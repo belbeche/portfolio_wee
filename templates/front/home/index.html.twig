@@ -1,11 +1,102 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Accueil{% endblock %}
+{% block title %}Wee - Portfolio
+{% endblock %}
 
 {% block content %}
+	<div class="container-fluide main_img jumbotron jumbotron-fluid px-4 py-5">
+		<section class="container">
+			<h1 class="display-4 text-white">Création de site web</h1><br>
+			<p class="lead text-white">Aujourd'hui la pluspart de nos utilisateurs sont connectés.</p><br>
+		</section>
+	</div>
 
-    <div class="container">
-        <h1>Page d'accueil</h1>
-    </div>
+	<!-- start services -->
+	<section class="section bg-gradient-light-white" id="services">
+		<div class="container">
+			<div class="row justify-content-center mb-4">
+				<div class="col-12 col-md-10 col-lg-7 text-center">
+					<span class="badge badge-lg rounded bg-soft-alt-success fw-normal fs-13 text-uppercase">Mes services</span>
+					<h2 class="fs-2 fw-medium lh-1 text-dark my-3">Un outil autonome dans la gestion de vos besoins</h2>
+					<p class="text-gray-700 fs-18 fs-lg mb-4 mb-md-5 lh-lg">
+						Afin de créer des expériences de marque de premier plan qui ont un sens, il faut une collaboration constante, je serai votre seul interlocuteur tout le long du process de de la rédaction au développement ainsi qu'a la mise en production et le suivi client.
+					</p>
+				</div>
+				<!--end col-->
+			</div>
+			<!--end row-->
+			<div class="row">
+				<div class="col-lg-4 col-md-6 mt-4 pt-2">
+					<div class="card rounded shadow border-0">
+						<div class="card-body p-4 m-2">
+							<div class="bg-soft-alt-orange d-flex justify-content-center align-items-center thumb-xl  rounded">
+								<i data-feather="layers" class="align-self-center svg-orange icon-md"></i>
+							</div>
+							<h5 class="text-dark fs-22 fw-medium my-4">Un service sur mesure</h5>
+						</div>
+						<!-- end card-body -->
+					</div>
+					<!-- end card -->
+				</div>
+				<!-- end col -->
+				<div class="col-lg-4 col-md-6 mt-4 pt-2">
+					<div class="card rounded shadow  border-0">
+						<div class="card-body p-4 m-2">
+							<div class="bg-soft-alt-info d-flex justify-content-center align-items-center thumb-xl  rounded">
+								<i data-feather="dollar-sign" class="align-self-center svg-info icon-md"></i>
+							</div>
+							<h5 class="text-dark fs-22 fw-medium my-4">Croissance dynamique</h5>
+						</div>
+						<!-- end card-body -->
+					</div>
+					<!-- end card -->
+				</div>
+				<!-- end col -->
+				<div class="col-lg-4 col-md-6 mt-4 pt-2">
+					<div class="card rounded shadow  border-0">
+						<div class="card-body p-4 m-2">
+							<div class="bg-soft-alt-success d-flex justify-content-center align-items-center thumb-xl  rounded">
+								<i data-feather="check-square" class="align-self-center svg-success icon-md"></i>
+							</div>
+							<h5 class="text-dark fs-22 fw-medium my-4">Identité de marque</h5>
+						</div>
+						<!-- end card-body -->
+					</div>
+					<!-- end card -->
+				</div>
+				<!-- end col -->
+			</div>
+			<!-- end row -->
+		</div>
+		<!-- end container -->
+	</section>
+	<!-- end services -->
 
+	<section class="section bg-light cta-pettern" id="cta">
+		<div class="container">
+			<div class="row align-items-center">
+				<div class="col-lg-10">
+					<div class="pattern-1 position-absolute">
+						<img src="images/p-1.svg" alt="" class="" height="80">
+					</div>
+					<h2 class="text-dark" style="line-height: 1.5; position: relative;">Je suis disponible pour l'alternance.</h2>
+					<h3>1 semaine en formation, 3 semaines en entreprises</h3>
+					<p class="text-muted mb-0">Discutons de vos projets et de mes compétences ainsi que de mon potentiel.
+					</p>
+				</div>
+				<!--end col-->
+				<div class="col-lg-2 ml-auto">
+					<div class="cta-search">
+						<a href="#" class="btn btn-dark">
+							PORFOLIO
+							<i class="bi bi-arrow-right"></i>
+						</a>
+					</div>
+				</div>
+				<!--end col-->
+			</div>
+			<!--end row-->
+		</div>
+		<!--end container-->
+	</section>
 {% endblock %}

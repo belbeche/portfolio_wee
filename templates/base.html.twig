@@ -1,17 +1,88 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="UTF-8">
-        <title>{% block title %}Welcome!{% endblock %}</title>
-        <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text></svg>">
-        <link rel="stylesheet" href="{{ asset('assets/css/cosmo_bootstrap.css') }}">
-    </head>
-    <body>
-        {% block navbar %}
-            {% include "front/includes/_nav.html.twig" %}
-        {% endblock %}
-        {% block content %}{% endblock %}
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1"/>
+		<title>
+			{% block title %}Welcome!
+			{% endblock %}
+		</title>
+		<meta name="description" content="Walid BELBECHE - Junior devloper"/>
+		<meta name="keywords" content="site web, identité numérique, développement"/>
+		<meta content="WalidBELBECHE" name="author"/>
+		<link
+		rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
 
-        {% block footer %} {% endblock %}
-    </body>
-</html>
+		<!-- Global CSS-->
+		<link rel="stylesheet" href="{{ asset('css/front/css/bootstrap.min.css') }}">
+		<link rel="stylesheet" href="{{ asset('css/front/css/style.css') }}">
+		<link rel="stylesheet" href="{{ asset('css/front/css/app.css') }}">
+		<link
+		rel="stylesheet" href="{{ asset('css/front/css/styles.css') }}">
+
+		<!-- Favicon -->
+
+		<link rel="apple-touch-icon" sizes="180x180" href="{{ asset('medias/favicon/favicon-16x16.png') }}">
+		<link rel="icon" type="image/png" sizes="32x32" href="{{ asset('medias/favicon/favicon-32x32.png') }}">
+		<link rel="icon" type="image/png" sizes="16x16" href="{{ asset('medias/favicon/favicon-16x16.png') }}">
+		<link rel="manifest" href="{{ asset('medias/favicon/site.webmanifest') }}">
+		<link rel="icon" href="{{ asset('medias/favicon/favicon.ico') }}">
+
+	</head>
+	<body>
+		{% block navbar %}
+			{% include "front/includes/_nav.html.twig" %}
+		{% endblock %}
+		<main class="cd-main-content">
+			<nav class="cd-side-nav js-cd-side-nav">
+				<ul class="cd-side__list js-cd-side__list">
+					<li class="cd-side__label">
+						<span>Walid BELBECHE</span>
+					</li>
+					<li class="cd-side__item cd-side__item--has-children cd-side__item--overview">
+						<a href="{{ url('front_home') }}">Accueil</a>
+					</li>
+
+					<li class="cd-side__item cd-side__item--has-children cd-side__item--notifications cd-side__item--selected">
+						<a href="#0">Projets<span class="cd-count">3</span>
+						</a>
+					</li>
+				</ul>
+
+				<ul class="cd-side__list js-cd-side__list">
+					<li class="cd-side__label">
+						<span>Contactez-moi</span>
+					</li>
+					{% if app.user %}
+						<li class="cd-side__btn">
+
+							<a href="{{ path('front_request_home', {'email': app.user.email})}}) }}" class="btn btn-primary">Mon tableau de bord
+							</a>
+						</li>
+					{% else %}
+						<li class="cd-side__btn">
+							<a href="{{ url('app_register') }}" class="btn btn-primary">Devis en ligne
+							</a>
+						</li>
+					{% endif %}
+				</ul>
+			</nav>
+
+			<div class="cd-content-wrapper"> {% block content %}{% endblock %}
+				</div>
+				<!-- .content-wrapper -->
+			</main>
+			<!-- .cd-main-content -->
+
+			{% block footer %}
+				<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous"></script>
+				<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js" integrity="sha384-mQ93GR66B00ZXjt0YO5KlohRA5SY2XofN4zfuZxLkoj1gXtW8ANNCe9d5Y3eG5eD" crossorigin="anonymous"></script>
+				<!-- Menu script -->
+				<script src="{{ asset('js/util.js') }}"></script>
+				<script src="{{ asset('js/menu-aim.js') }}"></script>
+				<script src="{{ asset('js/main.js') }}"></script>
+
+
+			{% endblock %}
+		</body>
+	</html>

@@ -1,24 +1,52 @@
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="#">Wee - portfolio</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor02" aria-controls="navbarColor02" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarColor02">
-            <ul class="navbar-nav me-auto">
-                <li class="nav-item {{ app.request.get('_route') == 'front_home' ? 'active' : '' }}">
-                    <a class="nav-link" href="{{ url('front_home') }}">Accueil</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">A propos</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Compétences</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Contact</a>
-                </li>
-            </ul>
-        </div>
-    </div>
-</nav>
+<header class="cd-main-header js-cd-main-header">
+	<div class="cd-logo-wrapper">
+		<a href="#0" class="cd-logo"><img src="{{ asset('css/front/img/cd-logo.svg') }}" alt="Logo"></a>
+	</div>
+
+	<div class="js-cd-search"></div>
+
+	<button class="reset cd-nav-trigger js-cd-nav-trigger" aria-label="Toggle menu">
+		<span></span>
+	</button>
+
+	{% if not app.user %}
+		<ul class="cd-nav__list js-cd-nav__list">
+			<li class="cd-nav__item cd-nav__item--has-children cd-nav__item--account js-cd-item--has-children">
+				<a href="#">
+					<i class="bi bi-person-square"></i>
+					<span>Espace membre</span>
+				</a>
+
+				<ul class="cd-nav__sub-list">
+					<li class="cd-nav__sub-item">
+						<a href="{{ url('app_login') }}">Déjà membre</a>
+					</li>
+				</ul>
+			</li>
+		</ul>
+	{% else %}
+		<ul class="cd-nav__list js-cd-nav__list">
+			<li class="cd-nav__item cd-nav__item--has-children cd-nav__item--account js-cd-item--has-children">
+				<a href="#">
+					<i class="fas fa-life-ring"></i>
+					<span>
+						Assistance</span>
+				</a>
+				<ul class="cd-nav__sub-list">
+					<li class="cd-nav__sub-item">
+						<a href="#">Suivi d'une demande</a>
+					</li>
+					<li class="cd-nav__sub-item">
+						<a href="#">Crée un tickets</a>
+					</li>
+				</ul>
+			</li>
+		</ul>
+		<li class="cd-nav__item cd-nav__item--has-children cd-nav__item--account js-cd-item--has-children">
+			<a href="{{ url('app_logout') }}">
+				<i class="fas fa-user-clock">Déconnexion</i>
+			</a>
+		</li>
+	{% endif %}
+</header>
+<!-- .cd-main-header -->

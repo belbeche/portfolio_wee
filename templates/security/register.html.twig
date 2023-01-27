@@ -1,0 +1,39 @@
+{% extends 'base.html.twig' %}
+
+{% block title  %}
+	Inscription
+{% endblock %}
+
+{% block content %}
+
+	<div class="container col-xl-10 col-xxl-8 px-4 py-5">
+		<div class="row align-items-center g-lg-5 py-5">
+			<div class="col-lg-7 text-center text-lg-start">
+				<h1 class="display-4 fw-bold lh-1 mb-3">Inscrivez-vous pour suivre la progression de votre projet</h1>
+			</div>
+			<div
+				class="col-md-10 mx-auto col-lg-5">
+				<!-- Formulaire de devis -->
+				{{ form_start(formRegister) }}
+				<div class="row">
+					<div class="col-xs-12 col-sm-6">
+						<div class="form-group form-floating mb-3">
+							{{ form_row(formRegister.email, {attr: {'class': 'form-control'}}) }}
+							{{ form_errors(formRegister.email) }}
+						</div>
+					</div>
+					<div class="col-xs-12 col-sm-6">
+						<div class="form-group form-floating mb-3">
+							{{ form_row(formRegister.password, {attr: {'class': 'form-control'}}) }}
+							{{ form_errors(formRegister.password) }}
+						</div>
+					</div>
+					<button type="submit" class="btn btn-outline-success my-5">Je m'inscris</button>
+					<hr>
+					<small class="text-muted">En cliquant sur S'inscrire, vous acceptez les conditions d'utilisation.</small>
+				</div>
+				{{ form_end(formRegister) }}
+			</div>
+		</div>
+
+	{% endblock %}
