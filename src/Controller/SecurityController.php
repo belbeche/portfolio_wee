@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Entity\Devis;
 use App\Form\UserType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -17,6 +18,7 @@ class SecurityController extends AbstractController
 
     /**
      * @Route("/inscription", name="app_register")
+     * 
      */
     public function Register(Request $request, EntityManagerInterface $entityManager, UserPasswordHasherInterface $hasher): Response
     {
@@ -40,9 +42,10 @@ class SecurityController extends AbstractController
                 $entityManager->persist($user);
 
                 $entityManager->flush();
+
                 return $this->redirectToRoute(
                     'front_devis',
-                    ['email' => $user->getEmail()],
+                    ['id' => $user->getDevisId()],
                 );
             }
         }
@@ -57,13 +60,6 @@ class SecurityController extends AbstractController
      */
     public function login(AuthenticationUtils $authenticationUtils): Response
     {
-
-        if ($this->getUser()) {
-            return $this->redirectToRoute('front_request_home', [
-                'email' => $this->getUser(),
-            ]);
-        }
-
         // if ($this->getUser()) {
         //     return $this->redirectToRoute('target_path');
         // }

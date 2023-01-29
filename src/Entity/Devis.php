@@ -2,11 +2,14 @@
 
 namespace App\Entity;
 
-use App\Repository\DevisRepository;
+
+use App\Entity\User;
 use DateTimeImmutable;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\DevisRepository;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Validator\Constraints\Uuid;
 
 /**
  * @ORM\Entity(repositoryClass=DevisRepository::class)
@@ -15,10 +18,11 @@ class Devis
 {
     /**
      * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="uuid")
+     * @ORM\GeneratedValue(strategy="CUSTOM")
+     * @ORM\CustomIdGenerator(class="doctrine.uuid_generator")
      */
-    private $id;
+    private  ?Uuid $id;
 
     /**
      * @ORM\Column(type="string", length=255)
@@ -41,22 +45,22 @@ class Devis
     private $multi_langues;
 
     /**
-     * @ORM\OneToMany(targetEntity=User::class, mappedBy="devis")
-     */
-    private $DevisUser;
-
-    /**
      * @ORM\Column(type="datetime_immutable")
      */
     private $created_at;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="devis_id")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $devisUser;
+
     public function __construct()
     {
-        $this->DevisUser = new ArrayCollection();
         $this->created_at = new DateTimeImmutable('now');
     }
 
-    public function getId(): ?int
+    public function getId(): ?Uuid
     {
         return $this->id;
     }
@@ -109,44 +113,14 @@ class Devis
         return $this;
     }
 
-    /**
-     * @return Collection<int, User>
-     */
-    public function getDevisUser(): Collection
+    public function getDevisUser(): ?User
     {
-        return $this->DevisUser;
+        return $this->devisUser;
     }
 
-    public function addDevisUser(User $devisUser): self
+    public function setDevisUser(?User $devisUser): self
     {
-        if (!$this->DevisUser->contains($devisUser)) {
-            $this->DevisUser[] = $devisUser;
-            $devisUser->setDevis($this);
-        }
-
-        return $this;
-    }
-
-    public function removeDevisUser(User $devisUser): self
-    {
-        if ($this->DevisUser->removeElement($devisUser)) {
-            // set the owning side to null (unless already changed)
-            if ($devisUser->getDevis() === $this) {
-                $devisUser->setDevis(null);
-            }
-        }
-
-        return $this;
-    }
-
-    public function getCreatedAt(): ?\DateTimeImmutable
-    {
-        return $this->created_at;
-    }
-
-    public function setCreatedAt(\DateTimeImmutable $created_at): self
-    {
-        $this->created_at = $created_at;
+        $this->devisUser = $devisUser;
 
         return $this;
     }

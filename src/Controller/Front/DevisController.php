@@ -5,22 +5,25 @@ namespace App\Controller\Front;
 use Exception;
 use App\Entity\User;
 use App\Entity\Devis;
-use App\Form\UserType;
 use App\Form\DevisType;
+use App\Repository\UserRepository;
+use App\Repository\DevisRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Entity;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 
 class DevisController extends AbstractController
 {
     /**
-     * @Route("/devis-en-ligne/{email}", name="front_devis")
+     * @Route("/devis-en-ligne/{id}", name="front_devis")
      */
-    public function new(Request $request, EntityManagerInterface $entityManager, User $user): Response
+    public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
+
         $devis = new Devis();
 
         $form = $this->createForm(DevisType::class, $devis);
@@ -30,17 +33,12 @@ class DevisController extends AbstractController
             $form->handleRequest($request);
 
             if ($form->isSubmitted() && $form->isValid()) {
+                $devis->setDevisUser($user);
 
-                if (!$devis) {
-                    throw new Exception('Un devis existe déjà pour ce compte');
-                } else {
-                    $user->setDevis($devis);
+                $entityManager->persist($devis);
+                $entityManager->flush($devis);
 
-                    $entityManager->persist($devis);
-                    $entityManager->flush();
-
-                    return $this->redirectToRoute('app_login');
-                }
+                return $this->redirectToRoute('app_login');
             }
         }
 
@@ -50,19 +48,19 @@ class DevisController extends AbstractController
     }
 
     /**
-     * @Route("/devis/tableau-de-bord/{email}", name="front_request_home")
-     * @ParamConverter("email", class="Devis", options={"email": "email"})
+     * @Route("/tableau-de-bord/{id}", name="front_board")
+     *
+     * @param DevisRepository $devisRepo
+     * @return void
      */
-
-    public function request(User $user, EntityManagerInterface $entityManager): Response
+    public function Show($id, EntityManagerInterface $entityManager): Response
     {
-        $singleDevis = $entityManager->getRepository(Devis::class)->find($user);
 
+        dd($id);
+        $userDevis = $entityManager->getRepository(User::class)->find($id);
 
-
-
-        return $this->render('front/devis/allDevis.html.twig', [
-            'singleRequest' => $singleDevis,
+        return $this->render('devis/allDevis.html.twig', [
+            'singleDevis' => $userDevis,
         ]);
     }
 }

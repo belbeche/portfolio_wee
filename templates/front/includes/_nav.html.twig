@@ -27,26 +27,17 @@
 	{% else %}
 		<ul class="cd-nav__list js-cd-nav__list">
 			<li class="cd-nav__item cd-nav__item--has-children cd-nav__item--account js-cd-item--has-children">
-				<a href="#">
-					<i class="fas fa-life-ring"></i>
-					<span>
-						Assistance</span>
+				<a href="mailto:wbelbeche.s@gmail.com">
+					<i class="bi bi-envelope-at paddin"></i>
+					Assistance
+
 				</a>
-				<ul class="cd-nav__sub-list">
-					<li class="cd-nav__sub-item">
-						<a href="#">Suivi d'une demande</a>
-					</li>
-					<li class="cd-nav__sub-item">
-						<a href="#">Crée un tickets</a>
-					</li>
-				</ul>
 			</li>
-		</ul>
-		<li class="cd-nav__item cd-nav__item--has-children cd-nav__item--account js-cd-item--has-children">
-			<a href="{{ url('app_logout') }}">
-				<i class="fas fa-user-clock">Déconnexion</i>
-			</a>
 		</li>
-	{% endif %}
-</header>
-<!-- .cd-main-header -->
+	</ul>
+	<li class="cd-nav__item cd-nav__item--has-children cd-nav__item--account js-cd-item--has-children">
+		<a href="{{ url('app_logout') }}">
+			<i class="fas fa-user-clock">Déconnexion</i>
+		</a>
+	</li>
+{% endif %}</header><!-- .cd-main-header -->

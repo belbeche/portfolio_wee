@@ -2,12 +2,14 @@
 
 namespace App\Entity;
 
+use Symfony\Component\Uid\Uuid;
 use Doctrine\ORM\Mapping as ORM;
+use App\Entity\Devis;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 
 /**
@@ -19,8 +21,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     /**
      * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="uuid")
+     * @ORM\GeneratedValue(strategy="CUSTOM")
+     * @ORM\CustomIdGenerator(class="doctrine.uuid_generator")
      */
     private $id;
 
@@ -41,16 +44,21 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $password;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Devis::class, inversedBy="DevisUser")
-     */
-    private $devis;
-
-    /**
      * @ORM\Column(type="boolean")
      */
     private $isVerified = false;
 
-    public function getId(): ?int
+    /**
+     * @ORM\OneToMany(targetEntity=Devis::class, mappedBy="devisUser", orphanRemoval=true)
+     */
+    private $devis_id;
+
+    public function __construct()
+    {
+        $this->devis_id = new ArrayCollection();
+    }
+
+    public function getId(): ?Uuid
     {
         return $this->id;
     }
@@ -131,18 +139,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         // $this->plainPassword = null;
     }
 
-    public function getDevis(): ?Devis
-    {
-        return $this->devis;
-    }
-
-    public function setDevis(?Devis $devis): self
-    {
-        $this->devis = $devis;
-
-        return $this;
-    }
-
     public function getUsername()
     {
     }
@@ -155,6 +151,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setIsVerified(bool $isVerified): self
     {
         $this->isVerified = $isVerified;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Devis>
+     */
+    public function getDevisId(): Collection
+    {
+        return $this->devis_id;
+    }
+
+    public function addDevisId(Devis $devisId): self
+    {
+        if (!$this->devis_id->contains($devisId)) {
+            $this->devis_id[] = $devisId;
+            $devisId->setDevisUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeDevisId(Devis $devisId): self
+    {
+        if ($this->devis_id->removeElement($devisId)) {
+            // set the owning side to null (unless already changed)
+            if ($devisId->getDevisUser() === $this) {
+                $devisId->setDevisUser(null);
+            }
+        }
 
         return $this;
     }

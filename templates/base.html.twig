@@ -56,7 +56,8 @@
 					{% if app.user %}
 						<li class="cd-side__btn">
 
-							<a href="{{ path('front_request_home', {'email': app.user.email})}}) }}" class="btn btn-primary">Mon tableau de bord
+							<a href="{{ path('front_board', {id: app.user.id}) }}) }}" class="btn btn-primary">Mon tableau de bord
+
 							</a>
 						</li>
 					{% else %}
