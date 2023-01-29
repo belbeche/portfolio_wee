@@ -49,13 +49,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $isVerified = false;
 
     /**
-     * @ORM\OneToMany(targetEntity=Devis::class, mappedBy="devisUser", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity=Devis::class, mappedBy="userId", orphanRemoval=true)
      */
-    private $devis_id;
+    private $devis;
 
     public function __construct()
     {
-        $this->devis_id = new ArrayCollection();
+        $this->devis = new ArrayCollection();
     }
 
     public function getId(): ?Uuid
@@ -158,27 +158,27 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @return Collection<int, Devis>
      */
-    public function getDevisId(): Collection
+    public function getDevis(): Collection
     {
-        return $this->devis_id;
+        return $this->devis;
     }
 
-    public function addDevisId(Devis $devisId): self
+    public function addDevis(Devis $devis): self
     {
-        if (!$this->devis_id->contains($devisId)) {
-            $this->devis_id[] = $devisId;
-            $devisId->setDevisUser($this);
+        if (!$this->devis->contains($devis)) {
+            $this->devis[] = $devis;
+            $devis->setUser($this);
         }
 
         return $this;
     }
 
-    public function removeDevisId(Devis $devisId): self
+    public function removeDevis(Devis $devis): self
     {
-        if ($this->devis_id->removeElement($devisId)) {
+        if ($this->devis->removeElement($devis)) {
             // set the owning side to null (unless already changed)
-            if ($devisId->getDevisUser() === $this) {
-                $devisId->setDevisUser(null);
+            if ($devis->getUser() === $this) {
+                $devis->setUser(null);
             }
         }
 

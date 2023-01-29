@@ -39,6 +39,7 @@ class DevisRepository extends ServiceEntityRepository
             $this->getEntityManager()->flush();
         }
     }
+
     //    /**
     //     * @return Devis[] Returns an array of Devis objects
     //     */

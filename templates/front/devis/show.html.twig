@@ -1,0 +1,30 @@
+{% extends "base.html.twig" %}
+
+{% block title %}
+	Tableau de bord
+{% endblock %}
+
+{% block content %}
+
+	<div class="col-md-6">
+		<article>
+			{#{{ dump(singleDevis)}}#}
+			<h2>Type de demande :
+				{{ singleDevis.typeDeSiteWeb }}</h2>
+			<h3>Par :
+				{{ singleDevis.user.email }}</h3>
+
+			<div class="metadata">
+				Crée le
+				{{ singleDevis.createdAt|date('d/m/Y') }}
+				à
+				{{ singleDevis.createdAt|date('H:i') }}</div>
+			<div class="contenu">
+				Message :
+				{{ singleDevis.descriptionProjet | raw }}
+			</div>
+
+		</article>
+	</div>
+
+{% endblock %}

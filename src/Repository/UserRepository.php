@@ -2,12 +2,14 @@
 
 namespace App\Repository;
 
+use Exception;
 use App\Entity\User;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\Common\Collections\Criteria;
 use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
-use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
 
 /**
  * @extends ServiceEntityRepository<User>
@@ -54,6 +56,22 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         $user->setPassword($newHashedPassword);
 
         $this->add($user, true);
+    }
+
+    public function findByUuid($id, $lockMode = null, $lockVersion = null)
+    {
+
+        if (is_array($id)) {
+            $uuidInstance = reset($id);
+            $uuidCriteria = Criteria::create()->where(Criteria::expr()->eq('u.id', $uuidInstance->getBytes()));
+        } else {
+            throw new Exception('Not array found for the id');
+        }
+
+        return $this->createQueryBuilder('u')
+            ->addCriteria($uuidCriteria)
+            ->getQuery()
+            ->getOneOrNullResult();
     }
 
     //    /**

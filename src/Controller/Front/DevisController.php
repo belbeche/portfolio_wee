@@ -23,7 +23,6 @@ class DevisController extends AbstractController
      */
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
-
         $devis = new Devis();
 
         $form = $this->createForm(DevisType::class, $devis);
@@ -33,8 +32,8 @@ class DevisController extends AbstractController
             $form->handleRequest($request);
 
             if ($form->isSubmitted() && $form->isValid()) {
-                $devis->setDevisUser($user);
-
+                $user = $entityManager->getRepository(User::class)->findOneBy(['id' => $request->get('id')]);
+                $devis->setUser($user);
                 $entityManager->persist($devis);
                 $entityManager->flush($devis);
 
@@ -42,25 +41,23 @@ class DevisController extends AbstractController
             }
         }
 
-        return $this->render('front/devis/index.html.twig', [
+        return $this->render('front/devis/new.html.twig', [
             'formDevis' => $form->createView(),
         ]);
     }
 
     /**
-     * @Route("/tableau-de-bord/{id}", name="front_board")
-     *
+     * @Route("/devis/utilisateur", name="front_devis_utilisateur_show")
+     * 
      * @param DevisRepository $devisRepo
-     * @return void
+     * @return Response
      */
-    public function Show($id, EntityManagerInterface $entityManager): Response
+    public function Show(EntityManagerInterface $entityManager, Request $request): Response
     {
+        $user = $entityManager->getRepository(Devis::class)->findOneBy(['user' => $this->getUser()]);
 
-        dd($id);
-        $userDevis = $entityManager->getRepository(User::class)->find($id);
-
-        return $this->render('devis/allDevis.html.twig', [
-            'singleDevis' => $userDevis,
+        return $this->render('front/devis/show.html.twig', [
+            'singleDevis' => $user,
         ]);
     }
 }

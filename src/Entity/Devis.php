@@ -5,11 +5,11 @@ namespace App\Entity;
 
 use App\Entity\User;
 use DateTimeImmutable;
+use Symfony\Component\Uid\Uuid;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\DevisRepository;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
-use Symfony\Component\Validator\Constraints\Uuid;
 
 /**
  * @ORM\Entity(repositoryClass=DevisRepository::class)
@@ -22,25 +22,25 @@ class Devis
      * @ORM\GeneratedValue(strategy="CUSTOM")
      * @ORM\CustomIdGenerator(class="doctrine.uuid_generator")
      */
-    private  ?Uuid $id;
+    private  $id;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $type_de_site_web;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $attentes_design_web;
 
     /**
-     * @ORM\Column(type="text")
+     * @ORM\Column(type="text", nullable=true)
      */
     private $description_projet;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $multi_langues;
 
@@ -50,10 +50,10 @@ class Devis
     private $created_at;
 
     /**
-     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="devis_id")
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="devis")
      * @ORM\JoinColumn(nullable=false)
      */
-    private $devisUser;
+    private $user;
 
     public function __construct()
     {
@@ -113,14 +113,32 @@ class Devis
         return $this;
     }
 
-    public function getDevisUser(): ?User
+    /**
+     * @return DateTimeImmutable
+     */
+    public function getCreatedAt(): DateTimeImmutable
     {
-        return $this->devisUser;
+        return $this->created_at;
     }
 
-    public function setDevisUser(?User $devisUser): self
+    /**
+     * @param DateTimeImmutable $created_at
+     * @return Devis
+     */
+    public function setCreatedAt(DateTimeImmutable $created_at): Devis
     {
-        $this->devisUser = $devisUser;
+        $this->created_at = $created_at;
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): self
+    {
+        $this->user = $user;
 
         return $this;
     }
