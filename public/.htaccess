@@ -1,4 +1,4 @@
-<VirtualHost *:80>
+<VirtualHost 45.155.169.37:80>
     DocumentRoot /var/www/html/portfolio_wee/public
 
     <Directory /var/www/html/portfolio_wee/public>
