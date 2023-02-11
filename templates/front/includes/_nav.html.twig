@@ -1,40 +1,51 @@
-<header class="cd-main-header js-cd-main-header">
-	<div class="cd-logo-wrapper">
-		<a href="#0" class="cd-logo"><img src="{{ asset('css/front/img/cd-logo.svg') }}" alt="Logo"></a>
-	</div>
+<!-- Header -->
+<header id="site_header" class="header">
+    <div class="header-content clearfix">
 
-	<div class="js-cd-search"></div>
+        <!-- Text Logo -->
+        <div class="text-logo">
+            <a href="index.html">
+                <div class="logo-symbol">Wee</div>
+                <div class="logo-text">Walid <span>BELBECHE</span></div>
+            </a>
+        </div>
+        <!-- /Text Logo -->
 
-	<button class="reset cd-nav-trigger js-cd-nav-trigger" aria-label="Toggle menu">
-		<span></span>
-	</button>
+        <!-- Navigation -->
+        <div class="site-nav mobile-menu-hide">
+            <ul class="leven-classic-menu site-main-menu">
+                <li class="menu-item">
+                    <a href="{{ url('front_home') }}">Accueil</a>
+                </li>
 
-	{% if not app.user %}
-		<ul class="cd-nav__list js-cd-nav__list">
-			<li class="cd-nav__item cd-nav__item--has-children cd-nav__item--account js-cd-item--has-children">
-				<a href="#">
-					<i class="bi bi-person-square"></i>
-					<span>Espace membre</span>
-				</a>
+                <li class="menu-item">
+                    <a href="{{ url('front_home') }}">Mes réalisations</a>
+                </li>
 
-				<ul class="cd-nav__sub-list">
-					<li class="cd-nav__sub-item">
-						<a href="{{ url('app_login') }}">Déjà membre</a>
-					</li>
-				</ul>
-			</li>
-		</ul>
-	{% else %}
-		<ul class="cd-nav__list js-cd-nav__list">
-			<li class="cd-nav__item">
-				<a href="mailto:wbelbeche.s@gmail.com">
-					Assistance
-				</a>
-			</li>
-			<li class="cd-nav__item cd-nav__item--account">
-				<a href="{{ url('app_logout') }}">
-					<i class="fas fa-user-clock">Déconnexion</i>
-				</a>
-			</li>
-		</ul>
-{% endif %}</header><!-- .cd-main-header -->
+                <li class="menu-item">
+                    <a href="mailto:wbelbeche.s@gmail.com">Contact</a>
+                </li>
+                {% if not app.user %}
+                <li class="menu-item">
+                    <a href="{{ url('app_register') }}" class="btn btn-outline-info btn-lg">Devis en ligne</a>
+                </li>
+                <li class="menu-item">
+                    <a href="{{ url('app_login') }}" class="btn btn-outline-dark btn-lg">Connexion</a>
+                </li>
+                {% else %}
+                <li class="menu-item">
+                    <a href="{{ url('front_devis_utilisateur_show') }}" class="btn btn-outline-info">Gestion demande</a>
+                </li>
+                <li class="menu-item">
+                    <a href="{{ url('app_logout') }}" class="btn btn-outline-danger btn-lg">Déconnexion</a>
+                </li>
+                {% endif %}
+            </ul>
+        </div>
+
+        <a class="menu-toggle mobile-visible">
+            <i class="fa fa-bars"></i>
+        </a>
+    </div>
+</header>
+<!-- /Header -->
