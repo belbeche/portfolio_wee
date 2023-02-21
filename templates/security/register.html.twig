@@ -1,7 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title  %}
-	Inscription
+{% block title %}Inscription
 {% endblock %}
 
 {% block content %}
@@ -9,31 +8,46 @@
 	<div class="container col-xl-10 col-xxl-8 px-4 py-5">
 		<div class="row align-items-center g-lg-5 py-5">
 			<div class="col-lg-7 text-center text-lg-start">
-				<h1 class="fw-bold lh-1 mb-3">Inscrivez-vous pour suivre la progression de votre projet</h1>
-			</div>
-			<div
-				class="col-md-10 mx-auto col-lg-5">
-				<!-- Formulaire de devis -->
-				{{ form_start(formRegister) }}
-				<div class="row">
-					<div class="col-xs-12 col-sm-6">
-						<div class="form-group form-floating mb-3">
-							{{ form_row(formRegister.email, {attr: {'class': 'form-control'}}) }}
-							{{ form_errors(formRegister.email) }}
-						</div>
+				<h1 class="display-4 fw-bold lh-1 mb-3">Inscrivez-vous</h1>
+				<p>Afin de suivre la progression de votre demande</p>
+				<div class="flex items-center justify-between forgot-password">
+					<div class="text-sm">
+						<a href="#" class="font-medium text-indigo-600 hover:text-indigo-500">Vous avez oublié votre mot de passe ?</a>
 					</div>
-					<div class="col-xs-12 col-sm-6">
-						<div class="form-group form-floating mb-3">
-							{{ form_row(formRegister.password, {attr: {'class': 'form-control'}}) }}
-							{{ form_errors(formRegister.password) }}
-						</div>
-					</div>
-					<button type="submit" class="btn btn-outline-success my-5">Je m'inscris</button>
-					<hr>
-					<small class="text-muted">En cliquant sur S'inscrire, vous acceptez les conditions d'utilisation.</small>
 				</div>
+				<div class="login">
+					<h6>Vous ètes membre ?</h6>
+					<p>Connectez-vous en suivant ce lien <a href="{{ url('app_login') }}">Je me connecte</a>.</p>
+				</div>
+			</div>
+			<div class="col-md-10 mx-auto col-lg-5">
+				{{ form_start(formRegister, {attr: {'class' : 'p-4 p-md-5 border rounded-3 bg-light'}}) }}
+					<div>
+						<label for="nom" class="sr-only">Nom</label>
+						{{ form_row(formRegister.nom) }}
+						{{ form_errors(formRegister.nom) }}
+					</div>
+					<div>
+						<label for="prenom" class="sr-only">Prenom</label>
+						{{ form_row(formRegister.prenom) }}
+						{{ form_errors(formRegister.prenom) }}
+					</div>
+					<div>
+						<label for="email-address" class="sr-only">Identifiant de connexion</label>
+						{{ form_row(formRegister.email) }}
+						{{ form_errors(formRegister.email) }}
+					</div>
+					<div>
+						<label for="password" class="sr-only">Mot de passe</label>
+						{{ form_row(formRegister.password.first) }}
+					</div>
+					<div>
+						<label for="password" class="sr-only">Répetez votre mot de passe</label>
+						{{ form_row(formRegister.password.second) }}
+					</div>
+					<button type="submit" class="btn btn-primary">Je m'inscris</button>
 				{{ form_end(formRegister) }}
 			</div>
 		</div>
-
-	{% endblock %}
+	</div>
+{% endblock %}

@@ -40,11 +40,6 @@ class Devis
     private $description_projet;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
-    private $multi_langues;
-
-    /**
      * @ORM\Column(type="datetime_immutable")
      */
     private $created_at;
@@ -97,18 +92,6 @@ class Devis
     public function setDescriptionProjet(string $description_projet): self
     {
         $this->description_projet = $description_projet;
-
-        return $this;
-    }
-
-    public function getMultiLangues(): ?string
-    {
-        return $this->multi_langues;
-    }
-
-    public function setMultiLangues(string $multi_langues): self
-    {
-        $this->multi_langues = $multi_langues;
 
         return $this;
     }

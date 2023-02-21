@@ -30,6 +30,7 @@ class DevisType extends AbstractType
                 'attr' => [
                     'class' => 'devisForm',
                 ],
+                'expanded' => true,
                 'multiple' => false,
             ])
             ->add('attentes_design_web', ChoiceType::class, [
@@ -38,13 +39,15 @@ class DevisType extends AbstractType
                     'Un design standard' => 'design_standard',
                     'Vous avez vos propres maquettes' => 'own_wireframe',
                     'Avancée' => 'advanced'
+                ],
+                'multiple' => false,
+            ])
+            ->add('description_projet', TextareaType::class, [
+                'attr' => [
+                    'class' => 'form-control',
                 ]
             ])
-            ->add('description_projet', TextareaType::class, [])
-            ->add('multi_langues', CheckboxType::class, [
-                'label' => 'Multi languages ?',
-                'required' => true,
-            ]);
+            ;
     }
 
     public function configureOptions(OptionsResolver $resolver): void

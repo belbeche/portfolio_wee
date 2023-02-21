@@ -4,8 +4,8 @@
 
         <!-- Text Logo -->
         <div class="text-logo">
-            <a href="index.html">
-                <div class="logo-symbol">Wee</div>
+            <a href="{{ url('front_home') }}">
+                <div class="logo-symbol">WB</div>
                 <div class="logo-text">Walid <span>BELBECHE</span></div>
             </a>
         </div>
@@ -34,7 +34,7 @@
                 </li>
                 {% else %}
                 <li class="menu-item">
-                    <a href="{{ url('front_devis_utilisateur_show') }}" class="btn btn-outline-info">Gestion demande</a>
+                    <a href="{{ url('front_devis_utilisateur_show') }}" class="btn btn-outline-info">Mon compte</a>
                 </li>
                 <li class="menu-item">
                     <a href="{{ url('app_logout') }}" class="btn btn-outline-danger btn-lg">Déconnexion</a>
