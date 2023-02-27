@@ -1,30 +1,36 @@
 {% extends "base.html.twig" %}
 
 {% block title %}
-	Tableau de bord
+    Tableau de bord
 {% endblock %}
 
 {% block content %}
+    <br>
+    {% if app.user %}
+    <a href="{{ url('front_devis_new', {id: app.user.id }) }}" class="btn btn-info btn-lg m-auto">Créer un nouveau devis</a>
+    {% endif %}
+    <hr>
 
-	<div class="col-md-6">
-		<article>
-			{#{{ dump(singleDevis)}}#}
-			<h2>Type de demande :
-				{{ singleDevis.typeDeSiteWeb }}</h2>
-			<h3>Par :
-				{{ singleDevis.user.email }}</h3>
+    {% for singleDevis in allQuote %}
+        <div class="xs-12">
+            {# {{ dump(singleDevis)}} #}
 
-			<div class="metadata">
-				Crée le
-				{{ singleDevis.createdAt|date('d/m/Y') }}
-				à
-				{{ singleDevis.createdAt|date('H:i') }}</div>
-			<div class="contenu">
-				Message :
-				{{ singleDevis.descriptionProjet | raw }}
-			</div>
+            <h2>Type de demande :
+                {{ singleDevis.typeDeSiteWeb }}</h2>
+            <h3>Par :
+                {{ singleDevis.user.prenom }} {{ singleDevis.user.nom }}</h3>
 
-		</article>
-	</div>
+            <div class="metadata">
+                Crée le
+                {{ singleDevis.createdAt|date('d/m/Y') }}
+                à
+                {{ singleDevis.createdAt|date('H:i') }}</div>
+            <div class="contenu">
+                Message:
+                    {{ singleDevis.descriptionProjet | nl2br  }}
+            </div>
+        </div>
+
+    {% endfor %}
 
 {% endblock %}

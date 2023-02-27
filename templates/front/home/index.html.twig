@@ -25,7 +25,7 @@
                                     <h4>Walid BELBECHE</h4>
                                 </div>
                                 <div class="item">
-                                    <h4>Créateur de site internet, sophistiqué et pas cher !</h4>
+                                    <h4>Créateur de site internet</h4>
                                 </div>
                             </div>
 
@@ -203,7 +203,7 @@
                         </div>
 
                         <div class="fw-button-row">
-                            <a href="{{ url('front_devis', {id: app.user.id }) }}" target="_self" class="btn btn-secondary">Je fais une demande</a>
+                            <a href="{% if app.user %} {{ url('front_devis_new', {id : app.user.id}) }} {% else %} {{ url('app_login') }} {% endif %}" target="_self" class="btn btn-secondary">Je fais une demande</a>
                         </div>
 
                         <div class="fw-default-row">Vous êtes une marque souhaitant donner un coup de neuf à son site web ou une entreprise souhaitant redynamiser sa présence sur le web ? Optez pour une création de site vitrine sur mesure, dynamique et novateur. A votre image.</div>
@@ -221,7 +221,7 @@
                         </div>
 
                         <div class="fw-button-row">
-                            <a href="{{ url('app_register') }}" target="_self" class="btn btn-primary">Je fais ma demande</a>
+                            <a href="{% if app.user %} {{ url('front_devis_new', {id : app.user.id}) }} {% else %} {{ url('app_login') }} {% endif %}" target="_self" class="btn btn-primary">Je fais ma demande</a>
                         </div>
 
                         <div class="fw-default-row">Vous souhaitez aller un peu plus loin et vous avez en tête des fonctionnalités bien précises pour votre nouveau site internet ? Tout est possible techniquement, discutons ensemble de votre développement web sur mesure !</div>

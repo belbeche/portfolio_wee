@@ -27,17 +27,14 @@
                 </li>
                 {% if not app.user %}
                 <li class="menu-item">
-                    <a href="{{ url('app_register') }}" class="btn btn-outline-info btn-lg">Devis en ligne</a>
-                </li>
-                <li class="menu-item">
                     <a href="{{ url('app_login') }}" class="btn btn-outline-dark btn-lg">Connexion</a>
                 </li>
                 {% else %}
                 <li class="menu-item">
-                    <a href="{{ url('front_devis_utilisateur_show') }}" class="btn btn-outline-info">Mon compte</a>
+                    <a href="{{ url('front_devis_utilisateur_show') }}" class="btn btn-outline-info">Mes devis</a>
                 </li>
                 <li class="menu-item">
-                    <a href="{{ url('app_logout') }}" class="btn btn-outline-danger btn-lg">Déconnexion</a>
+                    <a href="{{ url('app_logout') }}" class="btn btn-outline-danger">Déconnexion</a>
                 </li>
                 {% endif %}
             </ul>

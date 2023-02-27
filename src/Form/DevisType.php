@@ -22,9 +22,9 @@ class DevisType extends AbstractType
             ->add('type_de_site_web', ChoiceType::class, [
                 'label' => 'Type de site web',
                 'choices' => [
-                    'Site vitrine' => 'site_vitrine',
-                    'Site e-commerce' => 'site_e-commerce',
-                    'Application web' => 'application_web',
+                    'Présentation entreprise' => 'site_vitrine',
+                    'Site marchand' => 'site_e-commerce',
+                    'Application fonctionnelle' => 'application_web',
                     'Autre' => 'Autre'
                 ],
                 'attr' => [
