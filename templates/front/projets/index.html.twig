@@ -1,0 +1,24 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mes réalisations{% endblock %}
+
+{% block content %}
+
+    <h1>Page des réalisations</h1>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-3">
+                <div class="card" style="width: 18rem;">
+                    <img src="{{ asset('img/portfolio/1.jpg') }}" class="card-img-top" alt="Réalisation 1">
+                    <div class="card-body">
+                        <h5 class="card-title">Ma première réalisations</h5>
+                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                        <a href="#" class="btn btn-primary">Voir le projet</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

@@ -1,0 +1,24 @@
+{% extends 'base_back.html.twig' %}
+
+{% block title %}Back controller project{% endblock %}
+
+{% block content %}
+
+    <h1>Page back project</h1>
+
+    {{ form_start(projectForm) }}
+
+    {{ form_row(projectForm.title) }}
+    {{ form_errors(projectForm.title) }}
+
+    {{ form_row(projectForm.description) }}
+    {{ form_errors(projectForm.description) }}
+
+    {{ form_row(projectForm.img) }}
+    {{ form_errors(projectForm.img) }}
+
+    <button type="submit">Créer projet</button>
+
+    {{ form_end(projectForm) }}
+
+{% endblock %}
