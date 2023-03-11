@@ -6,9 +6,9 @@
 {% block content %}
 	<div class="container">
 		<div
-			class="px-4 py-5 my-5 text-center">
+			class="px-4 py-5 my-5">
 			{#<img class="d-block mx-auto mb-4" src="/docs/5.3/assets/brand/bootstrap-logo.svg" alt="" width="72" height="57">#}
-			<h1 class="display-5 fw-bold">Discutons de votre projet
+			<h1 class="display-5 fw-bold text-center">Discutons de votre projet
 			</h1>
 			<p class="lead">Vous voulez des informations complémentaires quant à la réalisation de votre projet ?
 			</p>
@@ -16,12 +16,12 @@
 				Utilisez le formulaire ci-dessous :
 			</p>
 			<div
-				class="col-lg-6 mx-auto padding-top-xxl">
+				class="col-lg-12 mx-auto padding-top-xxl">
 				<!-- Formulaire de devis -->
 				{{ form_start(formDevis) }}
 				{{ form_row(formDevis.type_de_site_web)}}
 				{{ form_errors(formDevis.type_de_site_web)}}
-				{{ form_row(formDevis.attentes_design_web)}}
+				 {{ form_row(formDevis.attentes_design_web)}}
 				{{ form_errors(formDevis.attentes_design_web)}}
 				{{ form_row(formDevis.description_projet)}}
 				{{ form_errors(formDevis.description_projet)}}

@@ -34,7 +34,7 @@ class DevisType extends AbstractType
                 'multiple' => false,
             ])
             ->add('attentes_design_web', ChoiceType::class, [
-                'label' => 'Quelles sont vos attentes concernant le design du site ?',
+                'label' => 'Quelles sont vos attentes concernant le design du site ? ',
                 'choices' => [
                     'Un design standard' => 'design_standard',
                     'Vous avez vos propres maquettes' => 'own_wireframe',
