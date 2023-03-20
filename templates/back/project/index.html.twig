@@ -38,7 +38,7 @@
                 <td>{{ project.createdAt|date('d-m-Y') }}</td>
                 <td>
                     <a href="">Voir</a>
-                    <a href="">Editer</a>
+                    <a href="{{ url('back_project_edit', {id: project.id}) }}">Editer</a>
                     <a href="">Supprimé</a>
                 </td>
             </tr>

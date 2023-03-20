@@ -17,7 +17,12 @@ class ProjectType extends AbstractType
         $builder
             ->add('title', TextType::class)
             ->add('description', TextType::class)
-            ->add('img', FileType::class)
+            ->add('images_project', FileType::class,[
+                'label' => false,
+                'multiple' => true,
+                'mapped' => false,
+                'required' => true
+            ])
         ;
     }
 

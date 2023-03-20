@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\ProjectRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -38,9 +40,14 @@ class Project
     private $updated_at;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\OneToMany(targetEntity=Images::class, mappedBy="images", orphanRemoval=true,cascade={"persist"})
      */
-    private $img;
+    private $images_project;
+
+    public function __construct()
+    {
+        $this->images_project = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -95,15 +102,18 @@ class Project
         return $this;
     }
 
-    public function getImg(): ?string
+    public function getImagesProject()
     {
-        return $this->img;
+        return $this->images_project;
     }
 
-    public function setImg(string $img): self
+    /**
+     * @param ArrayCollection $images_project
+     * @return Project
+     */
+    public function setImagesProject(ArrayCollection $images_project): Project
     {
-        $this->img = $img;
-
+        $this->images_project = $images_project;
         return $this;
     }
 }

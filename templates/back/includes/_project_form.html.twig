@@ -1,0 +1,14 @@
+{{ form_start(projectEdit) }}
+
+    {{ form_row(projectEdit.title) }}
+    {{ form_errors(projectEdit.title) }}
+
+    {{ form_row(projectEdit.description) }}
+    {{ form_errors(projectEdit.description) }}
+
+    {{ form_row(projectEdit.images_project) }}
+    {{ form_errors(projectEdit.images_project) }}
+
+<button type="submit" class="btn btn-primary">Enregistrer</button>
+
+{{ form_end(projectEdit) }}
