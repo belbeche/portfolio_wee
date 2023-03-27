@@ -47,7 +47,8 @@ class DevisController extends AbstractController
                     ->context([
                         'email_address' => $devis->getEmail(),
                         'registrationNumber' => $devis->getId(),
-                        'subject' => $devis->getTypeDeSiteWeb()
+                        'subject' => $devis->getTypeDeSiteWeb(),
+                        'message' => $devis->getDescriptionProjet(),
                     ])
                     ->htmlTemplate('front/devis/email.html.twig');
 
