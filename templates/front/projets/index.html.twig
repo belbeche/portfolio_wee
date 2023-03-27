@@ -11,9 +11,9 @@
             {% for project in projects  %}
                 <div class="col-md-3">
                     <div class="card" style="width: 18rem;">
-                        {% for image in project.imagesProject %}
-                            <img src="{{ asset('/upload_images_project/'~image.name) }}" class="card-img-top" alt="{{ image.name }}">
-                        {% endfor %}
+                        {% if project.image is not null %}
+                            <img src="{{ asset(project.image.data) }}" alt="{{ project.image.name }}"/>
+                        {% endif %}
                         <div class="card-body">
                             <h5 class="card-title">{{ project.title }}</h5>
                             <p class="card-text">{{ project.description }}.</p>

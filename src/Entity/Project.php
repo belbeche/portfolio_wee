@@ -22,32 +22,28 @@ class Project
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $title;
+    private ?string $title;
 
     /**
      * @ORM\Column(type="text")
      */
-    private $description;
+    private ?string $description;
 
     /**
      * @ORM\Column(type="datetime")
      */
-    private $created_at;
+    private ?\DateTime $created_at;
 
     /**
      * @ORM\Column(type="datetime")
      */
-    private $updated_at;
+    private ?\DateTime $updated_at;
 
     /**
-     * @ORM\OneToMany(targetEntity=Images::class, mappedBy="images", orphanRemoval=true,cascade={"persist"})
+     * @ORM\OneToOne(targetEntity="Image", cascade={"persist"})
+     * @ORM\JoinColumn(name="image_id", referencedColumnName="id")
      */
-    private $images_project;
-
-    public function __construct()
-    {
-        $this->images_project = new ArrayCollection();
-    }
+    private Image $image;
 
     public function getId(): ?int
     {
@@ -78,42 +74,39 @@ class Project
         return $this;
     }
 
-    public function getCreatedAt(): ?\DateTimeInterface
+    public function getCreatedAt(): ?\DateTime
     {
         return $this->created_at;
     }
 
-    public function setCreatedAt(\DateTimeInterface $created_at): self
+    public function setCreatedAt(\DateTime $created_at): self
     {
         $this->created_at = $created_at;
 
         return $this;
     }
 
-    public function getUpdatedAt(): ?\DateTimeInterface
+    public function getUpdatedAt(): ?\DateTime
     {
         return $this->updated_at;
     }
 
-    public function setUpdatedAt(\DateTimeInterface $updated_at): self
+    public function setUpdatedAt(\DateTime $updated_at): self
     {
         $this->updated_at = $updated_at;
 
         return $this;
     }
 
-    public function getImagesProject()
+    public function getImage(): Image
     {
-        return $this->images_project;
+        return $this->image;
     }
 
-    /**
-     * @param ArrayCollection $images_project
-     * @return Project
-     */
-    public function setImagesProject(ArrayCollection $images_project): Project
+    public function setImage(Image $image): self
     {
-        $this->images_project = $images_project;
+        $this->image = $image;
+
         return $this;
     }
 }

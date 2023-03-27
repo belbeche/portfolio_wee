@@ -4,7 +4,36 @@
 
 {% block content %}
 
-    <h1>Page affichage du projet</h1>
+    <div class="container">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <a href="{{ url('front_home') }}">Accueil</a>
+                </li>
+                <li class="breadcrumb-item">
+                    <a href="{{ url('front_project') }}">Mes réalisations</a>
+                </li>
+                <li class="breadcrumb-item active" aria-current="page">{{ project.title }}
+                </li>
+            </ol>
+        </nav>
+    </div>
+
+    <article class="container mt-4 text-center">
+        <h1>{{ project.title }}</h1>
+        <br>
+        <p class="text-secondary">
+            | le
+            {{ project.createdAt|format_datetime('full', 'short', locale='fr') }}
+            | modifié le
+            {{ project.updatedAt|format_datetime('full', 'short', locale='fr') }}</p>
+
+            {#<img src="{{ asset('public/upload_images_project/' ~project.image) }}" alt="{{ project.title }}" class="img-fluid">#}
+
+        <div class="mt-4">
+            {{ project.description|raw }}
+        </div>
+    </article>
 
 
 

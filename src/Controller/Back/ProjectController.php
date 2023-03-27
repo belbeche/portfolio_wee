@@ -2,7 +2,7 @@
 
 namespace App\Controller\Back;
 
-use App\Entity\Images;
+use App\Entity\Image;
 use App\Entity\Project;
 use App\Form\ProjectType;
 use Doctrine\ORM\EntityManagerInterface;
@@ -34,36 +34,26 @@ class ProjectController extends AbstractController
      */
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
-        $newProject = new Project();
+        $project = new Project();
 
-        $form = $this->createForm(ProjectType::class, $newProject);
+        $form = $this->createForm(ProjectType::class, $project);
 
         if ($request->isMethod('POST')) {
             $form->handleRequest($request);
             if ($form->isSubmitted() && $form->isValid()) {
-                $newProject->setCreatedAt(new \DateTime());
-                $newProject->setUpdatedAt(new \DateTime());
-                // On récupère les images transmises
-                $images = $form->get('images_project')->getData();
+                $project->setCreatedAt(new \DateTime('NOW'));
+                $project->setUpdatedAt(new \DateTime('NOW'));
 
-                // Foreach on each image
-                foreach ($images as $image) {
-                    // We generate an hashed name with the extension
-                    $file = md5(uniqid()) . '.' . $image->guessExtension();
+                $imageFile = $form->get('image')->getData();
 
-                    // We copy to the upload folder the image
-                    $image->move(
-                        $this->getParameter('images_directory'),
-                        $file
-                    );
-
-                    // We add image in the database and to the article
-                    $img = new Images();
-                    $img->setName($file);
-                    $img->setImages($newProject);
+                if ($imageFile) {
+                    $image = new Image();
+                    $image->setName($imageFile->getData()->getClientOriginalName());
+                    $image->setData(file_get_contents($imageFile->getData()->getPathName()));
+                    $project->setImage($image);
                 }
 
-                $entityManager->persist($newProject);
+                $entityManager->persist($project);
                 $entityManager->flush();
 
                 return $this->redirectToRoute('back_project_index');
@@ -95,24 +85,14 @@ class ProjectController extends AbstractController
             $form->handleRequest($request);
             if ($form->isSubmitted() && $form->isValid()) {
                 $project->setUpdatedAt(new \DateTime());
-                // On récupère les images transmises
-                $images = $form->get('images_project')->getData();
 
-                // Foreach on each image
-                foreach ($images as $image) {
-                    // We generate an hashed name with the extension
-                    $file = md5(uniqid()) . '.' . $image->guessExtension();
+                $imageFile = $form->get('imageFile')->getData();
 
-                    // We copy to the upload folder the image
-                    $image->move(
-                        $this->getParameter('images_directory'),
-                        $file
-                    );
-
-                    // We add image in the database and to the article
-                    $img = new Images();
-                    $img->setName($file);
-                    $img->setImages($project);
+                if ($imageFile) {
+                    $image = new Image();
+                    $image->setName($imageFile->getClientOriginalName());
+                    $image->setData(file_get_contents($imageFile->getPathName()));
+                    $project->setImageFile($image->getName());
                 }
 
                 $entityManager->persist($project);

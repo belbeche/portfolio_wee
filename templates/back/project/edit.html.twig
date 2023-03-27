@@ -9,9 +9,8 @@
         {% if app.request.attributes.get('_route') == 'back_project_edit' %}
 
             <h2>Gestion des images</h2>
-            {% for image in project.imagesProject %}
                 <div>
-                    <img src="{{ asset('/upload_images_project/'~image.name) }}" alt="{{ image.name }}" width="150">
+                    {#<img src="{{ asset('public/upload_images_project/'~image.name) }}" alt="{{ image.name }}" width="150">#}
 
                     {# We add a link to delete an image (will be managed in Ajax in images.js) #}
 
@@ -21,7 +20,6 @@
                     </a>#}
 
                 </div>
-            {% endfor %}
         {% endif %}
         <br>
         {% include 'back/includes/_project_form.html.twig' %}
