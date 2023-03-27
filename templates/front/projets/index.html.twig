@@ -11,9 +11,7 @@
             {% for project in projects  %}
                 <div class="col-md-3">
                     <div class="card" style="width: 18rem;">
-                        {% if project.image is not null %}
-                            <img src="{{ asset(project.image.data) }}" alt="{{ project.image.name }}"/>
-                        {% endif %}
+                        <img src="{{ asset('/image_project/'~project.image.name) }}" alt="{{ project.image.name }}"/>
                         <div class="card-body">
                             <h5 class="card-title">{{ project.title }}</h5>
                             <p class="card-text">{{ project.description }}.</p>

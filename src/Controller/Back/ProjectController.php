@@ -47,9 +47,19 @@ class ProjectController extends AbstractController
                 $imageFile = $form->get('image')->getData();
 
                 if ($imageFile) {
+
+                    $imageName = uniqid().'.'.$imageFile->getData()->getClientOriginalExtension();
+
+                    /*$imageFile->move($this->getParameter('images_directory'), $imageName);*/
+
+                    $imageFile->getData()->move(
+                        $this->getParameter('images_directory'),
+                        $imageName
+                    );
+
                     $image = new Image();
-                    $image->setName($imageFile->getData()->getClientOriginalName());
-                    $image->setData(file_get_contents($imageFile->getData()->getPathName()));
+                    $image->setName($imageName);
+                    $image->setData($imageFile->getData()->getClientOriginalExtension());
                     $project->setImage($image);
                 }
 

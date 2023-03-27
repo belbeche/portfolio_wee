@@ -28,9 +28,9 @@
             | modifié le
             {{ project.updatedAt|format_datetime('full', 'short', locale='fr') }}</p>
 
-            {#<img src="{{ asset('public/upload_images_project/' ~project.image) }}" alt="{{ project.title }}" class="img-fluid">#}
-
+            <img src="{{ asset('/image_project/'~project.image.name) }}" alt="{{ project.image.name }}" class="img-fluid"/>
         <div class="mt-4">
+            <h2>Description : </h2>
             {{ project.description|raw }}
         </div>
     </article>
