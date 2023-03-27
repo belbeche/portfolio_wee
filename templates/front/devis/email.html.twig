@@ -2,11 +2,20 @@
 
 {% block body_text %}
 
-    Bonjour {{ name }},
+    Bonjour {{ email }},
 
-    Voici votre récapitulatif de devis :
+    <br>
 
     Numéro d'inscription : {{ registrationNumber }}
+
+    <br>
+
+    Votre demande concerne : {{ subject }}
+
+    <br>
+
+    Je reviens vers vous dans 48h/72h maximum, vérifiez votre adresse email, passé ce délais , veuillez me contacter <a
+        href="mailto:wbelbeche.s@gmail.com">Clickez ici</a>
 
 
 {% endblock %}

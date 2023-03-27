@@ -45,7 +45,7 @@ class DevisController extends AbstractController
                     ->subject('Récapitulatif de devis, Portfolio - Wee')
                     ->bcc('wbelbeche.s@gmail.com')
                     ->context([
-                        'name' => $devis->getUser(),
+                        'email' => $devis->getEmail(),
                         'registrationNumber' => $devis->getId(),
                         'subject' => $devis->getTypeDeSiteWeb()
                     ])
