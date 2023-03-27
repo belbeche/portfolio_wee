@@ -44,7 +44,7 @@ class SecurityController extends AbstractController
 
                 $entityManager->flush();
 
-                return $this->redirectToRoute('front_home');
+                return $this->redirectToRoute('app_login');
             }
         }
 

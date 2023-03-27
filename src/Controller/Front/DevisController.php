@@ -42,10 +42,10 @@ class DevisController extends AbstractController
                 $email = (new TemplatedEmail())
                     ->from('wbelbeche.s@gmail.com')
                     ->to($devis->getEmail())
-                    ->subject('Récapitulatif de devis, Portfolio - Wee')
+                    ->subject('Récapitulatif de devis, Walid BELBECHE')
                     ->bcc('wbelbeche.s@gmail.com')
                     ->context([
-                        'email' => $devis->getEmail(),
+                        'email_address' => $devis->getEmail(),
                         'registrationNumber' => $devis->getId(),
                         'subject' => $devis->getTypeDeSiteWeb()
                     ])
