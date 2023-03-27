@@ -6,6 +6,7 @@ use App\Entity\User;
 use App\Entity\Devis;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -20,7 +21,7 @@ class DevisType extends AbstractType
     {
         $builder
             ->add('type_de_site_web', ChoiceType::class, [
-                'label' => 'Type de site web',
+                'label' => false,
                 'choices' => [
                     'Présentation entreprise' => 'site_vitrine',
                     'Site marchand' => 'site_e-commerce',
@@ -34,7 +35,7 @@ class DevisType extends AbstractType
                 'multiple' => false,
             ])
             ->add('attentes_design_web', ChoiceType::class, [
-                'label' => 'Quelles sont vos attentes concernant le design du site ? ',
+                'label' => false,
                 'choices' => [
                     'Un design standard' => 'design_standard',
                     'Vous avez vos propres maquettes' => 'own_wireframe',
@@ -43,10 +44,12 @@ class DevisType extends AbstractType
                 'multiple' => false,
             ])
             ->add('description_projet', TextareaType::class, [
+                'label' => false,
                 'attr' => [
                     'class' => 'form-control',
                 ]
             ])
+            ->add('email', EmailType::class)
             ;
     }
 

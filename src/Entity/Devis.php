@@ -12,7 +12,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
- * @ORM\Entity(repositoryClass=DevisRepository::class)
+ * @ORM\Entity(repositoryClass="App\Repository\DevisRepository", repositoryClass=DevisRepository::class)
  */
 class Devis
 {
@@ -46,9 +46,14 @@ class Devis
 
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="devis")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(nullable=true)
      */
-    private $user;
+    private ?User $user;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $email;
 
     public function __construct()
     {
@@ -122,6 +127,18 @@ class Devis
     public function setUser(?User $user): self
     {
         $this->user = $user;
+
+        return $this;
+    }
+
+    public function getEmail(): ?string
+    {
+        return $this->email;
+    }
+
+    public function setEmail(string $email): self
+    {
+        $this->email = $email;
 
         return $this;
     }

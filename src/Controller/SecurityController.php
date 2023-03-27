@@ -45,7 +45,7 @@ class SecurityController extends AbstractController
                 $entityManager->flush();
 
                 return $this->redirectToRoute(
-                    'app_login',
+                    'front_devis_utilisateur_show',
                     ['id' => $user->getId()],
                 );
             }

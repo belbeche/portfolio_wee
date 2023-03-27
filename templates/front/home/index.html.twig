@@ -5,6 +5,14 @@
 
 {% block content %}
 
+    <div class="container">
+        {% for type, messages in app.flashes %}
+            {% for message in messages %}
+                <div class="alert alert-{{ type }}">{{ message }}</div>
+            {% endfor %}
+        {% endfor %}
+    </div>
+
     <!-- Home Page Top Part -->
     <div class="row">
         <div class=" col-xs-12 col-sm-12">
@@ -217,7 +225,7 @@
                         </div>
 
                         <div class="fw-button-row">
-                            <a href="{% if app.user %} {{ url('front_devis_new', {id : app.user.id}) }} {% else %} {{ url('app_login') }} {% endif %}"
+                            <a href="{{ url('front_devis_new') }}"
                                target="_self" class="btn btn-secondary">Je fais une demande</a>
                         </div>
 
@@ -239,7 +247,7 @@
                         </div>
 
                         <div class="fw-button-row">
-                            <a href="{% if app.user %} {{ url('front_devis_new', {id : app.user.id}) }} {% else %} {{ url('app_login') }} {% endif %}"
+                            <a href="{{ url('front_devis_new') }}"
                                target="_self" class="btn btn-primary">Je fais ma demande</a>
                         </div>
 

@@ -19,10 +19,16 @@
 				class="col-lg-12 mx-auto padding-top-xxl">
 				<!-- Formulaire de devis -->
 				{{ form_start(formDevis) }}
+				<label for="">L'adresse email pour recevoir votre devis</label>
+				{{ form_row(formDevis.email) }}
+				{{ form_errors(formDevis.email) }}
+				<label for="">Type d'application souhaité</label>
 				{{ form_row(formDevis.type_de_site_web)}}
 				{{ form_errors(formDevis.type_de_site_web)}}
+				<label for="">Quelles sont vos attentes concernant le design ?</label>
 				 {{ form_row(formDevis.attentes_design_web)}}
 				{{ form_errors(formDevis.attentes_design_web)}}
+				<label for="">Parlez moi un peu plus de votre projet !</label>
 				{{ form_row(formDevis.description_projet)}}
 				{{ form_errors(formDevis.description_projet)}}
 				<button type="submit" class="btn btn-outline-success my-5">Suivant</button>

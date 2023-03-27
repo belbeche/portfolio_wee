@@ -20,7 +20,7 @@ use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 class DevisController extends AbstractController
 {
     /**
-     * @Route("/devis-en-ligne/{id}", name="front_devis_new")
+     * @Route("/devis-en-ligne", name="front_devis_new")
      * @throws TransportExceptionInterface
      */
     public function new(Request $request, EntityManagerInterface $entityManager, MailerInterface $mailer): Response
@@ -34,46 +34,31 @@ class DevisController extends AbstractController
 
             if ($form->isSubmitted() && $form->isValid()) {
 
-                $user = $entityManager->getRepository(User::class)->findOneBy(['id' => $request->get('id')]);
-                $devis->setUser($user);
+
+                $devis->setUser(null);
                 $entityManager->persist($devis);
-                $entityManager->flush($devis);
+                $entityManager->flush();
 
                 $email = (new TemplatedEmail())
                     ->from('wbelbeche.s@gmail.com')
-                    ->to($user->getEmail())
+                    ->to($devis->getEmail())
                     ->subject('Récapitulatif de devis, Portfolio - Wee')
                     ->bcc('wbelbeche.s@gmail.com')
                     ->context([
-                        'name' => $user->getNom(),
-                        'registrationNumber' => $user->getId(),
+                        'name' => $devis->getUser(),
+                        'registrationNumber' => $devis->getId(),
                         'subject' => $devis->getTypeDeSiteWeb()
                     ])
                     ->htmlTemplate('front/devis/email.html.twig');
 
                 $mailer->send($email);
-
-                return $this->redirectToRoute('front_devis_utilisateur_show');
-            }
+                    $this->addFlash('success', 'Votre demande à bien était prise en compte, vérifiez votre adresse email');
+                    return $this->redirectToRoute('front_home');
+                }
         }
 
         return $this->render('front/devis/new.html.twig', [
             'formDevis' => $form->createView(),
-        ]);
-    }
-
-    /**
-     * @Route("/devis/utilisateur", name="front_devis_utilisateur_show")
-     * 
-     * @param DevisRepository $devisRepo
-     * @return Response
-     */
-    public function Show(EntityManagerInterface $entityManager, Request $request): Response
-    {
-        $user = $entityManager->getRepository(Devis::class)->findBy(['user' => $this->getUser()]);
-
-        return $this->render('front/devis/show.html.twig', [
-            'allQuote' => $user,
         ]);
     }
 }
