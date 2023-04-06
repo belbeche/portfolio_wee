@@ -42,7 +42,7 @@ class ProjectType extends AbstractType
                     'multiple'      => true,
                     'choice_label'   => 'name',
                     'expanded' => false,
-                    'required'    => true,
+                    'required'    => false,
                     'attr' => [
                         'class' => 'select2',
                     ]
