@@ -1,27 +1,34 @@
 {% extends 'base_back.html.twig' %}
 
 {% block content %}
-    <div class="container mt-4">
-        <h1>Modifier le projet {{ project.title }}</h1>
+	<div class="container mt-4">
+		<h1>Modifier le projet
+			{{ project.title }}</h1>
 
-        <hr>
+		<hr>
 
-        {% if app.request.attributes.get('_route') == 'back_project_edit' %}
+		{% if app.request.attributes.get('_route') == 'back_project_edit' %}
+			<hr>
+			<h2>Gestion des images</h2>
+			<div>
+				<img src="{{ asset('/image_project/'~project.image.name) }}" alt="{{ project.image.name }}" class="img-fluid"/>
 
-            <h2>Gestion des images</h2>
-                <div>
-                    {#<img src="{{ asset('public/upload_images_project/'~image.name) }}" alt="{{ image.name }}" width="150">#}
+			{# We add a link to delete an image (will be managed in Ajax in images.js) #}
+				{# <a href="{{ path('back_articles_remove_image', {id: image.id})}}" data-delete data-token="{{ csrf_token('delete' ~ image.id )}}">
+													<i class="bi bi-file-earmark-x"></i>
+													Supprimer
+												</a> #}
+			</div>
+		{% endif %}
+		<br>
+		{% include 'back/includes/_project_form.html.twig' %}
 
-                    {# We add a link to delete an image (will be managed in Ajax in images.js) #}
+	</div>
 
-                    {#<a href="{{ path('back_articles_remove_image', {name: image.name})}}" data-delete data-token="{{ csrf_token('delete' ~image.name )}}">
-                        <i class="bi bi-file-earmark-x"></i>
-                        Supprimer
-                    </a>#}
+	<script>
+		$(document).ready(function () {
+$('.select2').select2();
+});
+	</script>
 
-                </div>
-        {% endif %}
-        <br>
-        {% include 'back/includes/_project_form.html.twig' %}
-    </div>
 {% endblock %}

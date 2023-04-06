@@ -1,24 +1,33 @@
 {% extends 'base_back.html.twig' %}
 
-{% block title %}Back controller project{% endblock %}
+{% block title %}Back controller project
+{% endblock %}
 
 {% block content %}
 
-    <h1>Page back project</h1>
+	<h1>Ajouter un project</h1>
 
-    {{ form_start(projectForm) }}
+	{% if app.request.attributes.get('_route') == 'back_project_edit' %}
+		<hr>
+		<h2>Gestion des images</h2>
+		<div>
+			<img
+			src="{{ asset('/image_project/'~project.image.name) }}" alt="{{ project.image.name }}" class="img-fluid"/>
 
-    {{ form_row(projectForm.title) }}
-    {{ form_errors(projectForm.title) }}
+			{# We add a link to delete an image (will be managed in Ajax in images.js) #}
+			<a href="{{ path('back_articles_remove_image', {id: image.id})}}" data-delete data-token="{{ csrf_token('delete' ~ image.id )}}">
+				<i class="bi bi-file-earmark-x"></i>
+				Supprimer
+			</a>
+		</div>
+	{% endif %}
+	<br>
+	{% include 'back/includes/_project_form.html.twig' %}
 
-    {{ form_row(projectForm.description) }}
-    {{ form_errors(projectForm.description) }}
-
-{#    {{ form_row(projectForm.image) }}
-    {{ form_errors(projectForm.image) }}#}
-
-    <button type="submit">Créer projet</button>
-
-    {{ form_end(projectForm) }}
+	<script>
+		$(document).ready(function () {
+$('.select2').select2();
+});
+	</script>
 
 {% endblock %}

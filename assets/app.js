@@ -13,6 +13,7 @@ import './styles/bootstrap.min.css';
 import './styles/owl.carousel.css';
 import './styles/magnific-popup.css';
 import './styles/main.css';
+import './styles/header.css';
 
 // start the Stimulus application
 import './bootstrap';

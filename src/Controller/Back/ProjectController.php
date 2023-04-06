@@ -48,7 +48,7 @@ class ProjectController extends AbstractController
 
                 if ($imageFile) {
 
-                    $imageName = uniqid().'.'.$imageFile->getData()->getClientOriginalExtension();
+                    $imageName = uniqid() . '.' . $imageFile->getData()->getClientOriginalExtension();
 
                     /*$imageFile->move($this->getParameter('images_directory'), $imageName);*/
 
@@ -86,8 +86,7 @@ class ProjectController extends AbstractController
         Project                $project,
         Request                $request,
         EntityManagerInterface $entityManager
-    ): Response
-    {
+    ): Response {
 
         $form = $this->createForm(ProjectType::class, $project);
 
@@ -96,13 +95,23 @@ class ProjectController extends AbstractController
             if ($form->isSubmitted() && $form->isValid()) {
                 $project->setUpdatedAt(new \DateTime());
 
-                $imageFile = $form->get('imageFile')->getData();
+                $imageFile = $form->get('image')->getData();
 
                 if ($imageFile) {
+
+                    $imageName = uniqid() . '.' . $imageFile->getData()->getClientOriginalExtension();
+
+                    /*$imageFile->move($this->getParameter('images_directory'), $imageName);*/
+
+                    $imageFile->getData()->move(
+                        $this->getParameter('images_directory'),
+                        $imageName
+                    );
+
                     $image = new Image();
-                    $image->setName($imageFile->getClientOriginalName());
-                    $image->setData(file_get_contents($imageFile->getPathName()));
-                    $project->setImageFile($image->getName());
+                    $image->setName($imageName);
+                    $image->setData($imageFile->getData()->getClientOriginalExtension());
+                    $project->setImage($image);
                 }
 
                 $entityManager->persist($project);
@@ -113,9 +122,8 @@ class ProjectController extends AbstractController
         }
 
         return $this->render('back/project/edit.html.twig', [
-            'projectEdit' => $form->createView(),
+            'projectForm' => $form->createView(),
             'project' => $project,
         ]);
     }
-
 }
