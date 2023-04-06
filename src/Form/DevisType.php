@@ -44,13 +44,17 @@ class DevisType extends AbstractType
                 ],
                 'multiple' => false,
             ])
-            ->add('description_projet', CKEditorType::class, [
+            ->add('description_projet', TextareaType::class, [
                 'label' => false,
                 'attr' => [
                     'placeholder' => 'Merci de décrire votre projet...',
                 ]
             ])
-            ->add('email', EmailType::class);
+            ->add('email', EmailType::class, [
+                'attr' => [
+                    'placeholder' => 'Votre adresse email',
+                ]
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

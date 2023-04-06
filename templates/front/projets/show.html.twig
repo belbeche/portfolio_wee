@@ -39,7 +39,7 @@
 						<h3>Categories :
 						</h3>
 						{% for categorie in project.categories %}
-							<div>
+							<div class="select2">
 								{{ categorie.name }}
 							</div>
 						{% endfor %}
@@ -53,5 +53,11 @@
 
 		</article>
 	</section>
+
+	<script>
+		$(document).ready(function () {
+$('.select2').select2();
+});
+	</script>
 
 {% endblock %}
