@@ -1,26 +1,27 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Mes réalisations{% endblock %}
+{% block title %}Mes réalisations
+{% endblock %}
 
 {% block content %}
 
-    <h1>Page des réalisations</h1>
+	<h1>Envie d'avoir une visibilité sur le web ? Discutons de votre besoin !</h1>
 
-    <div class="container">
-        <div class="row">
-            {% for project in projects  %}
-                <div class="col-md-3">
-                    <div class="card" style="width: 18rem;">
-                        <img src="{{ asset('/image_project/'~project.image.name) }}" alt="{{ project.image.name }}"/>
-                        <div class="card-body">
-                            <h5 class="card-title">{{ project.title }}</h5>
-                            <p class="card-text">{{ project.description }}.</p>
-                            <a href="{{ url('front_project_show', {id: project.id }) }}" class="btn btn-primary">Voir le projet</a>
-                        </div>
-                    </div>
-                </div>
-            {% endfor %}
-        </div>
-    </div>
+	<div class="container">
+		<div class="row">
+			{% for project in projects  %}
+				<div class="col-md-3">
+					<div class="card" style="width: 18rem;">
+						<img src="{{ asset('/image_project/'~project.image.name) }}" alt="{{ project.image.name }}"/>
+						<div class="card-body">
+							<h5 class="card-title">{{ project.title }}</h5>
+							<p class="card-text">{{ project.description }}.</p>
+							<a href="{{ url('front_devis_new') }}" class="btn btn-primary">Je crée mon devis</a>
+						</div>
+					</div>
+				</div>
+			{% endfor %}
+		</div>
+	</div>
 
 {% endblock %}
