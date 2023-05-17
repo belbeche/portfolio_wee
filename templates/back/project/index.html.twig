@@ -35,7 +35,7 @@
 					<td>
 						<a href="">Voir</a>
 						<a href="{{ url('back_project_edit', {id: project.id}) }}">Editer</a>
-						<a href="">Supprimé</a>
+						<a href="{{ url('back_project_remove', {id: project.id}) }}">Supprimé</a>
 					</td>
 				</tr>
 			{% endfor %}

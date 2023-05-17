@@ -126,4 +126,25 @@ class ProjectController extends AbstractController
             'project' => $project,
         ]);
     }
+    /**
+     * @Route("/admin/project/remove/{id}", name="back_project_remove")
+     * @return Response
+     * @IsGranted("ROLE_ADMIN")
+     */
+    public function remove(
+        Project $project,
+        Request $request,
+        EntityManagerInterface $entityManager
+    ): Response {
+
+        if ($project->getCreatedAt(true)) {
+            $this->addFlash('success', "Le projet " . $project->getTitle() . " est supprimé avec success !");
+            $entityManager->remove($project);
+            $entityManager->flush();
+        } else {
+            $this->addFlash('success', "Le projet " . $project->getTitle() . " est activé, disactivez-le puis réessayer, merci.");
+        }
+
+        return $this->redirectToRoute('back_project_index');
+    }
 }
