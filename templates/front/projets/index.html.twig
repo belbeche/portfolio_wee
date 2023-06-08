@@ -10,8 +10,8 @@
 	<div class="container">
 		<div class="row">
 			{% for project in projects  %}
-				<div class="col-md-3">
-					<div class="card" style="width: 18rem;">
+				<div class="col-md-3 col-xs-12">
+					<div class="card">
 						<img src="{{ asset('/image_project/'~project.image.name) }}" alt="{{ project.image.name }}"/>
 						<div class="card-body">
 							<h5 class="card-title">{{ project.title }}</h5>
