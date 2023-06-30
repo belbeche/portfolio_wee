@@ -53,9 +53,9 @@ class DevisController extends AbstractController
                     ->htmlTemplate('front/devis/email.html.twig');
 
                 $mailer->send($email);
-                    $this->addFlash('success', 'Votre demande à bien était prise en compte, vérifiez votre adresse email');
-                    return $this->redirectToRoute('front_home');
-                }
+                $this->addFlash('success', 'Votre demande à bien était prise en compte, vérifiez votre adresse email');
+                return $this->redirectToRoute('front_home');
+            }
         }
 
         return $this->render('front/devis/new.html.twig', [

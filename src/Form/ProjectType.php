@@ -26,6 +26,7 @@ class ProjectType extends AbstractType
                 ],
             ])
             ->add('image', ImageType::class, [
+                'label' => 'Parcourir',
                 'mapped' => false,
                 'required' => false
             ])
@@ -41,7 +42,7 @@ class ProjectType extends AbstractType
                     /*'expanded' => true,*/
                     'multiple'      => true,
                     'choice_label'   => 'name',
-                    'expanded' => false,
+                    'expanded' => true,
                     'required'    => false,
                     'attr' => [
                         'class' => 'select2',

@@ -2,11 +2,12 @@
 
 namespace App\Controller\Front;
 
+use App\Entity\Devis;
 use App\Entity\Project;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class ProjetsController extends AbstractController
 {
@@ -18,7 +19,6 @@ class ProjetsController extends AbstractController
     {
 
         $projects = $entityManager->getRepository(Project::class)->findAll();
-
         return $this->render('front/projets/index.html.twig', [
             'projects' => $projects,
         ]);
@@ -27,10 +27,9 @@ class ProjetsController extends AbstractController
     /**
      * @Route("/realisations/{id}", name="front_project_show")
      */
-    public function show(EntityManagerInterface $entityManager,Project $id): Response
+    public function show(EntityManagerInterface $entityManager, Project $project): Response
     {
-        $project = $entityManager->getRepository(Project::class)->find($id);
-
+        $project = $entityManager->getRepository(Project::class)->find($project);
         return $this->render('front/projets/show.html.twig', [
             'project' => $project,
         ]);
