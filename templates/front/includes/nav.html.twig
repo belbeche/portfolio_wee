@@ -26,12 +26,13 @@
 				</li>
 
 				<li class="menu-item">
+					<a href="{{ url('front_devis_new') }}" class="btn btn-outline-info">Créer devis</a>
+				</li>
+
+				<li class="menu-item">
 					<a href="mailto:wbelbeche.s@gmail.com">Contact</a>
 				</li>
 				{% if is_granted('ROLE_USER') %}
-					<li class="menu-item">
-						<a href="{{ url('front_devis_new') }}" class="btn btn-outline-info">Créer devis</a>
-					</li>
 					<li class="menu-item">
 						<a href="{{ url('app_logout') }}" class="btn btn-outline-danger">Déconnexion</a>
 					</li>
