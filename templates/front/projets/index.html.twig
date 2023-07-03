@@ -13,7 +13,8 @@
 			{% for project in projects  %}
 				<div class="col-md-3 col-xs-12 mb-5 mt-2">
 					<div class="card">
-						<img src="{{ asset('/image_project/'~project.image.name) }}" alt="{{ project.image.name }}"/>
+						<a href="{{ asset('/image_project/'~project.image.name) }}"><img src="{{ asset('/image_project/'~project.image.name) }}" alt="{{ project.image.name }}" class="img-fluid"/></a>
+
 						<div class="card-body">
 							<h5 class="card-title">{{ project.title }}</h5>
 							<p class="card-text">{{ project.description }}.</p>
