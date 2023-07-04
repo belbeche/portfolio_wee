@@ -1,0 +1,51 @@
+.img_profil {
+    width: 10%;
+    -ms-flex-align: center;
+}
+
+@media only screen and (max-width: 320px) {
+    .img_profil {
+        width: 100%;
+    }
+}
+
+.modal-sheet {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: fixed;
+    z-index: 999;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    overflow: auto;
+}
+
+.modal-dialog {
+    width: 100%;
+    max-width: 600px;
+    background-color: #fff;
+    border-radius: 0;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+
+.modal-header {
+    border-bottom: none;
+}
+
+.modal-body {
+    padding: 20px;
+}
+
+.fullscreen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
