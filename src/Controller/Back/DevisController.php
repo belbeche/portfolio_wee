@@ -9,7 +9,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class DevisController extends AbstractController
 {
     /**
-     * @Route("/admin/devis", name="back_devis")
+     * @Route("/admin/devis", name="back_devis_index")
      */
     public function index(): Response
     {

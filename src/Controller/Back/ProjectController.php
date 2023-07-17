@@ -6,11 +6,13 @@ use App\Entity\Image;
 use App\Entity\Project;
 use App\Form\ProjectType;
 use Doctrine\ORM\EntityManagerInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class ProjectController extends AbstractController
 {
@@ -41,38 +43,36 @@ class ProjectController extends AbstractController
         if ($request->isMethod('POST')) {
             $form->handleRequest($request);
             if ($form->isSubmitted() && $form->isValid()) {
-                $project->setCreatedAt(new \DateTime('NOW'));
-                $project->setUpdatedAt(new \DateTime('NOW'));
-
-                $imageFile = $form->get('image')->getData();
-
-                if ($imageFile) {
-
-                    $imageName = uniqid() . '.' . $imageFile->getData()->getClientOriginalExtension();
-
-                    /*$imageFile->move($this->getParameter('images_directory'), $imageName);*/
-
-                    $imageFile->getData()->move(
-                        $this->getParameter('images_directory'),
-                        $imageName
-                    );
-
-                    $image = new Image();
-                    $image->setName($imageName);
-                    $image->setData($imageFile->getData()->getClientOriginalExtension());
-                    $project->setImage($image);
+                $project->setUpdatedAt(new \DateTime());
+    
+                // Récupérer les fichiers d'images uploadés
+                $imageFiles = $form->get('images')->getData();
+    
+                foreach ($imageFiles as $imageFile) {
+                    if ($imageFile instanceof UploadedFile) {
+                        $imageName = uniqid() . '.' . $imageFile->getClientOriginalExtension();
+    
+                        $imageFile->move(
+                            $this->getParameter('images_directory'),
+                            $imageName
+                        );
+    
+                        $image = new Image();
+                        $image->setName($imageName);
+                        $project->addImage($image);
+                    }
                 }
-
+    
                 $entityManager->persist($project);
                 $entityManager->flush();
-
+    
                 return $this->redirectToRoute('back_project_index');
             }
         }
-
-
+    
         return $this->render('back/project/new.html.twig', [
             'projectForm' => $form->createView(),
+            'project' => $project,
         ]);
     }
 
@@ -87,40 +87,52 @@ class ProjectController extends AbstractController
         Request                $request,
         EntityManagerInterface $entityManager
     ): Response {
-
         $form = $this->createForm(ProjectType::class, $project);
-
+        $originalImages = new ArrayCollection();
+    
+        // Créer une copie des images originales du projet
+        foreach ($project->getImages() as $image) {
+            $originalImages->add($image);
+        }
+    
         if ($request->isMethod('POST')) {
             $form->handleRequest($request);
             if ($form->isSubmitted() && $form->isValid()) {
                 $project->setUpdatedAt(new \DateTime());
-
-                $imageFile = $form->get('image')->getData();
-
-                if ($imageFile) {
-
-                    $imageName = uniqid() . '.' . $imageFile->getData()->getClientOriginalExtension();
-
-                    /*$imageFile->move($this->getParameter('images_directory'), $imageName);*/
-
-                    $imageFile->getData()->move(
-                        $this->getParameter('images_directory'),
-                        $imageName
-                    );
-
-                    $image = new Image();
-                    $image->setName($imageName);
-                    $image->setData($imageFile->getData()->getClientOriginalExtension());
-                    $project->setImage($image);
+    
+                // Supprimer les images qui ont été supprimées du formulaire
+                foreach ($originalImages as $image) {
+                    if (!$project->getImages()->contains($image)) {
+                        $entityManager->remove($image);
+                    }
                 }
-
+    
+                // Récupérer les fichiers d'images uploadés
+                $imageFiles = $form->get('images')->getData();
+    
+                foreach ($imageFiles as $imageFile) {
+                    if ($imageFile instanceof UploadedFile) {
+                        $imageName = uniqid() . '.' . $imageFile->getClientOriginalExtension();
+                        $imageExtension = $imageFile->getClientOriginalExtension();
+                
+                        $imageFile->move(
+                            $this->getParameter('images_directory'),
+                            $imageName
+                        );
+                
+                        $image = new Image();
+                        $image->setName($imageName);
+                        $project->addImage($image);
+                    }
+                }
+    
                 $entityManager->persist($project);
                 $entityManager->flush();
-
+    
                 return $this->redirectToRoute('back_project_index');
             }
         }
-
+    
         return $this->render('back/project/edit.html.twig', [
             'projectForm' => $form->createView(),
             'project' => $project,
@@ -142,7 +154,7 @@ class ProjectController extends AbstractController
             $entityManager->remove($project);
             $entityManager->flush();
         } else {
-            $this->addFlash('success', "Le projet " . $project->getTitle() . " est activé, disactivez-le puis réessayer, merci.");
+            $this->addFlash('success', "Le projet " . $project->getTitle() . " est inexistant ou a déjà été supprimé");
         }
 
         return $this->redirectToRoute('back_project_index');

@@ -2,8 +2,10 @@
 
 namespace App\Controller\Front;
 
+use App\Entity\Category;
 use App\Entity\Devis;
 use App\Entity\Project;
+use App\Repository\CategoryRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -31,7 +33,7 @@ class ProjetsController extends AbstractController
     {
         $project = $entityManager->getRepository(Project::class)->find($project);
         return $this->render('front/projets/show.html.twig', [
-            'project' => $project,
+            'project' => $project
         ]);
     }
 }

@@ -2,8 +2,9 @@
 
 namespace App\Entity;
 
-use App\Repository\CategoryRepository;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\CategoryRepository;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * @ORM\Entity(repositoryClass=CategoryRepository::class)
@@ -23,10 +24,15 @@ class Category
     private $name;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Project::class, inversedBy="categories")
+     * @ORM\ManyToMany(targetEntity=Project::class, mappedBy="categories", cascade={"persist"})
      * @ORM\JoinColumn(nullable=false)
      */
-    private $project;
+    private $projects;
+
+    public function __construct()
+    {
+        $this->projects = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -45,14 +51,29 @@ class Category
         return $this;
     }
 
-    public function getProject(): ?Project
+    /**
+    * @return Collection|Project[]
+    */
+    public function getProjects(): Collection
     {
-        return $this->project;
+        return $this->projects;
     }
 
-    public function setProject(?Project $project): self
+    public function addProject(Project $project): self
     {
-        $this->project = $project;
+        if (!$this->projects->contains($project)) {
+            $this->projects[] = $project;
+            $project->addCategory($this);
+        }
+
+        return $this;
+    }
+
+    public function removeProject(Project $project): self
+    {
+        if ($this->projects->removeElement($project)) {
+            $project->removeCategory($this);
+        }
 
         return $this;
     }

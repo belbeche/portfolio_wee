@@ -40,20 +40,28 @@ class Project
     private ?\DateTime $updated_at;
 
     /**
-     * @ORM\OneToOne(targetEntity="Image", cascade={"persist"})
-     * @ORM\JoinColumn(name="image_id", referencedColumnName="id")
+     * @ORM\OneToMany(targetEntity=Image::class, mappedBy="project", cascade={"persist"}, orphanRemoval=true)
+     * @ORM\JoinColumn(name="project_id", referencedColumnName="id")
      */
-    private Image $image;
-
+    private $images;
     /**
-     * @ORM\OneToMany(targetEntity=Category::class, mappedBy="project")
+     * @ORM\ManyToMany(targetEntity=Category::class, inversedBy="projects", cascade={"persist"})
+     * @ORM\JoinTable(name="project_category")
      */
     private $categories;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $link;
 
     public function __construct()
     {
         $this->categories = new ArrayCollection();
+        $this->images = new ArrayCollection();
+        $this->created_at = new \DateTime('NOW');
     }
+
 
     public function getId(): ?int
     {
@@ -108,20 +116,38 @@ class Project
         return $this;
     }
 
-    public function getImage(): Image
+    /**
+     * @return Collection|Image[]
+     */
+    public function getImages(): Collection
     {
-        return $this->image;
+        return $this->images;
     }
 
-    public function setImage(Image $image): self
+    public function addImage(Image $image): self
     {
-        $this->image = $image;
+        if (!$this->images->contains($image)) {
+            $this->images[] = $image;
+            $image->setProject($this);
+        }
+
+        return $this;
+    }
+
+    public function removeImage(Image $image): self
+    {
+        if ($this->images->removeElement($image)) {
+            // set the owning side to null (unless already changed)
+            if ($image->getProject() === $this) {
+                $image->setProject(null);
+            }
+        }
 
         return $this;
     }
 
     /**
-     * @return Collection<int, Category>
+     * @return Collection|Category[]
      */
     public function getCategories(): Collection
     {
@@ -132,7 +158,7 @@ class Project
     {
         if (!$this->categories->contains($category)) {
             $this->categories[] = $category;
-            $category->setProject($this);
+                $category->addProject($this);
         }
 
         return $this;
@@ -141,11 +167,20 @@ class Project
     public function removeCategory(Category $category): self
     {
         if ($this->categories->removeElement($category)) {
-            // set the owning side to null (unless already changed)
-            if ($category->getProject() === $this) {
-                $category->setProjectId(null);
-            }
+            $category->removeProject($this);
         }
+
+        return $this;
+    }
+
+    public function getLink(): ?string
+    {
+        return $this->link;
+    }
+
+    public function setLink(?string $link): self
+    {
+        $this->link = $link;
 
         return $this;
     }

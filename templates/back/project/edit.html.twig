@@ -10,13 +10,9 @@
 		{% if app.request.attributes.get('_route') == 'back_project_edit' %}
 			<h2>Gestion des images</h2>
 			<div>
-				<img src="{{ asset('/image_project/'~project.image.name) }}" alt="{{ project.image.name }}" class="img-fluid"/>
-
-			{# We add a link to delete an image (will be managed in Ajax in images.js) #}
-				{# <a href="{{ path('back_articles_remove_image', {id: image.id})}}" data-delete data-token="{{ csrf_token('delete' ~ image.id )}}">
-																																					<i class="bi bi-file-earmark-x"></i>
-																																					Supprimer
-																																				</a> #}
+				{% for image in project.images %}
+					<a href="{{ asset('/image_project/'~image.name) }}"><img src="{{ asset('/image_project/'~image.name) }}" class="img-fluid" alt="{{ image.name }}"/></a>
+				{% endfor %}
 			</div>
 		{% endif %}
 		<br>

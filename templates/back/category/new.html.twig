@@ -1,0 +1,17 @@
+{% extends 'base_back.html.twig' %}
+
+{% block content %}
+
+	<div class="container" style="padding-top: 50px">
+		<h1>Ajout d'une nouvelle categorie</h1>
+
+		<div class="form-group">
+			{{ form_start(categoryForm) }}
+			<label for="">Titre de la categorie</label>
+			{{ form_widget(categoryForm.name, {'attr': {'class': 'form-control'}}) }}
+
+			<button type="submit" class="btn btn-primary mt-4">Soumettre</button>
+			{{ form_end(categoryForm) }}
+		</div>
+	</div>
+{% endblock %}

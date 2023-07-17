@@ -1,0 +1,80 @@
+<div id="content" class="page-content site-content single-post" role="main">
+
+	<div class="row">
+		<div
+			class=" col-xs-12 col-sm-12 ">
+			<!-- Portfolio Content -->
+			<div id="portfolio_content_q" class="portfolio-content">
+
+				<ul class="portfolio-filters">
+					<li class="active">
+						<a class="filter btn btn-sm btn-link" data-group="all">Toutes catégorie</a>
+					</li>
+
+					<li>
+						<a class="filter btn btn-sm btn-link" data-group="category_detailed">Détaillé</a>
+					</li>
+
+					<li>
+						<a class="filter btn btn-sm btn-link" data-group="category_direct-url">URL direct</a>
+					</li>
+
+					<li>
+						<a class="filter btn btn-sm btn-link" data-group="category_image">Image</a>
+					</li>
+				</ul>
+
+
+				<!-- Portfolio Grid -->
+				<div
+					class="portfolio-grid two-columns shuffle">
+
+					<!-- for each item -->
+					{% for project in projects  %}
+						<figure class="item standard" data-groups='["all", "category_detailed"]'>
+							<div class="portfolio-item-img">
+								{% for image in project.images %}
+									<a href="{{ asset('/image_project/'~image.name) }}"><img src="{{ asset('/image_project/'~image.name) }}" alt="{{ image.name }}"/></a>
+								{% endfor %}
+								<a href="{{ url('front_project_show', {id: project.id}) }}"></a>
+							</div>
+
+							<i class="far fa-file-alt"></i>
+							<h4 class="name">{{ project.title }}</h4>
+							<span class="category">{{ project.description }}</span>
+						</figure>
+					{% endfor %}
+					<!-- /for each item -->
+
+					<!-- Portfolio Item 8 
+																																																													<figure class="item direct" data-groups='["all", "category_direct-url"]'>
+																																																														<div class="portfolio-item-img">
+																																																															<img src="./img/portfolio/8.jpg" alt="Direct URL" title=""/>
+																																																															<a target="_blank" href="https://themeforest.net/user/lmpixels/portfolio"></a>
+																																																														</div>
+																																																				
+																																																														<i class="fa fa-link"></i>
+																																																														<h4 class="name">Direct URL</h4>
+																																																														<span class="category">Direct URL</span>
+																																																													</figure>
+																																																													<!-- /Portfolio Item 8 
+																																																				
+																																																													<!-- Portfolio Item 9 
+																																																													<figure class="item lbimage" data-groups='["all", "category_image"]'>
+																																																														<div class="portfolio-item-img">
+																																																															<img src="./img/portfolio/9.jpg" alt="Image 1" title=""/>
+																																																															<a class="lightbox" title="Image 1" href="./img/portfolio/full/5.jpg"></a>
+																																																														</div>
+																																																				
+																																																														<i class="fa fa-image"></i>
+																																																														<h4 class="name">Image 1</h4>
+																																																														<span class="category">Image</span>
+																																																													</figure>
+																																																													<!-- /Portfolio Item 9 
+																																																												</div>
+																																																												<!-- /Portfolio Content -->
+				</div>
+			</div>
+		</div>
+	</div>
+</div></div></div>
