@@ -1,0 +1,29 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Une erreur s'est produite
+{% endblock %}
+
+{% block content %}
+
+	<div id="main" class="site-main">
+		<div id="main-content" class="single-page-content nothing-found">
+			<div id="primary" class="content-area">
+
+				<div id="content" class="page-content site-content single-post" role="main">
+
+					<div class="page-content">
+						<h1 class="nf-page-title">404</h1>
+						<p>Il semble que rien n'ait été trouvé à cet endroit.</p>
+						<div class="d-block">
+							<a href="{{ url('front_home')}}">Revenir à l'Accueil</a>
+							|
+							<a href="{{ url('front_project')}}">Voir mes réalisations</a>
+						</div>
+					</div>
+
+				</div>
+			</div>
+		</div>
+	</div>
+
+{% endblock %}
