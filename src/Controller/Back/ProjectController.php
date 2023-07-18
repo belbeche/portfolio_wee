@@ -10,6 +10,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -158,5 +159,34 @@ class ProjectController extends AbstractController
         }
 
         return $this->redirectToRoute('back_project_index');
+    }
+
+    /**
+     * @Route("/back/project/remove/image/{name}", name="back_project_remove_image", methods={"GET","DELETE"})
+     * @IsGranted("ROLE_ADMIN")
+     */
+    public function deleteImage(Image $image, Request $request,EntityManagerInterface $entityManager)
+    {
+        $data = json_decode($request->getContent(), true);
+
+        // We check if the token is valid
+        if ($this->isCsrfTokenValid('delete' . $image->getName(), $data['_token'])) {
+
+            // We get the name of the image
+            $nom = $image->getName();
+
+            // We delete the file
+            unlink($this->getParameter('images_directory') . '/' . $nom);
+
+            // We delete the entry from the database
+
+            $entityManager->remove($image);
+            $entityManager->flush();
+
+            // We answer in json
+            return new JsonResponse(['success' => 1]);
+        } else {
+            return new JsonResponse(['error' => 'Token Invalide'], 400);
+        }
     }
 }

@@ -2,67 +2,67 @@
   "entrypoints": {
     "app": {
       "js": [
-        "/portfolio_wee/public/build/runtime.725dd7e0.js",
-        "/portfolio_wee/public/build/768.30b53ee5.js",
-        "/portfolio_wee/public/build/386.23396cdc.js",
-        "/portfolio_wee/public/build/109.85974240.js",
-        "/portfolio_wee/public/build/app.107f9545.js"
+        "/build/runtime.725dd7e0.js",
+        "/build/768.30b53ee5.js",
+        "/build/386.23396cdc.js",
+        "/build/109.85974240.js",
+        "/build/app.107f9545.js"
       ],
       "css": [
-        "/portfolio_wee/public/build/app.bca92508.css"
+        "/build/app.0c73b3a8.css"
       ]
     },
     "jquery": {
       "js": [
-        "/portfolio_wee/public/build/runtime.725dd7e0.js",
-        "/portfolio_wee/public/build/768.30b53ee5.js",
-        "/portfolio_wee/public/build/386.23396cdc.js",
-        "/portfolio_wee/public/build/255.7f520948.js",
-        "/portfolio_wee/public/build/568.0813d0b6.js",
-        "/portfolio_wee/public/build/jquery.b89bad47.js"
+        "/build/runtime.725dd7e0.js",
+        "/build/768.30b53ee5.js",
+        "/build/386.23396cdc.js",
+        "/build/255.7f520948.js",
+        "/build/568.0813d0b6.js",
+        "/build/jquery.b89bad47.js"
       ]
     },
     "imagesloaded": {
       "js": [
-        "/portfolio_wee/public/build/runtime.725dd7e0.js",
-        "/portfolio_wee/public/build/768.30b53ee5.js",
-        "/portfolio_wee/public/build/386.23396cdc.js",
-        "/portfolio_wee/public/build/imagesloaded.4ddf5ea8.js"
+        "/build/runtime.725dd7e0.js",
+        "/build/768.30b53ee5.js",
+        "/build/386.23396cdc.js",
+        "/build/imagesloaded.4ddf5ea8.js"
       ]
     },
     "owl.carousel": {
       "js": [
-        "/portfolio_wee/public/build/runtime.725dd7e0.js",
-        "/portfolio_wee/public/build/768.30b53ee5.js",
-        "/portfolio_wee/public/build/386.23396cdc.js",
-        "/portfolio_wee/public/build/255.7f520948.js",
-        "/portfolio_wee/public/build/568.0813d0b6.js",
-        "/portfolio_wee/public/build/80.3b2ed425.js",
-        "/portfolio_wee/public/build/owl.carousel.70280d38.js"
+        "/build/runtime.725dd7e0.js",
+        "/build/768.30b53ee5.js",
+        "/build/386.23396cdc.js",
+        "/build/255.7f520948.js",
+        "/build/568.0813d0b6.js",
+        "/build/80.3b2ed425.js",
+        "/build/owl.carousel.70280d38.js"
       ]
     },
     "jquery.googlemap": {
       "js": [
-        "/portfolio_wee/public/build/runtime.725dd7e0.js",
-        "/portfolio_wee/public/build/768.30b53ee5.js",
-        "/portfolio_wee/public/build/386.23396cdc.js",
-        "/portfolio_wee/public/build/jquery.googlemap.498bacdf.js"
+        "/build/runtime.725dd7e0.js",
+        "/build/768.30b53ee5.js",
+        "/build/386.23396cdc.js",
+        "/build/jquery.googlemap.498bacdf.js"
       ]
     },
     "validator": {
       "js": [
-        "/portfolio_wee/public/build/runtime.725dd7e0.js",
-        "/portfolio_wee/public/build/768.30b53ee5.js",
-        "/portfolio_wee/public/build/386.23396cdc.js",
-        "/portfolio_wee/public/build/255.7f520948.js",
-        "/portfolio_wee/public/build/validator.aa206678.js"
+        "/build/runtime.725dd7e0.js",
+        "/build/768.30b53ee5.js",
+        "/build/386.23396cdc.js",
+        "/build/255.7f520948.js",
+        "/build/validator.aa206678.js"
       ]
     },
     "main": {
       "js": [
-        "/portfolio_wee/public/build/runtime.725dd7e0.js",
-        "/portfolio_wee/public/build/768.30b53ee5.js",
-        "/portfolio_wee/public/build/main.4fb47f19.js"
+        "/build/runtime.725dd7e0.js",
+        "/build/768.30b53ee5.js",
+        "/build/main.4fb47f19.js"
       ]
     }
   }

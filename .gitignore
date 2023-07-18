@@ -1,6 +1,7 @@
 
 ###> symfony/framework-bundle ###
 /.env
+webpack.config.js
 /.env.local
 /.env.local.php
 /.env.*.local
