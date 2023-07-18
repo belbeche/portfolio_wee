@@ -47,7 +47,7 @@
 					<div class="owl-carousel portfolio-page-carousel">
 						{% for image in project.images %}
 							<div class="item">
-								<a href="{{ asset('/image_project/'~image.name) }}"><img src="{{ asset('/image_project/'~image.name) }}" alt="{{ image.name }}"/></a>
+								<a href="{{ asset('image_project/'~image.name) }}"><img src="{{ asset('image_project/'~image.name) }}" alt="{{ image.name }}"/></a>
 							</div>
 						{% endfor %}
 					</div>

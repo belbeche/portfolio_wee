@@ -32,11 +32,11 @@
 					<!-- for each item -->
 
 					{% for project in projects  %}
-						<figure class="item standard" data-groups='["all", "category_detailed"]'>
+						<figure class="item standard" data-groups='["category_all", "category_detailed"]'>
 
 							<div class="portfolio-item-img">
 								{% for image in project.images %}
-									<img src="{{ asset('/image_project/'~image.name) }}" alt="{{ image.name }}"/>
+									<img src="{{ asset('image_project/'~image.name) }}" alt="{{ image.name }}"/>
 								{% endfor %}
 								<a href="{{ url('front_project_show', {id: project.id}) }}"></a>
 							</div>
