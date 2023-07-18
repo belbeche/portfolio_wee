@@ -6,35 +6,37 @@
 
 {% block content %}
 
-<a href="{{ url('back_category_new') }}" class="ml-auto btn btn-primary">Créer une nouvelle categorie</a>
+	<a href="{{ url('back_category_new') }}" class="ml-auto btn btn-primary">Créer une nouvelle categorie</a>
 
-{% for type, messages in app.flashes %}
-	{% for message in messages %}
-		<div class="alert alert-{{ type }}">{{ message }}</div>
+	{% for type, messages in app.flashes %}
+		{% for message in messages %}
+			<div class="alert alert-{{ type }}">{{ message }}</div>
+		{% endfor %}
 	{% endfor %}
-{% endfor %}
 
-<table class="table-light">
-	<thead>
-		<tr>
-			<th>#</th>
-			<th>Nom</th>
-			<th>Actions</th>
-		</tr>
-	</thead>
-	<tbody>
-		{% for category in categories %}
+	<table class="table-light">
+		<thead>
 			<tr>
-				<td>{{ category.id }}</td>
-				<td>
-					<a href="{{ url('back_category_show', {id: category.id})}}">{{ category.name}}</td>
-				</td>
+				<th>#</th>
+				<th>Nom</th>
+				<th>Actions</th>
 			</tr>
-		</a>
-		<td>
-			<a href="{{ url('back_category_show', {id: category.id})}}">Voir</a>
-			<a href="">Editer</a>
-			<a href="">Supprimé</a>
-		</td>
-	</tbody>
-</tr>{% endfor %}</tbody></table>{% endblock %}
+		</thead>
+		<tbody>
+			{% for category in categories %}
+				<tr>
+					<td>{{ category.id }}</td>
+					<td>
+						<a href="{{ url('back_category_show', {id: category.id}) }}">{{ category.name }}</a>
+					</td>
+					<td>
+						<a href="{{ url('back_category_show', {id: category.id}) }}">Voir</a>
+						<a href="#">Editer</a>
+						<a href="#">Supprimer</a>
+					</td>
+				</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+
+{% endblock %}

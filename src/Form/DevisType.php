@@ -5,12 +5,14 @@ namespace App\Form;
 use App\Entity\User;
 use App\Entity\Devis;
 use Doctrine\ORM\EntityRepository;
-use FOS\CKEditorBundle\Form\Type\CKEditorType;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\EmailType;
+use FOS\CKEditorBundle\Form\Type\CKEditorType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
@@ -54,7 +56,20 @@ class DevisType extends AbstractType
                 'attr' => [
                     'placeholder' => 'Votre adresse email',
                 ]
-            ]);
+            ])
+            // Ajouter le champ "status" sans le mapper avec l'entité
+            ->add('statut', ChoiceType::class, [
+                'choices' => [
+                    'Validé' => 'validé',
+                    'En attente' => 'en_attente',
+                    'Brouillon' => 'brouillon',
+                ],
+                'attr' => [
+                    'style' => 'display: none;',
+                ],
+                'label' => false,
+            ])
+            ;
     }
 
     public function configureOptions(OptionsResolver $resolver): void

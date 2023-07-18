@@ -26,6 +26,7 @@ class DevisController extends AbstractController
     public function new(Request $request, EntityManagerInterface $entityManager, MailerInterface $mailer): Response
     {
         $devis = new Devis();
+        $devis->setStatut('brouillon'); // Défaut : brouillon
 
         $form = $this->createForm(DevisType::class, $devis);
 
@@ -33,9 +34,9 @@ class DevisController extends AbstractController
             $form->handleRequest($request);
 
             if ($form->isSubmitted() && $form->isValid()) {
+                $devis->setStatut('en_attente'); // Mettez à jour le statut si nécessaire
 
-
-                $devis->setUser(null);
+                // $devis->setUser($devis->getUser());
                 $entityManager->persist($devis);
                 $entityManager->flush();
 

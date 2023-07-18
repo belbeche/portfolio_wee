@@ -1,0 +1,18 @@
+{% extends 'base_back.html.twig' %}
+
+{% block title %}Modifier utilisateur
+{% endblock %}
+
+{% block content %}
+	<h1>Modifier l'utilisateur</h1>
+
+	{{ form_start(form) }}
+	{{ form_row(form.email) }}
+	{{ form_row(form.password, { 'label': 'Nouveau mot de passe', 'required': false }) }}
+	{{ form_row(form.nom) }}
+	{{ form_row(form.prenom) }}
+	<button type="submit">Mettre à jours</button>
+	{{ form_end(form) }}
+
+	<a href="{{ path('back_user_index') }}">Retour</a>
+{% endblock %}

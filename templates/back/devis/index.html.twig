@@ -1,9 +1,45 @@
 {% extends 'base_back.html.twig' %}
 
-{% block title %}Voir tous les devis{% endblock %}
+{% block title %}Liste des devis
+{% endblock %}
 
 {% block content %}
 
-    <h1>Voir tout les devis admin panel</h1>
 
+	<h1>Liste des devis</h1>
+
+	<a href="{{ url('front_devis_new') }}" class="ml-auto btn btn-primary">Créer un nouveau devis</a>
+
+	<table>
+		<thead>
+			<tr>
+				<th>Numéro</th>
+				<th>Email</th>
+				<th>Type de site web</th>
+				<th>Description du projet</th>
+				<th>Date de création</th>
+				<th>Status</th>
+				<th>Actions</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for devis in devis %}
+				<tr>
+					<td>{{ devis.id }}</td>
+					<td>{{ devis.email }}</td>
+					<td>{{ devis.typeDeSiteWeb }}</td>
+					<td>{{ devis.descriptionProjet }}</td>
+					<td>{{ devis.createdAt|date('Y-m-d H:i:s') }}</td>
+					<td>{{ devis.statut }}</td>
+					<td>
+						<a href="{{ path('back_devis_show', {'id': devis.id}) }}">Voir</a>
+						<a href="{{ path('back_devis_edit', {'id': devis.id}) }}">Modifier</a>
+						<form action="{{ path('back_devis_delete', {'id': devis.id}) }}" method="post" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce devis ?');">
+							<button type="submit">Supprimer</button>
+						</form>
+					</td>
+				</tr>
+			{% endfor %}
+		</tbody>
+	</table>
 {% endblock %}
