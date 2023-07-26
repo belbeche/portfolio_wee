@@ -1,0 +1,69 @@
+{
+  "entrypoints": {
+    "app": {
+      "js": [
+        "/build/runtime.725dd7e0.js",
+        "/build/768.30b53ee5.js",
+        "/build/386.23396cdc.js",
+        "/build/109.85974240.js",
+        "/build/app.107f9545.js"
+      ],
+      "css": [
+        "/build/app.8b849792.css"
+      ]
+    },
+    "jquery": {
+      "js": [
+        "/build/runtime.725dd7e0.js",
+        "/build/768.30b53ee5.js",
+        "/build/386.23396cdc.js",
+        "/build/255.7f520948.js",
+        "/build/568.0813d0b6.js",
+        "/build/jquery.b89bad47.js"
+      ]
+    },
+    "imagesloaded": {
+      "js": [
+        "/build/runtime.725dd7e0.js",
+        "/build/768.30b53ee5.js",
+        "/build/386.23396cdc.js",
+        "/build/imagesloaded.4ddf5ea8.js"
+      ]
+    },
+    "owl.carousel": {
+      "js": [
+        "/build/runtime.725dd7e0.js",
+        "/build/768.30b53ee5.js",
+        "/build/386.23396cdc.js",
+        "/build/255.7f520948.js",
+        "/build/568.0813d0b6.js",
+        "/build/80.3b2ed425.js",
+        "/build/owl.carousel.70280d38.js"
+      ]
+    },
+    "jquery.googlemap": {
+      "js": [
+        "/build/runtime.725dd7e0.js",
+        "/build/768.30b53ee5.js",
+        "/build/386.23396cdc.js",
+        "/build/jquery.googlemap.498bacdf.js"
+      ]
+    },
+    "validator": {
+      "js": [
+        "/build/runtime.725dd7e0.js",
+        "/build/768.30b53ee5.js",
+        "/build/386.23396cdc.js",
+        "/build/255.7f520948.js",
+        "/build/validator.aa206678.js"
+      ]
+    },
+    "main": {
+      "js": [
+        "/build/runtime.725dd7e0.js",
+        "/build/768.30b53ee5.js",
+        "/build/main.4fb47f19.js"
+      ]
+    }
+  }
+}
