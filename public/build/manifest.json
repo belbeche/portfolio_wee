@@ -1,19 +1,35 @@
 {
+<<<<<<< HEAD
   "build/app.css": "/build/app.8b849792.css",
   "build/app.js": "/build/app.107f9545.js",
   "build/jquery.js": "/build/jquery.b89bad47.js",
   "build/imagesloaded.js": "/build/imagesloaded.4ddf5ea8.js",
+=======
+  "build/app.css": "/build/app.b8a28650.css",
+  "build/app.js": "/build/app.107f9545.js",
+  "build/jquery.js": "/build/jquery.cd8b7c11.js",
+  "build/imagesloaded.js": "/build/imagesloaded.d011a9e3.js",
+>>>>>>> dc5e7a2971adca60e190567162714b19a5697761
   "build/owl.carousel.js": "/build/owl.carousel.70280d38.js",
   "build/jquery.googlemap.js": "/build/jquery.googlemap.498bacdf.js",
   "build/validator.js": "/build/validator.aa206678.js",
   "build/main.js": "/build/main.4fb47f19.js",
   "build/runtime.js": "/build/runtime.725dd7e0.js",
+<<<<<<< HEAD
   "build/768.30b53ee5.js": "/build/768.30b53ee5.js",
   "build/386.23396cdc.js": "/build/386.23396cdc.js",
   "build/255.7f520948.js": "/build/255.7f520948.js",
   "build/568.0813d0b6.js": "/build/568.0813d0b6.js",
   "build/80.3b2ed425.js": "/build/80.3b2ed425.js",
   "build/109.85974240.js": "/build/109.85974240.js",
+=======
+  "build/768.a8a574ac.js": "/build/768.a8a574ac.js",
+  "build/386.23396cdc.js": "/build/386.23396cdc.js",
+  "build/255.7f520948.js": "/build/255.7f520948.js",
+  "build/568.0813d0b6.js": "/build/568.0813d0b6.js",
+  "build/80.dcf83162.js": "/build/80.dcf83162.js",
+  "build/109.032b6e48.js": "/build/109.032b6e48.js",
+>>>>>>> dc5e7a2971adca60e190567162714b19a5697761
   "build/images/fa-solid-900.svg": "/build/images/fa-solid-900.a84653d4.svg",
   "build/images/fa-brands-400.svg": "/build/images/fa-brands-400.55faa7ef.svg",
   "build/images/Linearicons-Free.svg?w118d": "/build/images/Linearicons-Free.638c6c05.svg",
