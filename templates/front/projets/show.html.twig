@@ -47,7 +47,7 @@
 					<div class="owl-carousel portfolio-page-carousel">
 						{% for image in project.images %}
 							<div class="item">
-								<a href="{{ asset('image_project/'~image.name) }}"><img src="{{ asset('image_project/'~image.name) }}" alt="{{ image.name }}"/></a>
+								<a href="{{ asset('image_project/'~image.name) }}" class="lightbox"><img src="{{ asset('image_project/'~image.name) }}" alt="{{ image.name }}"/></a>
 							</div>
 						{% endfor %}
 					</div>
@@ -117,19 +117,19 @@ autoHeight: true
 
 					<!-- Share Buttons -->
 						{# <div class="btn-group share-buttons">
-																																																																			<div class="block-title">
-																																																																				<h3>Share</h3>
-																																																																			</div>
-																																																																			<a href="#" target="_blank" class="btn">
-																																																																				<i class="fab fa-facebook-f"></i>
-																																																																			</a>
-																																																																			<a href="#" target="_blank" class="btn">
-																																																																				<i class="fab fa-twitter"></i>
-																																																																			</a>
-																																																																			<a href="#" target="_blank" class="btn">
-																																																																				<i class="fab fa-dribbble"></i>
-																																																																			</a>
-																																																																		</div> #}
+																																																																									<div class="block-title">
+																																																																										<h3>Share</h3>
+																																																																									</div>
+																																																																									<a href="#" target="_blank" class="btn">
+																																																																										<i class="fab fa-facebook-f"></i>
+																																																																									</a>
+																																																																									<a href="#" target="_blank" class="btn">
+																																																																										<i class="fab fa-twitter"></i>
+																																																																									</a>
+																																																																									<a href="#" target="_blank" class="btn">
+																																																																										<i class="fab fa-dribbble"></i>
+																																																																									</a>
+																																																																								</div> #}
 						<!-- /Share Buttons -->
 					</div>
 					<!-- Project Description -->

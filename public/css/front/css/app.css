@@ -1,0 +1,70 @@
+.logo img {
+    -ms-interpolation-mode: bicubic;
+    border: 0;
+    height: auto;
+    max-width: 100%;
+    vertical-align: bottom;
+    position: absolute;
+    bottom: 32px;
+}
+
+.logo-text {
+    display: none;
+}
+
+/*
+ * Cover
+ */
+.cover {
+    /* background-color: rgb(4, 51, 78); */
+    border-radius: 10px;
+}
+
+
+.cover h1 {
+    color: #fcb900;
+}
+
+.cover .btn-lg {
+    padding: .75rem 1.25rem;
+    font-weight: 700;
+}
+
+.img-intro img {
+    width: 50%;
+    height: 50%;
+}
+
+.cover-heading {
+    margin-bottom: 2.5%;
+}
+
+
+
+@media screen and (max-width: 767px) {
+
+    /* Styles pour les écrans jusqu'à 767px de large (mode téléphone et tablette) */
+    .logo img {
+        display: none;
+    }
+
+    .logo-text {
+        font-size: 200px;
+        font-weight: 700;
+        display: block;
+    }
+
+    .lm-animated-bg {
+        display: none;
+    }
+
+    .img-intro img {
+        margin-top: 50%;
+        width: 100%;
+        height: 100%;
+    }
+
+    .cover-heading {
+        margin-bottom: 50%;
+    }
+}

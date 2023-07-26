@@ -1,0 +1,39 @@
+{% extends "base.html.twig" %}
+
+{% block title %}Assistance
+{% endblock %}
+
+{% block content %}
+
+	{% if devisList is not empty %}
+		<h1>Créer un ticket</h1>
+
+		{{ form_start(form) }}
+		<div>
+			{{ form_label(form.content) }}
+			{{ form_widget(form.content) }}
+		</div>
+		<div>
+			{{ form_label(form.priority) }}
+			{{ form_widget(form.priority) }}
+		</div>
+		<div>
+			{{ form_label(form.status) }}
+			{{ form_widget(form.status) }}
+		</div>
+		<div>
+			{{ form_label(form.receiverEmail)}}
+			{{ form_widget(form.receiverEmail)}}
+		</div>
+
+		<div>
+			{{ form_label(form.devis) }}
+			{{ form_widget(form.devis) }}
+		</div>
+
+		<button type="submit">Envoyer le message</button>
+		{{ form_end(form) }}
+	{% else %}
+		<p>Aucun devis trouvé pour cet utilisateur.</p>
+	{% endif %}
+{% endblock %}

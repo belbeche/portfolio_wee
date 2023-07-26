@@ -21,6 +21,8 @@
 		<!-- Global CSS -->
 		<link rel="stylesheet" href="{{ asset('css/front/css/bootstrap.min.css') }}">
 		<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet"/>
+		<link rel="stylesheet" href="{{ asset('css/front/css/about.css')}}">
+		<link rel="stylesheet" href="{{ asset('css/front/css/app.css')}}">
 		{% block stylesheets %}
 			{{ encore_entry_link_tags('app') }}
 		{% endblock %}
@@ -45,13 +47,12 @@
 		<!-- /Scroll To Top Button -->
 
 		<div class="page-scroll">
-			<div id="page_container" class="page-container bg-move-effect" data-animation="transition-flip-in-right">
+			<div id="page_container" class="page-container bg-move-effect">
 
 
 				{% block navbar %}
 					{% include "front/includes/nav.html.twig" %}
 				{% endblock %}
-
 				{% block content %}{% endblock %}
 
 				<!-- Footer -->
@@ -101,6 +102,8 @@
 			{{ encore_entry_script_tags('main') }}
 			<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 			<script src="{{ asset('js/jquery.shuffle.min.js')}}"></script>
+			{#  <script src="{{ asset('js/particles.js')}}"></script>#}
+			{#	<script src="{{ asset('js/app.js')}}"></script> #}
 		{% endblock %}
 	</body>
 </html>

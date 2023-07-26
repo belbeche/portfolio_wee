@@ -10,6 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
 use App\Repository\DevisRepository;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\DevisRepository", repositoryClass=DevisRepository::class)
@@ -52,6 +53,8 @@ class Devis
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\Email(message="L'adresse email '{{ value }}' n'est pas valide.")
+     * @ORM\Column(nullable=true)
      */
     private $email;
 
@@ -60,9 +63,15 @@ class Devis
      */
     private $statut;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Message::class, mappedBy="devis")
+     */
+    private $messages;
+
     public function __construct()
     {
         $this->created_at = new DateTimeImmutable('now');
+        $this->messages = new ArrayCollection();
     }
 
     public function getId(): ?Uuid
@@ -159,4 +168,20 @@ class Devis
 
         return $this;
     }
+
+    /**
+     * @return Collection<int, Message>
+     */
+    public function getMessages(): Collection
+    {
+        return $this->messages;
+    }
+    public function setEmailFromUser(?User $user): void
+    {
+        if ($user) {
+            // Utilisateur connecté, utilisez son adresse email
+            $this->email = $user->getEmail();
+        }
+    }
+
 }

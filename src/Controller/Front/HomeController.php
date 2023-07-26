@@ -17,4 +17,13 @@ class HomeController extends AbstractController
     {
         return $this->render('front/home/index.html.twig');
     }
+
+    /**
+     * @Route("/a-propos", name="front_about")
+     *
+     */
+    public function about(): Response
+    {
+        return $this->render('front/about/index.html.twig');
+    }
 }
