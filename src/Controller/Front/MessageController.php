@@ -2,8 +2,6 @@
 
 namespace App\Controller;
 
-ini_set('memory_limit', '1024M');
-
 use App\Entity\User;
 use App\Entity\Devis;
 use App\Entity\Message;
