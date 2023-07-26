@@ -4,11 +4,13 @@
 		class="header-content clearfix">
 
 		<!-- Text Logo -->
-		<div class="text-logo">
+		<div class="logo">
 			<a href="{{ url('front_home') }}">
-				<div class="logo-symbol">WB</div>
-				<div class="logo-text">Walid
-					<span>BELBECHE</span>
+				<img src="{{ asset('img/digitalit.png')}}" width="10%" height="10%" alt="Agence web à nevers (58)">
+			</a>
+			<a href="{{ url('front_home') }}">
+				<div class="logo-text">Digital
+					<span>iT</span>
 				</div>
 			</a>
 		</div>
@@ -22,11 +24,19 @@
 				</li>
 
 				<li class="menu-item">
+					<a href="{{ url('front_about')}}">A propos de moi</a>
+				</li>
+
+				<li class="menu-item">
 					<a href="{{ url('front_project') }}">Ce que je propose</a>
 				</li>
 
 				<li class="menu-item">
-					<a href="{{ url('front_devis_new') }}">Créer devis</a>
+					<a href="{{ url('front_devis_new') }}">Faire une demande</a>
+				</li>
+
+				<li class="menu-item">
+					<a href="{{ url('front_assistance')}}">Assistance</a>
 				</li>
 				{% if is_granted('ROLE_USER') %}
 					<li class="menu-item">

@@ -8,6 +8,7 @@ use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Security\Core\Security;
 use FOS\CKEditorBundle\Form\Type\CKEditorType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -20,6 +21,13 @@ use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 
 class DevisType extends AbstractType
 {
+    private $security;
+
+    public function __construct(Security $security)
+    {
+        $this->security = $security;
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
@@ -53,8 +61,11 @@ class DevisType extends AbstractType
                 ]
             ])
             ->add('email', EmailType::class, [
+                'label' => false,
+                'required' => false,
+                'mapped' => false, // Ne pas mapper ce champ à l'entité Devis,
                 'attr' => [
-                    'placeholder' => 'Votre adresse email',
+                    'display' => 'none'
                 ]
             ])
             // Ajouter le champ "status" sans le mapper avec l'entité
@@ -68,8 +79,7 @@ class DevisType extends AbstractType
                     'style' => 'display: none;',
                 ],
                 'label' => false,
-            ])
-            ;
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

@@ -1,0 +1,37 @@
+{% extends "base.html.twig" %}
+
+{% block title %}Assistance
+{% endblock %}
+
+{% block content %}
+
+	<table>
+		<thead class="thead-dark">
+		<tr>
+			<th>Numéro</th>
+			<th>Email</th>
+			<th>Type de site web</th>
+			<th>Description du projet</th>
+			<th>Date de création</th>
+			<th>Status</th>
+			<th>Actions</th>
+		</tr>
+		</thead>
+		<tbody>
+		{% for devis in devisUser %}
+			<tr>
+				<td>{{ devis.id }}</td>
+				<td>{{ devis.email }}</td>
+				<td>{{ devis.typeDeSiteWeb }}</td>
+				<td>{{ devis.descriptionProjet }}</td>
+				<td>{{ devis.createdAt|date('Y-m-d H:i:s') }}</td>
+				<td>{{ devis.statut }}</td>
+				<td>
+					<a href="{{ url('send_message')}}" class="btn btn-primary">Créer un nouveau ticket</a>
+					<a href="{{ url('front_show_ticket', {id: app.user.id})}}" class="btn btn-secondary">Voir mes tickets</a>
+				</td>
+			</tr>
+		{% endfor %}
+		</tbody>
+	</table>
+{% endblock %}

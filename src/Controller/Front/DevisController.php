@@ -2,18 +2,14 @@
 
 namespace App\Controller\Front;
 
-use App\Entity\User;
 use App\Entity\Devis;
 use App\Form\DevisType;
-use App\Repository\DevisRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
-
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 
@@ -25,6 +21,25 @@ class DevisController extends AbstractController
      */
     public function new(Request $request, EntityManagerInterface $entityManager, MailerInterface $mailer): Response
     {
+        $currentUser = $this->getUser();
+
+        if (!$currentUser) {
+            // Utilisateur non connecté, renvoyer vers la page d'inscription
+            return $this->redirectToRoute('app_register');
+
+        } else {
+            // Utilisateur connecté, utilisez son adresse email
+            $email = $currentUser->getEmail();
+        }
+
+        // Vérifier si l'utilisateur a déjà un devis en fonction de l'adresse email
+        $existingDevis = $entityManager->getRepository(Devis::class)->findOneBy(['email' => $email]);
+
+        if ($existingDevis) {
+            // Si un devis existe avec cette adresse email, rediriger vers la page d'assistance
+            return $this->redirectToRoute('front_assistance');
+        }
+
         $devis = new Devis();
         $devis->setStatut('brouillon'); // Défaut : brouillon
 
@@ -35,27 +50,15 @@ class DevisController extends AbstractController
 
             if ($form->isSubmitted() && $form->isValid()) {
                 $devis->setStatut('en_attente'); // Mettez à jour le statut si nécessaire
-
-                // $devis->setUser($devis->getUser());
+                $devis->setEmail($currentUser->getEmail()); // Définir l'adresse email fournie par l'utilisateur
+                $devis->setUser($currentUser);
                 $entityManager->persist($devis);
                 $entityManager->flush();
 
-                $email = (new TemplatedEmail())
-                    ->from('wbelbeche.s@gmail.com')
-                    ->to($devis->getEmail())
-                    ->subject('Récapitulatif de devis, Walid BELBECHE')
-                    ->bcc('wbelbeche.s@gmail.com')
-                    ->context([
-                        'email_address' => $devis->getEmail(),
-                        'registrationNumber' => $devis->getId(),
-                        'subject' => $devis->getTypeDeSiteWeb(),
-                        'message' => $devis->getDescriptionProjet(),
-                    ])
-                    ->htmlTemplate('front/devis/email.html.twig');
+                // Envoi de l'email (vous devez ajouter le code pour l'envoi de l'email ici)
 
-                $mailer->send($email);
-                $this->addFlash('success', 'Votre demande à bien était prise en compte, vérifiez votre adresse email');
-                return $this->redirectToRoute('front_home');
+                $this->addFlash('success', 'Votre demande a bien été prise en compte, vérifiez votre adresse email');
+                return $this->redirectToRoute('front_assistance');
             }
         }
 

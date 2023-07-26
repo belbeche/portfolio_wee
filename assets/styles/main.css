@@ -57,8 +57,7 @@ body {
   width: 100%;
   height: 100%;
   min-height: 100%;
-  /*background-color: #343a40;*/
-  background-image: url('../../public/img/bg_old.jpg');
+  background-color: #4A6583;
   background-position: center center;
   background-size: calc(100% + 25px);
   background-repeat: repeat;
@@ -818,7 +817,7 @@ td {
   -webkit-box-flex: 0;
   -ms-flex: 0 0 100%;
   flex: 0 0 100%;
-  max-width: 1240px;
+  max-width: 100%;
   margin: 3% auto;
   padding: 40px 70px 60px;
   background-color: #fff;
@@ -1256,6 +1255,7 @@ td {
 
 .logo-symbol {
   float: left;
+  width: 44px;
   height: 44px;
   line-height: 44px;
   background-color: #4A6583;
@@ -4063,11 +4063,6 @@ a.post-thumbnail:hover {
   line-height: 1.5;
 }
 
-/*
-.required {
-  color: #4caf50;
-}*/
-
 .comment-reply-title small {}
 
 .comment-reply-title small a {
@@ -5339,8 +5334,8 @@ a.post-thumbnail:hover {
   }
 
   .logo-symbol {
-    width: auto;
-    height: auto;
+    width: 32px;
+    height: 32px;
     line-height: 32px;
     font-size: 18px;
     margin-top: 0;
@@ -5550,12 +5545,6 @@ a.post-thumbnail:hover {
 }
 
 @media only screen and (max-width: 768px) {
-
-  /* Body Animated Background */
-  .lm-animated-bg {
-    display: none;
-  }
-
   .portfolio-grid figure {
     width: calc(50% - 16px);
   }
@@ -5926,3 +5915,44 @@ a.post-thumbnail:hover {
 /* ============================================================================= 
 15. Updates
 ============================================================================= */
+/* === v1.2 === */
+/* Full Width Mode */
+@media only screen and (min-width: 991px) {
+  .page-container {
+    max-width: 100%;
+    border-radius: 0;
+    margin: 0;
+  }
+
+  .page-content.single-post {
+    max-width: 1320px;
+    margin: 0 auto;
+  }
+
+  .post-content {
+    max-width: 1320px;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 50px;
+    padding-right: 50px;
+  }
+
+  .post-thumbnail {
+    width: calc(100% + 140px);
+    margin: 40px -70px 40px;
+    z-index: 0;
+  }
+
+  .page-container {
+    min-height: 100vh;
+    padding-bottom: 120px;
+  }
+
+  .site-footer {
+    position: absolute;
+    margin: 60px 0 0;
+    right: 0;
+    left: 0;
+    bottom: 0;
+  }
+}
