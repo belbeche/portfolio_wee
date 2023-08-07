@@ -30,11 +30,10 @@
 					<label for="">Parlez moi un peu plus de votre projet !</label>
 					{{ form_row(formDevis.description_projet)}}
 					{{ form_errors(formDevis.description_projet)}}
-					<button type="submit" class="btn btn-outline-success my-5">Valider ma demande !</button>
+					<button type="submit">Recevoir mon récapitulatif de devis</button>
 					{{ form_end(formDevis) }}
 				</div>
 			</div>
-			<button type="submit">Envoyer le devis</button>
 			{{ form_end(formDevis) }}
 		{% else %}
 			<p>Vous n'êtes pas connecté, veuillez fournir votre adresse email pour soumettre un devis :</p>

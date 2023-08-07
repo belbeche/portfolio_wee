@@ -5,6 +5,7 @@ namespace App\Form;
 use App\Entity\User;
 use App\Entity\Devis;
 use Doctrine\ORM\EntityRepository;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\AbstractType;
@@ -52,6 +53,7 @@ class DevisType extends AbstractType
                     'Vous avez vos propres maquettes' => 'own_wireframe',
                     'Avancée' => 'advanced'
                 ],
+                'placeholder' => 'Cliquer pour choisir',
                 'multiple' => false,
             ])
             ->add('description_projet', TextareaType::class, [
@@ -60,7 +62,7 @@ class DevisType extends AbstractType
                     'placeholder' => 'Merci de décrire votre projet...',
                 ]
             ])
-            ->add('email', EmailType::class, [
+            ->add('email', hiddenType::class, [
                 'label' => false,
                 'required' => false,
                 'mapped' => false, // Ne pas mapper ce champ à l'entité Devis,

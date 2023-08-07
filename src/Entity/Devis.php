@@ -184,4 +184,9 @@ class Devis
         }
     }
 
+    public function __toString()
+    {
+        return $this->type_de_site_web;
+    }
+
 }

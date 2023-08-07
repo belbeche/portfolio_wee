@@ -6,10 +6,10 @@
 		<!-- Text Logo -->
 		<div class="logo">
 			<a href="{{ url('front_home') }}">
-				<img src="{{ asset('img/digitalit.png')}}" width="10%" height="10%" alt="Agence web à nevers (58)">
+				<img src="{{ asset('img/logo.png')}}" class="d-sm-none d-md-block d-lg-block" width="10%" height="10%" alt="Agence web à nevers (58)">
 			</a>
 			<a href="{{ url('front_home') }}">
-				<div class="logo-text">Digital
+				<div class="logo-text">ScriptZen
 					<span>iT</span>
 				</div>
 			</a>
@@ -30,14 +30,19 @@
 				<li class="menu-item">
 					<a href="{{ url('front_project') }}">Ce que je propose</a>
 				</li>
+				{% if is_granted('ROLE_USER') %}
+					<li class="menu-item">
+						<a href="{{ url('front_assistance') }}">Assistance</a>
+					</li>
+				{% else %}
+					<li class="menu-item">
+						<a href="{{ url('front_devis_new') }}">Faire une demande</a>
+					</li>
+					<li class="menu-item">
+						<a href="{{ url('app_login') }}" class="btn btn-outline-info">Connexion</a>
+					</li>
+				{% endif %}
 
-				<li class="menu-item">
-					<a href="{{ url('front_devis_new') }}">Faire une demande</a>
-				</li>
-
-				<li class="menu-item">
-					<a href="{{ url('front_assistance')}}">Assistance</a>
-				</li>
 				{% if is_granted('ROLE_USER') %}
 					<li class="menu-item">
 						<a href="{{ url('app_logout') }}" class="btn btn-outline-danger">Déconnexion</a>

@@ -1,0 +1,10 @@
+.img_profil {
+    width: 10%;
+    -ms-flex-align: center;
+}
+
+@media (max-width: 576px) {
+    .img_profil {
+        width: 100%;
+    }
+}

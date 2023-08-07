@@ -33,12 +33,12 @@
 				</div>
 			</div>
 			<div class="col-md-10 mx-auto col-lg-5">
-				<form class="p-4 p-md-5 border rounded-3 bg-light" method="post" action="{{ url('app_login')}}">
-					<div class="form-floating mb-3">
+				<form class="p-4 p-md-5 border rounded-3" method="post" action="{{ url('app_login')}}">
+					<div class="form-group mb-3">
 						<input type="email" class="form-control" value="{{ last_username }}" id="floatingInput" placeholder="l'adresse saisie pour l'inscription" name="email">
 						<label for="floatingInput">Email adresse</label>
 					</div>
-					<div class="form-floating mb-3">
+					<div class="form-group mb-3">
 						<input type="password" class="form-control" id="floatingPassword" placeholder="Mot de passe" name="password">
 						<label for="floatingPassword">Mot de passe</label>
 					</div>

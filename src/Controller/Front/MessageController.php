@@ -8,8 +8,10 @@ use App\Entity\Message;
 use App\Form\DevisType;
 use App\Form\MessageType;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
@@ -52,7 +54,7 @@ class MessageController extends AbstractController
     /**
      * @Route("/nouveau-ticket", name="send_message", methods={"GET","POST"})
      */
-    public function sendMessage(Request $request, EntityManagerInterface $entityManager): Response
+    public function sendMessage(Request $request, EntityManagerInterface $entityManager, MailerInterface $mailer): Response
     {
         // Récupérer l'utilisateur actuellement connecté (l'expéditeur du message)
         $currentUser = $this->getUser();
@@ -104,6 +106,24 @@ class MessageController extends AbstractController
             // Persistez l'objet Message dans la base de données
             $entityManager->persist($message);
             $entityManager->flush();
+
+            $email = (new TemplatedEmail())
+                ->from('wbelbeche.s@gmail.com')
+                ->to($devis->getEmail())
+                ->subject('Récapitulatif ticket, Devis , Walid BELBECHE')
+                ->bcc('wbelbeche.s@gmail.com')
+                ->context([
+                    'email_address' => $currentUser->getEmail(),
+                    'service' => $message->getReceiverEmail(),
+                    'subject' => $message->getDevis(),
+                    'message' => $message->getContent(),
+                    'status' => $message->getStatus(),
+                ])
+                ->htmlTemplate('front/ticket/email.html.twig');
+
+            $mailer->send($email);
+
+            $this->addFlash('info', 'Votre ticket à bien était prise en compte, vérifiez votre adresse email');
 
             return $this->redirectToRoute('front_show_ticket', [
                 'id' => $message->getId()

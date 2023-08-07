@@ -12,28 +12,122 @@
 			{% endfor %}
 		{% endfor %}
 	</div>
-
-	<main role="main" class="inner px-5">
-		<div class="row">
-			<div class="col-12 mt-5">
-				<div
-					class="d-flex justify-content-center img-intro">
-					<!-- Ajout de la classe d-flex justify-content-center -->
-					<img src="{{ asset('img/digitalit.png')}}" alt="Agence web à Nevers(58)">
+	<!-- Introduction -->
+	<section class="section section-lg pt-6">
+		<div class="container">
+			<div class="row justify-content-center mb-5 mb-md-7">
+				<div class="col-12 col-md-8 text-center">
+					<h2 class="h1 font-weight-bolder mb-4">Agence web à Nevers</h2>
+					<div
+							class="justify-content-center">
+						<!-- Ajout de la classe d-flex justify-content-center -->
+						<img src="{{ asset('img/logo.png')}}" alt="Agence web à Nevers(58)">
+					</div>
+					<p class="lead">Grâce à mon expertise en développement Web, je vous aide à créer un site professionnel et attractif, adapté à tous les appareils. La sécurité des données est une priorité, et je propose des solutions de gestion de contenu faciles à utiliser.</p>
 				</div>
-				<hr>
-				<h1 class="cover-heading text-center display-4">Agence web à Nevers</h1>
-				<p class="lead">Grâce à mon expertise en développement Web, je vous aide à créer un site professionnel et attractif, adapté à tous les appareils. La sécurité des données est une priorité, et je propose des solutions de gestion de contenu faciles à utiliser.</p>
-				<h3 class="mb-5 text-center">Merci pour votre confiance et bonne visite</h3>
+			</div>
+			<hr>
+			<h1 class="cover-heading text-center display-4"></h1>
+			<p class="lead"></p>
+			<h3 class="mb-5 text-center">Merci pour votre confiance et bonne visite</h3>
+			{% if not app.user %}
 				<p class="lead text-center">
 					<a href="{{ url('front_devis_new')}}" class="btn btn-lg btn-primary">Réaliser ma demande en ligne</a>
 				</p>
+			{% else %}
+				<p class="lead text-center">
+					<a href="{{ url('front_assistance')}}" class="btn btn-lg btn-primary">Réaliser une demande d'assistance</a>
+				</p>
+			{% endif %}
+		</div>
+	</section>
+	<!--  ./Introduction-->
+
+	<!-- Solutions -->
+
+	<section class="section section-lg">
+		<div class="container-fluid">
+			<div class="row justify-content-center mb-5 mb-md-7">
+				<div class="col-12 col-md-8 text-center">
+					<h2 class="h1 font-weight-bolder mb-4">Des solutions de développement web adaptées à tous les besoins</h2>
+					<p class="lead">Je conçois la solution optimale de développement web pour chaque situation spécifique, qu'il s'agisse de développer une plateforme complète ou de mettre en place des outils précis pour vos besoins uniques.</p>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-12 col-md-6 col-lg-4 mb-5">
+					<div class="card shadow-soft border-light">
+						<div class="card-body">
+							<h3 class="card-title mt-3">Préparation / communication</h3>
+							<p class="card-text">En comprenant le besoin unique de votre entreprise et de votre marché local, je m'efforce de fournir une solution de développement web et mobile personnalisée qui vous aidera à atteindre vos objectifs spécifiques. Mon service de développement local se concentre sur la création d'une solution sur mesure qui répond à la fois aux exigences de votre entreprise et aux attentes de vos clients.</p>
+							<ul class="list-group d-flex justify-content-center mb-4">
+								<li class="list-group-item d-flex pl-0 pb-1">
+									<span class="mr-2"><i class="fas fa-check-circle text-success"></i></span>
+									<div>Conception tout écrans</div>
+								</li>
+								<li class="list-group-item d-flex pl-0 pb-1">
+									<span class="mr-2"><i class="fas fa-check-circle text-success"></i></span>
+									<div>Optimisation SEO</div>
+								</li>
+								<li class="list-group-item d-flex pl-0 pb-1">
+									<span class="mr-2"><i class="fas fa-check-circle text-success"></i></span>
+									<div>Gestion de la performance du site</div>
+								</li>
+							</ul>
+						</div>
+					</div>
+				</div>
+				<div class="col-12 col-md-6 col-lg-4 mb-5">
+					<div class="card shadow-soft border-light">
+						<div class="card-body">
+							<h3 class="card-title mt-3">Prêt à vous lancer ?</h3>
+							<p class="card-text">Lorsqu'une demande est créée par un client sur notre plateforme, un processus soigneusement conçu est déclenché pour s'assurer que chaque demande est correctement enregistrée et prise en compte.</p>
+							<ul class="list-group d-flex justify-content-center mb-4">
+								<li class="list-group-item d-flex pl-0 pb-1">
+									<span class="mr-2"><i class="fas fa-check-circle text-success"></i></span>
+									<div>Définition des besoins et objectifs</div>
+								</li>
+								<li class="list-group-item d-flex pl-0 pb-1">
+									<span class="mr-2"><i class="fas fa-check-circle text-success"></i></span>
+									<div>Évaluation technique</div>
+								</li>
+								<li class="list-group-item d-flex pl-0 pb-1">
+									<span class="mr-2"><i class="fas fa-check-circle text-success"></i></span>
+									<div>Suivi et reporting de la demande</div>
+								</li>
+							</ul>
+						</div>
+					</div>
+				</div>
+				<div class="col-12 col-md-6 col-lg-4 mb-5">
+					<div class="card shadow-soft border-light">
+						{#<div class="card-header p-0">
+							<img src="{{ asset('img/saas-platform-5.jpg')}}" class="card-img-top rounded-top" alt="image">
+						</div>#}
+						<div class="card-body">
+							<h3 class="card-title mt-3">Gestion des Tickets</h3>
+							<p class="card-text">Notre système de tickets offre un suivi détaillé de chaque demande. Traquez chaque ticket, de sa création à sa résolution, peu importe leur nombre.</p>
+							<ul class="list-group d-flex justify-content-center mb-4">
+								<li class="list-group-item d-flex pl-0 pb-1">
+									<span class="mr-2"><i class="fas fa-check-circle text-success"></i></span>
+									<div>Suivi quotidien des tickets</div>
+								</li>
+								<li class="list-group-item d-flex pl-0 pb-1">
+									<span class="mr-2"><i class="fas fa-check-circle text-success"></i></span>
+									<div>Support multiplateforme (web et mobile)</div>
+								</li>
+								<li class="list-group-item d-flex pl-0 pb-1">
+									<span class="mr-2"><i class="fas fa-check-circle text-success"></i></span>
+									<div>Gestion des tickets et de la demande</div>
+								</li>
+							</ul>
+						</div>
+					</div>
+				</div>
 			</div>
 		</div>
-	</main>
+	</section>
 
-
-	<div class="p-40"></div>
+	<!-- ./ Solutions -->
 
 	<!-- Services -->
 	<div class="row">
@@ -168,6 +262,36 @@
 	<!-- /Clients Slider -->
 
 	<div class="p-40"></div>
+
+	<!-- FAQ -->
+
+	{#<section class="py-5 py-sm-5">
+		<div class="container">
+			<div class="mb-5 text-center"><span class="display-4 font-weight-bold text-primary text-uppercase">VOUS AVEZ DES QUESTIONS ?</span>
+				<h2 class="mt-2">Voici quelques réponses</h2>
+			</div>
+			<div class="col-md-8 mx-auto">
+				<div id="accordion">
+					<div class="card border-primary mb-2">
+						<div class="card-header" id="headingOne">
+							<h5 class="mb-0">
+								<button class="btn btn-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+									Calendrier de paiement et options
+								</button>
+							</h5>
+						</div>
+						<div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
+							<div class="card-body">
+								<p>La définition de la portée du projet est le fruit d'une collaboration avec mon client. Ensemble, nous définissons les principales caractéristiques, les fonctionnalités et les éventuelles contraintes qui façonneront le processus de conception. Cette clarté garantit que nous sommes alignés et que nous travaillons pour atteindre les mêmes objectifs.</p>
+							</div>
+						</div>
+					</div>
+				<p class="d-flex flex-wrap align-items-center justify-content-center"><span class="mr-1">Vous avez encore des questions ?</span><a class="btn btn-link font-weight-bold" href="{{ url('front_assistance') }}">Créez votre ticket maintenant !</a></p>
+			</div>
+		</div>
+	</section>#}
+
+
 
 	<!-- Pricing -->
 	<div class="row">

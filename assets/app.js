@@ -14,6 +14,7 @@ import './styles/owl.carousel.css';
 import './styles/magnific-popup.css';
 import './styles/main.css';
 import './styles/email.css';
+import './styles/pixel.scss';
 
 // start the Stimulus application
 import './bootstrap';

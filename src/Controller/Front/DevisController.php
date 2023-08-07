@@ -41,7 +41,6 @@ class DevisController extends AbstractController
         }
 
         $devis = new Devis();
-        $devis->setStatut('brouillon'); // Défaut : brouillon
 
         $form = $this->createForm(DevisType::class, $devis);
 
@@ -55,9 +54,24 @@ class DevisController extends AbstractController
                 $entityManager->persist($devis);
                 $entityManager->flush();
 
-                // Envoi de l'email (vous devez ajouter le code pour l'envoi de l'email ici)
+                $email = (new TemplatedEmail())
+                    ->from('wbelbeche.s@gmail.com')
+                    ->to($devis->getEmail())
+                    ->subject('Récapitulatif de demande devis, Walid BELBECHE')
+                    ->bcc('wbelbeche.s@gmail.com')
+                    ->context([
+                        'RegistredNumber' => $devis->getId(),
+                        'email_address' => $devis->getEmail(),
+                        'subject' => $devis->getTypeDeSiteWeb(),
+                        'designWebsite' => $devis->getAttentesDesignWeb(),
+                        'message' => $devis->getDescriptionProjet(),
+                    ])
+                    ->htmlTemplate('front/devis/email.html.twig');
 
-                $this->addFlash('success', 'Votre demande a bien été prise en compte, vérifiez votre adresse email');
+                $mailer->send($email);
+
+                $this->addFlash('success', 'Votre demande à bien était prise en compte, vérifiez votre adresse email');
+
                 return $this->redirectToRoute('front_assistance');
             }
         }
@@ -65,5 +79,18 @@ class DevisController extends AbstractController
         return $this->render('front/devis/new.html.twig', [
             'formDevis' => $form->createView(),
         ]);
+    }
+
+    /**
+     * @Route("/devis/{id}/delete", name="front_devis_delete")
+     */
+    public function delete(Request $request, EntityManagerInterface $entityManager, Devis $devis): Response
+    {
+        if ($request->isMethod('POST')) {
+            $entityManager->remove($devis);
+            $entityManager->flush();
+        }
+
+        return $this->redirectToRoute('front_assistance');
     }
 }

@@ -9,25 +9,27 @@
 	<h1>Liste des devis</h1>
 
 	<a href="{{ url('front_devis_new') }}" class="ml-auto btn btn-primary">Créer un nouveau devis</a>
-
-	<table>
-		<thead>
+	<div class="table-responsive">
+		<table>
+			<thead class="table table-sm">
 			<tr>
 				<th>Numéro</th>
 				<th>Email</th>
 				<th>Type de site web</th>
+				<th>Type de design</th>
 				<th>Description du projet</th>
 				<th>Date de création</th>
 				<th>Status</th>
 				<th>Actions</th>
 			</tr>
-		</thead>
-		<tbody>
+			</thead>
+			<tbody>
 			{% for devis in devis %}
 				<tr>
 					<td>{{ devis.id }}</td>
 					<td>{{ devis.email }}</td>
 					<td>{{ devis.typeDeSiteWeb }}</td>
+					<td>{{ devis.attentesDesignWeb }}</td>
 					<td>{{ devis.descriptionProjet }}</td>
 					<td>{{ devis.createdAt|date('Y-m-d H:i:s') }}</td>
 					<td>{{ devis.statut }}</td>
@@ -40,6 +42,7 @@
 					</td>
 				</tr>
 			{% endfor %}
-		</tbody>
-	</table>
+			</tbody>
+		</table>
+	</div>
 {% endblock %}

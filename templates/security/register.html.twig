@@ -11,12 +11,12 @@
 				<h1 class="display-4 fw-bold lh-1 mb-3">Inscrivez-vous</h1>
 				<p>Afin de suivre la progression de votre demande</p>
 				<div class="login">
-					<h6>Vous ètes membre ?</h6>
-					<p>Connectez-vous en suivant ce lien <a href="{{ url('app_login') }}">Je me connecte</a>.</p>
+					<h6>Vous êtes membre ?</h6>
+					<p>Connectez-vous-en suivant ce lien <a href="{{ url('app_login') }}">Je me connecte</a>.</p>
 				</div>
 			</div>
 			<div class="col-md-10 mx-auto col-lg-5">
-				{{ form_start(formRegister, {attr: {'class' : 'p-4 p-md-5 border rounded-3 bg-light'}}) }}
+				{{ form_start(formRegister, {attr: {'class' : 'p-4 p-md-5 border rounded-3'}}) }}
 					<div>
 						<label for="nom" class="sr-only">Nom</label>
 						{{ form_row(formRegister.nom) }}
@@ -29,7 +29,7 @@
 					</div>
 					<div>
 						<label for="email-address" class="sr-only">Identifiant de connexion</label>
-						{{ form_row(formRegister.email) }}
+						{{ form_row(formRegister.email, {attr: {'class' : 'form-control'}}) }}
 						{{ form_errors(formRegister.email) }}
 					</div>
 					<div>
@@ -37,7 +37,7 @@
 						{{ form_row(formRegister.password.first) }}
 					</div>
 					<div>
-						<label for="password" class="sr-only">Répetez votre mot de passe</label>
+						<label for="repeat-password" class="sr-only">Répétez votre mot de passe</label>
 						{{ form_row(formRegister.password.second) }}
 					</div>
 					<button type="submit" class="btn btn-primary">Je m'inscris</button>

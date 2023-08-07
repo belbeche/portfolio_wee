@@ -5,12 +5,14 @@
 
 {% block content %}
 
+<div class="table-responsive table-responsive-lg table-responsive-md">
 	<table>
-		<thead class="thead-dark">
+		<thead class="thead-dark table table-sm">
 		<tr>
 			<th>Numéro</th>
 			<th>Email</th>
 			<th>Type de site web</th>
+			<th>Type de design</th>
 			<th>Description du projet</th>
 			<th>Date de création</th>
 			<th>Status</th>
@@ -23,15 +25,22 @@
 				<td>{{ devis.id }}</td>
 				<td>{{ devis.email }}</td>
 				<td>{{ devis.typeDeSiteWeb }}</td>
+				<td>{{ devis.attentesDesignWeb }}</td>
 				<td>{{ devis.descriptionProjet }}</td>
 				<td>{{ devis.createdAt|date('Y-m-d H:i:s') }}</td>
 				<td>{{ devis.statut }}</td>
 				<td>
-					<a href="{{ url('send_message')}}" class="btn btn-primary">Créer un nouveau ticket</a>
-					<a href="{{ url('front_show_ticket', {id: app.user.id})}}" class="btn btn-secondary">Voir mes tickets</a>
+					<a href="{{ path('send_message') }}" class="btn btn-outline-primary">Créer un nouveau ticket</a>
+					<a href="{{ path('front_show_ticket', {'id': devis.id}) }}" class="btn btn-outline-secondary">Voir mes tickets</a>
+					{% if app.user.id %}
+						<form action="{{ path('front_devis_delete', {'id': devis.id}) }}" method="post" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce devis ?');">
+							<button type="submit">Supprimer</button>
+						</form>
+					{% endif %}
 				</td>
 			</tr>
 		{% endfor %}
 		</tbody>
 	</table>
+</div>
 {% endblock %}
