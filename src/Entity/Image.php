@@ -23,9 +23,22 @@ class Image
     private ?string $name;
 
     /**
-     * @ORM\Column(type="binary")
+     * @ORM\ManyToOne(targetEntity=Project::class, inversedBy="images")
+     * @ORM\JoinColumn(nullable=false)
      */
-    private $data;
+    private $project;
+
+    public function getProject(): ?Project
+    {
+        return $this->project;
+    }
+
+    public function setProject(?Project $project): self
+    {
+        $this->project = $project;
+
+        return $this;
+    }
 
     public function getId(): ?int
     {
@@ -40,18 +53,6 @@ class Image
     public function setName(string $name): self
     {
         $this->name = $name;
-
-        return $this;
-    }
-
-    public function getData()
-    {
-        return $this->data;
-    }
-
-    public function setData($data): self
-    {
-        $this->data = $data;
 
         return $this;
     }

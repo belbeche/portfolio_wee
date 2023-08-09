@@ -1,0 +1,40 @@
+{% extends 'base_back.html.twig' %}
+
+{% block title %}Détails du devis
+{% endblock %}
+
+{% block content %}
+	<h1>Détails du devis</h1>
+
+	<table>
+		<tr>
+			<th>Numéro</th>
+			<td>{{ devis.id }}</td>
+		</tr>
+		<tr>
+			<th>Email</th>
+			<td>{{ devis.email }}</td>
+		</tr>
+		<tr>
+			<th>Type de site web</th>
+			<td>{{ devis.typeDeSiteWeb }}</td>
+		</tr>
+		<tr>
+			<th>Description du projet</th>
+			<td>{{ devis.descriptionProjet }}</td>
+		</tr>
+		<tr>
+			<th>Status du devis</th>
+			<td>{{ devis.statut }}</td>
+		</tr>
+		<tr>
+			<th>Date de création</th>
+			<td>{{ devis.createdAt|date('Y-m-d H:i:s') }}</td>
+		</tr>
+	</table>
+
+	<a href="{{ path('back_devis_edit', {'id': devis.id}) }}">Modifier</a>
+	<form action="{{ path('back_devis_delete', {'id': devis.id}) }}" method="post" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce devis ?');">
+		<button type="submit">Supprimer</button>
+	</form>
+{% endblock %}

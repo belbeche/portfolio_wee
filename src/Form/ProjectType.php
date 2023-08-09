@@ -3,12 +3,18 @@
 namespace App\Form;
 
 use App\Entity\Project;
+use App\Form\ImageType;
+use App\Entity\Category;
+use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
+use FOS\CKEditorBundle\Form\Type\CKEditorType;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 
 class ProjectType extends AbstractType
 {
@@ -16,9 +22,44 @@ class ProjectType extends AbstractType
     {
         $builder
             ->add('title', TextType::class)
-            ->add('description', TextType::class)
-            ->add('image', ImageType::class)
-        ;
+            ->add('description', TextareaType::class, [
+                'required' => true,
+                'attr' => [
+                    'placeholder' => 'Merci de décrire votre projet...',
+                ],
+            ])
+            ->add('images', FileType::class, [
+                'label' => false,
+                'multiple' => true,
+                'mapped' => false,
+                'required' => false,
+                'attr' => [
+                    'placeholder' => 'Sélections multiples possibles'
+                ]
+            ])
+            ->add(
+                'categories',
+                EntityType::class,
+                [
+                    'class'         => Category::class,
+                    'query_builder' => function (EntityRepository $er) {
+                        return $er->createQueryBuilder('ca')
+                            ->orderBy('ca.name', 'DESC');
+                    },
+                    /*'expanded' => true,*/
+                    'multiple'      => true,
+                    'choice_label'   => 'name',
+                    'expanded' => true,
+                    'required'    => false,
+                    'attr' => [
+                        'class' => 'select2',
+                    ]
+                ]
+            )
+            ->add('link', TextType::class, [
+                'required' => false,
+            ])
+            ;
     }
 
     public function configureOptions(OptionsResolver $resolver): void

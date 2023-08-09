@@ -1,49 +1,47 @@
 {% extends 'base_back.html.twig' %}
 
-{% block title %}Back controller project{% endblock %}
+{% block title %}Back controller project
+{% endblock %}
 
 {% block content %}
 
 
-    <h1>Projets</h1>
+	<h1>Projets</h1>
 
-    <a href="{{ url('back_project_new') }}" class="ml-auto btn btn-primary">Créer un nouveau projet</a>
+	<a href="{{ url('back_project_new') }}" class="ml-auto btn btn-primary">Créer un nouveau projet</a>
 
-    {% for type, messages in app.flashes %}
-        {% for message in messages %}
-            <div class="alert alert-{{ type }}">{{ message }}</div>
-        {% endfor %}
-    {% endfor %}
+	{% for type, messages in app.flashes %}
+		{% for message in messages %}
+			<div class="alert alert-{{ type }}">{{ message }}</div>
+		{% endfor %}
+	{% endfor %}
 
-    <table class="table-light">
-        <thead>
-        <tr>
-            <th>#</th>
-            <th>Titre</th>
-            {#<th>Categorie</th>#}
-            <th>Date de création</th>
-            <th>Actions</th>
-        </tr>
-        </thead>
-        <tbody>
-        {% for project in projects %}
-            <tr>
-                <td>{{ project.id }}</td>
-                <td>{{ project.title}}</td>
-                {#<td>
-                    {% for category in article.categories %}
-                        {{ category.name }} {% if loop.last != true %}/{% endif %}
-                    {% endfor %}
-                </td>#}
-                <td>{{ project.createdAt|date('d-m-Y') }}</td>
-                <td>
-                    <a href="">Voir</a>
-                    <a href="{{ url('back_project_edit', {id: project.id}) }}">Editer</a>
-                    <a href="">Supprimé</a>
-                </td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+<div class="table-responsive">
 
+	<table class="table-light table table-sm">
+		<thead>
+			<tr>
+				<th>#</th>
+				<th>Titre</th>
+				{#<th>Categorie</th>#}
+				<th>Date de création</th>
+				<th>Actions</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for project in projects %}
+				<tr>
+					<td>{{ project.id }}</td>
+					<td>{{ project.title}}</td>
+					<td>{{ project.createdAt|date('d-m-Y') }}</td>
+					<td>
+						<a href="{{ url('front_project_show', {id: project.id})}}">Voir</a>
+						<a href="{{ url('back_project_edit', {id: project.id}) }}">Editer</a>
+						<a href="{{ url('back_project_remove', {id: project.id}) }}">Supprimé</a>
+					</td>
+				</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+</div>
 {% endblock %}

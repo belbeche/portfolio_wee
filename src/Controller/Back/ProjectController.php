@@ -6,11 +6,14 @@ use App\Entity\Image;
 use App\Entity\Project;
 use App\Form\ProjectType;
 use Doctrine\ORM\EntityManagerInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class ProjectController extends AbstractController
 {
@@ -41,38 +44,36 @@ class ProjectController extends AbstractController
         if ($request->isMethod('POST')) {
             $form->handleRequest($request);
             if ($form->isSubmitted() && $form->isValid()) {
-                $project->setCreatedAt(new \DateTime('NOW'));
-                $project->setUpdatedAt(new \DateTime('NOW'));
-
-                $imageFile = $form->get('image')->getData();
-
-                if ($imageFile) {
-
-                    $imageName = uniqid().'.'.$imageFile->getData()->getClientOriginalExtension();
-
-                    /*$imageFile->move($this->getParameter('images_directory'), $imageName);*/
-
-                    $imageFile->getData()->move(
-                        $this->getParameter('images_directory'),
-                        $imageName
-                    );
-
-                    $image = new Image();
-                    $image->setName($imageName);
-                    $image->setData($imageFile->getData()->getClientOriginalExtension());
-                    $project->setImage($image);
+                $project->setUpdatedAt(new \DateTime());
+    
+                // Récupérer les fichiers d'images uploadés
+                $imageFiles = $form->get('images')->getData();
+    
+                foreach ($imageFiles as $imageFile) {
+                    if ($imageFile instanceof UploadedFile) {
+                        $imageName = uniqid() . '.' . $imageFile->getClientOriginalExtension();
+    
+                        $imageFile->move(
+                            $this->getParameter('images_directory'),
+                            $imageName
+                        );
+    
+                        $image = new Image();
+                        $image->setName($imageName);
+                        $project->addImage($image);
+                    }
                 }
-
+    
                 $entityManager->persist($project);
                 $entityManager->flush();
-
+    
                 return $this->redirectToRoute('back_project_index');
             }
         }
-
-
+    
         return $this->render('back/project/new.html.twig', [
             'projectForm' => $form->createView(),
+            'project' => $project,
         ]);
     }
 
@@ -86,36 +87,106 @@ class ProjectController extends AbstractController
         Project                $project,
         Request                $request,
         EntityManagerInterface $entityManager
-    ): Response
-    {
-
+    ): Response {
         $form = $this->createForm(ProjectType::class, $project);
-
+        $originalImages = new ArrayCollection();
+    
+        // Créer une copie des images originales du projet
+        foreach ($project->getImages() as $image) {
+            $originalImages->add($image);
+        }
+    
         if ($request->isMethod('POST')) {
             $form->handleRequest($request);
             if ($form->isSubmitted() && $form->isValid()) {
                 $project->setUpdatedAt(new \DateTime());
-
-                $imageFile = $form->get('imageFile')->getData();
-
-                if ($imageFile) {
-                    $image = new Image();
-                    $image->setName($imageFile->getClientOriginalName());
-                    $image->setData(file_get_contents($imageFile->getPathName()));
-                    $project->setImageFile($image->getName());
+    
+                // Supprimer les images qui ont été supprimées du formulaire
+                foreach ($originalImages as $image) {
+                    if (!$project->getImages()->contains($image)) {
+                        $entityManager->remove($image);
+                    }
                 }
-
+    
+                // Récupérer les fichiers d'images uploadés
+                $imageFiles = $form->get('images')->getData();
+    
+                foreach ($imageFiles as $imageFile) {
+                    if ($imageFile instanceof UploadedFile) {
+                        $imageName = uniqid() . '.' . $imageFile->getClientOriginalExtension();
+                        $imageExtension = $imageFile->getClientOriginalExtension();
+                
+                        $imageFile->move(
+                            $this->getParameter('images_directory'),
+                            $imageName
+                        );
+                
+                        $image = new Image();
+                        $image->setName($imageName);
+                        $project->addImage($image);
+                    }
+                }
+    
                 $entityManager->persist($project);
                 $entityManager->flush();
-
+    
                 return $this->redirectToRoute('back_project_index');
             }
         }
-
+    
         return $this->render('back/project/edit.html.twig', [
-            'projectEdit' => $form->createView(),
+            'projectForm' => $form->createView(),
             'project' => $project,
         ]);
     }
+    /**
+     * @Route("/admin/project/remove/{id}", name="back_project_remove")
+     * @return Response
+     * @IsGranted("ROLE_ADMIN")
+     */
+    public function remove(
+        Project $project,
+        Request $request,
+        EntityManagerInterface $entityManager
+    ): Response {
 
+        if ($project->getCreatedAt(true)) {
+            $this->addFlash('success', "Le projet " . $project->getTitle() . " est supprimé avec success !");
+            $entityManager->remove($project);
+            $entityManager->flush();
+        } else {
+            $this->addFlash('success', "Le projet " . $project->getTitle() . " est inexistant ou a déjà été supprimé");
+        }
+
+        return $this->redirectToRoute('back_project_index');
+    }
+
+    /**
+     * @Route("/back/project/remove/image/{name}", name="back_project_remove_image", methods={"GET","DELETE"})
+     * @IsGranted("ROLE_ADMIN")
+     */
+    public function deleteImage(Image $image, Request $request,EntityManagerInterface $entityManager)
+    {
+        $data = json_decode($request->getContent(), true);
+
+        // We check if the token is valid
+        if ($this->isCsrfTokenValid('delete' . $image->getName(), $data['_token'])) {
+
+            // We get the name of the image
+            $nom = $image->getName();
+
+            // We delete the file
+            unlink($this->getParameter('images_directory') . '/' . $nom);
+
+            // We delete the entry from the database
+
+            $entityManager->remove($image);
+            $entityManager->flush();
+
+            // We answer in json
+            return new JsonResponse(['success' => 1]);
+        } else {
+            return new JsonResponse(['error' => 'Token Invalide'], 400);
+        }
+    }
 }

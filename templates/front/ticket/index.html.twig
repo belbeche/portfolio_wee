@@ -1,0 +1,26 @@
+{% extends "base.html.twig" %}
+
+{% block title %}
+	Assistance
+{% endblock %}
+
+{% block content %}
+
+	<h1>Liste des tickets</h1>
+
+	{% if tickets is empty %}
+		<p>Aucun ticket disponible pour le moment.</p>
+	{% else %}
+		<ul>
+			{% for ticket in tickets %}
+				<li>
+					<strong>Contenu du ticket :</strong>
+					{{ ticket.getContent() }}
+					<br>
+					<strong>Priorité :</strong>
+					{{ ticket.getPriority() }}
+				</li>
+			{% endfor %}
+		</ul>
+	{% endif %}
+{% endblock %}

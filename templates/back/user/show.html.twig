@@ -1,0 +1,31 @@
+{% extends 'base_back.html.twig' %}
+
+{% block title %}Utilisateurs
+{% endblock %}
+
+{% block content %}
+	<h1>Utilisateurs</h1>
+
+	<table>
+		<tbody>
+			<tr>
+				<th>#</th>
+				<td>{{ user.id }}</td>
+			</tr>
+			<tr>
+				<th>Email</th>
+				<td>{{ user.email }}</td>
+			</tr>
+			<tr>
+				<th>Nom</th>
+				<td>{{ user.nom }}</td>
+			</tr>
+			<tr>
+				<th>Prenom</th>
+				<td>{{ user.prenom }}</td>
+			</tr>
+		</tbody>
+	</table>
+
+	<a href="{{ path('back_user_index') }}">Retour</a>
+{% endblock %}

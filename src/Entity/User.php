@@ -49,11 +49,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $isVerified = false;
 
     /**
-     * @ORM\OneToMany(targetEntity=Devis::class, mappedBy="userId", orphanRemoval=true)
-     */
-    private $devis;
-
-    /**
      * @ORM\Column(type="string", length=255)
      */
     private $nom;
@@ -63,9 +58,25 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private $prenom;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Message::class, mappedBy="sender")
+     */
+    private $sentMessages;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Message::class, mappedBy="receiver")
+     */
+    private $receivedMessages;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Devis::class, mappedBy="user", orphanRemoval=true)
+     */
+    private $devis;
     public function __construct()
     {
         $this->devis = new ArrayCollection();
+        $this->sentMessages = new ArrayCollection();
+        $this->receivedMessages = new ArrayCollection();
     }
 
     public function getId(): ?Uuid
@@ -165,8 +176,53 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
+    public function getNom(): ?string
+    {
+        return $this->nom;
+    }
+
+    public function setNom(string $nom): self
+    {
+        $this->nom = $nom;
+
+        return $this;
+    }
+
+    public function getPrenom(): ?string
+    {
+        return $this->prenom;
+    }
+
+    public function setPrenom(string $prenom): self
+    {
+        $this->prenom = $prenom;
+
+        return $this;
+    }
+
     /**
-     * @return Collection<int, Devis>
+     * @return Collection<int, Message>
+     */
+    public function getSentMessages(): Collection
+    {
+        return $this->sentMessages;
+    }
+
+    /**
+     * @return Collection<int, Message>
+     */
+    public function getReceivedMessages(): Collection
+    {
+        return $this->receivedMessages;
+    }
+
+    public function __toString()
+    {
+        return $this->email; //
+    }
+
+    /**
+     * @return Collection|Devis[]
      */
     public function getDevis(): Collection
     {
@@ -191,30 +247,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
                 $devis->setUser(null);
             }
         }
-
-        return $this;
-    }
-
-    public function getNom(): ?string
-    {
-        return $this->nom;
-    }
-
-    public function setNom(string $nom): self
-    {
-        $this->nom = $nom;
-
-        return $this;
-    }
-
-    public function getPrenom(): ?string
-    {
-        return $this->prenom;
-    }
-
-    public function setPrenom(string $prenom): self
-    {
-        $this->prenom = $prenom;
 
         return $this;
     }

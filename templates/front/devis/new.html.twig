@@ -5,30 +5,39 @@
 
 {% block content %}
 	<div class="container">
-		<div
-			class="px-4 py-5 my-5">
-			{#<img class="d-block mx-auto mb-4" src="/docs/5.3/assets/brand/bootstrap-logo.svg" alt="" width="72" height="57">#}
-			<h1 class="display-5 fw-bold text-center">Discutons de votre projet
-			</h1>
-			<p class="lead">Vous voulez des informations complémentaires quant à la réalisation de votre projet ?
-			</p>
-			<p class="lead">
-				Utilisez le formulaire ci-dessous :
-			</p>
-			<div
-				class="col-lg-12 mx-auto padding-top-xxl">
-				<!-- Formulaire de devis -->
-				{{ form_start(formDevis) }}
-				{{ form_row(formDevis.type_de_site_web)}}
-				{{ form_errors(formDevis.type_de_site_web)}}
-				 {{ form_row(formDevis.attentes_design_web)}}
-				{{ form_errors(formDevis.attentes_design_web)}}
-				{{ form_row(formDevis.description_projet)}}
-				{{ form_errors(formDevis.description_projet)}}
-				<button type="submit" class="btn btn-outline-success my-5">Suivant</button>
-				{{ form_end(formDevis) }}
-			</div>
-		</div>
 
+		<h1 class="display-5 fw-bold text-center">Discutons de votre projet
+		</h1>
+		<p class="lead">Vous voulez des informations complémentaires quant à la réalisation de votre projet ?
+		</p>
+		<p class="lead">
+			Utilisez le formulaire ci-dessous :
+		</p>
+		{% if app.user %}
+			<p>Bienvenue, {{ app.user.email }} !</p>
+
+			<div class="px-4 py-5 my-5">
+				<div
+						class="col-lg-12 mx-auto padding-top-xxl">
+					<!-- Formulaire de devis -->
+					{{ form_start(formDevis) }}
+					<label for="">Type d'application souhaité</label>
+					{{ form_row(formDevis.type_de_site_web)}}
+					{{ form_errors(formDevis.type_de_site_web)}}
+					<label for="">Quelles sont vos attentes concernant le design ?</label>
+					{{ form_row(formDevis.attentes_design_web)}}
+					{{ form_errors(formDevis.attentes_design_web)}}
+					<label for="">Parlez moi un peu plus de votre projet !</label>
+					{{ form_row(formDevis.description_projet)}}
+					{{ form_errors(formDevis.description_projet)}}
+					<button type="submit">Recevoir mon récapitulatif de devis</button>
+					{{ form_end(formDevis) }}
+				</div>
+			</div>
+			{{ form_end(formDevis) }}
+		{% else %}
+			<p>Vous n'êtes pas connecté, veuillez fournir votre adresse email pour soumettre un devis :</p>
+			<a href="{{ url('app_register') }}" class="btn btn-success">Cliquez ici pour vous inscrire</a>
+		{% endif %}
 	</div>
 {% endblock %}

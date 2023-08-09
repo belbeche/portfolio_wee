@@ -10,9 +10,10 @@ use Doctrine\ORM\Mapping as ORM;
 use App\Repository\DevisRepository;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * @ORM\Entity(repositoryClass=DevisRepository::class)
+ * @ORM\Entity(repositoryClass="App\Repository\DevisRepository", repositoryClass=DevisRepository::class)
  */
 class Devis
 {
@@ -46,13 +47,31 @@ class Devis
 
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="devis")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(nullable=true)
      */
-    private $user;
+    private ?User $user;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     * @Assert\Email(message="L'adresse email '{{ value }}' n'est pas valide.")
+     * @ORM\Column(nullable=true)
+     */
+    private $email;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $statut;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Message::class, mappedBy="devis")
+     */
+    private $messages;
 
     public function __construct()
     {
         $this->created_at = new DateTimeImmutable('now');
+        $this->messages = new ArrayCollection();
     }
 
     public function getId(): ?Uuid
@@ -125,4 +144,49 @@ class Devis
 
         return $this;
     }
+
+    public function getEmail(): ?string
+    {
+        return $this->email;
+    }
+
+    public function setEmail(string $email): self
+    {
+        $this->email = $email;
+
+        return $this;
+    }
+
+    public function getStatut(): ?string
+    {
+        return $this->statut;
+    }
+
+    public function setStatut(string $statut): self
+    {
+        $this->statut = $statut;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Message>
+     */
+    public function getMessages(): Collection
+    {
+        return $this->messages;
+    }
+    public function setEmailFromUser(?User $user): void
+    {
+        if ($user) {
+            // Utilisateur connecté, utilisez son adresse email
+            $this->email = $user->getEmail();
+        }
+    }
+
+    public function __toString()
+    {
+        return $this->type_de_site_web;
+    }
+
 }

@@ -1,96 +1,97 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1"/>
-    <meta name="description" content="Walid BELBECHE - Création de site internet pas cher"/>
-    <meta name="keywords" content="Site web, Identité numérique, conseils site internet"/>
-    <meta content="Walid BELBECHE" name="author"/>
-    <title>
-        {% block title %}Admin panel
-        {% endblock %}
-    </title>
-    <!-- Favicon -->
-    <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('medias/favicon/favicon-16x16.png') }}">
-    <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('medias/favicon/favicon-32x32.png') }}">
-    <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('medias/favicon/favicon-16x16.png') }}">
-    <link rel="manifest" href="{{ asset('medias/favicon/site.webmanifest') }}">
-    <link rel="icon" href="{{ asset('medias/favicon/favicon.ico') }}">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1"/>
+		<meta name="description" content="Walid BELBECHE - Création de site internet pas cher"/>
+		<meta name="keywords" content="Site web, Identité numérique, conseils site internet"/>
+		<meta content="Walid BELBECHE" name="author"/>
+		<title>
+			{% block title %}Admin panel
+			{% endblock %}
+		</title>
+		<!-- Favicon -->
+		<link rel="apple-touch-icon" sizes="180x180" href="{{ asset('medias/favicon/favicon-16x16.png') }}">
+		<link rel="icon" type="image/png" sizes="32x32" href="{{ asset('medias/favicon/favicon-32x32.png') }}">
+		<link rel="icon" type="image/png" sizes="16x16" href="{{ asset('medias/favicon/favicon-16x16.png') }}">
+		<link rel="manifest" href="{{ asset('medias/favicon/site.webmanifest') }}">
+		<link rel="icon" href="{{ asset('medias/favicon/favicon.ico') }}">
 
-    <!-- Global CSS -->
-    {#<link rel="stylesheet" href="{{ asset('css/front/css/bootstrap.min.css') }}">#}
-    {% block stylesheets %}
-        {{ encore_entry_link_tags('app') }}
-    {% endblock %}
-</head>
-<body class="page">
+		<!-- Global CSS -->
+		{#<link rel="stylesheet" href="{{ asset('css/front/css/bootstrap.min.css') }}">#}
+			{% block stylesheets %}
+		{{ encore_entry_link_tags('app') }}
+	{% endblock %}
+	</head>
+		<body class="page"> <div class="lm-animated-bg"></div>
 
-<div class="lm-animated-bg"></div>
+		<!-- Loading animation -->
+		<div class="preloader">
+			<div class="preloader-animation">
+				<div class="preloader-spinner"></div>
+			</div>
+		</div>
+		<!-- /Loading animation -->
 
-<!-- Loading animation -->
-<div class="preloader">
-    <div class="preloader-animation">
-        <div class="preloader-spinner">
-        </div>
-    </div>
-</div>
-<!-- /Loading animation -->
+		<!-- Scroll To Top Button -->
+		<div class="lmpixels-scroll-to-top">
+			<i class="lnr lnr-chevron-up"></i>
+		</div>
+		<!-- /Scroll To Top Button -->
 
-<!-- Scroll To Top Button -->
-<div class="lmpixels-scroll-to-top"><i class="lnr lnr-chevron-up"></i></div>
-<!-- /Scroll To Top Button -->
-
-<div class="page-scroll">
-    <div id="page_container" class="page-container bg-move-effect" data-animation="transition-flip-in-right">
+		<div class="page-scroll">
+			<div id="page_container" class="page-container bg-move-effect">
 
 
-        {% block navbar %}
-            {% include "back/includes/nav.html.twig" %}
-        {% endblock %}
+				{% block navbar %}
+					{% include "back/includes/nav.html.twig" %}
+				{% endblock %}
 
-        {% block content %}{% endblock %}
+				{% block content %}{% endblock %}
 
-        <!-- Footer -->
-        <footer class="site-footer clearfix">
-            <div class="footer-social">
-                <ul class="footer-social-links">
-                    <li>
-                        <a href="https://github.com/belbeche" target="_blank">Github</a>
-                    </li>
+				<!-- Footer -->
+				<footer class="site-footer clearfix">
+					<div class="footer-social">
+						<ul class="footer-social-links">
+							<li>
+								<a href="https://github.com/belbeche" target="_blank">Github</a>
+							</li>
 
-                    <li>
-                        <a href="https://www.linkedin.com/in/walid-belbeche/" target="_blank">LinkedIn</a>
-                    </li>
+							<li>
+								<a href="https://www.linkedin.com/in/walid-belbeche/" target="_blank">LinkedIn</a>
+							</li>
 
-                    <li>
-                        <a href="#" target="_blank">Mes réalisations</a>
-                    </li>
-                </ul>
-            </div>
+							<li>
+								<a href="{{ url('front_project')}}" target="_blank">Mes réalisations</a>
+							</li>
+						</ul>
+					</div>
 
-            <div class="footer-copyrights">
-                <p> Walid BELBECHE © 2023 All rights reserved.</p>
-            </div>
-        </footer>
-        <!-- /Footer -->
+					<div class="footer-copyrights">
+						<p>
+							Walid BELBECHE © 2023 All rights reserved.</p>
+					</div>
+				</footer>
+				<!-- /Footer -->
 
-    </div>
-</div>
+			</div>
+		</div>
 
-<!-- Front script -->
-{% block javascripts %}
-    <script src="{{ asset('js/jquery-3.5.1.min.js') }}"></script>
-    <script src="{{ asset('js/bootstrap.js') }}"></script>
-    {{ encore_entry_script_tags('app') }}
-    {{ encore_entry_script_tags('imagesloaded') }}
-    {#<script src='https://www.google.com/recaptcha/api.js'></script>#}
-    <script src="{{ asset('js/modernizr.custom.js') }}"></script>
-    <script src="{{ asset('js/jquery.shuffle.min.js') }}"></script>
-    <script src="{{ asset('js/masonry.pkgd.min.js') }}"></script>
-    {{ encore_entry_script_tags('owl.carousel') }}
-    <script src="{{ asset('js/jquery.magnific-popup.min.js') }}"></script>
-    {{ encore_entry_script_tags('validator') }}
-    {{ encore_entry_script_tags('main') }}
-{% endblock %}
-</body>
+		<!-- Front script -->
+		{% block javascripts %}
+			<script src="{{ asset('js/jquery-3.5.1.min.js') }}"></script>
+			<script src="{{ asset('js/bootstrap.js') }}"></script>
+			{{ encore_entry_script_tags('app') }}
+			{{ encore_entry_script_tags('imagesloaded') }}
+			{#<script src='https://www.google.com/recaptcha/api.js'></script>#}
+			<script src="{{ asset('js/modernizr.custom.js') }}"></script>
+			<script src="{{ asset('js/jquery.shuffle.min.js') }}"></script>
+			<script src="{{ asset('js/masonry.pkgd.min.js') }}"></script>
+			{{ encore_entry_script_tags('owl.carousel') }}
+			<script src="{{ asset('js/jquery.magnific-popup.min.js') }}"></script>
+			{{ encore_entry_script_tags('validator') }}
+			{{ encore_entry_script_tags('main') }}
+			<script src="{{ asset('js/delete_image.js')}}"></script>
+		{% endblock %}
+	</body>
 </html>

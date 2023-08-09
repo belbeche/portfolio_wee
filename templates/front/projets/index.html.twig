@@ -1,26 +1,82 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Mes réalisations{% endblock %}
+{% block title %}Mes réalisations
+{% endblock %}
 
 {% block content %}
 
-    <h1>Page des réalisations</h1>
+	<div id="main" class="site-main">
+		<div id="main-content" class="single-page-content">
+			<div id="primary" class="content-area">
 
-    <div class="container">
-        <div class="row">
-            {% for project in projects  %}
-                <div class="col-md-3">
-                    <div class="card" style="width: 18rem;">
-                        <img src="{{ asset('/image_project/'~project.image.name) }}" alt="{{ project.image.name }}"/>
-                        <div class="card-body">
-                            <h5 class="card-title">{{ project.title }}</h5>
-                            <p class="card-text">{{ project.description }}.</p>
-                            <a href="{{ url('front_project_show', {id: project.id }) }}" class="btn btn-primary">Voir le projet</a>
-                        </div>
-                    </div>
-                </div>
-            {% endfor %}
-        </div>
-    </div>
+				<div class="page-title">
+					<h1>Mes réalisations</h1>
+					<div class="page-subtitle">
+						<br>
+						<a href="{{ url('front_devis_new')}}">Demandez votre devis maintenant</a>
+						<h4></h4>
+					</div>
+				</div>
 
-{% endblock %}
+
+				{% include "front/includes/project.html.twig" %}
+
+
+				<h1 class="pb-4">Envie d'avoir une visibilité sur le web ? Discutons de votre besoin !</h1>
+
+				<div class="container">
+					<div
+						class="row">
+
+						<!-- Rélisation d'un site d'agence -->
+						<div class="col-md-3 col-xs-12 mb-5 mt-2">
+							<div class="card">
+								<img src="{{ asset('img/quote/agency.svg') }}" alt="Rélisation de site d'agence"/>
+								<div class="card-body">
+									<h5 class="card-title">Rélisation de site d'agence</h5>
+									<p class="card-text">Une réalisation sur mesure pour votre site d'agence, afin de garantir une présence permanente en ligne..</p>
+									<a href="{{ url('front_devis_new') }}" class="btn btn-primary">Je crée mon devis</a>
+								</div>
+							</div>
+						</div>
+
+						<!-- Réalisation de site d'annonce immobilière -->
+						<div class="col-md-3 col-xs-12 mb-5 mt-2">
+							<div class="card">
+								<img src="{{ asset('img/quote/real_estate_or_travel.svg') }}" alt="Réalisation de site d'annonce immobilière"/>
+								<div class="card-body">
+									<h5 class="card-title">Réalisation de site d'annonce immobilière</h5>
+									<p class="card-text">Une réalisation sur mesure pour votre site d'annonce immobilière ou de voyage, afin de garantir une présence permanente en ligne..</p>
+									<a href="{{ url('front_devis_new') }}" class="btn btn-primary">Je crée mon devis</a>
+								</div>
+							</div>
+						</div>
+
+						<!-- Rélisation de site eCommerce -->
+						<div class="col-md-3 col-xs-12 mb-5 mt-2">
+							<div class="card">
+								<img src="{{ asset('img/quote/Ecommerce.svg') }}" alt="Rélisation de site eCommerce"/>
+								<div class="card-body">
+									<h5 class="card-title">Rélisation de site eCommerce</h5>
+									<p class="card-text">Une réalisation sur mesure pour votre site de boutique en ligne..</p>
+									<a href="{{ url('front_devis_new') }}" class="btn btn-primary">Je crée mon devis</a>
+								</div>
+							</div>
+						</div>
+
+						<!-- Réalisation de site portfolio -->
+						<div class="col-md-3 col-xs-12 mb-5 mt-2">
+							<div class="card">
+								<img src="{{ asset('img/quote/portfolio.svg') }}" alt="Réalisation de site portfolio"/>
+								<div class="card-body">
+									<h5 class="card-title">Réalisation de site portfolio</h5>
+									<p class="card-text">Une réalisation sur mesure pour votre site portfolio, afin de présenter vos meilleure créations et d'acquérir de nouveau client..</p>
+									<a href="{{ url('front_devis_new') }}" class="btn btn-primary">Je crée mon devis</a>
+								</div>
+							</div>
+						</div>
+
+					</div>
+				</div>
+
+			{% endblock %}

@@ -1,0 +1,58 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}A propos
+{% endblock %}
+
+{% block content %}
+
+	<div id="home_content" class="home-content third-style">
+		<div class="">
+			<div class="row">
+				<div class="col-sm-12 col-md-6 col-lg-6">
+					<div class="inner-content">
+
+						<a href="{{ asset('img/develop.jpg')}}"><img src="{{ asset('img/develop.jpg')}}" alt="Création de site internet pas cher Nevers" class="img-fluid rounded-pill"></a>
+
+					</div>
+				</div>
+				<div class="col-sm-12 col-md-6 col-lg-6">
+					<div class="inner-content inner-text-block">
+						<div>
+							<section class="about-content rounded-3">
+								<div class="owl-carousel text-rotation">
+									<div class="item">
+										<div class="sp-subtitle">Free lance - développeur</div>
+									</div>
+								</div>
+								<h2 class="hp-main-title">Walid BELBECHE</h2>
+								<p>
+									Grâce à mon expertise en développement Web et à ma connaissance approfondie des nouvelles technologies, je peux vous guider dans votre transformation digitale pour atteindre vos objectifs en ligne. Ensemble, nous pouvons créer un site Web professionnel et attractif qui représente votre entreprise de manière efficace sur Internet. De la conception à la mise en ligne, je m'occupe de toutes les étapes du processus de développement Web. Votre site sera adapté à tous les appareils, optimisé pour les moteurs de recherche et doté des fonctionnalités nécessaires pour attirer et engager vos visiteurs.
+								</p>
+								<p>
+									Je vous propose également des stratégies de marketing numérique pour augmenter votre visibilité en ligne et attirer un public ciblé. De la création de campagnes publicitaires sur les réseaux sociaux à l'optimisation de votre référencement naturel, je mets en place des stratégies personnalisées pour vous aider à atteindre vos objectifs de croissance et de conversion.
+								</p>
+								<p>
+									La sécurité en ligne est une préoccupation majeure pour toute entreprise. Je vous aide à renforcer la sécurité de vos données et de votre site Web en mettant en place des mesures de protection avancées. De la sécurisation des transactions en ligne à la protection contre les cyberattaques, je veille à ce que votre présence en ligne soit sûre et fiable.
+								</p>
+								<p>
+									La gestion de contenu est essentielle pour maintenir votre site Web à jour et fournir à vos utilisateurs des informations pertinentes. Je vous propose des solutions de gestion de contenu faciles à utiliser et personnalisées, vous permettant de mettre à jour votre site en toute simplicité, d'ajouter de nouvelles pages et de partager du contenu attrayant pour votre audience.
+								</p>
+								<p>
+									Enfin, je vous accompagne dans l'analyse des données et la mesure de vos performances en ligne. Grâce à des outils d'analyse puissants, je vous fournis des rapports détaillés sur le trafic de votre site, le comportement de vos utilisateurs et les conversions réalisées. Ces informations précieuses vous aident à prendre des décisions éclairées et à ajuster votre stratégie digitale pour obtenir de meilleurs résultats.
+								</p>
+							</section>
+
+							<div class="hp-buttons">
+								<a href="{{ asset('belbeche_walid_cv.pdf')}}" target="_blank" class="d-inline-flex align-items-center btn btn-primary btn-lg px-4 rounded-pill">Télécharger CV</a>
+								<a href="mailto:wbelbeche.s@gmail.com" target="_blank" class="d-inline-flex align-items-center btn btn-success btn-lg px-4 rounded-pill">Contacter</a>
+
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+{% endblock %}

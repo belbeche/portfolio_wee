@@ -1,14 +1,11 @@
-{{ form_start(projectEdit) }}
+{{ form_start(projectForm) }}
 
-    {{ form_row(projectEdit.title) }}
-    {{ form_errors(projectEdit.title) }}
-
-    {{ form_row(projectEdit.description) }}
-    {{ form_errors(projectEdit.description) }}
-
-{#    {{ form_row(projectEdit.image) }}
-    {{ form_errors(projectEdit.image) }}#}
+{{ form_row(projectForm.title) }}
+{{ form_row(projectForm.description) }}
+{{ form_row(projectForm.images) }}
+{{ form_row(projectForm.categories) }}
+{{ form_row(projectForm.link) }}
 
 <button type="submit" class="btn btn-primary">Enregistrer</button>
 
-{{ form_end(projectEdit) }}
+{{ form_end(projectForm) }}

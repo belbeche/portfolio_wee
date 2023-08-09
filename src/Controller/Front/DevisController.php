@@ -2,29 +2,44 @@
 
 namespace App\Controller\Front;
 
-use App\Entity\User;
 use App\Entity\Devis;
 use App\Form\DevisType;
-use App\Repository\DevisRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
-
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 
 class DevisController extends AbstractController
 {
     /**
-     * @Route("/devis-en-ligne/{id}", name="front_devis_new")
+     * @Route("/devis-en-ligne", name="front_devis_new")
      * @throws TransportExceptionInterface
      */
     public function new(Request $request, EntityManagerInterface $entityManager, MailerInterface $mailer): Response
     {
+        $currentUser = $this->getUser();
+
+        if (!$currentUser) {
+            // Utilisateur non connecté, renvoyer vers la page d'inscription
+            return $this->redirectToRoute('app_register');
+
+        } else {
+            // Utilisateur connecté, utilisez son adresse email
+            $email = $currentUser->getEmail();
+        }
+
+        // Vérifier si l'utilisateur a déjà un devis en fonction de l'adresse email
+        $existingDevis = $entityManager->getRepository(Devis::class)->findOneBy(['email' => $email]);
+
+        if ($existingDevis) {
+            // Si un devis existe avec cette adresse email, rediriger vers la page d'assistance
+            return $this->redirectToRoute('front_assistance');
+        }
+
         $devis = new Devis();
 
         $form = $this->createForm(DevisType::class, $devis);
@@ -33,27 +48,31 @@ class DevisController extends AbstractController
             $form->handleRequest($request);
 
             if ($form->isSubmitted() && $form->isValid()) {
-
-                $user = $entityManager->getRepository(User::class)->findOneBy(['id' => $request->get('id')]);
-                $devis->setUser($user);
+                $devis->setStatut('en_attente'); // Mettez à jour le statut si nécessaire
+                $devis->setEmail($currentUser->getEmail()); // Définir l'adresse email fournie par l'utilisateur
+                $devis->setUser($currentUser);
                 $entityManager->persist($devis);
-                $entityManager->flush($devis);
+                $entityManager->flush();
 
                 $email = (new TemplatedEmail())
                     ->from('wbelbeche.s@gmail.com')
-                    ->to($user->getEmail())
-                    ->subject('Récapitulatif de devis, Portfolio - Wee')
+                    ->to($devis->getEmail())
+                    ->subject('Récapitulatif de demande devis, Walid BELBECHE')
                     ->bcc('wbelbeche.s@gmail.com')
                     ->context([
-                        'name' => $user->getNom(),
-                        'registrationNumber' => $user->getId(),
-                        'subject' => $devis->getTypeDeSiteWeb()
+                        'RegistredNumber' => $devis->getId(),
+                        'email_address' => $devis->getEmail(),
+                        'subject' => $devis->getTypeDeSiteWeb(),
+                        'designWebsite' => $devis->getAttentesDesignWeb(),
+                        'message' => $devis->getDescriptionProjet(),
                     ])
                     ->htmlTemplate('front/devis/email.html.twig');
 
                 $mailer->send($email);
 
-                return $this->redirectToRoute('front_devis_utilisateur_show');
+                $this->addFlash('success', 'Votre demande à bien était prise en compte, vérifiez votre adresse email');
+
+                return $this->redirectToRoute('front_assistance');
             }
         }
 
@@ -63,17 +82,15 @@ class DevisController extends AbstractController
     }
 
     /**
-     * @Route("/devis/utilisateur", name="front_devis_utilisateur_show")
-     * 
-     * @param DevisRepository $devisRepo
-     * @return Response
+     * @Route("/devis/{id}/delete", name="front_devis_delete")
      */
-    public function Show(EntityManagerInterface $entityManager, Request $request): Response
+    public function delete(Request $request, EntityManagerInterface $entityManager, Devis $devis): Response
     {
-        $user = $entityManager->getRepository(Devis::class)->findBy(['user' => $this->getUser()]);
+        if ($request->isMethod('POST')) {
+            $entityManager->remove($devis);
+            $entityManager->flush();
+        }
 
-        return $this->render('front/devis/show.html.twig', [
-            'allQuote' => $user,
-        ]);
+        return $this->redirectToRoute('front_assistance');
     }
 }
