@@ -8,6 +8,7 @@ webpack.config.js
 /config/secrets/prod/prod.decrypt.private.php
 /public/bundles/
 /config/jwt/*
+/config/packages/lexik_jwt_authentication.yaml
 /var/
 /vendor/
 /node_modules/
