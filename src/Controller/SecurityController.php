@@ -15,44 +15,59 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class SecurityController extends AbstractController
 {
+
     /**
-     * @Route("/api/register", name="api_register", methods={"POST"})
+     * @Route("/inscription", name="app_register")
+     * 
      */
     public function Register(Request $request, EntityManagerInterface $entityManager, UserPasswordHasherInterface $hasher): Response
     {
-        $data = json_decode($request->getContent(), true);
+
         $user = new User();
 
-        // Utilisez $data pour remplir l'entité $user...
+        $form = $this->createForm(UserType::class, $user);
 
-        // Par exemple:
-        $user->setEmail($data['email']);
-        $user->setPassword($hasher->hashPassword($user, $data['password']));
-        $user->setNom($data['nom']);
-        $user->setPrenom($data['prenom']);
-        $user->setRoles($data['roles']);
+        if ($request->isMethod('post')) {
+            $form->handleRequest($request);
 
-        $entityManager->persist($user);
-        $entityManager->flush();
+            if ($form->isSubmitted() && $form->isValid()) {
 
-        return $this->json(['success' => true]);
+                $user->setPassword($hasher->hashpassword(
+                    $user,
+                    $form->get('password')->getData()
+                ));
+
+                $user->setRoles(['ROLE_USER']);
+
+
+                $entityManager->persist($user);
+
+                $entityManager->flush();
+
+                return $this->redirectToRoute('app_login');
+            }
+        }
+
+        return $this->render('security/register.html.twig', [
+            'formRegister' => $form->createView(),
+        ]);
     }
 
     /**
-     * @Route("/api/login_check", name="api_login")
+     * @Route("/login", name="app_login")
      */
-    public function login(AuthenticationUtils $authenticationUtils): JsonResponse
+    public function login(AuthenticationUtils $authenticationUtils): Response
     {
-        // Récupérez l'erreur d'authentification, si elle existe
-        $error = $authenticationUtils->getLastAuthenticationError();
-
-        if ($error) {
-            return new JsonResponse(['error' => $error->getMessage()], JsonResponse::HTTP_UNAUTHORIZED);
+        if ($this->getUser()) {
+            return $this->redirectToRoute('front_assitance');
         }
 
-        // Si l'authentification a réussi, le bundle JWT prendra le relais.
-        // En cas de succès, un JWT sera retourné, donc aucun autre traitement n'est nécessaire ici.
-        return new JsonResponse(['error' => 'Une erreur inattendue s\'est produite.'], JsonResponse::HTTP_INTERNAL_SERVER_ERROR);
+        // get the login error if there is one
+        $error = $authenticationUtils->getLastAuthenticationError();
+        // last username entered by the user
+        $lastUsername = $authenticationUtils->getLastUsername();
+
+        return $this->render('security/login.html.twig', ['last_username' => $lastUsername, 'error' => $error]);
     }
 
     /**
