@@ -1,8 +1,6 @@
-<!-- Header -->
-<header id="site_header" class="header">
-	<div
-		class="header-content clearfix">
 
+<header id="header">
+	<nav class="navbar container">
 		<!-- Text Logo -->
 		<div class="logo">
 			<a href="{{ url('front_home') }}">
@@ -15,51 +13,41 @@
 			</a>
 		</div>
 		<!-- /Text Logo -->
+		<div class="burger" id="burger">
+			<span class="burger-line"></span>
+			<span class="burger-line"></span>
+			<span class="burger-line"></span>
+		</div>
+		<div class="menu" id="menu">
+			<ul class="menu-inner">
 
-		<!-- Navigation -->
-		<div class="site-nav mobile-menu-hide">
-			<ul class="leven-classic-menu site-main-menu">
-				<li class="menu-item">
-					<a href="{{ url('front_home') }}">Accueil</a>
-				</li>
+				<li class="menu-item"><a href="{{ url('front_home') }}" class="menu-link">Accueil</a></li>
 
-				<li class="menu-item">
-					<a href="{{ url('front_about')}}">A propos de moi</a>
-				</li>
-
-				<li class="menu-item">
-					<a href="{{ url('front_project') }}">Ce que je propose</a>
-				</li>
+				<a href="{{ url('front_about')}}" class="menu-link">A propos de moi</a>
+				<a href="{{ url('front_project') }}" class="menu-link">Ce que je propose</a>
 				{% if is_granted('ROLE_USER') %}
 					<li class="menu-item">
-						<a href="{{ url('front_assistance') }}">Assistance</a>
+						<a href="{{ url('front_assistance') }}" class="menu-link">Assistance</a>
 					</li>
 				{% else %}
 					<li class="menu-item">
-						<a href="{{ url('front_devis_new') }}">Faire une demande</a>
+						<a href="{{ url('front_devis_new') }}" class="menu-link">Faire une demande</a>
 					</li>
 					<li class="menu-item">
 						<a href="{{ url('app_login') }}" class="btn btn-outline-info">Connexion</a>
 					</li>
 				{% endif %}
-
 				{% if is_granted('ROLE_USER') %}
 					<li class="menu-item">
-						<a href="{{ url('app_logout') }}" class="btn btn-outline-danger">Déconnexion</a>
+						<a href="{{ url('app_logout') }}" class="btn btn-danger">Déconnexion</a>
 					</li>
 				{% endif %}
-
 				{% if is_granted('ROLE_ADMIN') %}
 					<li class="menu-item">
-						<a href="{{ url('back_index') }}" class="btn btn-outline-danger">Admin panel</a>
+						<a href="{{ url('back_index') }}" class="btn btn-danger">Admin panel</a>
 					</li>
 				{% endif %}
 			</ul>
 		</div>
-
-		<a class="menu-toggle mobile-visible">
-			<i class="fa fa-bars"></i>
-		</a>
-	</div>
+	</nav>
 </header>
-<!-- /Header -->
