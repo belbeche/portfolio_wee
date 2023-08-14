@@ -37,14 +37,14 @@
 						<a href="{{ url('app_login') }}" class="btn btn-outline-info">Connexion</a>
 					</li>
 				{% endif %}
-				{% if is_granted('ROLE_USER') %}
+				{% if app.user %}
 					<li class="menu-item">
-						<a href="{{ url('app_logout') }}" class="btn btn-danger">Déconnexion</a>
+						<a href="{{ url('app_logout') }}" class="btn btn-outline-danger">Déconnexion</a>
 					</li>
 				{% endif %}
 				{% if is_granted('ROLE_ADMIN') %}
 					<li class="menu-item">
-						<a href="{{ url('back_index') }}" class="btn btn-danger">Admin panel</a>
+						<a href="{{ url('back_index') }}" class="btn btn-outline-danger">Admin panel</a>
 					</li>
 				{% endif %}
 			</ul>

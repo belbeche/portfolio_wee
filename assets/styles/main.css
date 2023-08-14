@@ -2380,7 +2380,6 @@ ul.social-links li:last-child a {
   position: relative;
   text-align: center;
   width: 100%;
-  display: block;
   margin: 0 0 15px;
   background: #fff;
   padding: 25px 10px 15px;
@@ -2395,6 +2394,10 @@ ul.social-links li:last-child a {
   -o-transition: all 0.2s ease-in-out;
   -ms-transition: all 0.2s ease-in-out;
   transition: all 0.2s ease-in-out;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
 .lm-info-block:hover {
@@ -2417,13 +2420,13 @@ ul.social-links li:last-child a {
   margin: 15px;
 }
 
-.lm-info-block i {
+.lm-info-block img {
   position: relative;
   font-size: 33px;
   color: #4A6583;
   margin-bottom: 6px;
   width: 33px;
-  height: 33px;
+  display: block;
 }
 
 .lm-info-block .lm-info-block {
