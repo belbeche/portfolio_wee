@@ -42,6 +42,7 @@ class DevisController extends AbstractController
      */
     public function edit(Request $request, EntityManagerInterface $entityManager, Devis $devis): Response
     {
+
         $form = $this->createForm(DevisType::class, $devis);
 
         $form->handleRequest($request);
@@ -59,7 +60,7 @@ class DevisController extends AbstractController
     }
 
     /**
-     * @Route("/admin/devis/{id}/delete", name="back_devis_delete")
+     * @Route("/admin/devis/{id}/delete", name="back_devis_delete", methods={"POST"})
      */
     public function delete(Request $request, EntityManagerInterface $entityManager, Devis $devis): Response
     {

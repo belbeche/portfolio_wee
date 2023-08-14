@@ -51,7 +51,7 @@ body {
     color: var(--color-black-400);
     background-color: var(--color-white-100);
 }
-body.darkmode {
+body .darkmode {
     color: var(--color-white-100);
     background-color: var(--color-black-400);
 }

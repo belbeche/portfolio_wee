@@ -16,7 +16,6 @@
 			<th>Description du projet</th>
 			<th>Date de création</th>
 			<th>Status</th>
-			<th>Actions</th>
 		</tr>
 		</thead>
 		<tbody>
@@ -29,16 +28,16 @@
 				<td>{{ devis.descriptionProjet }}</td>
 				<td>{{ devis.createdAt|date('Y-m-d H:i:s') }}</td>
 				<td>{{ devis.statut }}</td>
-				<td>
-					<a href="{{ path('send_message') }}" class="btn btn-outline-primary">Créer un nouveau ticket</a>
-					<a href="{{ path('front_show_ticket', {'id': devis.id}) }}" class="btn btn-outline-secondary">Voir mes tickets</a>
-					{% if app.user.id %}
-						<form action="{{ path('front_devis_delete', {'id': devis.id}) }}" method="post" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce devis ?');">
-							<button type="submit">Supprimer</button>
-						</form>
-					{% endif %}
-				</td>
 			</tr>
+			<div class="d-flex">
+				<a href="{{ path('send_message') }}" class="btn btn-outline-primary">Créer un nouveau ticket</a>
+				<a href="{{ path('front_show_ticket', {'id': devis.id}) }}" class="btn btn-outline-secondary">Voir mes tickets</a>
+				{% if app.user.id %}
+					<form action="{{ path('front_devis_delete', {'id': devis.id}) }}" method="post" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce devis ?');">
+						<button type="submit">Supprimer</button>
+					</form>
+				{% endif %}
+			</div>
 		{% endfor %}
 		</tbody>
 	</table>

@@ -7,13 +7,13 @@
 	<h1>Modifier le devis</h1>
 
 	{{ form_start(formDevis) }}
-	{{ form_row(formDevis.email) }}
-	{{ form_row(formDevis.type_de_site_web) }}
-	{{ form_row(formDevis.attentes_design_web) }}
-	{{ form_row(formDevis.description_projet)}}
+	{{ form_widget(formDevis.email) }}
+	{{ form_widget(formDevis.type_de_site_web) }}
+	{{ form_widget(formDevis.attentes_design_web) }}
+	{{ form_widget(formDevis.description_projet)}}
 	{% if is_granted('ROLE_ADMIN') %}
 		Status :
-		{{ form_row(formDevis.statut, {attr: {style: 'display:block'}}) }}
+		{{ form_widget(formDevis.statut, {attr: {style: 'display:block'}}) }}
 	{% endif %}
 	<button type="submit">Enregistrer</button>
 	{{ form_end(formDevis) }}

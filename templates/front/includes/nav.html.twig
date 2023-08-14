@@ -25,7 +25,7 @@
 
 				<a href="{{ url('front_about')}}" class="menu-link">A propos de moi</a>
 				<a href="{{ url('front_project') }}" class="menu-link">Ce que je propose</a>
-				{% if is_granted('ROLE_USER') %}
+				{% if app.user %}
 					<li class="menu-item">
 						<a href="{{ url('front_assistance') }}" class="menu-link">Assistance</a>
 					</li>
@@ -49,5 +49,6 @@
 				{% endif %}
 			</ul>
 		</div>
+		{#<button id="switch">Dark mode</button>#}
 	</nav>
 </header>
