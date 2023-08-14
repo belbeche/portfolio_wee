@@ -59,6 +59,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $prenom;
 
     /**
+     * @ORM\Column(type="string", length=10)
+     */
+    private $civility;
+
+    /**
      * @ORM\OneToMany(targetEntity=Message::class, mappedBy="sender")
      */
     private $sentMessages;
@@ -197,6 +202,24 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         $this->prenom = $prenom;
 
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCivility()
+    {
+        return $this->civility;
+    }
+
+    /**
+     * @param mixed $civility
+     * @return User
+     */
+    public function setCivility($civility)
+    {
+        $this->civility = $civility;
         return $this;
     }
 

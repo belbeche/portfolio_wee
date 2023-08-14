@@ -6,17 +6,21 @@
 {% block content %}
 	<div class="container">
 
-		<h1 class="display-5 fw-bold text-center">Discutons de votre projet
-		</h1>
-		<p class="lead">Vous voulez des informations complémentaires quant à la réalisation de votre projet ?
-		</p>
-		<p class="lead">
-			Utilisez le formulaire ci-dessous :
-		</p>
-		{% if app.user %}
-			<p>Bienvenue, {{ app.user.email }} !</p>
+		<div class="text-center">
+			{% if app.user %}
+				<h1 class="display-5 fw-bold text-center">Discutons de votre projet {{ app.user.civility}}. {{ app.user.prenom }} {{ app.user.nom }} !</h1>
+			{% endif %}
 
-			<div class="px-4 py-5 my-5">
+			<p class="lead">
+				Vous avez un projet en tête et souhaitez obtenir un devis personnalisé ? Vous êtes au bon endroit.
+			</p>
+
+			<p class="lead">
+				Remplissez le formulaire ci-dessous pour détailler vos besoins. Une fois votre demande de devis soumise, vous pourrez suivre son avancement en temps réel grâce à notre onglet <a href="{{ path('front_assistance') }}">Assistance</a>. Je suis là pour vous accompagner à chaque étape.
+			</p>
+		</div>
+		{% if app.user %}
+			<div class="px-4">
 				<div
 						class="col-lg-12 mx-auto padding-top-xxl">
 					<!-- Formulaire de devis -->

@@ -28,8 +28,13 @@
 						{{ form_errors(formRegister.prenom) }}
 					</div>
 					<div>
+						<label for="nom" class="sr-only">Civilité</label>
+						{{ form_row(formRegister.civility) }}
+						{{ form_errors(formRegister.civility) }}
+					</div>
+					<div>
 						<label for="email-address" class="sr-only">Identifiant de connexion</label>
-						{{ form_row(formRegister.email, {attr: {'class' : 'form-control'}}) }}
+						{{ form_row(formRegister.email) }}
 						{{ form_errors(formRegister.email) }}
 					</div>
 					<div>

@@ -21,6 +21,15 @@ class UserType extends AbstractType
         $builder
             ->add('nom', TextType::class)
             ->add('prenom', TextType::class)
+            ->add('civility', ChoiceType::class, [
+                'label' => 'Civilité',
+                'choices' => [
+                    'M.' => 'M',
+                    'Mme.' => 'Mme',
+                ],
+                'expanded' => true,   // Utilisez ceci si vous souhaitez des boutons radio
+                'multiple' => false,  // Gardez ceci sur false pour ne permettre qu'un seul choix
+            ])
             ->add('email', EmailType::class)
             ->add('roles', HiddenType::class)
             ->add('password', RepeatedType::class, [

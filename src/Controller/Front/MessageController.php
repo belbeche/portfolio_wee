@@ -9,6 +9,7 @@ use App\Form\DevisType;
 use App\Form\MessageType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Mailer\MailerInterface;
@@ -142,11 +143,35 @@ class MessageController extends AbstractController
      */
     public function show(EntityManagerInterface $entityManager, $id)
     {
+        // Récupérer l'utilisateur actuellement connecté (l'expéditeur du message)
+        $currentUser = $this->getUser();
+
+        // Récupérer l'utilisateur actuellement connecté (l'expéditeur du message)
+        $email = $currentUser->getEmail();
+
         // Récupérer les tickets envoyés par l'utilisateur
         $tickets = $entityManager->getRepository(Message::class)->findBy(['sender' => $this->getUser()]);
 
+        // Récupérer le devis associé à l'utilisateur actuellement connecté
+        $devis = $entityManager->getRepository(Devis::class)->findBy(['email' => $email]);
+
         return $this->render('front/ticket/index.html.twig', [
             'tickets' => $tickets,
+            'devis' => $devis
+        ]);
+    }
+
+    /**
+     * @Route("supprimer/{id}/ticket", name="front_delete_ticket", methods={"POST"})
+     */
+    public function remove(EntityManagerInterface $entityManager,Message $ticket,Request $request): RedirectResponse
+    {
+        if ($this->isCsrfTokenValid('delete'.$ticket->getId(), $request->request->get('_token'))) {
+            $entityManager->remove($ticket);
+            $entityManager->flush();
+        }
+        return $this->redirectToRoute('front_show_ticket', [
+            'id' => $ticket->getDevis()
         ]);
     }
 }

@@ -80,7 +80,7 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("/{id}", name="back_user_delete", methods={"DELETE"})
+     * @Route("/admin/user/{id}/delete", name="back_user_delete", methods={"POST"})
      */
     public function delete(Request $request, User $user, EntityManagerInterface $entityManager): Response
     {
