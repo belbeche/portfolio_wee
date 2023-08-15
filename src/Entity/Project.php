@@ -55,11 +55,14 @@ class Project
      */
     private $link;
 
+    /**
+     * @throws \Exception
+     */
     public function __construct()
     {
         $this->categories = new ArrayCollection();
         $this->images = new ArrayCollection();
-        $this->created_at = new \DateTime('NOW');
+        $this->created_at = new \DateTime('now', new \DateTimeZone('Europe/Paris'));
     }
 
 

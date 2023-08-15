@@ -29,9 +29,9 @@
 	{% else %}
 		<ul>
 			{% for ticket in tickets %}
-				<div class="container my-5">
+				<div class="container">
 					<div class="position-relative p-5 text-center text-muted bg-body border border-dashed rounded-5">
-
+						<a href="{{ url('respond_to_ticket', {'id': ticket.id}) }}" class="btn btn-success">Répondre</a>
 						<!-- Formulaire de suppression pour le ticket -->
 						<form action="{{ path('front_delete_ticket', {'id': ticket.id}) }}" method="post" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce ticket ?');">
 							<!-- Bouton de fermeture qui va maintenant servir à supprimer le ticket -->
@@ -42,7 +42,11 @@
 							<input type="hidden" name="_token" value="{{ csrf_token('delete' ~ ticket.id) }}">
 
 							<svg class="bi mt-5 mb-3" width="48" height="48"><use xlink:href="#check2-circle"/></svg>
-							<h1 class="text-body-emphasis">Contenu du ticket </h1>
+							{% if ticket.status == 'en_cours' %}
+								<h1 class="text-body-emphasis">Réponse du support </h1>
+							{% else %}
+								<h1 class="text-body-emphasis">Contenu du ticket </h1>
+							{% endif %}
 							<p class="col-lg-6 mx-auto mb-4">
 								{{ ticket.getContent() }}
 							</p>
@@ -60,6 +64,10 @@
 
 							<!-- Si vous souhaitez toujours avoir un bouton "Supprimer" visible -->
 							<button type="submit" class="btn btn-primary px-5 mb-5">Supprimer le message</button>
+
+							{% if ticket.attachment %}
+								<a href="{{ asset('uploads/' ~ ticket.attachment) }}" target="_blank" class="btn btn-info px-5 mb-5">Voir le fichier joint</a>
+							{% endif %}
 						</form>
 					</div>
 				</div>

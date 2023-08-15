@@ -40,9 +40,20 @@ class DevisController extends AbstractController
             return $this->redirectToRoute('front_assistance');
         }
 
+
         $devis = new Devis();
 
-        $form = $this->createForm(DevisType::class, $devis);
+        // Supposons que "type" est un paramètre GET de la requête
+        $type = $request->query->get('type');
+
+        $defaultValue = 'site_vitrine'; // valeur par défaut
+        if ($type === 'cross_plateforme') {
+            $defaultValue = 'application_cross_plateforme';
+        }
+
+        $form = $this->createForm(DevisType::class, $devis, [
+            'default_type_de_site_web' => $defaultValue
+        ]);
 
         if ($request->isMethod('post')) {
             $form->handleRequest($request);

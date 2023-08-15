@@ -70,7 +70,7 @@ class Devis
 
     public function __construct()
     {
-        $this->created_at = new DateTimeImmutable('now');
+        $this->created_at = new DateTimeImmutable('now', new \DateTimeZone('Europe/Paris'));
         $this->messages = new ArrayCollection();
     }
 

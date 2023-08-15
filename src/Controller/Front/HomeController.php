@@ -26,4 +26,12 @@ class HomeController extends AbstractController
     {
         return $this->render('front/about/index.html.twig');
     }
+
+    /**
+     * @Route("/tableau-de-bord", name="front_dashboard")
+     */
+    public function dashboard(): Response{
+        return $this->render('front/dashboard/index.html.twig');
+    }
+
 }

@@ -42,6 +42,11 @@ class Message
     private $receiverEmail;
 
     /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $attachment;
+
+    /**
      * @ORM\ManyToOne(targetEntity=User::class)
      * @ORM\JoinColumn(nullable=false)
      */
@@ -55,7 +60,7 @@ class Message
 
     public function __construct()
     {
-        $this->createdAt = new DateTimeImmutable();
+        $this->createdAt = new DateTimeImmutable('now', new \DateTimeZone('Europe/Paris'));
     }
 
     public function getId(): ?Uuid
@@ -127,6 +132,24 @@ class Message
     public function setSender(?User $sender): self
     {
         $this->sender = $sender;
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAttachment()
+    {
+        return $this->attachment;
+    }
+
+    /**
+     * @param mixed $attachment
+     * @return Message
+     */
+    public function setAttachment($attachment)
+    {
+        $this->attachment = $attachment;
         return $this;
     }
 

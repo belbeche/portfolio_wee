@@ -45,6 +45,7 @@ class DevisType extends AbstractType
                 ],
                 'expanded' => true,
                 'multiple' => false,
+                'data' => $options['default_type_de_site_web'], // Utilisez l'option passée depuis le contrôleur
             ])
             ->add('attentes_design_web', ChoiceType::class, [
                 'label' => false,
@@ -88,6 +89,7 @@ class DevisType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Devis::class,
+            'default_type_de_site_web' => null,
         ]);
     }
 }

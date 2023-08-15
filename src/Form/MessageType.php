@@ -7,6 +7,7 @@ use App\Entity\Devis;
 use App\Entity\Message;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityRepository;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\AbstractType;
@@ -81,6 +82,10 @@ class MessageType extends AbstractType
                 'placeholder' => 'Choisissez un destinataire',
                 'required' => true,
                 'label' => 'Service à contacter',
+            ])
+            ->add('attachment', FileType::class, [
+                'label' => 'Joindre un fichier (optionnel)',
+                'required' => false,
             ]);
     }
 

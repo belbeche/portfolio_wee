@@ -1,0 +1,33 @@
+{% extends 'base_back.html.twig' %}
+
+{% block title %}Répondre au Ticket{% endblock %}
+
+{% block content %}
+    <div class="container mt-5">
+        <h2>Répondre au Ticket</h2>
+
+        <div class="card mb-4">
+            <div class="card-header">
+                Message Original
+            </div>
+            <div class="card-body">
+                <p><strong>De :</strong> {{ originalMessage.getSender() }}</p>
+                <p><strong>Email :</strong> {{ originalMessage.getSender().getEmail() }}</p>
+                <p><strong>Priorité :</strong> {{ originalMessage.getPriority() }}</p>
+                <p><strong>Contenu :</strong> {{ originalMessage.getContent() }}</p>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                Votre Réponse
+            </div>
+            <div class="card-body">
+                {{ form_start(form) }}
+                {{ form_row(form.content, {'label': 'Votre Message', 'attr': {'class': 'form-control', 'rows': '5', 'placeholder': 'Tapez votre réponse ici...'}}) }}
+                <button type="submit" class="btn btn-primary mt-3">Envoyer la Réponse</button>
+                {{ form_end(form) }}
+            </div>
+        </div>
+    </div>
+{% endblock %}
