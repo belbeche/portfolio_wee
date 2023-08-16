@@ -17,6 +17,7 @@ use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -34,15 +35,11 @@ class TicketController extends AbstractController
         ]);
     }
     /**
-     * @Route("/back/ticket/nouveau/{id}", name="back_ticket_new")
+     * @Route("/back/repondre-ticket/{id}", name="back_respond_to_ticket", methods={"GET","POST"})
+     * @throws TransportExceptionInterface
      */
-    public function new(Request $request, UserRepository $userRepository, MailerInterface $mailer,EntityManagerInterface $entityManager,$id): Response
+    public function respondToTicket(Request $request, EntityManagerInterface $entityManager, MailerInterface $mailer, Message $originalMessage): Response
     {
-        $user = $userRepository->find($id);
-        if (!$user) {
-            throw $this->createNotFoundException('Utilisateur non trouvé');
-        }
-
         // Récupérer l'utilisateur actuellement connecté (l'expéditeur du message)
         $currentUser = $this->getUser();
 
@@ -52,39 +49,23 @@ class TicketController extends AbstractController
             return $this->redirectToRoute('app_login');
         }
 
-        $email = $user->getEmail();
+        /*$email = $entityManager->getRepository(User::class)->findOneBy(['email' => $originalMessage->getSender()->getEmail()]);*/
 
-        // Récupérer les devis associés à l'email de l'utilisateur
-        $devisList = $entityManager->getRepository(Devis::class)->findBy(['email' => $email]);
+        $devis = $entityManager->getRepository(Devis::class)->findOneBy(['email' => $originalMessage->getSender()->getEmail()]);
 
-        // En utilisant les IDs de ces devis, récupérer les tickets/messages associés
-        $devisIds = array_map(function($devis) {
-            return $devis->getId();
-        }, $devisList);
+        $responseMessage = new Message();
 
-        $tickets = $entityManager->getRepository(Ticket::class)->findBy(['devis' => $devisIds]);
-
-        dd($tickets);
-
-        $responseMessage = new Ticket();
-        $form = $this->createForm(TicketType::class, $ticket);
-        $responseMessage->setSender($currentUser);
-        $responseMessage->setDevis($tickets);
-        $responseMessage->setReceiverEmail($originalMessage->getSender()->getEmail());
-
-        $form = $this->createForm(MessageType::class, $responseMessage, [
-            'attr' => [
-                'current_user' => $email,
-            ],
-        ]);
+        $form = $this->createForm(TicketType::class, $responseMessage);
 
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-
+            $responseMessage->setReceiverEmail($originalMessage->getSender()->getEmail());
+            $responseMessage->setDevis($devis);
+            $responseMessage->setSender($currentUser);
+            $responseMessage->setReceiverEmail($originalMessage->getReceiverEmail());
             $responseMessage->setStatus('en_cours');
             $this->extracted($form, $responseMessage);
-            $responseMessage->setDevis($originalMessage->getDevis());
 
             $entityManager->persist($responseMessage);
             $entityManager->flush();
@@ -106,11 +87,10 @@ class TicketController extends AbstractController
 
             $this->addFlash('info', 'Votre réponse a bien été envoyée.');
 
-            return $this->redirectToRoute('front_show_ticket', [
+            return $this->redirectToRoute('back_show_ticket', [
                 'id' => $originalMessage->getId()
             ]);
         }
-
         return $this->render('back/ticket/new.html.twig', [
             'form' => $form->createView(),
             'originalMessage' => $originalMessage,
@@ -119,11 +99,10 @@ class TicketController extends AbstractController
     /**
      * @Route("/back/voir-ticket/{id}", name="back_show_ticket", methods={"GET"})
      */
-    public function show(EntityManagerInterface $entityManager,Request $request, $id)
+    public function show(Message $originalMessage,EntityManagerInterface $entityManager,Request $request)
     {
-        $user = $entityManager->getRepository(User::class)->find($id);
 
-        $email = $user->getEmail();
+        $email = $entityManager->getRepository(User::class)->findOneBy(['email' => $originalMessage->getSender()->getEmail()]);
 
         // Récupérer les devis associés à l'email de l'utilisateur
         $devisList = $entityManager->getRepository(Devis::class)->findBy(['email' => $email]);

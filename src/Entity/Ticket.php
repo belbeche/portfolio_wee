@@ -175,7 +175,7 @@ class Ticket extends \App\Entity\Message
     /**
      * @return mixed
      */
-    public function getUpdatedAt(): ?string
+    public function getUpdatedAt(): ?\DateTimeImmutable
     {
         return $this->updatedAt;
     }

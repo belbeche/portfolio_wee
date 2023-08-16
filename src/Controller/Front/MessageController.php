@@ -8,6 +8,7 @@ use App\Entity\Message;
 use App\Form\DevisType;
 use App\Form\MessageType;
 use Doctrine\ORM\EntityManagerInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -18,6 +19,7 @@ use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class MessageController extends AbstractController
 {
@@ -44,9 +46,8 @@ class MessageController extends AbstractController
 
         // Vérifier si le devis a été trouvé
         if (!$devis) {
-            // Gérer le cas où aucun devis n'a été trouvé pour l'utilisateur actuel
             // Rediriger vers une page d'erreur ou afficher un message approprié
-            return $this->redirectToRoute('front_devis_new'); // Remplacez "front_devis_new" par le nom de votre route pour créer un nouveau devis
+            return $this->redirectToRoute('front_devis_new');
         }
 
         return $this->render('front/ticket/home.html.twig', [
@@ -132,7 +133,9 @@ class MessageController extends AbstractController
             $this->addFlash('info', 'Votre ticket à bien était prise en compte, vérifiez votre adresse email');
 
             return $this->redirectToRoute('front_show_ticket', [
-                'id' => $message->getId()
+                'id' => $message->getId(),
+                'sender' => $message->getSender(),
+                'devis' => $message->getDevis()
             ]);
         }
 
@@ -146,7 +149,7 @@ class MessageController extends AbstractController
     /**
      * @Route("/voir-ticket/{id}", name="front_show_ticket", methods={"GET"})
      */
-    public function show(EntityManagerInterface $entityManager, $id)
+    public function show(EntityManagerInterface $entityManager, $id,Request $request)
     {
         // Récupérer l'utilisateur actuellement connecté (l'expéditeur du message)
         $currentUser = $this->getUser();
