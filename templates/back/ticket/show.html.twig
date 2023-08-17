@@ -14,7 +14,7 @@
         <ul>
             {% for ticket in tickets %}
                 <div class="container">
-                    <div class="position-relative p-5 text-center text-muted bg-body border border-dashed rounded-5">
+                    <div class="position-relative text-center text-muted bg-body border border-dashed rounded-5">
                         <a href="{{ url('back_respond_to_ticket', {'id': ticket.id}) }}" class="btn btn-success">Répondre</a>
                         <!-- Formulaire de suppression pour le ticket -->
                         <form action="{{ path('back_delete_ticket', {'id': ticket.id}) }}" method="post" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce ticket ?');">
