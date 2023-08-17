@@ -192,7 +192,8 @@ class MessageController extends AbstractController
 
         $responseMessage = new Message();
         $responseMessage->setSender($currentUser);
-        $responseMessage->setReceiverEmail($originalMessage->getSender()->getEmail());
+        $responseMessage->setReceiver($originalMessage->getSender())
+        ;
 
         $form = $this->createForm(MessageType::class, $responseMessage, [
             'attr' => [
@@ -204,7 +205,7 @@ class MessageController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
 
-            $responseMessage->setStatus('en_cours');
+            $responseMessage->setStatus('en_attente');
             $this->extracted($form, $responseMessage);
             $responseMessage->setDevis($originalMessage->getDevis());
 

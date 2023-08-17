@@ -127,31 +127,14 @@ class TicketController extends AbstractController
     public function show(Message $originalMessage,EntityManagerInterface $entityManager,Request $request)
     {
 
-        $email = $entityManager->getRepository(User::class)->findOneBy(['email' => $originalMessage->getSender()->getEmail()]);
-
-        // Récupérer les devis associés à l'email de l'utilisateur
-        $devisList = $entityManager->getRepository(Devis::class)->findBy(['email' => $email]);
-
-        // En utilisant les IDs de ces devis, récupérer les tickets/messages associés
-        $devisIds = array_map(function($devis) {
-            return $devis->getId();
-        }, $devisList);
-
-        // Maintenant, $tickets contient les tickets/messages associés aux devis de l'utilisateur
+        $user = $entityManager->getRepository(User::class)->findOneBy(['email' => $originalMessage->getSender()->getEmail()]);
 
         // Récupérer les tickets envoyés par l'utilisateur et les ordonner par date de création décroissante
-        /*$tickets = $entityManager->getRepository(Message::class)->findBy(
-            ['sender' => $email],
-            ['createdAt' => 'DESC']  // Ceci ordonne les tickets par date de création décroissante
-        );*/
 
-        $tickets = $entityManager->getRepository(Message::class)->findBy(['devis' => $devisIds]);
-
-        // Maintenant, $tickets contient les tickets/messages associés aux devis de l'utilisateur
-
-        foreach ($tickets as $ticket){
-            dd($ticket);
-        }
+        $tickets = $entityManager->getRepository(Message::class)->findBy(
+            ['sender' => $user],
+            ['createdAt' => 'DESC']
+        );
 
         return $this->render('back/ticket/show.html.twig', [
             'tickets' => $tickets

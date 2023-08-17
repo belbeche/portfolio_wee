@@ -12,7 +12,7 @@
             </div>
             <div class="card-body">
                 <p><strong>De :</strong> {{ originalMessage.getSender().getEmail() }}</p>
-                <p><strong>à :</strong> {{ originalMessage.getReceiverEmail() }}</p>
+                <p><strong>à :</strong> {{ originalMessage.getReceiver() }}</p>
                 <p><strong>Priorité :</strong> {{ originalMessage.getPriority() }}</p>
                 <p><strong>Contenu :</strong> {{ originalMessage.getContent() }}</p>
             </div>
@@ -34,8 +34,8 @@
                     {{ form_widget(form.status) }}
                 </div>
                 <div>
-                    {{ form_label(form.receiverEmail)}}
-                    {{ form_widget(form.receiverEmail)}}
+                    {{ form_label(form.receiver)}}
+                    {{ form_widget(form.receiver)}}
                 </div>
 
                 <div>
