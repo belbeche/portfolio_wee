@@ -7,7 +7,7 @@ use Symfony\Component\Uid\Uuid;
 /**
  * @ORM\Entity()
  */
-class Ticket extends \App\Entity\Message
+class Ticket
 {
     /**
      * @ORM\Id
@@ -16,21 +16,6 @@ class Ticket extends \App\Entity\Message
      * @ORM\CustomIdGenerator(class="doctrine.uuid_generator")
      */
     private $id;
-
-    /**
-     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="tickets")
-     */
-    private $sender;
-
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $receiverEmail;
-
-    /**
-     * @ORM\ManyToOne(targetEntity=Devis::class)
-     */
-    private $devis;
 
     /**
      * @ORM\Column(type="text")
@@ -57,6 +42,23 @@ class Ticket extends \App\Entity\Message
      */
     private $updatedAt;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=Devis::class)
+     */
+    private $devis;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="sentMessages")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $sender;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="receivedMessages")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $receiver;
+
     public function __construct(){
         $this->createdAt = new \DateTimeImmutable('now', new \DateTimeZone('Europe/Paris'));
         $this->updatedAt = new \DateTimeImmutable('now', new \DateTimeZone('Europe/Paris'));
@@ -80,36 +82,18 @@ class Ticket extends \App\Entity\Message
     /**
      * @return mixed
      */
-    public function getSender(): ?User
+    public function getReceiver():?User
     {
-        return $this->sender;
+        return $this->receiver;
     }
 
     /**
-     * @param mixed $sender
+     * @param mixed $receiver
      * @return Ticket
      */
-    public function setSender($sender): self
+    public function setReceiver($receiver):self
     {
-        $this->sender = $sender;
-        return $this;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getReceiverEmail()
-    {
-        return $this->receiverEmail;
-    }
-
-    /**
-     * @param mixed $receiverEmail
-     * @return Ticket
-     */
-    public function setReceiverEmail($receiverEmail)
-    {
-        $this->receiverEmail = $receiverEmail;
+        $this->receiver = $receiver;
         return $this;
     }
 
@@ -173,6 +157,24 @@ class Ticket extends \App\Entity\Message
     }
 
     /**
+     * @return \DateTimeImmutable
+     */
+    public function getCreatedAt(): \DateTimeImmutable
+    {
+        return $this->createdAt;
+    }
+
+    /**
+     * @param \DateTimeImmutable $createdAt
+     * @return Ticket
+     */
+    public function setCreatedAt(\DateTimeImmutable $createdAt): Ticket
+    {
+        $this->createdAt = $createdAt;
+        return $this;
+    }
+
+    /**
      * @return mixed
      */
     public function getUpdatedAt(): ?\DateTimeImmutable
@@ -187,6 +189,24 @@ class Ticket extends \App\Entity\Message
     public function setUpdatedAt($updatedAt): self
     {
         $this->updatedAt = $updatedAt;
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSender():?User
+    {
+        return $this->sender;
+    }
+
+    /**
+     * @param mixed $sender
+     * @return Ticket
+     */
+    public function setSender($sender):self
+    {
+        $this->sender = $sender;
         return $this;
     }
 }

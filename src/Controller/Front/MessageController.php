@@ -79,9 +79,6 @@ class MessageController extends AbstractController
         // Récupérer les devis associés à l'email de l'utilisateur
         $devisList = $entityManager->getRepository(Devis::class)->findBy(['email' => $email]);
 
-        // Traitez $devisList comme vous le souhaitez, par exemple, transmettez-le au formulaire
-        // pour afficher les devis associés dans le champ de sélection.
-
         $form = $this->createForm(MessageType::class, $message, [
             'attr' => [
                 'current_user' => $email,
@@ -91,6 +88,7 @@ class MessageController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+
             // Vérifier si l'utilisateur a sélectionné un devis existant ou s'il veut en créer un nouveau
             $devisChoice = $form->get('devis')->getData();
 
@@ -102,8 +100,13 @@ class MessageController extends AbstractController
                 $devis = $devisChoice;
             }
 
-            // Associer le devis au message
-            $message->setDevis($devis);
+            $receiverId = $form->get('receiver')->getData();
+            $receiver = $entityManager->getRepository(User::class)->find($receiverId);
+            $message
+                ->setReceiver($receiver)
+                // Associer le devis au message
+                ->setDevis($devis)
+            ;
 
             // Définition du statut du ticket
             $message->setStatus('en_attente');
@@ -121,7 +124,7 @@ class MessageController extends AbstractController
                 ->bcc('wbelbeche.s@gmail.com')
                 ->context([
                     'email_address' => $currentUser->getEmail(),
-                    'service' => $message->getReceiverEmail(),
+                    'service' => $message->getReceiver(),
                     'subject' => $message->getDevis(),
                     'message' => $message->getContent(),
                     'status' => $message->getStatus(),
@@ -133,9 +136,7 @@ class MessageController extends AbstractController
             $this->addFlash('info', 'Votre ticket à bien était prise en compte, vérifiez votre adresse email');
 
             return $this->redirectToRoute('front_show_ticket', [
-                'id' => $message->getId(),
-                'sender' => $message->getSender(),
-                'devis' => $message->getDevis()
+                'id' => $message->getSender()->getId()
             ]);
         }
 

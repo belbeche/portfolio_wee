@@ -5,6 +5,7 @@ namespace App\Entity;
 use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Uid\Uuid;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity()
@@ -39,7 +40,11 @@ class Message
      */
     private $status;
 
-    private $receiverEmail;
+    /**
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="receivedMessages")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $receiver;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
@@ -47,14 +52,12 @@ class Message
     private $attachment;
 
     /**
-     * @ORM\ManyToOne(targetEntity=User::class)
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="sentMessages")
      */
     private $sender;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Devis::class)
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\ManyToOne(targetEntity=Devis::class, inversedBy="messages")
      */
     private $devis;
 
@@ -109,18 +112,18 @@ class Message
     /**
      * @return mixed
      */
-    public function getReceiverEmail()
+    public function getReceiver()
     {
-        return $this->receiverEmail;
+        return $this->receiver;
     }
 
     /**
-     * @param mixed $receiverEmail
+     * @param mixed $receiver
      * @return Message
      */
-    public function setReceiverEmail($receiverEmail)
+    public function setReceiver($receiver):self
     {
-        $this->receiverEmail = $receiverEmail;
+        $this->receiver = $receiver;
         return $this;
     }
 

@@ -74,11 +74,9 @@ class MessageType extends AbstractType
                 },
                 'required' => true,
             ])
-            ->add('receiverEmail', ChoiceType::class, [
-                'choices' => [
-                    'Avancement projet' => 'wbelbeche.s@gmail.com',
-                    'Problème lié à la demande' => 'wbelbeche.s@gmail.com'
-                ],
+            ->add('receiver', EntityType::class, [
+                'class' => User::class,
+                'choice_label' => 'email', // ou tout autre champ que vous voulez afficher
                 'placeholder' => 'Choisissez un destinataire',
                 'required' => true,
                 'label' => 'Service à contacter',

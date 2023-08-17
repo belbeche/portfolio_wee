@@ -11,8 +11,8 @@
                 Message Original
             </div>
             <div class="card-body">
-                <p><strong>De :</strong> {{ originalMessage.getSender() }}</p>
-                <p><strong>Email :</strong> {{ originalMessage.getSender().getEmail() }}</p>
+                <p><strong>De :</strong> {{ originalMessage.getSender().getEmail() }}</p>
+                <p><strong>à :</strong> {{ originalMessage.getReceiverEmail() }}</p>
                 <p><strong>Priorité :</strong> {{ originalMessage.getPriority() }}</p>
                 <p><strong>Contenu :</strong> {{ originalMessage.getContent() }}</p>
             </div>

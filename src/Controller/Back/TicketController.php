@@ -38,7 +38,7 @@ class TicketController extends AbstractController
      * @Route("/back/repondre-ticket/{id}", name="back_respond_to_ticket", methods={"GET","POST"})
      * @throws TransportExceptionInterface
      */
-    public function respondToTicket(Request $request, EntityManagerInterface $entityManager, MailerInterface $mailer, Message $originalMessage): Response
+    public function respondToTicket(Request $request, EntityManagerInterface $entityManager, MailerInterface $mailer,$id): Response
     {
         // Récupérer l'utilisateur actuellement connecté (l'expéditeur du message)
         $currentUser = $this->getUser();
@@ -49,28 +49,53 @@ class TicketController extends AbstractController
             return $this->redirectToRoute('app_login');
         }
 
-        /*$email = $entityManager->getRepository(User::class)->findOneBy(['email' => $originalMessage->getSender()->getEmail()]);*/
+        $currentMessage = $entityManager->getRepository(Message::class)->find($id);
+        if (!$currentMessage) {
+            die('Message not found!');
+        }
 
-        $devis = $entityManager->getRepository(Devis::class)->findOneBy(['email' => $originalMessage->getSender()->getEmail()]);
+        $user = $entityManager->getRepository(User::class)->findBy(['email' => $currentMessage->getSender()]);
 
-        $responseMessage = new Message();
+        $ticket = new Ticket();
 
-        $form = $this->createForm(TicketType::class, $responseMessage);
+        $form = $this->createForm(TicketType::class, $ticket);
+
+        /*$form->get('sender')->setData($currentMessage->getSender()->getEmail());*/
+        /*$form->get('sender')->setData($currentMessage->getSender());*/
 
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $responseMessage->setReceiverEmail($originalMessage->getSender()->getEmail());
-            $responseMessage->setDevis($devis);
-            $responseMessage->setSender($currentUser);
-            $responseMessage->setReceiverEmail($originalMessage->getReceiverEmail());
-            $responseMessage->setStatus('en_cours');
-            $this->extracted($form, $responseMessage);
+        if ($request->isMethod('POST') && $form->isSubmitted()) {
 
-            $entityManager->persist($responseMessage);
+            /*$senderId = $form->get('sender')->getData();
+
+            $sender = $entityManager->getRepository(User::class)->find($senderId);*/
+
+            $message = new Message();
+
+            $message
+                ->setDevis($currentMessage->getDevis())
+                ->setSender($currentMessage->getSender())
+                ->setReceiver($currentMessage->getReceiver())
+                ->setContent($ticket->getContent())
+                ->setPriority($ticket->getPriority())
+                ->setStatus('en_cours')
+            ;
+
+            $ticket
+                ->setDevis($currentMessage->getDevis())
+                ->setReceiver($currentMessage->getReceiver())
+                ->setSender($message->getSender()) // Si le ticket est envoyé par l'utilisateur actuellement connecté.
+                ->setStatus('en_cours')
+                ->setPriority($ticket->getPriority());
+            ;
+
+            /*dump($message);dd($ticket);*/
+            $entityManager->persist($message);
+            $entityManager->persist($ticket);
             $entityManager->flush();
 
-            $email = (new TemplatedEmail())
+            /*$email = (new TemplatedEmail())
                 ->from('wbelbeche.s@gmail.com')
                 ->to($originalMessage->getSender()->getEmail())
                 ->subject('Réponse à votre demande, Devis , Walid BELBECHE')
@@ -83,17 +108,17 @@ class TicketController extends AbstractController
                 ])
                 ->htmlTemplate('front/ticket/response_email.html.twig');
 
-            $mailer->send($email);
+            $mailer->send($email);*/
 
             $this->addFlash('info', 'Votre réponse a bien été envoyée.');
 
             return $this->redirectToRoute('back_show_ticket', [
-                'id' => $originalMessage->getId()
+                'id' => $currentMessage->getId()
             ]);
         }
         return $this->render('back/ticket/new.html.twig', [
             'form' => $form->createView(),
-            'originalMessage' => $originalMessage,
+            'originalMessage' => $currentMessage,
         ]);
     }
     /**
@@ -154,32 +179,5 @@ class TicketController extends AbstractController
         return $this->redirectToRoute('back_show_ticket', [
             'id' => $ticket->getDevis()
         ]);
-    }
-
-    /**
-     * @param \Symfony\Component\Form\FormInterface $form
-     * @param Message $responseMessage
-     * @return void
-     */
-    public function extracted(\Symfony\Component\Form\FormInterface $form, Message $responseMessage): void
-    {
-        $attachmentFile = $form->get('attachment')->getData();
-
-        if ($attachmentFile) {
-            $originalFilename = pathinfo($attachmentFile->getClientOriginalName(), PATHINFO_FILENAME);
-            $safeFilename = transliterator_transliterate('Any-Latin; Latin-ASCII; [^A-Za-z0-9_] remove; Lower()', $originalFilename);
-            $newFilename = $safeFilename . '-' . uniqid() . '.' . $attachmentFile->guessExtension();
-
-            try {
-                $attachmentFile->move(
-                    $this->getParameter('uploads_directory'),
-                    $newFilename
-                );
-            } catch (FileException $e) {
-                echo 'une erreur s\'est produite lors du chargement du fichier';
-            }
-
-            $responseMessage->setAttachment($newFilename);
-        }
     }
 }
