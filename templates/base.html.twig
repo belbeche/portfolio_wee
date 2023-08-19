@@ -53,6 +53,15 @@
 				{% block navbar %}
 					{% include "front/includes/nav.html.twig" %}
 				{% endblock %}
+				<section class="container-fluid">
+					<div id="cookie-consent" class="position-fixed bg-primary text-center" style="bottom:0;z-index: 99999;left: 0;right:0;">
+						<p class="text-white">
+							Nous utilisons des cookies pour améliorer votre expérience. En acceptant, vous consentez à l'utilisation de ces cookies à des fins non commerciales.
+						</p>
+						<button id="accept-cookies" class="btn btn-success mb-3">J'accepte</button>
+					</div>
+				</section>
+
 				{% block content %}{% endblock %}
 
 				<!-- Footer -->
@@ -156,6 +165,20 @@
 					});
 				});*/
 
+			</script>
+			<script>
+				document.getElementById('accept-cookies').addEventListener('click', function() {
+					document.getElementById('cookie-consent').style.display = 'none';
+					// Ici, vous définissez le cookie pour indiquer que l'utilisateur a accepté
+					document.cookie = "cookie-consent=true; path=/";
+				});
+
+				// Vérifier si le cookie d'acceptation existe déjà
+				if (document.cookie.split(';').some((item) => item.trim().startsWith('cookie-consent='))) {
+					document.getElementById('cookie-consent').style.display = 'none';
+				} else {
+					document.getElementById('cookie-consent').style.display = 'block';
+				}
 			</script>
 		{% endblock %}
 	</body>

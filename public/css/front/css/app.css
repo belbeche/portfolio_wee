@@ -39,6 +39,48 @@
     margin-bottom: 2.5%;
 }
 
+#cookie-consent {
+    position: fixed;       /* Flottant en bas de la page */
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: rgba(0,0,0,0.8); /* Fond noir semi-transparent */
+    color: #fff;          /* Texte blanc */
+    padding: 10px 20px;   /* Espacement à l'intérieur */
+    font-size: 14px;      /* Taille du texte */
+    z-index: 1000;        /* Assure que le bandeau est au-dessus des autres éléments */
+    text-align: center;   /* Centre le texte */
+}
+
+@media screen and (max-width: 450px) {
+    #cookie-consent{
+        position: fixed;       /* Flottant en bas de la page */
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background-color: rgba(0,0,0,0.8); /* Fond noir semi-transparent */
+        color: #fff;          /* Texte blanc */
+        padding: 10px 20px;   /* Espacement à l'intérieur */
+        font-size: 14px;      /* Taille du texte */
+        text-align: center;   /* Centre le texte */
+        margin-bottom: 100px;
+    }
+}
+
+#accept-cookies {
+    background-color: #4CAF50; /* Vert pour le bouton Accepter */
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    margin-left: 10px;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+
 
 
 @media screen and (max-width: 767px) {
