@@ -149,23 +149,23 @@ class TicketController extends AbstractController
      * @Route("back/supprimer/{id}/ticket", name="back_delete_ticket", methods={"POST"})
      * @IsGranted("ROLE_ADMIN")
      */
-    public function remove(EntityManagerInterface $entityManager, Message $ticket, Request $request, Filesystem $filesystem): RedirectResponse
+    public function remove(EntityManagerInterface $entityManager, Message $message, Request $request, Filesystem $filesystem): RedirectResponse
     {
-        if ($this->isCsrfTokenValid('delete' . $ticket->getId(), $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $message->getId(), $request->request->get('_token'))) {
 
             // Récupérer le chemin du fichier associé au ticket
-            $attachmentPath = $this->getParameter('uploads_directory') . '/' . $ticket->getAttachment();
+            $attachmentPath = $this->getParameter('uploads_directory') . '/' . $message->getAttachment();
 
             // Supprimer le fichier si il existe
             if ($filesystem->exists($attachmentPath)) {
                 $filesystem->remove($attachmentPath);
             }
 
-            $entityManager->remove($ticket);
+            $entityManager->remove($message);
             $entityManager->flush();
         }
         return $this->redirectToRoute('back_show_ticket', [
-            'id' => $ticket->getDevis()
+            'id' => $message->getDevis()
         ]);
     }
 }
