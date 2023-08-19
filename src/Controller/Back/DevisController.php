@@ -6,6 +6,7 @@ use App\Entity\Devis;
 use App\Form\DevisType;
 use App\Repository\DevisRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Mailer\MailerInterface;
@@ -17,6 +18,7 @@ class DevisController extends AbstractController
 {
     /**
      * @Route("/admin/devis", name="back_devis_index")
+     * @IsGranted("ROLE_ADMIN")
      */
     public function index(DevisRepository $devisRepository): Response
     {
@@ -29,6 +31,7 @@ class DevisController extends AbstractController
 
     /**
      * @Route("/admin/devis/{id}", name="back_devis_show")
+     * @IsGranted("ROLE_ADMIN")
      */
     public function show(Devis $devis): Response
     {
@@ -39,6 +42,7 @@ class DevisController extends AbstractController
 
     /**
      * @Route("/admin/devis/{id}/edit", name="back_devis_edit")
+     * @IsGranted("ROLE_ADMIN")
      */
     public function edit(Request $request, EntityManagerInterface $entityManager, Devis $devis): Response
     {
@@ -61,6 +65,7 @@ class DevisController extends AbstractController
 
     /**
      * @Route("/admin/devis/{id}/delete", name="back_devis_delete", methods={"POST"})
+     * @IsGranted("ROLE_ADMIN")
      */
     public function delete(Request $request, EntityManagerInterface $entityManager, Devis $devis): Response
     {

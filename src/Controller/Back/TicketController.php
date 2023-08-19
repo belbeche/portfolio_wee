@@ -10,6 +10,7 @@ use App\Form\MessageType;
 use App\Form\TicketType;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Filesystem\Filesystem;
@@ -25,6 +26,7 @@ class TicketController extends AbstractController
 {
     /**
      * @Route("/back/ticket", name="back_ticket")
+     * @IsGranted("ROLE_ADMIN")
      */
     public function index(EntityManagerInterface $entityManager): Response
     {
@@ -37,6 +39,7 @@ class TicketController extends AbstractController
     /**
      * @Route("/back/repondre-ticket/{id}", name="back_respond_to_ticket", methods={"GET","POST"})
      * @throws TransportExceptionInterface
+     * @IsGranted("ROLE_ADMIN")
      */
     public function respondToTicket(Request $request, EntityManagerInterface $entityManager, MailerInterface $mailer,$id): Response
     {
@@ -123,6 +126,7 @@ class TicketController extends AbstractController
     }
     /**
      * @Route("/back/voir-ticket/{id}", name="back_show_ticket", methods={"GET"})
+     * @IsGranted("ROLE_ADMIN")
      */
     public function show(Message $originalMessage,EntityManagerInterface $entityManager,Request $request)
     {
@@ -143,6 +147,7 @@ class TicketController extends AbstractController
 
     /**
      * @Route("back/supprimer/{id}/ticket", name="back_delete_ticket", methods={"POST"})
+     * @IsGranted("ROLE_ADMIN")
      */
     public function remove(EntityManagerInterface $entityManager, Message $ticket, Request $request, Filesystem $filesystem): RedirectResponse
     {

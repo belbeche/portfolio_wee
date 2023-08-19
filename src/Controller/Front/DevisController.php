@@ -6,6 +6,7 @@ use App\Entity\Devis;
 use App\Form\DevisType;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Snappy\Pdf;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
@@ -97,6 +98,7 @@ class DevisController extends AbstractController
 
     /**
      * @Route("/devis/{id}/delete", name="front_devis_delete")
+     * @IsGranted("ROLE_USER")
      */
     public function delete(Request $request, EntityManagerInterface $entityManager, Devis $devis): Response
     {
@@ -110,6 +112,7 @@ class DevisController extends AbstractController
 
     /**
      * @Route("/telecharger-devis/{id}", name="front_download_devis")
+     * @IsGranted("ROLE_USER")
      */
     public function downloadDevis(Pdf $snappy, EntityManagerInterface $entityManager, $id): Response
     {

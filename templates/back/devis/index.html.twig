@@ -36,7 +36,7 @@
 					<td>
 						<a href="{{ path('back_devis_show', {'id': devis.id}) }}">Voir</a>
 						<a href="{{ path('back_devis_edit', {'id': devis.id}) }}">Modifier</a>
-						<form action="{{ path('back_devis_delete', {'id': devis.id}) }}" method="post" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce devis ?');">
+						<form action="{{ path('back_delete_ticket', {'id': devis.id}) }}" method="post" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce devis ?');">
 							<button type="submit">Supprimer</button>
 						</form>
 					</td>
