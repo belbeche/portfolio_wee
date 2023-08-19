@@ -52,7 +52,7 @@
     text-align: center;   /* Centre le texte */
 }
 
-@media screen and (max-width: 450px) {
+@media screen and (max-width: 400px) {
     #cookie-consent{
         position: fixed;       /* Flottant en bas de la page */
         bottom: 0;
@@ -63,7 +63,6 @@
         padding: 10px 20px;   /* Espacement à l'intérieur */
         font-size: 14px;      /* Taille du texte */
         text-align: center;   /* Centre le texte */
-        margin-bottom: 100px;
     }
 }
 
