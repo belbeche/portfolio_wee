@@ -7,11 +7,13 @@
         "php": ">=8.2",
         "ext-ctype": "*",
         "ext-iconv": "*",
+        "ext-intl": "*",
         "doctrine/annotations": "^1.0",
         "doctrine/doctrine-bundle": "^2.8",
         "doctrine/doctrine-migrations-bundle": "^3.2",
         "doctrine/orm": "^2.14",
         "friendsofsymfony/ckeditor-bundle": "^2.4",
+        "knplabs/knp-snappy-bundle": "^1.9",
         "lcobucci/jwt": "^4.0",
         "lexik/jwt-authentication-bundle": "^2.18",
         "phpdocumentor/reflection-docblock": "^5.3",
@@ -51,8 +53,7 @@
         "symfonycasts/verify-email-bundle": "^1.13",
         "twig/extra-bundle": "^2.12|^3.0",
         "twig/intl-extra": "^3.5",
-        "twig/twig": "^2.12|^3.0",
-      "ext-intl": "*"
+        "twig/twig": "^2.12|^3.0"
     },
     "config": {
         "allow-plugins": {

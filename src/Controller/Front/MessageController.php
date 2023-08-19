@@ -44,6 +44,9 @@ class MessageController extends AbstractController
         // Récupérer le devis associé à l'utilisateur actuellement connecté
         $devis = $entityManager->getRepository(Devis::class)->findBy(['email' => $email]);
 
+        // Récupérer le message associé à l'utilisateur actuellement connecté
+        /*$message = $entityManager->getRepository(Message::class)->findBy(['sender' => $email]);*/
+
         // Vérifier si le devis a été trouvé
         if (!$devis) {
             // Rediriger vers une page d'erreur ou afficher un message approprié
@@ -51,7 +54,7 @@ class MessageController extends AbstractController
         }
 
         return $this->render('front/ticket/home.html.twig', [
-            'devisUser' => $devis,
+            'devisUser' => $devis
         ]);
     }
 

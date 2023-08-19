@@ -1,36 +1,25 @@
-{% extends "base.html.twig" %}
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Devis n°{{ devis.id }}</title>
+</head>
+<body>
+    <div class="xs-12">
+        <h2>Type de demande :
+            {{ devis.typeDeSiteWeb }}</h2>
+        <h3>Par :
+            {{ devis.email }}</h3>
 
-{% block title %}
-    Tableau de bord
-{% endblock %}
-
-{% block content %}
-    <br>
-    {% if app.user %}
-    <a href="{{ url('front_devis_new', {id: app.user.id }) }}" class="btn btn-info btn-lg m-auto">Créer un nouveau devis</a>
-    {% endif %}
-    <hr>
-
-    {% for singleDevis in allQuote %}
-        <div class="xs-12">
-            {# {{ dump(singleDevis)}} #}
-
-            <h2>Type de demande :
-                {{ singleDevis.typeDeSiteWeb }}</h2>
-            <h3>Par :
-                {{ singleDevis.email }}</h3>
-
-            <div class="metadata">
-                Crée le
-                {{ singleDevis.createdAt|date('d/m/Y') }}
-                à
-                {{ singleDevis.createdAt|date('H:i') }}</div>
-            <div class="contenu">
-                Message:
-                    {{ singleDevis.descriptionProjet | nl2br  }}
-            </div>
+        <div class="metadata">
+            Crée le
+            {{ devis.createdAt|date('d/m/Y') }}
+            à
+            {{ devis.createdAt|date('H:i') }}</div>
+        <div class="contenu">
+            Message:
+            {{ devis.descriptionProjet | nl2br  }}
         </div>
-
-    {% endfor %}
-
-{% endblock %}
+    </div>
+</body>
+</html>

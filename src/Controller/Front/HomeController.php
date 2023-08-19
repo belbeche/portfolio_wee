@@ -28,10 +28,17 @@ class HomeController extends AbstractController
     }
 
     /**
-     * @Route("/tableau-de-bord", name="front_dashboard")
+     * @Route("/mentions-légales", name="front_mentions")
      */
-    public function dashboard(): Response{
-        return $this->render('front/dashboard/index.html.twig');
+    public function mentionsLegales(): Response{
+        return $this->render('front/administrative/mentions.html.twig');
+    }
+
+    /**
+     * @Route("/conditions-utilisations", name="front_conditions")
+     */
+    public function conditionUtilisation(): Response{
+        return $this->render('front/administrative/conditions.html.twig');
     }
 
 }

@@ -5,6 +5,7 @@ namespace App\Controller\Front;
 use App\Entity\Devis;
 use App\Form\DevisType;
 use Doctrine\ORM\EntityManagerInterface;
+use Knp\Snappy\Pdf;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
@@ -83,7 +84,9 @@ class DevisController extends AbstractController
 
                 $this->addFlash('success', 'Votre demande à bien était prise en compte, vérifiez votre adresse email');
 
-                return $this->redirectToRoute('front_assistance');
+                return $this->redirectToRoute('front_assistance', [
+                    'id' => $devis->getId()
+                ]);
             }
         }
 
@@ -103,5 +106,30 @@ class DevisController extends AbstractController
         }
 
         return $this->redirectToRoute('front_assistance');
+    }
+
+    /**
+     * @Route("/telecharger-devis/{id}", name="front_download_devis")
+     */
+    public function downloadDevis(Pdf $snappy, EntityManagerInterface $entityManager, $id): Response
+    {
+        $currentUser = $this->getUser();
+
+        $devis = $entityManager->getRepository(Devis::class)->find($id);
+
+        $html = $this->renderView('front/devis/show.html.twig', [
+            'devis' => $devis
+        ]);
+
+        $filename = 'devis_' . $currentUser->getId() . '.pdf';
+
+        return new Response(
+            $snappy->getOutputFromHtml($html),
+            200,
+            [
+                'Content-Type' => 'application/pdf',
+                'Content-Disposition' => 'inline; filename="' . $filename . '"'
+            ]
+        );
     }
 }
