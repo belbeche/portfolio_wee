@@ -64,11 +64,10 @@
 
 							<!-- Si vous souhaitez toujours avoir un bouton "Supprimer" visible -->
 							<button type="submit" class="btn-primary">Supprimer le message</button>
-
-							{% if ticket.attachment %}
-								<a href="{{ asset('uploads/' ~ ticket.attachment) }}" target="_blank" class="btn btn-info">Voir le fichier joint</a>
-							{% endif %}
 						</form>
+						{% if ticket.attachment %}
+							<a href="{{ asset('uploads/' ~ ticket.attachment) }}" target="_blank" class="btn btn-info">Voir le fichier joint</a>
+						{% endif %}
 					</div>
 				</div>
 			{% endfor %}
