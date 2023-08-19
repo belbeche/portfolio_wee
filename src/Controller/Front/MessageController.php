@@ -62,7 +62,7 @@ class MessageController extends AbstractController
 
 
     /**
-     * @Route("/nouveau-ticket", name="send_message", methods={"GET","POST"})
+     * @Route("/devis/nouveau-ticket", name="send_message", methods={"GET","POST"})
      * @IsGranted("ROLE_USER")
      */
     public function sendMessage(Request $request, EntityManagerInterface $entityManager, MailerInterface $mailer): Response
@@ -106,10 +106,9 @@ class MessageController extends AbstractController
                 $devis = $devisChoice;
             }
 
-            $receiverId = $form->get('receiver')->getData();
-            $receiver = $entityManager->getRepository(User::class)->find($receiverId);
+            !$receiver = $form->get('receiver')->getData();
+            /*$receiver = $entityManager->getRepository(User::class)->find($receiverId);*/
             $message
-                ->setReceiver($receiver)
                 // Associer le devis au message
                 ->setDevis($devis)
             ;

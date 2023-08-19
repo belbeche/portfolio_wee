@@ -45,7 +45,7 @@
 							{% if ticket.status == 'en_cours' %}
 								<h1 class="text-body-emphasis">Réponse du support </h1>
 							{% else %}
-								<h1 class="text-body-emphasis">Contenu du ticket </h1>
+								<h1 class="text-body-emphasis">Message de votre part </h1>
 							{% endif %}
 							<p class="col-lg-6 mx-auto mb-4">
 								{{ ticket.getContent() }}

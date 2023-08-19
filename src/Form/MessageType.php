@@ -2,30 +2,29 @@
 
 namespace App\Form;
 
-use App\Entity\User;
 use App\Entity\Devis;
 use App\Entity\Message;
-use App\Repository\UserRepository;
+use App\Form\DataTransformer\EmailToUserTransformer;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
-use Symfony\Component\Form\FormEvent;
-use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Security\Core\Security;
+use Doctrine\ORM\EntityManagerInterface;
 
 class MessageType extends AbstractType
 {
     private $security;
+    private $entityManager;
 
-    public function __construct(Security $security)
+    public function __construct(Security $security,EntityManagerInterface $entityManager)
     {
         $this->security = $security;
+        $this->entityManager = $entityManager;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -74,9 +73,11 @@ class MessageType extends AbstractType
                 },
                 'required' => true,
             ])
-            ->add('receiver', EntityType::class, [
-                'class' => User::class,
-                'choice_label' => 'email', // ou tout autre champ que vous voulez afficher
+            ->add('receiver', ChoiceType::class, [
+                'choices' => [
+                    'Avancement projet' => 'wbelbeche.s@gmail.com',
+                    'Problème lié à la demande' => 'wbelbeche.s@gmail.com'
+                ],
                 'placeholder' => 'Choisissez un destinataire',
                 'required' => true,
                 'label' => 'Service à contacter',
@@ -85,6 +86,10 @@ class MessageType extends AbstractType
                 'label' => 'Joindre un fichier (optionnel)',
                 'required' => false,
             ]);
+
+            // Ajoutez le transformer
+            $builder->get('receiver')
+                ->addModelTransformer(new EmailToUserTransformer($this->entityManager));
     }
 
     public function configureOptions(OptionsResolver $resolver)
