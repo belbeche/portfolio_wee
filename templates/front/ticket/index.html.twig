@@ -5,6 +5,13 @@
 {% endblock %}
 
 {% block content %}
+	<div class="container">
+		{% for type, messages in app.flashes %}
+			{% for message in messages %}
+				<div class="alert alert-{{ type }}">{{ message }}</div>
+			{% endfor %}
+		{% endfor %}
+	</div>
 
 	<h1 class="text-center">Liste des tickets</h1>
 

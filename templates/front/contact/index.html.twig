@@ -1,0 +1,131 @@
+{% extends 'base.html.twig' %}
+
+{% block title %} Contact {% endblock %}
+
+{% block content %}
+    <div class="container">
+        {% for type, messages in app.flashes %}
+            {% for message in messages %}
+                <div class="alert alert-{{ type }}">{{ message }}</div>
+            {% endfor %}
+        {% endfor %}
+    </div>
+    <script src="{{ asset('js/jquery-3.5.1.min.js') }}"></script>
+    <script src="{{ asset('js/jquery.googlemap.js') }}"></script>
+    <script src='https://www.google.com/recaptcha/api.js'></script>
+
+    <div id="main" class="site-main">
+        <div id="main-content" class="single-page-content">
+            <div id="primary" class="content-area">
+
+                <div class="page-title">
+                    <h1>Contact</h1>
+                    <div class="page-subtitle">
+                        <h4>Prendre contact</h4>
+                    </div>
+                </div>
+
+                <div id="content" class="page-content site-content single-post" role="main">
+
+                    <div class="row">
+                        <div class="col-xs-12 col-sm-4">
+
+                            <div id="info_list_1" class="info-list-w-icon">
+
+                                <div class="info-block-w-icon">
+                                    <div class="ci-icon">
+                                        <i class="linecons linecons-phone"></i>
+                                    </div>
+                                    <div class="ci-text">
+                                        <h4>07 62 97 26 91</h4>
+                                        <p>Vous pouvez me joindre à ce numéro pour toute demande.</p>
+                                    </div>
+                                </div>
+
+                                <div class="info-block-w-icon">
+                                    <div class="ci-icon">
+                                        <i class="linecons linecons-location"></i>
+                                    </div>
+                                    <div class="ci-text">
+                                        <h4>France</h4>
+                                        <p>Basé en France, je suis disponible pour des projets locaux comme internationaux.</p>
+                                    </div>
+                                </div>
+
+                                <div class="info-block-w-icon">
+                                    <div class="ci-icon">
+                                        <i class="linecons linecons-mail"></i>
+                                    </div>
+                                    <div class="ci-text">
+                                        <h4>wbelbeche.s@gmail.com</h4>
+                                        <p>N'hésitez pas à m'envoyer un e-mail pour toute question ou proposition de projet.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xs-12 col-sm-8">
+
+                            <div class="block-title">
+                                <h2>Comment puis-je vous aider ?</h2>
+                            </div>
+                            {{ form_start(form, {'action': path('front_contact'), 'attr': {'id': 'contact_form'}}) }}
+
+                            <div class="messages"></div>
+
+                            <div class="controls two-columns">
+                                <div class="fields clearfix">
+                                    <div class="left-column">
+                                        {{ form_row(form.firstName, {'attr': {'class': 'form-control', 'placeholder': 'Prénom'}}) }}
+                                        {{ form_row(form.lastName, {'attr': {'class': 'form-control', 'placeholder': 'Nom'}}) }}
+                                        {{ form_row(form.email, {'attr': {'class': 'form-control', 'placeholder': 'Adresse email'}}) }}
+                                    </div>
+                                    <div class="right-column">
+                                        {{ form_row(form.phone, {'attr': {'class': 'form-control', 'placeholder': 'Téléphone'}}) }}
+                                        {{ form_row(form.service) }}
+                                        <input type="submit" class="button btn-send disabled" value="Envoyer le message">
+                                    </div>
+                                </div>
+                            </div>
+                            {{ form_end(form) }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        document.getElementById("contact_form").addEventListener("submit", function(event) {
+            let form = document.getElementById('contact_form');
+            event.preventDefault();
+
+            let formData = new FormData(this);
+
+            fetch(this.getAttribute('action'), {
+                method: 'POST',
+                body: formData
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Cacher le formulaire
+                        document.getElementById("contact_form").style.display = "none";
+
+                        // Afficher un message de remerciement
+                        let thanksMsg = document.createElement('p');
+                        thanksMsg.textContent = 'Merci de nous avoir contactés. Nous traitons votre demande.';
+                        form.parentNode.appendChild(thanksMsg);
+                    } else {
+                        // Gérer les erreurs de validation ici
+                        alert("Des erreurs sont survenues !");
+                        for (let field in data.errors) {
+                            // Affichez l'erreur à côté du champ concerné.
+                            alert(field + ": " + data.errors[field]);
+                        }
+                    }
+                })
+                .catch((error) => {
+                    console.error('Error:', error);
+                });
+        });
+    </script>
+{% endblock %}
