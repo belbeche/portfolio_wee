@@ -45,6 +45,10 @@
 						<label for="repeat-password" class="sr-only">Répétez votre mot de passe</label>
 						{{ form_row(formRegister.password.second) }}
 					</div>
+					<div>
+						{{ form_row(formRegister.checked) }}
+						{{ form_errors(formRegister.checked) }}
+					</div>
 					<button type="submit" class="btn btn-primary">Je m'inscris</button>
 				{{ form_end(formRegister) }}
 			</div>

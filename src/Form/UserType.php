@@ -5,6 +5,7 @@ namespace App\Form;
 use App\Entity\User;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\CallbackTransformer;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
@@ -39,7 +40,14 @@ class UserType extends AbstractType
                 'required' => true,
                 'first_options'  => ['label' => 'Mot de passe'],
                 'second_options' => ['label' => 'Répétez le mot de passe'],
-            ]);
+            ])
+            ->add('checked', CheckboxType::class, [
+                'label' => 'Je reconnais avoir lu et compris les CGU et je les accepte',
+                'required' => true,
+                'mapped' => false,
+                'help' => 'Les conditions générales d\'utilisations sont accessible en bas de page',
+            ])
+        ;
 
         // Data transformer
         $builder->get('roles')
