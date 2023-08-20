@@ -58,7 +58,13 @@
 						<p class="text-white">
 							Nous utilisons des cookies pour améliorer votre expérience. En acceptant, vous consentez à l'utilisation de ces cookies à des fins non commerciales.
 						</p>
+						<button id="refuse-cookies" class="btn btn-danger mb-3">Je refuse</button>
 						<button id="accept-cookies" class="btn btn-success mb-3">J'accepte</button>
+					</div>
+					<div id="cookie-refused-message" class="position-fixed bg-danger text-center" style="display: none; bottom: 20%; z-index: 99999; left: 0; right: 0;">
+						<p class="text-white">
+							Vous avez refusé l'utilisation des cookies. Certains fonctionnalités peuvent ne pas fonctionner correctement.
+						</p>
 					</div>
 				</section>
 
@@ -168,8 +174,22 @@
 			<script>
 				document.getElementById('accept-cookies').addEventListener('click', function() {
 					document.getElementById('cookie-consent').style.display = 'none';
-					// Ici, vous définissez le cookie pour indiquer que l'utilisateur a accepté
+					// Définir le cookie pour indiquer que l'utilisateur a accepté
 					document.cookie = "cookie-consent=true; path=/";
+				});
+
+				document.getElementById('refuse-cookies').addEventListener('click', function() {
+					document.getElementById('cookie-consent').style.display = 'none';
+
+					// Afficher le message de refus
+					const refusedMessage = document.getElementById('cookie-refused-message');
+					refusedMessage.style.display = 'block';
+					setTimeout(() => {
+						refusedMessage.style.display = 'none';
+					}, 5000);  // Ce message disparaîtra après 5 secondes.
+
+					// Définir le cookie pour indiquer que l'utilisateur a refusé
+					document.cookie = "cookie-consent=false; path=/";
 				});
 
 				// Vérifier si le cookie d'acceptation existe déjà
