@@ -5,17 +5,24 @@
 
 {% block content %}
 
+	<div class="page-title">
+		<h1>A propos</h1>
+		<div class="page-subtitle">
+			<h4>Curieux ? Vous êtes au bon endroit !</h4>
+		</div>
+	</div>
+
 	<div id="home_content" class="home-content third-style">
 		<div class="">
 			<div class="row">
 				<div class="col-sm-12 col-md-6 col-lg-6">
-					<div class="inner-content">
+					<div class="inner-content mr-50 mt-5">
 
 						<a href="{{ asset('img/develop.jpg')}}"><img src="{{ asset('img/develop.jpg')}}" alt="Création de site internet pas cher Nevers" class="img-fluid rounded-pill"></a>
 
 					</div>
 				</div>
-				<div class="col-sm-12 col-md-6 col-lg-6">
+				<div class="col-sm-12 col-md-6 col-lg-6 mt-5">
 					<div class="inner-content inner-text-block">
 						<div>
 							<section class="about-content rounded-3">
@@ -38,10 +45,10 @@
 									Enfin, je vous accompagne dans l'analyse des données et la mesure de vos performances en ligne. Grâce à des outils d'analyse puissants, je vous fournis des rapports détaillés sur le trafic de votre site, le comportement de vos utilisateurs et les conversions réalisées. Ces informations précieuses vous aident à prendre des décisions éclairées et à ajuster votre stratégie digitale pour obtenir de meilleurs résultats.
 								</p>
 							</section>
-
-							<div class="hp-buttons">
-								<a href="{{ asset('belbeche_walid_cv.pdf')}}" target="_blank" class="btn btn-primary btn-lg px-4 rounded-pill">Télécharger CV</a>
-								<a href="mailto:wbelbeche.s@gmail.com" target="_blank" class="btn btn-success btn-lg px-4 rounded-pill">Contacter</a>
+							<h3 class="text-center">Liens utiles</h3>
+							<div class="d-flex justify-content-center mt-5">
+								<a href="{{ asset('belbeche_walid_cv.pdf')}}" target="_blank" class="btn btn-secondary btn-lg px-4 rounded-pill">Télécharger CV</a>
+								<a href="{{ url('front_contact')}}" target="_self" class="btn btn-primary btn-lg px-4 rounded-pill">Contacter</a>
 							</div>
 						</div>
 					</div>

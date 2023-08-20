@@ -5,15 +5,17 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * @ORM\Entity(repositoryClass=ContactRepository::class)
+ * @ORM\Entity(repositoryClass="App\Repository\ContactRepository", repositoryClass=ContactRepository::class)
  */
 class Contact
 {
     /**
      * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="uuid")
+     * @ORM\GeneratedValue(strategy="CUSTOM")
+     * @ORM\CustomIdGenerator(class="doctrine.uuid_generator")
      */
+
     private mixed $id;
     /**
      * @ORM\Column(type="string", length=255)
@@ -144,4 +146,5 @@ class Contact
         $this->service = $service;
         return $this;
     }
+
 }

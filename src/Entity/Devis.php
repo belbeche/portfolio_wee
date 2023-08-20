@@ -3,7 +3,6 @@
 namespace App\Entity;
 
 
-use App\Entity\User;
 use DateTimeImmutable;
 use Symfony\Component\Uid\Uuid;
 use Doctrine\ORM\Mapping as ORM;
@@ -187,6 +186,28 @@ class Devis
     public function __toString()
     {
         return $this->type_de_site_web;
+    }
+
+    public function addMessage(Message $message): static
+    {
+        if (!$this->messages->contains($message)) {
+            $this->messages->add($message);
+            $message->setDevis($this);
+        }
+
+        return $this;
+    }
+
+    public function removeMessage(Message $message): static
+    {
+        if ($this->messages->removeElement($message)) {
+            // set the owning side to null (unless already changed)
+            if ($message->getDevis() === $this) {
+                $message->setDevis(null);
+            }
+        }
+
+        return $this;
     }
 
 }
