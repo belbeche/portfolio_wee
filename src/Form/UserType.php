@@ -45,7 +45,7 @@ class UserType extends AbstractType
                 'label' => 'Je reconnais avoir lu et compris les CGU et je les accepte',
                 'required' => true,
                 'mapped' => false,
-                'help' => 'Les conditions générales d\'utilisations sont accessible en bas de page',
+                'help' => 'Les conditions générales d\'utilisations ainsi que les mentions légales sont accessible en bas de page',
             ])
         ;
 
