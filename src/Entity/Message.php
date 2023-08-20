@@ -58,7 +58,7 @@ class Message
     private $sender;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Devis::class, inversedBy="messages")
+     * @ORM\ManyToOne(targetEntity=Devis::class, inversedBy="messages", cascade={"remove"})
      */
     private $devis;
 

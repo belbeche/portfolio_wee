@@ -22,7 +22,7 @@ class Devis
      * @ORM\GeneratedValue(strategy="CUSTOM")
      * @ORM\CustomIdGenerator(class="doctrine.uuid_generator")
      */
-    private  $id;
+    private $id;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
@@ -63,14 +63,20 @@ class Devis
     private $statut;
 
     /**
-     * @ORM\OneToMany(targetEntity=Message::class, mappedBy="devis")
+     * @ORM\OneToMany(targetEntity=Message::class, mappedBy="devis", orphanRemoval=true, cascade={"remove"})
      */
     private $messages;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Ticket::class, mappedBy="devis", cascade={"remove"})
+     */
+    private $tickets;
 
     public function __construct()
     {
         $this->created_at = new DateTimeImmutable('now', new \DateTimeZone('Europe/Paris'));
         $this->messages = new ArrayCollection();
+        $this->tickets = new ArrayCollection();
     }
 
     public function getId(): ?Uuid
@@ -165,6 +171,24 @@ class Devis
     {
         $this->statut = $statut;
 
+        return $this;
+    }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getTickets(): ArrayCollection
+    {
+        return $this->tickets;
+    }
+
+    /**
+     * @param ArrayCollection $tickets
+     * @return Devis
+     */
+    public function setTickets(ArrayCollection $tickets): Devis
+    {
+        $this->tickets = $tickets;
         return $this;
     }
 

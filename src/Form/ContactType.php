@@ -29,7 +29,7 @@ class ContactType extends AbstractType
             ])
             ->add('service', ChoiceType::class, [
                 'choices' => [
-                    'Développement Web Front-End (HTML, CSS, JavaScript)' => 'frontend',
+                    'Développement Web Front-End (HTML, CSS, Javascript)' => 'frontend',
                     'Développement Web Back-End (PHP, Node, Django)' => 'backend',
                     'Développement d\'applications mobiles' => 'mobile',
                     'Conception UI/UX' => 'design',
@@ -38,7 +38,7 @@ class ContactType extends AbstractType
                     'Hébergement et déploiement' => 'hosting',
                     'Autres' => 'other'
                 ],
-                'label' => 'Service à contacter',
+                'label' => 'Objet de la demande',
                 'placeholder' => 'Cliquer pour choisir',
             ])
         ;
