@@ -17,12 +17,6 @@
 		<div class="row align-items-center g-lg-5 py-5">
 			<div class="col-lg-7 text-center text-lg-start">
 				<h1 class="display-4 fw-bold lh-1 mb-3">Heureux de vous revoir !</h1>
-				<div class="flex items-center justify-between forgot-password mb-3">
-					<h3><strong>Vous avez du mal à vous connecter ?</strong></h3>
-					<div class="text-sm">
-						<a href="{{ url('request_reset_password') }}" class="font-medium text-indigo-600 hover:text-indigo-500">J'ai oublié mon mot de passe.</a>
-					</div>
-				</div>
 				<div class="register">
 					<h6>Vous n'ètes pas membre ?</h6>
 					<p>Inscrivez-vous en suivant ce lien <a href="{{ url('app_register') }}">Je m'inscris</a>.</p>
@@ -42,6 +36,12 @@
 					{% if error %}
 						<div class="alert alert-danger">Identifiant ou mot de passe incorect.</div>
 					{% endif %}
+					<div class="flex items-center justify-between forgot-password mb-3">
+						<h3><strong>Vous avez du mal à vous connecter ?</strong></h3>
+						<div class="text-sm">
+							<a href="{{ url('request_reset_password') }}" class="font-medium text-indigo-600 hover:text-indigo-500">J'ai oublié mon mot de passe.</a>
+						</div>
+					</div>
 					<div class="checkbox mb-3">
 						<label>
 							<input type="checkbox" name="_remember_me">
