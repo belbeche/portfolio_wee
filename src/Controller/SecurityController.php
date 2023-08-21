@@ -24,7 +24,7 @@ class SecurityController extends AbstractController
      * @Route("/inscription", name="app_register")
      * 
      */
-    public function Register(Request $request, EntityManagerInterface $entityManager, UserPasswordHasherInterface $hasher): Response
+    public function Register(Request $request, EntityManagerInterface $entityManager, UserPasswordHasherInterface $hasher,MailerInterface $mailer): Response
     {
 
         $user = new User();
@@ -35,15 +35,29 @@ class SecurityController extends AbstractController
             $form->handleRequest($request);
 
             if ($form->isSubmitted() && $form->isValid()) {
-
                 $user->setPassword($hasher->hashpassword(
                     $user,
                     $form->get('password')->getData()
                 ));
-
                 $user->setRoles(['ROLE_USER']);
 
 
+                $email = (new TemplatedEmail())
+                    ->from('wbelbeche.s@gmail.com')
+                    ->to($user->getEmail())
+                    ->subject('Récapitulatif inscription ScriptZenIT')
+                    ->bcc('wbelbeche.s@gmail.com')
+                    ->context([
+                        'RegistredNumber' => $user->getId(),
+                        'email_address' => $user->getEmail(),
+                        'nom' => $user->getNom(),
+                        'prenom' => $user->getPrenom(),
+                        'civility' => $user->getCivility(),
+                        'password' => $user->getPassword(),
+                    ])
+                    ->htmlTemplate('security/email.html.twig');
+
+                $mailer->send($email);
 
                 $entityManager->persist($user);
 
