@@ -64,6 +64,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $civility;
 
     /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $resetToken;
+
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $resetTokenExpireAt;
+
+    /**
      * @ORM\OneToMany(targetEntity=Message::class, mappedBy="sender")
      */
     private $sentMessages;
@@ -220,6 +230,28 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setCivility($civility)
     {
         $this->civility = $civility;
+        return $this;
+    }
+
+    public function getResetToken(): ?string
+    {
+        return $this->resetToken;
+    }
+
+    public function setResetToken(?string $resetToken): self
+    {
+        $this->resetToken = $resetToken;
+        return $this;
+    }
+
+    public function getResetTokenExpireAt(): ?\DateTimeInterface
+    {
+        return $this->resetTokenExpireAt;
+    }
+
+    public function setResetTokenExpireAt(?\DateTimeInterface $resetTokenExpireAt): self
+    {
+        $this->resetTokenExpireAt = $resetTokenExpireAt;
         return $this;
     }
 
