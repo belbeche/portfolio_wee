@@ -25,12 +25,12 @@
 			<div class="col-md-10 mx-auto col-lg-5">
 				<form class="p-4 p-md-5 border rounded-3" method="post" action="{{ url('app_login')}}">
 					<div class="form-group mb-3">
-						<input type="email" class="form-control" value="{{ last_username }}" id="floatingInput" placeholder="l'adresse saisie pour l'inscription" name="email">
 						<label for="floatingInput">Email adresse</label>
+						<input type="email" class="form-control" value="{{ last_username }}" id="floatingInput" placeholder="l'adresse saisie pour l'inscription" name="email">
 					</div>
 					<div class="form-group mb-3">
-						<input type="password" class="form-control" id="floatingPassword" placeholder="Mot de passe" name="password">
 						<label for="floatingPassword">Mot de passe</label>
+						<input type="password" class="form-control" id="floatingPassword" placeholder="Mot de passe" name="password">
 					</div>
 					<input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
 					{% if error %}
