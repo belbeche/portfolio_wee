@@ -8,6 +8,7 @@ use App\Entity\Category;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Form\AbstractType;
 use FOS\CKEditorBundle\Form\Type\CKEditorType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -54,6 +55,17 @@ class ProjectType extends AbstractType
                     'attr' => [
                         'class' => 'select2',
                     ]
+                ]
+            )
+            ->add(
+                'category',
+                ChoiceType::class,[
+                    'choices' => [
+                        'détaillé' => 'détaillé',
+                        'lien-direct' => 'lien-direct',
+                        'prototype' => 'prototype',
+                        'toutes_categories' => 'toutes_categories',
+                    ],
                 ]
             )
             ->add('link', TextType::class, [

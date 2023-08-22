@@ -44,7 +44,7 @@ class ProjectController extends AbstractController
         if ($request->isMethod('POST')) {
             $form->handleRequest($request);
             if ($form->isSubmitted() && $form->isValid()) {
-                $project->setUpdatedAt(new \DateTime());
+                $project->setUpdatedAt(new \DateTime('now', new \DateTimeZone('Europe/Paris')));
     
                 // Récupérer les fichiers d'images uploadés
                 $imageFiles = $form->get('images')->getData();
@@ -95,44 +95,43 @@ class ProjectController extends AbstractController
         foreach ($project->getImages() as $image) {
             $originalImages->add($image);
         }
-    
-        if ($request->isMethod('POST')) {
-            $form->handleRequest($request);
-            if ($form->isSubmitted() && $form->isValid()) {
-                $project->setUpdatedAt(new \DateTime());
-    
-                // Supprimer les images qui ont été supprimées du formulaire
-                foreach ($originalImages as $image) {
-                    if (!$project->getImages()->contains($image)) {
-                        $entityManager->remove($image);
-                    }
+
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $project->setUpdatedAt((new \DateTime('now', new \DateTimeZone('Europe/Paris'))));
+
+            // Supprimer les images qui ont été supprimées du formulaire
+            foreach ($originalImages as $image) {
+                if (!$project->getImages()->contains($image)) {
+                    $entityManager->remove($image);
                 }
-    
-                // Récupérer les fichiers d'images uploadés
-                $imageFiles = $form->get('images')->getData();
-    
-                foreach ($imageFiles as $imageFile) {
-                    if ($imageFile instanceof UploadedFile) {
-                        $imageName = uniqid() . '.' . $imageFile->getClientOriginalExtension();
-                        $imageExtension = $imageFile->getClientOriginalExtension();
-                
-                        $imageFile->move(
-                            $this->getParameter('images_directory'),
-                            $imageName
-                        );
-                
-                        $image = new Image();
-                        $image->setName($imageName);
-                        $project->addImage($image);
-                    }
-                }
-    
-                $entityManager->persist($project);
-                $entityManager->flush();
-    
-                return $this->redirectToRoute('back_project_index');
             }
+
+            // Récupérer les fichiers d'images uploadés
+            $imageFiles = $form->get('images')->getData();
+
+            foreach ($imageFiles as $imageFile) {
+                if ($imageFile instanceof UploadedFile) {
+                    $imageName = uniqid() . '.' . $imageFile->getClientOriginalExtension();
+                    $imageExtension = $imageFile->getClientOriginalExtension();
+
+                    $imageFile->move(
+                        $this->getParameter('images_directory'),
+                        $imageName
+                    );
+
+                    $image = new Image();
+                    $image->setName($imageName);
+                    $project->addImage($image);
+                }
+            }
+
+            $entityManager->persist($project);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('back_project_index');
         }
+
     
         return $this->render('back/project/edit.html.twig', [
             'projectForm' => $form->createView(),

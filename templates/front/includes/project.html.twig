@@ -1,39 +1,39 @@
 <div id="content" class="container page-content site-content single-post" role="main">
-
 	<div class="row">
-		<div
-			class=" col-xs-12 col-sm-12 ">
+		<div class="col-xs-12 col-sm-12">
 			<!-- Portfolio Content -->
 			<div id="portfolio_content_q" class="portfolio-content">
-
 				<ul class="portfolio-filters">
-					<li class="active">
-						<a class="filter btn btn-sm btn-link" data-group="category_all">Toutes catégorie</a>
-					</li>
-
 					<li>
-						<a class="filter btn btn-sm btn-link" data-group="category_detailed">Détaillé</a>
+						<a class="filter btn btn-sm btn-link" data-group="toutes_categories">Toutes les catégories</a>
 					</li>
-
 					<li>
-						<a class="filter btn btn-sm btn-link" data-group="category_direct-url">URL direct</a>
+						<a class="filter btn btn-sm btn-link" data-group="détaillé">Projets Détaillés</a>
 					</li>
-
 					<li>
-						<a class="filter btn btn-sm btn-link" data-group="category_image">Image</a>
+						<a class="filter btn btn-sm btn-link" data-group="lien-direct">Liens fonctionnels</a>
+					</li>
+					<li>
+						<a class="filter btn btn-sm btn-link" data-group="prototype">Prototype</a>
 					</li>
 				</ul>
 
-
 				<!-- Portfolio Grid -->
-				<div
-					class="portfolio-grid four-columns shuffle">
+				<div class="portfolio-grid four-columns shuffle">
+					{% for project in projects %}
+						{% set dataGroups = ['toutes_categories'] %}
 
-					<!-- for each item -->
+						{% if 'détaillé' in project.category %}
+							{% set dataGroups = dataGroups|merge(['détaillé']) %}
+						{% endif %}
+						{% if 'lien-direct' in project.category %}
+							{% set dataGroups = dataGroups|merge(['lien-direct']) %}
+						{% endif %}
+						{% if 'prototype' in project.category %}
+							{% set dataGroups = dataGroups|merge(['prototype']) %}
+						{% endif %}
 
-					{% for project in projects  %}
-						<figure class="item standard" data-groups='["category_all", "category_detailed"]'>
-
+						<figure class="item standard" data-groups='["{{ dataGroups|join('", "') }}"]'>
 							<div class="portfolio-item-img">
 								{% for image in project.images %}
 									<img src="{{ asset('image_project/'~image.name) }}" alt="{{ image.name }}"/>
@@ -43,13 +43,11 @@
 
 							<i class="far fa-file-alt"></i>
 							<h4 class="name">{{ project.title }}</h4>
-							<!-- Categories -->
-							<span class="category">Détaillé</span>
-							<!-- /Categories -->
+							<span class="category">{{ project.category|join(', ')|title }}</span>
 						</figure>
 					{% endfor %}
-
 				</div>
 			</div>
 		</div>
 	</div>
+</div>

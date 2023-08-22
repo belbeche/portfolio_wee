@@ -14,6 +14,9 @@ webpack.config.js
 /node_modules/
 /.idea/
 /public/build
+/public/image_project
+
+
 
 ###< symfony/framework-bundle ###
 

@@ -41,6 +41,11 @@ class Project
     private ?\DateTime $updated_at;
 
     /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private ?string $category;
+
+    /**
      * @ORM\OneToMany(targetEntity=Image::class, mappedBy="project", cascade={"persist"}, orphanRemoval=true)
      * @ORM\JoinColumn(name="project_id", referencedColumnName="id")
      */
@@ -117,6 +122,17 @@ class Project
     {
         $this->updated_at = $updated_at;
 
+        return $this;
+    }
+
+    public function getCategory(): ?string
+    {
+        return $this->category;
+    }
+
+    public function setCategory(string $category): self
+    {
+        $this->category = $category;
         return $this;
     }
 
