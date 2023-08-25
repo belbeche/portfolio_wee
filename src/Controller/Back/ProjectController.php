@@ -44,39 +44,38 @@ class ProjectController extends AbstractController
         if ($request->isMethod('POST')) {
             $form->handleRequest($request);
             if ($form->isSubmitted() && $form->isValid()) {
-                $project->setUpdatedAt(new \DateTime('now', new \DateTimeZone('Europe/Paris')));
-    
+                $project->setUpdatedAt(new \DateTime());
+
                 // Récupérer les fichiers d'images uploadés
                 $imageFiles = $form->get('images')->getData();
-    
+
                 foreach ($imageFiles as $imageFile) {
                     if ($imageFile instanceof UploadedFile) {
                         $imageName = uniqid() . '.' . $imageFile->getClientOriginalExtension();
-    
+
                         $imageFile->move(
                             $this->getParameter('images_directory'),
                             $imageName
                         );
-    
+
                         $image = new Image();
                         $image->setName($imageName);
                         $project->addImage($image);
                     }
                 }
-    
+
                 $entityManager->persist($project);
                 $entityManager->flush();
-    
+
                 return $this->redirectToRoute('back_project_index');
             }
         }
-    
+
         return $this->render('back/project/new.html.twig', [
             'projectForm' => $form->createView(),
             'project' => $project,
         ]);
     }
-
     /**
      * @Route("/admin/project/edit/{id}", name="back_project_edit")
      * @param Request $request
@@ -90,7 +89,7 @@ class ProjectController extends AbstractController
     ): Response {
         $form = $this->createForm(ProjectType::class, $project);
         $originalImages = new ArrayCollection();
-    
+
         // Créer une copie des images originales du projet
         foreach ($project->getImages() as $image) {
             $originalImages->add($image);
@@ -132,14 +131,18 @@ class ProjectController extends AbstractController
             return $this->redirectToRoute('back_project_index');
         }
 
-    
+
         return $this->render('back/project/edit.html.twig', [
             'projectForm' => $form->createView(),
             'project' => $project,
         ]);
     }
+
     /**
      * @Route("/admin/project/remove/{id}", name="back_project_remove")
+     * @param Project $project
+     * @param Request $request
+     * @param EntityManagerInterface $entityManager
      * @return Response
      * @IsGranted("ROLE_ADMIN")
      */

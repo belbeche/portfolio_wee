@@ -2,7 +2,11 @@
 
 {{ form_widget(projectForm.title) }}
 {{ form_widget(projectForm.description) }}
-{{ form_widget(projectForm.images) }}
+<div>
+    {{ form_label(projectForm.images) }}
+    {{ form_errors(projectForm.images) }}
+    {{ form_widget(projectForm.images) }}
+</div>
 {{ form_widget(projectForm.categories) }}
 {{ form_widget(projectForm.link) }}
 {{ form_widget(projectForm.category) }}

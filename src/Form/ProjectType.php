@@ -36,7 +36,7 @@ class ProjectType extends AbstractType
             ->add('images', FileType::class, [
                 'label' => false,
                 'multiple' => true,
-                'mapped' => true,
+                'mapped' => false,
                 'required' => false,
                 'attr' => [
                     'placeholder' => 'Sélections multiples possibles'

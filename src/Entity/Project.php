@@ -150,7 +150,6 @@ class Project
             $this->images[] = $image;
             $image->setProject($this);
         }
-
         return $this;
     }
 
