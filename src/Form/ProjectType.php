@@ -22,7 +22,11 @@ class ProjectType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('title', TextType::class)
+            ->add('title', TextType::class, [
+                'attr' => [
+                    'placeholder' => 'Titre du projet'
+                ]
+            ])
             ->add('description', TextareaType::class, [
                 'required' => true,
                 'attr' => [
@@ -32,7 +36,7 @@ class ProjectType extends AbstractType
             ->add('images', FileType::class, [
                 'label' => false,
                 'multiple' => true,
-                'mapped' => false,
+                'mapped' => true,
                 'required' => false,
                 'attr' => [
                     'placeholder' => 'Sélections multiples possibles'
@@ -54,6 +58,7 @@ class ProjectType extends AbstractType
                     'required'    => false,
                     'attr' => [
                         'class' => 'select2',
+                        'placeholder' => 'Choix des catégories'
                     ]
                 ]
             )
@@ -66,10 +71,17 @@ class ProjectType extends AbstractType
                         'prototype' => 'prototype',
                         'toutes_categories' => 'toutes_categories',
                     ],
+                    'attr' => [
+                        'class' => 'select2',
+                        'placeholder' => 'Choix de la catégorie d\'affichage'
+                    ]
                 ]
             )
             ->add('link', TextType::class, [
                 'required' => false,
+                'attr' => [
+                    'placeholder' => 'Lien fonctionnel du projet'
+                ]
             ])
             ;
     }

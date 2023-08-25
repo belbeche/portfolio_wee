@@ -32,7 +32,7 @@ class DevisType extends AbstractType
                     'Application spécifique' => 'Autre'
                 ],
                 'attr' => [
-                    'class' => 'devisForm',
+                    'class' => 'devisForm selectpicker',
                 ],
                 'expanded' => true,
                 'multiple' => false,
@@ -47,6 +47,9 @@ class DevisType extends AbstractType
                 ],
                 'placeholder' => 'Cliquer pour choisir',
                 'multiple' => false,
+                'attr' => [
+                    'class' => 'selectpicker',
+                ]
             ])
             ->add('description_projet', TextareaType::class, [
                 'label' => false,
