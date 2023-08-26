@@ -49,19 +49,19 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $isVerified = false;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, nullable="true")
      */
-    private $nom;
+    private ?string $nom;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, nullable="true")
      */
-    private $prenom;
+    private ?string $prenom;
 
     /**
      * @ORM\Column(type="string", length=10, nullable="true")
      */
-    private $civility;
+    private ?string $civility;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)

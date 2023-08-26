@@ -16,22 +16,16 @@
 	<h1 class="text-center">Liste des tickets</h1>
 
 	{% if tickets is empty %}
-		<p class="text-center">Aucun ticket actif pour le moment.</p>
 		<div class="d-flex flex-column align-items-center">
-			{% for devisOn in devis %}
-				<a href="{{ url('send_message') }}" class="btn btn-outline-primary" style="margin-right: 10px;">Créer un nouveau ticket</a>
-				<br>
-				<form action="{{ url('front_devis_delete', {'id': devisOn.id}) }}" method="post" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce devis ?');">
-					<button type="submit" class="btn btn-outline-danger d-flex justify-content-center">Supprimer le devis</button>
-				</form>
-				<br>
-				<a href="{{ url('front_assistance') }}">
-					<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-return-left" viewBox="0 0 16 16">
-						<path fill-rule="evenodd" d="M14.5 1.5a.5.5 0 0 1 .5.5v4.8a2.5 2.5 0 0 1-2.5 2.5H2.707l3.347 3.346a.5.5 0 0 1-.708.708l-4.2-4.2a.5.5 0 0 1 0-.708l4-4a.5.5 0 1 1 .708.708L2.707 8.3H12.5A1.5 1.5 0 0 0 14 6.8V2a.5.5 0 0 1 .5-.5z"/>
-					</svg>
-					Retour en arrière
-				</a>
-			{% endfor %}
+			<p class="text-center">Aucun ticket actif pour le moment.</p>
+			<a href="{{ url('send_message') }}" class="btn btn-outline-primary" style="margin-right: 10px;">Créer un nouveau ticket</a>
+			<br>
+			<a href="{{ url('front_assistance') }}">
+				<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-return-left" viewBox="0 0 16 16">
+					<path fill-rule="evenodd" d="M14.5 1.5a.5.5 0 0 1 .5.5v4.8a2.5 2.5 0 0 1-2.5 2.5H2.707l3.347 3.346a.5.5 0 0 1-.708.708l-4.2-4.2a.5.5 0 0 1 0-.708l4-4a.5.5 0 1 1 .708.708L2.707 8.3H12.5A1.5 1.5 0 0 0 14 6.8V2a.5.5 0 0 1 .5-.5z"/>
+				</svg>
+				Retour en arrière
+			</a>
 		</div>
 	{% else %}
 		<ul>

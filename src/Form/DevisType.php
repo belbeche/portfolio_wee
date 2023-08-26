@@ -3,6 +3,8 @@
 namespace App\Form;
 
 use App\Entity\Devis;
+use Doctrine\DBAL\Types\TextType;
+use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Security\Core\Security;
@@ -57,13 +59,10 @@ class DevisType extends AbstractType
                     'placeholder' => 'Merci de décrire votre projet...',
                 ]
             ])
-            ->add('email', hiddenType::class, [
+            ->add('email', EmailType::class, [
                 'label' => false,
-                'required' => false,
-                'mapped' => false, // Ne pas mapper ce champ à l'entité Devis,
-                'attr' => [
-                    'display' => 'none'
-                ]
+                'required' => true,
+                'mapped' => true,
             ])
             // Ajouter le champ "status" sans le mapper avec l'entité
             ->add('statut', ChoiceType::class, [
