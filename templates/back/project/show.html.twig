@@ -1,0 +1,100 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    {{ project.title }}
+{% endblock %}
+
+{% block content %}
+
+<div class="ajax-page-title">
+    <div class="container">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <a href="{{ url('back_project_index') }}">Mes réalisations</a>
+                </li>
+                <li class="breadcrumb-item active" aria-current="page">{{ project.title }}
+                </li>
+            </ol>
+        </nav>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-sm-8 col-md-8 portfolio-block">
+        <div class="owl-carousel portfolio-page-carousel">
+            {% for image in project.images %}
+                <div class="item">
+                    <a href="{{ asset('image_project/'~image.name) }}" class="lightbox"><img src="{{ asset('image_project/'~image.name) }}" alt="{{ image.name }}"/></a>
+                </div>
+            {% endfor %}
+        </div>
+
+        <script type="text/javascript">
+            jQuery(document).ready(function ($) {
+                $('.portfolio-page-carousel').imagesLoaded(function () {
+                    $('.portfolio-page-carousel').owlCarousel({
+                        smartSpeed: 1200,
+                        items: 1,
+                        loop: true,
+                        dots: true,
+                        nav: true,
+                        navText: false,
+                        margin: 10,
+                        autoHeight: true
+                    });
+                });
+            });
+        </script>
+    </div>
+
+    <div
+            class="col-sm-4 col-md-4 portfolio-block">
+        <!-- Project Description -->
+        <div class="project-description">
+            <div class="block-title">
+                <h3>Description du projet</h3>
+            </div>
+            <ul class="project-general-info">
+                <li>
+                    <p>
+                        <i class="fa fa-user"></i>
+                        Walid BELBECHE</p>
+                </li>
+                <li>
+                    <p>
+                        <i class="fa fa-globe"></i>
+                        <a href="{{ project.link }}" target="_blank">{{ project.title}}</a>
+                    </p>
+                </li>
+                <li>
+                    <p>
+                        <i class="fa fa-calendar"></i>
+                        {{ project.createdAt|format_datetime(locale='fr') }}</p>
+                </li>
+            </ul>
+
+            <p class="text-justify">{{ project.description }}.</p>
+            <!-- /Project Description -->
+
+            <!-- Categories -->
+            <div class="tags-block">
+                <div class="block-title">
+                    <h3>Categories</h3>
+                </div>
+                <ul class="tags">
+                    {% for category in project.categories %}
+                        <li>
+                            <a>{{ category.name }}
+                            </a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+            <!-- /Categories -->
+        </div>
+        <!-- Project Description -->
+    </div>
+</div>
+
+{% endblock %}

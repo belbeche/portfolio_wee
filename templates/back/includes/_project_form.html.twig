@@ -1,16 +1,21 @@
 {{ form_start(projectForm) }}
 
 {{ form_widget(projectForm.title) }}
-{{ form_widget(projectForm.description) }}
+{{ form_errors(projectForm.title) }}
+{{ form_widget(projectForm.description, {'attr': {'class': 'form-control', 'rows': 12}}) }}
+{{ form_errors(projectForm.description) }}
 <div>
     {{ form_label(projectForm.images) }}
     {{ form_errors(projectForm.images) }}
     {{ form_widget(projectForm.images) }}
 </div>
 {{ form_widget(projectForm.categories) }}
+{{ form_errors(projectForm.categories) }}
 {{ form_widget(projectForm.link) }}
+{{ form_errors(projectForm.link) }}
 {{ form_widget(projectForm.category) }}
+{{ form_errors(projectForm.category) }}
 
-<button type="submit" class="btn btn-primary">Enregistrer</button>
+<button type="submit" class="btn btn-primary">Enregistrer les modifications</button>
 
 {{ form_end(projectForm) }}

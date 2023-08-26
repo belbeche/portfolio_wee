@@ -47,27 +47,11 @@ class ProjectController extends AbstractController
                 $project->setUpdatedAt(new \DateTime());
 
                 // Récupérer les fichiers d'images uploadés
-                $imageFiles = $form->get('images')->getData();
+                $this->extracted($form, $project, $entityManager);
 
-                foreach ($imageFiles as $imageFile) {
-                    if ($imageFile instanceof UploadedFile) {
-                        $imageName = uniqid() . '.' . $imageFile->getClientOriginalExtension();
-
-                        $imageFile->move(
-                            $this->getParameter('images_directory'),
-                            $imageName
-                        );
-
-                        $image = new Image();
-                        $image->setName($imageName);
-                        $project->addImage($image);
-                    }
-                }
-
-                $entityManager->persist($project);
-                $entityManager->flush();
-
-                return $this->redirectToRoute('back_project_index');
+                return $this->redirectToRoute('back_project_show', [
+                    'id' => $project->getId()
+                ]);
             }
         }
 
@@ -77,23 +61,40 @@ class ProjectController extends AbstractController
         ]);
     }
     /**
+     * @Route("/admin/project/show/{id}", name="back_project_show")
+     * @IsGranted("ROLE_ADMIN")
+     */
+    public function show(EntityManagerInterface $entityManager,$id): Response
+    {
+
+        $project = $entityManager->getRepository(Project::class)->find($id);
+
+
+        return $this->render('back/project/show.html.twig', [
+            'project' => $project,
+        ]);
+    }
+
+    /**
      * @Route("/admin/project/edit/{id}", name="back_project_edit")
      * @param Request $request
      * @return Response
      * @IsGranted("ROLE_ADMIN")
+     * @throws \Exception
      */
     public function edit(
         Project                $project,
         Request                $request,
         EntityManagerInterface $entityManager
     ): Response {
-        $form = $this->createForm(ProjectType::class, $project);
         $originalImages = new ArrayCollection();
 
         // Créer une copie des images originales du projet
         foreach ($project->getImages() as $image) {
             $originalImages->add($image);
         }
+
+        $form = $this->createForm(ProjectType::class, $project);
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
@@ -107,26 +108,7 @@ class ProjectController extends AbstractController
             }
 
             // Récupérer les fichiers d'images uploadés
-            $imageFiles = $form->get('images')->getData();
-
-            foreach ($imageFiles as $imageFile) {
-                if ($imageFile instanceof UploadedFile) {
-                    $imageName = uniqid() . '.' . $imageFile->getClientOriginalExtension();
-                    $imageExtension = $imageFile->getClientOriginalExtension();
-
-                    $imageFile->move(
-                        $this->getParameter('images_directory'),
-                        $imageName
-                    );
-
-                    $image = new Image();
-                    $image->setName($imageName);
-                    $project->addImage($image);
-                }
-            }
-
-            $entityManager->persist($project);
-            $entityManager->flush();
+            $this->extracted($form, $project, $entityManager);
 
             return $this->redirectToRoute('back_project_index');
         }
@@ -190,5 +172,34 @@ class ProjectController extends AbstractController
         } else {
             return new JsonResponse(['error' => 'Token Invalide'], 400);
         }
+    }
+
+    /**
+     * @param \Symfony\Component\Form\FormInterface $form
+     * @param Project $project
+     * @param EntityManagerInterface $entityManager
+     * @return void
+     */
+    public function extracted(\Symfony\Component\Form\FormInterface $form, Project $project, EntityManagerInterface $entityManager): void
+    {
+        $imageFiles = $form->get('images')->getData();
+
+        foreach ($imageFiles as $imageFile) {
+            if ($imageFile instanceof UploadedFile) {
+                $imageName = uniqid() . '.' . $imageFile->getClientOriginalExtension();
+
+                $imageFile->move(
+                    $this->getParameter('images_directory'),
+                    $imageName
+                );
+
+                $image = new Image();
+                $image->setName($imageName);
+                $project->addImage($image);
+            }
+        }
+
+        $entityManager->persist($project);
+        $entityManager->flush();
     }
 }

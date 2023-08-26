@@ -72,37 +72,6 @@
     }
     // /Ajax Pages loader
 
-    // Contact form validator
-    $(function () {
-
-        $('#contact_form').validator();
-
-        $('#contact_form').on('submit', function (e) {
-            if (!e.isDefaultPrevented()) {
-                var url = "contact_form/contact_form.php";
-
-                $.ajax({
-                    type: "POST",
-                    url: url,
-                    data: $(this).serialize(),
-                    success: function (data)
-                    {
-                        var messageAlert = 'alert-' + data.type;
-                        var messageText = data.message;
-
-                        var alertBox = '<div class="alert ' + messageAlert + ' alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>' + messageText + '</div>';
-                        if (messageAlert && messageText) {
-                            $('#contact_form').find('.messages').html(alertBox);
-                            $('#contact_form')[0].reset();
-                        }
-                    }
-                });
-                return false;
-            }
-        });
-    });
-    // /Contact form validator
-
     // Portfolio subpage filters
     function portfolio_init() {
         $( '.portfolio-content' ).each( function() {
@@ -394,19 +363,7 @@
             });
         });
 
-        $('.form-control').val('');
-
-        $(".form-control").on("focusin", function(){
-            $(this).parent('.form-group').addClass('form-group-focus');
-        });
-
-        $(".form-control").on("focusout", function(){
-            if($(this).val().length === 0) {
-                $(this).parent('.form-group').removeClass('form-group-focus');
-            }
-        });
-
-        $('body').append('<div id="page-ajax-loaded" class="page-portfolio-loaded animated fadeInLeft" style="display: none"><div class="preloader-portfolio"><div class="preloader-animation"><div class="preloader-spinner"></div></div></div></div>');
+        /*$('.form-control').val('');*/
 
         ajaxLoader();
 
@@ -421,14 +378,6 @@
                 scrollTop: 0
             }, 400);
             return false;
-        });
-        
-        //Google Maps
-        $("#map").googleMap({
-            zoom: 16 // Google Map ZOOM. You can change this value
-        });
-        $("#map").addMarker({
-            address: "S601 Townsend Street, San Francisco, California, USA", // Your Address. Change it
         });
 
         scrollTop();

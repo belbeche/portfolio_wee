@@ -28,7 +28,6 @@ class ProjectType extends AbstractType
                 ]
             ])
             ->add('description', TextareaType::class, [
-                'required' => true,
                 'attr' => [
                     'placeholder' => 'Merci de décrire votre projet...',
                 ],
@@ -51,13 +50,12 @@ class ProjectType extends AbstractType
                         return $er->createQueryBuilder('ca')
                             ->orderBy('ca.name', 'DESC');
                     },
-                    /*'expanded' => true,*/
                     'multiple'      => true,
                     'choice_label'   => 'name',
                     'expanded' => true,
                     'required'    => false,
                     'attr' => [
-                        'class' => 'select2',
+                        'class' => 'selectpicker',
                         'placeholder' => 'Choix des catégories'
                     ]
                 ]
@@ -72,7 +70,7 @@ class ProjectType extends AbstractType
                         'toutes_categories' => 'toutes_categories',
                     ],
                     'attr' => [
-                        'class' => 'select2',
+                        'class' => 'selectpicker',
                         'placeholder' => 'Choix de la catégorie d\'affichage'
                     ]
                 ]
