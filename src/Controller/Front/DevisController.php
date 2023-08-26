@@ -105,27 +105,16 @@ class DevisController extends AbstractController
      */
     public function setPassword(Request $request, EntityManagerInterface $entityManager, UserPasswordEncoderInterface $passwordEncoder)
     {
-
-        $currentUser = $this->getUser();
-
-        if (!$currentUser) {
-            // Utilisateur non connecté, renvoyer vers la page d'inscription
-            return $this->redirectToRoute('front_devis_new');
-
-        } else {
-            // Utilisateur connecté, utilisez son adresse email
-            $email = $currentUser->getEmail();
-        }
+        $email = $request->query->get('email'); // récupérer l'email depuis le formulaire de devis
 
         // Vérifier si l'utilisateur a déjà un devis en fonction de l'adresse email
         $existingDevis = $entityManager->getRepository(Devis::class)->findOneBy(['email' => $email]);
 
-        if($existingDevis){
-            // Si un devis existe avec cette adresse email, rediriger vers la page d'assistance
-            return $this->redirectToRoute('front_assistance');
-        } else {
-            $email = $request->query->get('email'); // récupérer l'email depuis le formulaire de devis
+        if (!$existingDevis) {
+            // Utilisateur non connecté, renvoyer vers la page d'inscription
+            return $this->redirectToRoute('front_devis_new');
 
+        } else {
             // Vérifiez si l'email existe dans les demandes de devis
             $existingDevis = $entityManager->getRepository(Devis::class)->findOneBy(['email' => $email]);
 
@@ -150,34 +139,32 @@ class DevisController extends AbstractController
                 $entityManager->persist($user);
                 $entityManager->flush();
 
-                return $this->redirectToRoute('front_message_devis');
+                return $this->redirectToRoute('front_message_devis', [
+                    'email' => $user->getEmail()
+                ]);
             }
         }
-
 
         return $this->render('front/devis/set_password.html.twig', [
             'form' => $form->createView(),
         ]);
     }
     /**
-     * @Route("/modifier-informations", name="front_devis_register")
+     * @Route("/modifier-informations/{email}", name="front_devis_register")
      */
-    public function editInfo(Request $request, EntityManagerInterface $entityManager,UserPasswordEncoderInterface $passwordEncoder)
+    public function editInfo(Request $request, EntityManagerInterface $entityManager,UserPasswordEncoderInterface $passwordEncoder,User $user)
     {
-        $user = $this->getUser();
-
         $form = $this->createForm(UserType::class, $user);
+
+        $form->remove('email');
+        $form->remove('password');
 
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            // Encode le nouveau mot de passe
-            $user->setPassword(
-                $passwordEncoder->encodePassword(
-                    $user,
-                    $form->get('password')->getData()
-                )
-            );
+
+            $user->getEmail($user->getEmail());
+            $user->getPassword($user->getPassword());
 
             $entityManager->persist($user);
             $entityManager->flush();
@@ -231,12 +218,23 @@ class DevisController extends AbstractController
     }
 
     /**
-     * @Route("/devis/remerciement", name="front_message_devis")
+     * @Route("/devis/remerciement/{email}", name="front_message_devis")
      */
     public function messageConfirmation(
-        EntityManagerInterface $entityManager
-    ):Response
+        EntityManagerInterface $entityManager,
+        Request $request,
+        User $user
+    ): Response
     {
-        return $this->render('front/devis/confirmation.html.twig');
+        $user = $entityManager->getRepository(User::class)->find($user);
+
+        if ($user === null) {
+            // Gérer l'erreur, peut-être rediriger vers une page d'erreur
+            throw $this->createNotFoundException('Aucun utilisateur avec cette adresse e-mail n\'a été trouvé.');
+        }
+
+        return $this->render('front/devis/confirmation.html.twig', [
+            'user' => $user,
+        ]);
     }
 }

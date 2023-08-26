@@ -92,6 +92,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->devis = new ArrayCollection();
         $this->sentMessages = new ArrayCollection();
         $this->receivedMessages = new ArrayCollection();
+        $this->roles = ['ROLE_USER'];
     }
 
     public function getId(): ?Uuid

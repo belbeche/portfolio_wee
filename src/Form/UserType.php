@@ -32,7 +32,10 @@ class UserType extends AbstractType
                 'multiple' => false,  // Gardez ceci sur false pour ne permettre qu'un seul choix
             ])
             ->add('email', EmailType::class)
-            ->add('roles', HiddenType::class)
+            ->add('roles', HiddenType::class, [
+                    'data' => ['ROLE_USER'],
+                ]
+            )
             ->add('password', RepeatedType::class, [
                 'type' => PasswordType::class,
                 'invalid_message' => 'Les champs du mot de passe doivent correspondre.',
