@@ -27,8 +27,6 @@ class DevisController extends AbstractController
      */
     public function new(Request $request, EntityManagerInterface $entityManager, MailerInterface $mailer): Response
     {
-        $currentUser = $this->getUser();
-
         /*if (!$currentUser) {
             // Utilisateur non connecté, renvoyer vers la page d'inscription
             return $this->redirectToRoute('app_register');
@@ -61,13 +59,14 @@ class DevisController extends AbstractController
             'default_type_de_site_web' => $defaultValue
         ]);
 
-        if ($request->isMethod('post')) {
-            $form->handleRequest($request);
+        $form->handleRequest($request);
 
+        if ($request->isMethod('post')) {
             if ($form->isSubmitted() && $form->isValid()) {
+                // Utilisation du Voter ici
+                $this->denyAccessUnlessGranted('CREATE', $devis);
                 $devis->setStatut('en_attente'); // Mettez à jour le statut si nécessaire
                 /*$devis->setEmail($currentUser->getEmail()); // Définir l'adresse email fournie par l'utilisateur*/
-                $devis->setUser(null);
                 $entityManager->persist($devis);
                 $entityManager->flush();
 
@@ -90,7 +89,7 @@ class DevisController extends AbstractController
                 $this->addFlash('success', 'Votre demande à bien était prise en compte, vérifiez votre adresse email');
 
                 return $this->redirectToRoute('front_devis_set_password', [
-                    'email' => $devis->getEmail()
+                    'id' => $devis->getId()
                 ]);
             }
         }
@@ -99,50 +98,42 @@ class DevisController extends AbstractController
             'formDevis' => $form->createView(),
         ]);
     }
-
     /**
-     * @Route("/set-password", name="front_devis_set_password")
+     * @Route("/continuer/{id}", name="front_devis_set_password")
      */
     public function setPassword(Request $request, EntityManagerInterface $entityManager, UserPasswordEncoderInterface $passwordEncoder)
     {
-        $email = $request->query->get('email'); // récupérer l'email depuis le formulaire de devis
+        $devisUuid = $request->get('id'); // Récupérer l'UUID depuis la route
 
-        // Vérifier si l'utilisateur a déjà un devis en fonction de l'adresse email
-        $existingDevis = $entityManager->getRepository(Devis::class)->findOneBy(['email' => $email]);
+        // Vérifier si un devis existe avec cet UUID
+        $existingDevis = $entityManager->getRepository(Devis::class)->findOneBy(['id' => $devisUuid]);
 
         if (!$existingDevis) {
-            // Utilisateur non connecté, renvoyer vers la page d'inscription
+            // Si l'UUID n'existe pas, redirigez vers une page d'erreur ou vers la création d'un devis
             return $this->redirectToRoute('front_devis_new');
+        }
 
-        } else {
-            // Vérifiez si l'email existe dans les demandes de devis
-            $existingDevis = $entityManager->getRepository(Devis::class)->findOneBy(['email' => $email]);
+        $email = $existingDevis->getEmail(); // Récupérer l'email associé à ce devis
 
-            if (!$existingDevis) {
-                // Si l'email n'existe pas, redirigez vers une page d'erreur
-                return $this->redirectToRoute('front_devis_new');
-            }
+        // Trouver ou créer l'entité User
+        $user = $entityManager->getRepository(User::class)->findOneBy(['email' => $email]) ?? new User();
+        $user->setEmail($email);
+        $user->setRoles(['ROLE_USER']);
 
-            // Trouver ou créer l'entité User
-            $user = $entityManager->getRepository(User::class)->findOneBy(['email' => $email]) ?? new User();
-            $user->setEmail($email);
-            $user->setRoles(['ROLE_USER']);
+        // Créer et traiter le formulaire pour le mot de passe
+        $form = $this->createForm(UserPasswordType::class, $user);
 
-            // Créer et traiter le formulaire pour le mot de passe
-            $form = $this->createForm(UserPasswordType::class, $user);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
 
-            $form->handleRequest($request);
-            if ($form->isSubmitted() && $form->isValid()) {
+            $user->setPassword($passwordEncoder->encodePassword($user, $user->getPassword()));
 
-                $user->setPassword($passwordEncoder->encodePassword($user, $user->getPassword()));
+            $entityManager->persist($user);
+            $entityManager->flush();
 
-                $entityManager->persist($user);
-                $entityManager->flush();
-
-                return $this->redirectToRoute('front_message_devis', [
-                    'email' => $user->getEmail()
-                ]);
-            }
+            return $this->redirectToRoute('front_message_devis', [
+                'id' => $user->getId()
+            ]);
         }
 
         return $this->render('front/devis/set_password.html.twig', [
@@ -150,7 +141,7 @@ class DevisController extends AbstractController
         ]);
     }
     /**
-     * @Route("/modifier-informations/{email}", name="front_devis_register")
+     * @Route("/modifier-informations/{id}", name="front_devis_register")
      */
     public function editInfo(Request $request, EntityManagerInterface $entityManager,UserPasswordEncoderInterface $passwordEncoder,User $user)
     {
@@ -162,9 +153,6 @@ class DevisController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-
-            $user->getEmail($user->getEmail());
-            $user->getPassword($user->getPassword());
 
             $entityManager->persist($user);
             $entityManager->flush();
@@ -218,7 +206,7 @@ class DevisController extends AbstractController
     }
 
     /**
-     * @Route("/devis/remerciement/{email}", name="front_message_devis")
+     * @Route("/devis/remerciement/{id}", name="front_message_devis")
      */
     public function messageConfirmation(
         EntityManagerInterface $entityManager,

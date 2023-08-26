@@ -15,6 +15,9 @@ services:
     App\Controller\Front\MessageController:
         tags: ['controller.service_arguments']
     # default configuration for services in *this* file
+    App\Security\Voter\DevisVoter:
+        tags:
+            - { name: 'security.voter' }
     _defaults:
         autowire: true # Automatically injects dependencies in your services.
         autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.

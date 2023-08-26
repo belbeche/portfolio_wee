@@ -45,10 +45,9 @@ class Devis
     private $created_at;
 
     /**
-     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="devis")
-     * @ORM\JoinColumn(nullable=true)
+     * @ORM\Column(type="string", nullable="true")
      */
-    private ?User $user;
+    private $prix;
 
     /**
      * @ORM\Column(type="string", length=255)
@@ -138,15 +137,21 @@ class Devis
         return $this;
     }
 
-    public function getUser(): ?User
+    /**
+     * @return mixed
+     */
+    public function getPrix()
     {
-        return $this->user;
+        return $this->prix;
     }
 
-    public function setUser(?User $user): self
+    /**
+     * @param mixed $prix
+     * @return Devis
+     */
+    public function setPrix($prix)
     {
-        $this->user = $user;
-
+        $this->prix = $prix;
         return $this;
     }
 
