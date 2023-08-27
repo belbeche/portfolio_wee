@@ -111,33 +111,33 @@ class DevisController extends AbstractController
 
         if (!$existingDevis) {
             // Si l'UUID n'existe pas, redirigez vers une page d'erreur ou vers la création d'un devis
-            return $this->redirectToRoute('front_devis_new');
+            return $this->redirectToRoute('front_assistance');
         } else {
-            return $this->redirectToRoute('app_login');
+            $email = $existingDevis->getEmail(); // Récupérer l'email associé à ce devis
+
+            // Trouver ou créer l'entité User
+            $user = $entityManager->getRepository(User::class)->findOneBy(['email' => $email]) ?? new User();
+            $user->setEmail($email);
+            $user->setRoles(['ROLE_USER']);
+
+            // Créer et traiter le formulaire pour le mot de passe
+            $form = $this->createForm(UserPasswordType::class, $user);
+
+            $form->handleRequest($request);
+            if ($form->isSubmitted() && $form->isValid()) {
+
+                $user->setPassword($passwordEncoder->encodePassword($user, $user->getPassword()));
+
+                $entityManager->persist($user);
+                $entityManager->flush();
+
+                return $this->redirectToRoute('front_message_devis', [
+                    'id' => $user->getId()
+                ]);
+            }
         }
 
-        $email = $existingDevis->getEmail(); // Récupérer l'email associé à ce devis
 
-        // Trouver ou créer l'entité User
-        $user = $entityManager->getRepository(User::class)->findOneBy(['email' => $email]) ?? new User();
-        $user->setEmail($email);
-        $user->setRoles(['ROLE_USER']);
-
-        // Créer et traiter le formulaire pour le mot de passe
-        $form = $this->createForm(UserPasswordType::class, $user);
-
-        $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
-
-            $user->setPassword($passwordEncoder->encodePassword($user, $user->getPassword()));
-
-            $entityManager->persist($user);
-            $entityManager->flush();
-
-            return $this->redirectToRoute('front_message_devis', [
-                'id' => $user->getId()
-            ]);
-        }
 
         return $this->render('front/devis/set_password.html.twig', [
             'form' => $form->createView(),

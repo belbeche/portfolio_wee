@@ -807,9 +807,9 @@ td {
 }
 
 
-/*!* =============================================================================
+/* =============================================================================
 3. Page container
-============================================================================= *!
+============================================================================= */
 .page-container {
   display: flex;
   flex-flow: column;
@@ -818,8 +818,8 @@ td {
   -ms-flex: 0 0 100%;
   flex: 0 0 100%;
   max-width: 100%;
-  margin: 3% auto;
-  padding: 30px 70px 60px;
+  /*margin: 3% auto;*/
+  /*padding: 30px 70px 60px;*/
   background-color: #fff;
   -webkit-box-shadow: 0px 0px 40px -10px rgba(0, 0, 0, .2);
   -moz-box-shadow: 0px 0px 40px -10px rgba(0, 0, 0, .2);
@@ -828,7 +828,7 @@ td {
   -webkit-backface-visibility: hidden;
   -moz-backface-visibility: hidden;
   backface-visibility: hidden;
-}*/
+}
 
 .transform3d {
   -webkit-transform: translate3d(0, 0, 0);
@@ -1406,7 +1406,7 @@ td {
   margin-right: -70px;
   margin-left: -70px;
   margin-bottom: 65px;
-  text-align: left;
+  text-align: center;
 }
 
 .list-view .page-title {
@@ -1421,9 +1421,7 @@ td {
 
 .page-title .page-subtitle {
   display: inline-block;
-  position: absolute;
   top: 0;
-  right: 70px;
 }
 
 .page-title .page-subtitle h4 {
@@ -5084,13 +5082,11 @@ a.post-thumbnail:hover {
 .site-footer {
   display: block;
   position: relative;
-  margin: 60px -70px -60px;
   padding: 15px 45px;
   ;
   background-color: #fdfdfd;
   border-top: 2px solid #f2f2f2;
-  border-bottom-left-radius: 40px;
-  border-bottom-right-radius: 40px;
+  bottom: 0;
 }
 
 .footer-social {
@@ -5133,9 +5129,6 @@ a.post-thumbnail:hover {
   font-size: 13px;
   margin: 0;
 }
-
-
-
 
 /* ============================================================================= 
 12. 404 Page
@@ -5922,11 +5915,11 @@ a.post-thumbnail:hover {
 /* === v1.2 === */
 /* Full Width Mode */
 @media only screen and (min-width: 991px) {
-  /*.page-container {
+  .page-container {
     max-width: 100%;
     border-radius: 0;
     margin: 0;
-  }*/
+  }
 
   .page-content.single-post {
     max-width: 1320px;
@@ -5947,10 +5940,10 @@ a.post-thumbnail:hover {
     z-index: 0;
   }
 
-  /*.page-container {
+  .page-container {
     min-height: 100vh;
     padding-bottom: 120px;
-  }*/
+  }
 
   .site-footer {
     position: absolute;
