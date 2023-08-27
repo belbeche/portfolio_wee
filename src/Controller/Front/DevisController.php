@@ -103,6 +103,7 @@ class DevisController extends AbstractController
      */
     public function setPassword(Request $request, EntityManagerInterface $entityManager, UserPasswordEncoderInterface $passwordEncoder)
     {
+
         $devisUuid = $request->get('id'); // Récupérer l'UUID depuis la route
 
         // Vérifier si un devis existe avec cet UUID
@@ -111,6 +112,8 @@ class DevisController extends AbstractController
         if (!$existingDevis) {
             // Si l'UUID n'existe pas, redirigez vers une page d'erreur ou vers la création d'un devis
             return $this->redirectToRoute('front_devis_new');
+        } else {
+            return $this->redirectToRoute('app_login');
         }
 
         $email = $existingDevis->getEmail(); // Récupérer l'email associé à ce devis

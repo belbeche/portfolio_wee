@@ -14,6 +14,8 @@
 	{% if is_granted('ROLE_ADMIN') %}
 		Status :
 		{{ form_widget(formDevis.statut, {attr: {style: 'display:block'}}) }}
+		Prix :
+		{{ form_widget(formDevis.prix, {attr: {style: 'display:block'}}) }}
 	{% endif %}
 	<button type="submit">Enregistrer</button>
 	{{ form_end(formDevis) }}

@@ -31,6 +31,10 @@
 			<th>Date de création</th>
 			<td>{{ devis.createdAt|date('Y-m-d H:i:s') }}</td>
 		</tr>
+		<tr>
+			<th>Prix</th>
+			<td>{{ devis.prix }} €</td>
+		</tr>
 	</table>
 
 	<a href="{{ path('back_devis_edit', {'id': devis.id}) }}">Modifier</a>

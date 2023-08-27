@@ -45,7 +45,7 @@ class Devis
     private $created_at;
 
     /**
-     * @ORM\Column(type="string", nullable="true")
+     * @ORM\Column(type="integer", nullable="true")
      */
     private $prix;
 

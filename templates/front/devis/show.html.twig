@@ -1,24 +1,156 @@
-<html>
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Devis n°{{ devis.id }}</title>
+    <style>
+        body{margin-top:20px;
+            font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif;
+            font-size: 20px;
+        }
+
+        .card-footer-btn {
+            display: flex;
+            align-items: center;
+            border-top-left-radius: 0!important;
+            border-top-right-radius: 0!important;
+        }
+        .text-uppercase-bold-sm {
+            text-transform: uppercase!important;
+            font-weight: 500!important;
+            letter-spacing: 2px!important;
+            font-size: .85rem!important;
+        }
+        .hover-lift-light {
+            transition: box-shadow .25s ease,transform .25s ease,color .25s ease,background-color .15s ease-in;
+        }
+        .justify-content-center {
+            justify-content: center!important;
+        }
+        .btn-group-lg>.btn, .btn-lg {
+            padding: 0.8rem 1.85rem;
+            font-size: 1.1rem;
+            border-radius: 0.3rem;
+        }
+        .btn-dark {
+            color: #fff;
+            background-color: #1e2e50;
+            border-color: #1e2e50;
+        }
+
+        .card {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            min-width: 0;
+            word-wrap: break-word;
+            background-color: #fff;
+            background-clip: border-box;
+            border: 1px solid rgba(30,46,80,.09);
+            border-radius: 0.25rem;
+            box-shadow: 0 20px 27px 0 rgb(0 0 0 / 5%);
+        }
+
+        .p-5 {
+            padding: 3rem!important;
+        }
+        .card-body {
+            flex: 1 1 auto;
+            padding: 1.5rem 1.5rem;
+        }
+
+        tbody, td, tfoot, th, thead, tr {
+            border-color: inherit;
+            border-style: solid;
+            border-width: 0;
+        }
+
+        .table td, .table th {
+            border-bottom: 0;
+            border-top: 1px solid #edf2f9;
+        }
+        .table>:not(caption)>*>* {
+            padding: 1rem 1rem;
+            background-color: var(--bs-table-bg);
+            border-bottom-width: 1px;
+            box-shadow: inset 0 0 0 9999px var(--bs-table-accent-bg);
+        }
+        .px-0 {
+            padding-right: 0!important;
+            padding-left: 0!important;
+        }
+        .table thead th, tbody td, tbody th {
+            vertical-align: middle;
+        }
+        tbody, td, tfoot, th, thead, tr {
+            border-color: inherit;
+            border-style: solid;
+            border-width: 0;
+        }
+
+        .mt-5 {
+            margin-top: 3rem!important;
+        }
+
+        .icon-circle[class*=text-] [fill]:not([fill=none]), .icon-circle[class*=text-] svg:not([fill=none]), .svg-icon[class*=text-] [fill]:not([fill=none]), .svg-icon[class*=text-] svg:not([fill=none]) {
+            fill: currentColor!important;
+        }
+        .svg-icon>svg {
+            width: 1.45rem;
+            height: 1.45rem;
+        }
+    </style>
 </head>
 <body>
-    <div class="xs-12">
-        <h2>Type de demande :
-            {{ devis.typeDeSiteWeb }}</h2>
-        <h3>Par :
-            {{ devis.email }}</h3>
+    <div class="container mt-6 mb-7">
+        <div class="justify-content-center">
+            <div class="card">
+                <div class="card-body p-5">
+                    <h2>
+                        Bonjour {{ app.user.civility}} {{ app.user.nom }},
+                    </h2>
+                    <p class="fs-sm">
+                        Ceci est le reçu du devis {{ devis.typeDeSiteWeb }} que vous avez effectué sur ScriptZenIT.
+                    </p>
 
-        <div class="metadata">
-            Crée le
-            {{ devis.createdAt|date('d/m/Y') }}
-            à
-            {{ devis.createdAt|date('H:i') }}</div>
-        <div class="contenu">
-            Message:
-            {{ devis.descriptionProjet | nl2br  }}
+                    <div class="border-top border-gray-200 pt-4 mt-4">
+                        <div class=">
+                            <div class="text-muted mb-2">Numéro de devis.</div>
+                            <strong>{{ devis.id }}</strong>
+                        </div>
+                        <div class="text-md-end">
+                            <div class="text-muted mb-2">Date de création</div>
+                            <strong>{{ devis.createdAt|date('d/m/Y') }} à {{ devis.createdAt|date('H:i') }}</strong>
+                        </div>
+                        <div class="text-md-end">
+                            <div class="text-muted mb-2">Statut de la demande</div>
+                            <strong>{{ devis.statut }}</strong>
+                        </div>
+                        <div class="border-top border-gray-200 mt-4 py-4 ">
+                            <div class="text-muted mb-2">Client</div>
+                            <strong>
+                                {{ app.user.civility }}. {{ app.user.nom }} {{ app.user.prenom }}
+                            </strong>
+                            <p class="fs-sm text-purple">
+                                {{ devis.email }}
+                            </p>
+                        </div>
+                    <table class="table border-bottom border-gray-200 mt-3">
+                        <thead>
+                        <tr>
+                            <th scope="col" class="fs-sm text-dark text-uppercase-bold-sm px-0">Description</th>
+                            <th scope="col" class="fs-sm text-dark text-uppercase-bold-sm text-end px-0">Prix</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td class="px-0">{{ devis.descriptionProjet | nl2br  }}</td>
+                            <td class="text-end px-0">{{ devis.prix }} €</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
     </div>
 </body>
