@@ -52,7 +52,7 @@
     text-align: center;   /* Centre le texte */
 }
 
-@media screen and (max-width: 400px) {
+@media screen and (max-width: 500px) {
     #cookie-consent{
         position: fixed;       /* Flottant en bas de la page */
         bottom: 0;
