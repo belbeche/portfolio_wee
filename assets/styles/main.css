@@ -807,9 +807,9 @@ td {
 }
 
 
-/* ============================================================================= 
+/*!* =============================================================================
 3. Page container
-============================================================================= */
+============================================================================= *!
 .page-container {
   display: flex;
   flex-flow: column;
@@ -828,7 +828,7 @@ td {
   -webkit-backface-visibility: hidden;
   -moz-backface-visibility: hidden;
   backface-visibility: hidden;
-}
+}*/
 
 .transform3d {
   -webkit-transform: translate3d(0, 0, 0);
@@ -5176,9 +5176,9 @@ a.post-thumbnail:hover {
     width: calc(33.33333% - 16px);
   }
 
-  .page-container {
+  /*.page-container {
     max-width: 94%;
-  }
+  }*/
 }
 
 @media only screen and (min-width: 991px) {
@@ -5232,7 +5232,7 @@ a.post-thumbnail:hover {
     min-width: 100%;
     min-height: 100%;
     width: 100%;
-    padding: 52px 40px 60px;
+    /*padding: 52px 40px 60px;*/
   }
 
   .page-title {
@@ -5922,11 +5922,11 @@ a.post-thumbnail:hover {
 /* === v1.2 === */
 /* Full Width Mode */
 @media only screen and (min-width: 991px) {
-  .page-container {
+  /*.page-container {
     max-width: 100%;
     border-radius: 0;
     margin: 0;
-  }
+  }*/
 
   .page-content.single-post {
     max-width: 1320px;
@@ -5947,10 +5947,10 @@ a.post-thumbnail:hover {
     z-index: 0;
   }
 
-  .page-container {
+  /*.page-container {
     min-height: 100vh;
     padding-bottom: 120px;
-  }
+  }*/
 
   .site-footer {
     position: absolute;

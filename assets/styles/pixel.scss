@@ -25446,12 +25446,6 @@ button.section-gray-800:focus {
     padding-bottom: 3rem;
 }
 
-.section-header {
-    position: relative;
-    padding-top: 7rem;
-    padding-bottom: 3rem;
-}
-
 @media (min-width: 576px) {
     .section {
         position: relative;
@@ -25461,13 +25455,8 @@ button.section-gray-800:focus {
 
     .section-header {
         position: relative;
-        padding-top: 10rem;
+        /*padding-top: 10rem;*/
         padding-bottom: 10rem;
-    }
-
-    .section-header.section-sm {
-        padding-top: 4rem;
-        padding-bottom: 3rem;
     }
 
     .section-xl {
@@ -25483,6 +25472,11 @@ button.section-gray-800:focus {
     .section-sm {
         padding-top: 4rem;
         padding-bottom: 4rem;
+    }
+
+    .section-header {
+        position: relative;
+        padding-top: 7rem;
     }
 }
 
