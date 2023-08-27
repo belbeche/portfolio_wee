@@ -5081,7 +5081,7 @@ a.post-thumbnail:hover {
 ============================================================================= */
 .site-footer {
   display: block;
-  position: relative;
+  position: fixed;
   padding: 15px 45px;
   ;
   background-color: #fdfdfd;
@@ -5946,7 +5946,17 @@ a.post-thumbnail:hover {
   }
 
   .site-footer {
-    position: absolute;
+    position: fixed;
+    margin: 60px 0 0;
+    right: 0;
+    left: 0;
+    bottom: 0;
+  }
+}
+
+@media only screen and (min-width: 200px) and (max-width: 991px) {
+  .site-footer {
+    position: relative;
     margin: 60px 0 0;
     right: 0;
     left: 0;
