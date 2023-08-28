@@ -13,7 +13,7 @@
 					<h1>Mes réalisations</h1>
 					<div class="page-subtitle">
 						<br>
-						<a href="{{ url('front_devis_new')}}">Demandez votre devis maintenant</a>
+						<a href="#devis">Voir des exemples de solutions.</a>
 						<h4></h4>
 					</div>
 				</div>
@@ -21,8 +21,15 @@
 
 				{% include "front/includes/project.html.twig" %}
 
-
-				<h1 class="pb-4">Envie d'avoir une visibilité sur le web ? Discutons de votre besoin !</h1>
+				<h1 class="pb-4"></h1>
+				<div class="page-title" id="devis">
+					<h1>Envie d'avoir une visibilité sur le web ? </h1>
+					<div class="page-subtitle">
+						<br>
+						<a href="{{ url('front_devis_new')}}">Cliquez ici pour personnaliser votre demande !</a>
+						<h4>Ou bien, choisissez parmi la sélection ci-dessous.</h4>
+					</div>
+				</div>
 
 				<div class="container">
 					<div
@@ -31,11 +38,11 @@
 						<!-- Rélisation d'un site d'agence -->
 						<div class="col-md-3 col-xs-12 mb-5 mt-2">
 							<div class="card">
-								<img src="{{ asset('img/quote/agency.svg') }}" alt="Rélisation de site d'agence"/>
+								<img src="{{ asset('img/quote/agency.svg') }}" alt="Realisation de site d'agence"/>
 								<div class="card-body">
 									<h5 class="card-title">Rélisation de site d'agence</h5>
 									<p class="card-text">Une réalisation sur mesure pour votre site d'agence, afin de garantir une présence permanente en ligne..</p>
-									<a href="{{ url('front_devis_new') }}" class="btn btn-primary">Je crée mon devis</a>
+									<a href="{{ url('front_devis_new', {'type': 'site_vitrine'}) }}" class="btn btn-primary">Je crée mon devis</a>
 								</div>
 							</div>
 						</div>
@@ -47,7 +54,7 @@
 								<div class="card-body">
 									<h5 class="card-title">Réalisation de site d'annonce immobilière</h5>
 									<p class="card-text">Une réalisation sur mesure pour votre site d'annonce immobilière ou de voyage, afin de garantir une présence permanente en ligne..</p>
-									<a href="{{ url('front_devis_new') }}" class="btn btn-primary">Je crée mon devis</a>
+									<a href="{{ url('front_devis_new', {'type': 'site_reale_state'}) }}" class="btn btn-primary">Je crée mon devis</a>
 								</div>
 							</div>
 						</div>
@@ -59,7 +66,7 @@
 								<div class="card-body">
 									<h5 class="card-title">Rélisation de site eCommerce</h5>
 									<p class="card-text">Une réalisation sur mesure pour votre site de boutique en ligne..</p>
-									<a href="{{ url('front_devis_new') }}" class="btn btn-primary">Je crée mon devis</a>
+									<a href="{{ url('front_devis_new', {'type': 'site_e-commerce'}) }}" class="btn btn-primary">Je crée mon devis</a>
 								</div>
 							</div>
 						</div>
@@ -71,7 +78,7 @@
 								<div class="card-body">
 									<h5 class="card-title">Réalisation de site portfolio</h5>
 									<p class="card-text">Une réalisation sur mesure pour votre site portfolio, afin de présenter vos meilleure créations et d'acquérir de nouveau client..</p>
-									<a href="{{ url('front_devis_new') }}" class="btn btn-primary">Je crée mon devis</a>
+									<a href="{{ url('front_devis_new', {'type': 'site_portfolio'}) }}" class="btn btn-primary">Je crée mon devis</a>
 								</div>
 							</div>
 						</div>
