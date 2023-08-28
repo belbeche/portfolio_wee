@@ -485,7 +485,7 @@ input[type="submit"],
 .wp-block-button .wp-block-button__link {
   display: inline-block;
   position: relative;
-  padding: .8em 2.1em;
+  /*padding: .8em 2.1em;*/
   margin-bottom: .75em;
   margin-right: .25em;
   font-size: 1em;
@@ -3520,7 +3520,7 @@ ul.social-links li:last-child a {
   display: block;
   line-height: 1;
   color: #333;
-  font-size: 42px;
+  /*font-size: 42px;*/
 }
 
 .fw-pricing .fw-pricing-row small {
@@ -5081,12 +5081,14 @@ a.post-thumbnail:hover {
 ============================================================================= */
 .site-footer {
   display: block;
-  position: fixed;
+  position: relative;
   padding: 15px 45px;
   ;
   background-color: #fdfdfd;
   border-top: 2px solid #f2f2f2;
   bottom: 0;
+  right: 0;
+  left: 0;
 }
 
 .footer-social {
@@ -5942,21 +5944,9 @@ a.post-thumbnail:hover {
 
   .page-container {
     min-height: 100vh;
-    padding-bottom: 120px;
   }
 
   .site-footer {
-    position: fixed;
-    margin: 60px 0 0;
-    right: 0;
-    left: 0;
-    bottom: 0;
-  }
-}
-
-@media only screen and (min-width: 200px) and (max-width: 991px) {
-  .site-footer {
-    position: relative;
     margin: 60px 0 0;
     right: 0;
     left: 0;

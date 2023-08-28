@@ -112,4 +112,7 @@
     .cover-heading {
         margin-bottom: 50%;
     }
+    .site-footer-fixed {
+        position: fixed;
+    }
 }

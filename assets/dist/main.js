@@ -26,52 +26,6 @@
         });
     }
 
-    // Ajax Pages loader
-   function ajaxLoader() {
-        // Check for hash value in URL
-        var ajaxLoadedContent = $('#page-ajax-loaded');
-
-        function showContent() {
-            ajaxLoadedContent.removeClass('fadeOutLeft closed');
-            ajaxLoadedContent.show();
-            $('body').addClass('ajax-page-visible');
-        }
-
-        function hideContent() {
-            $('#page-ajax-loaded').addClass('fadeOutLeft closed');
-            $('body').removeClass('ajax-page-visible');
-            setTimeout(function(){
-                $('#page-ajax-loaded.closed').html('');
-                ajaxLoadedContent.hide();
-            }, 500);
-        }
-
-        var href = $('.ajax-page-load').each(function(){
-            href = $(this).attr('href');
-            if(location.hash == location.hash.split('/')[0] + '/' + href.substr(0,href.length-5)){
-                var toLoad =  $(this).attr('href');
-                showContent();
-                ajaxLoadedContent.load(toLoad);
-                return false;
-            }
-        });
-
-        $(document)
-            .on("click","#ajax-page-close-button", function (e) { // Hide Ajax Loaded Page on Navigation cleck and Close button
-                e.preventDefault();
-                hideContent();
-                location.hash = location.hash.split('/')[0];
-            })
-            .on("click",".ajax-page-load", function () { // Show Ajax Loaded Page
-                var hash = location.hash.split('/')[0] + '/' + $(this).attr('href').substr(0,$(this).attr('href').length-5);
-                location.hash = hash;
-                showContent();
-
-                return false;
-            });
-    }
-    // /Ajax Pages loader
-
     // Portfolio subpage filters
     function portfolio_init() {
         $( '.portfolio-content' ).each( function() {
@@ -152,20 +106,6 @@
         });
         $('head').append('<style data-styles="leven-theme-skills-css" type="text/css">' + custom_styles + '</style>');
     }
-
-    //On Window load & Resize
-    $(window)
-        .on('load', function() { //Load
-            // Animation on Page Loading
-            $(".preloader").fadeOut( 800, "linear" );
-            animateLayout();
-        })
-        .on('hashchange', function(event) {
-            if(location.hash) {
-                ajaxLoader();
-            }
-        });
-
 
     // On Document Load
     $(document).ready(function () {
@@ -364,8 +304,6 @@
         });
 
         /*$('.form-control').val('');*/
-
-        ajaxLoader();
 
         // Sidebar toggle
         $('.sidebar-toggle').on("click", function () {

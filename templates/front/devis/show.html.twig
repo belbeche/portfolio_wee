@@ -128,12 +128,10 @@
                         </div>
                         <div class="border-top border-gray-200 mt-4 py-4 ">
                             <div class="text-muted mb-2">Client</div>
-                            <strong>
-                                {{ app.user.civility }}. {{ app.user.nom }} {{ app.user.prenom }}
-                            </strong>
-                            <p class="fs-sm text-purple">
-                                {{ devis.email }}
-                            </p>
+                            <strong>Nom  </strong> :  {{ app.user.nom }} <br>
+                            <strong>Prenom  </strong> : {{ app.user.prenom }} <br>
+                            <strong>Email </strong> :  {{ devis.email }}
+
                         </div>
                     <table class="table border-bottom border-gray-200 mt-3">
                         <thead>

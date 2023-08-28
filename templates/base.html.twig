@@ -31,13 +31,13 @@
 
 		{#<div class="lm-animated-bg"></div>#}
 
-		<!-- Loading animation -->
+		{#<!-- Loading animation -->
 		<div class="preloader">
 			<div class="preloader-animation">
 				<div class="preloader-spinner"></div>
 			</div>
 		</div>
-		<!-- /Loading animation -->
+		<!-- /Loading animation -->#}
 
 		<!-- Scroll To Top Button -->
 		<div class="lmpixels-scroll-to-top">
@@ -68,7 +68,7 @@
 				{% block content %}{% endblock %}
 
 				<!-- Footer -->
-				<footer class="site-footer">
+				<footer class="site-footer" id="footer-site">
 					<div class="footer-social">
 						<ul class="footer-social-links">
 							<li>
@@ -124,8 +124,6 @@
 			<script src="{{ asset('js/jquery.shuffle.min.js')}}"></script>
 			{#  <script src="{{ asset('js/particles.js')}}"></script>#}
 			{#	<script src="{{ asset('js/app.js')}}"></script> #}
-			<script src="{{ asset('js/pixel.min.js') }}"></script>
-			<script src="{{ asset('js/front.js') }}"></script>
 			<script>
 				const navbarMenu = document.getElementById("menu");
 				const burgerMenu = document.getElementById("burger");
@@ -157,17 +155,6 @@
 						}
 					}
 				});
-
-				// Dark and Light Mode on Switch Click
-				/*document.addEventListener("DOMContentLoaded", () => {
-					const darkSwitch = document.getElementById("switch");
-
-					darkSwitch.addEventListener("click", () => {
-						document.documentElement.classList.toggle("darkmode");
-						document.body.classList.toggle("darkmode");
-					});
-				});*/
-
 			</script>
 			<script>
 				document.getElementById('accept-cookies').addEventListener('click', function() {
@@ -197,6 +184,19 @@
 					document.getElementById('cookie-consent').style.display = 'block';
 				}
 			</script>
+			<script>
+				(() => {
+					const footer = document.querySelector('footer')
+					footer.classList.add('site-footer-fixed')
+
+					let displayFixed = () => {
+						footer.classList.remove('site-footer-fixed')
+					}
+
+					document.addEventListener('scroll', displayFixed)
+				})()
+			</script>
 		{% endblock %}
+
 	</body>
 </html>

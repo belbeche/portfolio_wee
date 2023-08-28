@@ -236,7 +236,7 @@ video {
 .menu-link {
     font-family: inherit;
     font-size: 1rem;
-    font-weight: 500;
+    /*font-weight: 500;*/
     line-height: 1.5;
     color: inherit;
     text-transform: uppercase;
