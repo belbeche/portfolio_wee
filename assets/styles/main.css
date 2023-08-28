@@ -485,7 +485,7 @@ input[type="submit"],
 .wp-block-button .wp-block-button__link {
   display: inline-block;
   position: relative;
-  /*padding: .8em 2.1em;*/
+  padding: .8em 2.1em;
   margin-bottom: .75em;
   margin-right: .25em;
   font-size: 1em;
