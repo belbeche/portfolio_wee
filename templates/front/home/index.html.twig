@@ -5,43 +5,6 @@
 
 {% block content %}
 
-
-	{#{% if not app.user %}
-		<div class="alert alert-primary d-flex align-items-center justify-content-between" role="alert">
-			<div class="d-flex align-items-center">
-				<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-exclamation-triangle-fill flex-shrink-0 me-2" viewBox="0 0 16 16" role="img" aria-label="Warning:">
-					<path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
-				</svg>
-				<div>
-					<ul class="mb-0">
-						<li>Bienvenue sur ScriptZen !</li>
-						<li>Pour réaliser une demande de devis, rendez-vous sur l'onglet <a href="{{ url('front_devis_new') }}" class="alert-link">Inscription</a></li>
-					</ul>
-				</div>
-			</div>
-			<button type="button" class="close" data-dismiss="alert" aria-label="Close">
-				<span aria-hidden="true">&times;</span>
-			</button>
-		</div>
-	{% else %}
-		<div class="alert alert-primary d-flex align-items-center justify-content-between" role="alert">
-			<div class="d-flex align-items-center">
-				<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-exclamation-triangle-fill flex-shrink-0 me-2" viewBox="0 0 16 16" role="img" aria-label="Warning:">
-					<path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
-				</svg>
-				<div>
-					<ul class="mb-0">
-						<li>Bienvenue {{ app.user.civility}}. {{ app.user.nom}} !</li>
-						<li>Pour demander assistance, rendez-vous sur l'onglet <a href="{{ url('front_assistance') }}" class="alert-link">Assistance</a></li>
-					</ul>
-				</div>
-			</div>
-			<button type="button" class="close" data-dismiss="alert" aria-label="Close">
-				<span aria-hidden="true">&times;</span>
-			</button>
-		</div>
-	{% endif %}#}
-
 	<div class="container">
 		{% for type, messages in app.flashes %}
 			{% for message in messages %}
@@ -55,11 +18,14 @@
 		<div class="container">
 			<div class="row justify-content-between align-items-center">
 				<div class="col-12 col-md-7 col-lg-6 text-center text-md-left intro">
-					<h1 class="display-2 mb-4">Agence numérique <br class="d-none d-md-inline">Basée dans la Nièvre</h1>
+					<h1 class="display-2 mb-4">Agence numérique <br> <span class="inline-block" style="background-color: dodgerblue;">Basée dans la Nièvre</span></h1>
 					<p class="lead mb-4 text-muted">Grâce à mon expertise en développement Web, je vous aide à créer un site professionnel
 						et attractif, adapté à tous les appareils. La sécurité des données est une priorité, et je propose
 						des solutions de gestion de contenu faciles à utiliser.</p>
-					<a href="{{ url('front_devis_new') }}" class="btn btn-tertiary mr-3 animate-up-2 ni-mobile-button">Ce que nous faisons<span class="ml-2"><span class="fas fa-arrow-right"></span></span></a>
+					<div class="flex-sm-column button_home">
+						<a href="{{ url('front_devis_new') }}" class="btn btn-tertiary mr-3 animate-up-2 inline-block">Obtenir un devis en 24h <span class="ml-2"><span class="fas fa-arrow-right"></span></span></a>
+						<a href="#agence" class="btn btn-danger mr-3 animate-up-2 inline-block">Découvrir l'agence<span class="ml-2"><span class="fas fa-arrow-down"></span></span></a>
+					</div>
 				</div>
 				<div class="col-12 col-md-5 d-none d-md-block text-center"><img src="{{ asset('img/support/support1.svg') }}" alt="scriptzenit"></div>
 			</div>
@@ -72,7 +38,7 @@
 	</section>
 	<!-- End of Hero section -->
 
-	<div class="container mt-5">
+	<div class="container mt-5" id="agence">
 		<h1 class="display-5 fw-bold lh-1 mb-3 text-center">Des solutions de développement web adaptées à tous les besoins</h1>
 		<p class="lead mb-4 text-muted text-center">Je conçois la solution optimale de développement web pour chaque situation spécifique, qu'il s'agisse de développer une plateforme complète ou de mettre en place des outils précis pour vos besoins uniques.</p>
 {#
