@@ -80,41 +80,7 @@
 
 				{% block content %}{% endblock %}
 
-				<!-- Footer -->
-				<footer class="site-footer" id="footer-site">
-					<div class="footer-social">
-						<ul class="footer-social-links">
-							<li>
-								<a href="https://github.com/belbeche" target="_blank">Github</a>
-							</li>
-
-							<li>
-								<a href="https://www.linkedin.com/in/walid-belbeche/" target="_blank">LinkedIn</a>
-							</li>
-
-							<li>
-								<a href="{{ url('front_project') }}" target="_self">Mes réalisations</a>
-							</li>
-						</ul>
-					</div>
-
-					<div class="footer-copyrights">
-						<div class="footer-legales ml-auto">
-							&copy; ScriptZenIT - 2023
-							<ul class="footer-social-links">
-								<li>
-									<a href="{{  url('front_mentions') }}">Mentions légales</a>
-								</li>
-
-								<li>
-									<a href="{{ url('front_conditions') }}">Conditions générales</a>
-								</li>
-								{#<li><a href="#Données personnelles">Données personnelles</a></li>#}
-							</ul>
-						</div>
-					</div>
-				</footer>
-				<!-- /Footer -->
+				{% include "front/includes/footer.html.twig" %}
 
 			</div>
 		</div>
