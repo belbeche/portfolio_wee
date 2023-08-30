@@ -26,6 +26,15 @@
 		{% block stylesheets %}
 			{{ encore_entry_link_tags('app') }}
 		{% endblock %}
+		<!-- Google tag (gtag.js) -->
+		<script async src="https://www.googletagmanager.com/gtag/js?id=G-19D64W6342"></script>
+		<script>
+			window.dataLayer = window.dataLayer || [];
+			function gtag(){dataLayer.push(arguments);}
+			gtag('js', new Date());
+
+			gtag('config', 'G-19D64W6342');
+		</script>
 	</head>
 	<body class="page">
 
@@ -194,17 +203,6 @@
 
 					document.addEventListener('scroll', displayFixed)
 				})()
-			</script>
-
-
-			<!-- Google tag (gtag.js) -->
-			<script async src="https://www.googletagmanager.com/gtag/js?id=G-19D64W6342"></script>
-			<script>
-				window.dataLayer = window.dataLayer || [];
-				function gtag(){dataLayer.push(arguments);}
-				gtag('js', new Date());
-
-				gtag('config', 'G-19D64W6342');
 			</script>
 		{% endblock %}
 
