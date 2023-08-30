@@ -14,12 +14,6 @@
     </url>
 
     <url>
-        <loc>https://scriptzenit.fr/realisations</loc>
-        <changefreq>weekly</changefreq>
-        <priority>0.8</priority>
-    </url>
-
-    <url>
         <loc>https://scriptzenit.fr/devis-en-ligne</loc>
         <changefreq>monthly</changefreq>
         <priority>0.6</priority>
