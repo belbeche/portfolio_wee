@@ -18,7 +18,7 @@
 		<div class="container">
 			<div class="row justify-content-between align-items-center">
 				<div class="col-12 col-md-7 col-lg-6 text-center text-md-left intro">
-					<h1 class="display-2 mb-4">Agence numérique <br> <span class="inline-block" style="background-color: dodgerblue;">Basée dans la Nièvre</span></h1>
+					<h1 class="display-2 mb-4">Agence web <br> <span class="inline-block" style="background-color: dodgerblue;">Basée dans la Nièvre</span></h1>
 					<p class="lead mb-4 text-muted">Grâce à mon expertise en développement Web, je vous aide à créer un site professionnel
 						et attractif, adapté à tous les appareils. La sécurité des données est une priorité, et je propose
 						des solutions de gestion de contenu faciles à utiliser.</p>
@@ -27,9 +27,51 @@
 						<a href="#agence" class="btn btn-danger mr-3 animate-up-2 inline-block">Découvrir l'agence<span class="ml-2"><span class="fas fa-arrow-down"></span></span></a>
 					</div>
 				</div>
-				<div class="col-12 col-md-5 d-none d-md-block text-center"><img src="{{ asset('img/support/support1.svg') }}" alt="scriptzenit" height="70"></div>
+				<div class="col-12 col-md-5 d-none d-md-block text-center"><img src="{{ asset('img/support/support1.svg') }}" alt="scriptzenit" height="100%" width="100%"></div>
+				<!-- Clients Slider -->
+
+				{#<div id="clients_1" class="clients owl-carousel" data-mobile-items="1" data-tablet-items="3" data-items="6">
+					<div class="client-block">
+						<a href="#">
+							<img src="./img/clients/logo-1.png">
+						</a>
+					</div>
+
+					<div class="client-block">
+						<a href="#">
+						<img src="./img/clients/logo2.png">
+						</a>
+					</div>
+
+					<div class="client-block">
+						<a href="#"itures">
+							<img src="./img/clients/logo3.png">
+						</a>
+					</div>
+
+					<div class="client-block">
+						<a href="#">
+							<img src="./img/clients/logo4.png">
+						</a>
+					</div>
+
+					<div class="client-block">
+						<a href="#">
+							<img src="./img/clients/logo5.png">
+						</a>
+					</div>
+
+					<div class="client-block">
+						<a href="#">
+							<img src="./img/clients/logo6.png">
+						</a>
+					</div>
+				</div>
+				<!-- /Clients Slider -->
+
+				<div class="p-40"></div>
 			</div>
-		</div>
+		</div>#}
 	</section>
 
 	<div class="container mt-5 flex-row-reverse" id="agence">
@@ -41,194 +83,38 @@
 	</div>
 	{# End of Hero section #}
 
-	{# Solutions   #}
-
 	<h1 class="display-4 fw-bold text-center">Processus</h1>
 
-	<section style="padding: 52px 40px 60px;">
-		<div class="container">
-			{#<div class="row">
-				<div class="col-12 col-md-6 col-lg-4 mb-5">
-					<div class="card shadow-soft border-light">
-						<div class="card-header p-0">
-							<img src="{{ asset('img/support/support0.svg')}}" class="card-img-top rounded-top" alt="image">
-						</div>
-						<div class="card-body">
-							<h3 class="card-title mt-3">Préparation / communication</h3>
-							<p class="card-text">En comprenant le besoin unique de votre entreprise et de votre marché local, je m'efforce de fournir une solution de développement web et mobile personnalisée qui vous aidera à atteindre vos objectifs spécifiques.</p>
-							<ul class="list-group d-flex justify-content-center mb-4">
-								<li class="list-group-item d-flex pl-0 pb-1">
-									<span class="mr-2"><i class="fas fa-check-circle text-success"></i></span>
-									<div>Définition des besoins et objectifs</div>
-								</li>
-								<li class="list-group-item d-flex pl-0 pb-1">
-									<span class="mr-2"><i class="fas fa-check-circle text-success"></i></span>
-									<div>Évaluation technique</div>
-								</li>
-								<li class="list-group-item d-flex pl-0 pb-1">
-									<span class="mr-2"><i class="fas fa-check-circle text-success"></i></span>
-									<div>Suivi et reporting de la demande</div>
-								</li>
-							</ul>
-						</div>
-					</div>
-				</div>
-				<div class="col-12 col-md-6 col-lg-4 mb-5">
-					<div class="card shadow-soft border-light">
-						<div class="card-header p-0">
-							<img src="{{ asset('img/support/support2.svg')}}" class="card-img-top rounded-top" alt="image">
-						</div>
-						<div class="card-body">
-							<h3 class="card-title mt-3">Prêt à vous lancer ?</h3>
-							<p class="card-text">Lorsqu'une demande est créée par un client sur notre plateforme, un processus soigneusement conçu est déclenché pour s'assurer que chaque demande est correctement enregistrée et prise en compte.</p>
-							<ul class="list-group d-flex justify-content-center mb-4">
-								<li class="list-group-item d-flex pl-0 pb-1">
-									<span class="mr-2"><i class="fas fa-check-circle text-success"></i></span>
-									<div>Conception tout écrans</div>
-								</li>
-								<li class="list-group-item d-flex pl-0 pb-1">
-									<span class="mr-2"><i class="fas fa-check-circle text-success"></i></span>
-									<div>Optimisation SEO</div>
-								</li>
-								<li class="list-group-item d-flex pl-0 pb-1">
-									<span class="mr-2"><i class="fas fa-check-circle text-success"></i></span>
-									<div>Gestion de la performance du site</div>
-								</li>
-							</ul>
-						</div>
-					</div>
-				</div>
-				<div class="col-12 col-md-6 col-lg-4 mb-5">
-					<div class="card shadow-soft border-light">
-						<div class="card-header p-0">
-							<img src="{{ asset('img/support/support3.svg')}}" class="card-img-top rounded-top" alt="image">
-						</div>
-						<div class="card-body">
-							<h3 class="card-title mt-3">Gestion des Tickets</h3>
-							<p class="card-text">Notre système de tickets offre un suivi détaillé de chaque demande. Traquez chaque ticket, de sa création à sa résolution, peu importe leur nombre.</p>
-							<ul class="list-group d-flex justify-content-center mb-4">
-								<li class="list-group-item d-flex pl-0 pb-1">
-									<span class="mr-2"><i class="fas fa-check-circle text-success"></i></span>
-									<div>Suivi quotidien des tickets</div>
-								</li>
-								<li class="list-group-item d-flex pl-0 pb-1">
-									<span class="mr-2"><i class="fas fa-check-circle text-success"></i></span>
-									<div>Support multiplateforme (web et mobile)</div>
-								</li>
-								<li class="list-group-item d-flex pl-0 pb-1">
-									<span class="mr-2"><i class="fas fa-check-circle text-success"></i></span>
-									<div>Gestion des tickets et de la demande</div>
-								</li>
-							</ul>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</section>#}
-
-	{# ./ Solutions #}
-
 	{# Services de l'Agence #}
-	{#<div class="container p-5 100-vh">
-		<div class="row">
-			<div class="col-xs-12 col-sm-12">
-				<div class="block-title">
-					<h2>Notre Processus</h2>
-				</div>
-			</div>
-		</div>
-		<div class="row">
-			<div class="col-xs-12 col-sm-6">
-				<div class="info-list-w-icon">
-					<div class="info-block-w-icon">
-						<div class="ci-icon">
-							<i class="fas fa-lightbulb"></i>
-						</div>
-						<div class="ci-text">
-							<h4>Brainstorming & Ergonomie</h4>
-							<p class="lead mb-4 text-muted">Nous démarrons par des sessions de brainstorming créatives pour générer des idées novatrices. L'ergonomie est notre priorité, garantissant une expérience utilisateur exceptionnelle.</p>
-						</div>
-					</div>
-					<div class="info-block-w-icon">
-						<div class="ci-icon">
-							<i class="fas fa-paint-brush"></i>
-						</div>
-						<div class="ci-text">
-							<h4>Création & Webdesign</h4>
-							<p class="lead mb-4 text-muted">Nos designers transforment vos idées en maquettes graphiques saisissantes, créant ainsi une identité visuelle unique pour votre site.</p>
-						</div>
-					</div>
-					<div class="info-block-w-icon">
-						<div class="ci-icon">
-							<i class="fas fa-chart-line"></i>
-						</div>
-						<div class="ci-text">
-							<h4>Contenus & Conversion</h4>
-							<p class="lead mb-4 text-muted">Nous travaillons avec vous pour créer un contenu engageant qui captive votre audience et favorise la conversion, vous aidant ainsi à atteindre vos objectifs en ligne.</p>
-						</div>
-					</div>
-				</div>
-			</div>
-			<div class="col-xs-12 col-sm-6">
-				<div class="info-list-w-icon">
-					<div class="info-block-w-icon">
-						<div class="ci-icon">
-							<i class="fas fa-code"></i>
-						</div>
-						<div class="ci-text">
-							<h4>Intégration & Développement</h4>
-							<p class="lead mb-4 text-muted">Notre équipe transforme les maquettes en code HTML, CSS et PHP, donnant vie à votre site web et assurant son bon fonctionnement technique.</p>
-						</div>
-					</div>
-					<div class="info-block-w-icon">
-						<div class="ci-icon">
-							<i class="fas fa-cogs"></i>
-						</div>
-						<div class="ci-text">
-							<h4>Suivi / Statistiques</h4>
-							<p class="lead mb-4 text-muted">Nous vous offrons un suivi dédié et vous fournissons des statistiques claires pour que vous puissiez suivre les performances de votre site.</p>
-						</div>
-					</div>
-					<div class="info-block-w-icon">
-						<div class="ci-icon">
-							<i class="fas fa-search"></i>
-						</div>
-						<div class="ci-text">
-							<h4>Référencement Naturel</h4>
-							<p class="lead mb-4 text-muted">Nous mettons en place une stratégie de référencement naturel pour que votre site soit bien positionné sur les moteurs de recherche tels que Google.</p>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>#}
-
-		<ul class="process">
-			<li class="process__item">
-				<span class="process__number"><i class="fas fa-lightbulb"></i></span>
-				<span class="process__title">Analyse &amp; Stratégie</span>
-				<span class="process__subtitle">Nous analysons votre problème et développons une stratégie</span>
-			</li>
-			<li class="process__item">
-				<span class="process__number"><i class="fas fa-file-alt"></i></span>
-				<span class="process__title">Faire une Offre</span>
-				<span class="process__subtitle">Nous vous fournissons une offre détaillée en fonction de notre analyse</span>
-			</li>
-			<li class="process__item">
-				<span class="process__number"><i class="fas fa-cogs"></i></span>
-				<span class="process__title">Développement</span>
-				<span class="process__subtitle">Notre équipe de développement transforme la stratégie en réalité</span>
-			</li>
-			<li class="process__item">
-				<span class="process__number"><i class="fas fa-check-circle"></i></span>
-				<span class="process__title">Finalisation</span>
-				<span class="process__subtitle">Nous effectuons les ajustements finaux et préparons la livraison</span>
-			</li>
-		</ul>
+	<section>
+		<div class="container">
+			<ul class="process">
+				<li class="process__item">
+					<span class="process__number"><i class="fas fa-lightbulb"></i></span>
+					<span class="process__title">Analyse &amp; Stratégie</span>
+					<span class="process__subtitle">J'analyse votre problème et développe une stratégie</span>
+				</li>
+				<li class="process__item">
+					<span class="process__number"><i class="fas fa-file-alt"></i></span>
+					<span class="process__title">Faire une Offre</span>
+					<span class="process__subtitle">Je vous fournis une offre détaillée en fonction de mon analyse</span>
+				</li>
+				<li class="process__item">
+					<span class="process__number"><i class="fas fa-cogs"></i></span>
+					<span class="process__title">Développement</span>
+					<span class="process__subtitle">Mon équipe de développement transforme la stratégie en réalité</span>
+				</li>
+				<li class="process__item">
+					<span class="process__number"><i class="fas fa-check-circle"></i></span>
+					<span class="process__title">Finalisation</span>
+					<span class="process__subtitle">J'effectue les ajustements finaux et prépare la livraison</span>
+				</li>
+			</ul>
 		</div>
 	</section>
-	<!-- Technologie et outils -->
+	{# ./ Services de l'Agence #}
+
+	{# Technologie et outils #}
 	<div class="container">
 		<div class="row">
 			<div class="col-xs-12 col-sm-12">
@@ -291,37 +177,26 @@
 			</div>
 		</div>
 	</div>
-	<!-- ./ Outils et technologies -->
+	{# ./ Technologie et outils #}
 
 	<!-- FAQ -->
 
-	{#<section class="py-5 py-sm-5">
-		<div class="container-fluid p-5" >
-			<div class="mb-5 text-center"><span class="display-4 font-weight-bold text-primary text-uppercase">VOUS AVEZ DES QUESTIONS ?</span>
-				<h2 class="mt-2">Voici quelques réponses</h2>
+	<section class="py-5 py-sm-5">
+		<div class="container-fluid p-5">
+			<div class="mb-5 text-center">
+				<span class="display-4 font-weight-bold text-primary text-uppercase">BESOIN D'ÉCLAIRAGE ?</span>
+				<h2 class="mt-2">Transformez les défis techniques en opportunités</h2>
 			</div>
 			<div class="col-md-8 mx-auto">
 				<div id="accordion">
-					<div class="card border-primary mb-2">
-						<div class="card-header" id="headingOne">
-							<h5 class="mb-0">
-								<button class="btn btn-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-									Calendrier de paiement et options
-								</button>
-							</h5>
-						</div>
-						<div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
-							<div class="card-body">
-								<p>La définition de la portée du projet est le fruit d'une collaboration avec mon client. Ensemble, nous définissons les principales caractéristiques, les fonctionnalités et les éventuelles contraintes qui façonneront le processus de conception. Cette clarté garantit que nous sommes alignés et que nous travaillons pour atteindre les mêmes objectifs.</p>
-							</div>
-						</div>
-					</div>
-				<p class="d-flex flex-wrap align-items-center justify-content-center"><span class="mr-1">Vous avez encore des questions ?</span><a class="btn btn-link font-weight-bold" href="{{ url('front_assistance') }}">Créez votre ticket maintenant !</a></p>
+					<p class="text-center mb-4">Lorsque vous êtes confronté à des problèmes techniques, vous faites face à des occasions de grandir et d'apprendre. Ne laissez pas les obstacles vous décourager. Au contraire, laissez-moi vous guider vers des solutions brillantes qui illuminent votre parcours.</p>
+					<p class="d-flex flex-wrap align-items-center justify-content-center">
+						<a class="btn btn-primary btn-lg font-weight-bold" href="{{ url('front_devis_new') }}">Osez l'illumination technique</a>
+					</p>
+				</div>
 			</div>
 		</div>
-	</section>#}
-
-
+	</section>
 
 	<!-- Pricing -->
 	<div class="container">
