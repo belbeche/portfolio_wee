@@ -4,14 +4,16 @@
 
 {% block content %}
 
-    <h1>Complétez vos informations</h1>
+    <div class="container mt-5">
+        <h1>Complétez vos informations</h1>
 
-    {{ form_start(form) }}
-    {{ form_row(form.nom) }}
-    {{ form_row(form.prenom) }}
-    {{ form_row(form.civility) }}
-    {{ form_row(form.checked)}}
-    <button type="submit">Mettre à jour</button>
-    {{ form_end(form) }}
+        {{ form_start(form) }}
+        {{ form_row(form.nom) }}
+        {{ form_row(form.prenom) }}
+        {{ form_row(form.civility) }}
+        {{ form_row(form.checked)}}
+        <button type="submit">Mettre à jour</button>
+        {{ form_end(form) }}
+    </div>
 
 {% endblock %}

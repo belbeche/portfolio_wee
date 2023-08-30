@@ -30,7 +30,7 @@ class DevisType extends AbstractType
                 'label' => false,
                 'choices' => [
                     'Site vitrine (Présentation de l\'entreprise)' => 'site_vitrine',
-                    'Réalisation de site d\'annonce immobilière' => 'site_reale_state',
+                    'Réalisation de site d\'annonce immobilière' => 'site_real_estate',
                     'E-Commerce (Vente en ligne)' => 'site_e-commerce',
                     'Blog professionnel' => 'site_blog',
                     'Portfolio (pour artistes, designers, etc.)' => 'site_portfolio',

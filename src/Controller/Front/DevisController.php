@@ -53,6 +53,12 @@ class DevisController extends AbstractController
         $defaultValue = 'site_vitrine'; // valeur par défaut
         if ($type === 'cross_plateforme') {
             $defaultValue = 'application_cross_plateforme';
+        } elseif ($type === 'site_real_estate'){
+            $defaultValue = 'site_real_estate';
+        } elseif ($type === 'site_e-commerce'){
+            $defaultValue = 'site_e-commerce';
+        } elseif ($type === 'site_portfolio'){
+            $defaultValue = 'site_portfolio';
         }
 
         $form = $this->createForm(DevisType::class, $devis, [
