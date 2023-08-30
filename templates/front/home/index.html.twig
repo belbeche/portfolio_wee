@@ -13,7 +13,7 @@
 		{% endfor %}
 	</div>
 
-	<!-- Hero -->
+	{# Hero #}
 	<section class="section-header section-sm bg-secondary text-white vh-100">
 		<div class="container">
 			<div class="row justify-content-between align-items-center">
@@ -27,33 +27,27 @@
 						<a href="#agence" class="btn btn-danger mr-3 animate-up-2 inline-block">Découvrir l'agence<span class="ml-2"><span class="fas fa-arrow-down"></span></span></a>
 					</div>
 				</div>
-				<div class="col-12 col-md-5 d-none d-md-block text-center"><img src="{{ asset('img/support/support1.svg') }}" alt="scriptzenit"></div>
+				<div class="col-12 col-md-5 d-none d-md-block text-center"><img src="{{ asset('img/support/support1.svg') }}" alt="scriptzenit" height="70"></div>
 			</div>
 		</div>
-		<div class="position-absolute bottom-0 left-0 w-100 mb-n2">
-			<svg class="fill-white" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 1920 43.4" style="enable-background:new 0 0 1920 43.4;" xml:space="preserve">
-                  <path d="M0,23.3c0,0,405.1-43.5,697.6,0c316.5,1.5,108.9-2.6,480.4-14.1c0,0,139-12.2,458.7,14.3 c0,0,67.8,19.2,283.3-22.7v35.1H0V23.3z"></path>
-               </svg>
-		</div>
 	</section>
-	<!-- End of Hero section -->
 
-	<div class="container mt-5" id="agence">
+	<div class="container mt-5 flex-row-reverse" id="agence">
 		<h1 class="display-5 fw-bold lh-1 mb-3 text-center">Des solutions de développement web adaptées à tous les besoins</h1>
-		<p class="lead mb-4 text-muted text-center">Je conçois la solution optimale de développement web pour chaque situation spécifique, qu'il s'agisse de développer une plateforme complète ou de mettre en place des outils précis pour vos besoins uniques.</p>
-{#
-		<a href="{{ url('front_devis_new') }}" class="btn btn-tertiary mr-3 animate-up-2 ni-mobile-button">Ce que nous faisons<span class="ml-2"><span class="fas fa-arrow-right"></span></span></a>
-#}
+		<p class="lead mb-4 text-muted text-center">Je conçois la solution optimale de développement web pour chaque
+			situation spécifique, qu'il s'agisse de développer une plateforme complète ou de mettre en place des outils précis
+			pour vos besoins uniques.
+		</p>
 	</div>
+	{# End of Hero section #}
 
+	{# Solutions   #}
 
-	<!-- Solutions -->
-
-	{#<h1 class="display-4 fw-bold text-center">Processus</h1>
+	<h1 class="display-4 fw-bold text-center">Processus</h1>
 
 	<section style="padding: 52px 40px 60px;">
-		<div class="container-fluid">
-			<div class="row">
+		<div class="container">
+			{#<div class="row">
 				<div class="col-12 col-md-6 col-lg-4 mb-5">
 					<div class="card shadow-soft border-light">
 						<div class="card-header p-0">
@@ -133,99 +127,109 @@
 		</div>
 	</section>#}
 
-	<!-- ./ Solutions -->
+	{# ./ Solutions #}
 
-	<!-- Services -->
 	{# Services de l'Agence #}
-	<div class="container p-5">
+	{#<div class="container p-5 100-vh">
 		<div class="row">
 			<div class="col-xs-12 col-sm-12">
 				<div class="block-title">
-					<h2>Processus</h2>
+					<h2>Notre Processus</h2>
 				</div>
 			</div>
 		</div>
-
 		<div class="row">
 			<div class="col-xs-12 col-sm-6">
 				<div class="info-list-w-icon">
 					<div class="info-block-w-icon">
 						<div class="ci-icon">
-							<i class="linecons linecons-pen"></i>
+							<i class="fas fa-lightbulb"></i>
 						</div>
-
 						<div class="ci-text">
-							<h4>BRAINSTORM & ERGONOMIE</h4>
-							<p class="lead mb-4 text-muted">Le brainstorming est une méthode de créativité très utile en développement logiciel. Cependant, pour que cette méthode soit efficace, il est important de prendre en compte l'ergonomie, c'est-à-dire la manière dont les utilisateurs interagissent avec l'interface. Lors de la phase de brainstorming, il est important de veiller à ce que l'ergonomie de l'interface ne soit pas un obstacle à la créativité des participants.</p>
+							<h4>Brainstorming & Ergonomie</h4>
+							<p class="lead mb-4 text-muted">Nous démarrons par des sessions de brainstorming créatives pour générer des idées novatrices. L'ergonomie est notre priorité, garantissant une expérience utilisateur exceptionnelle.</p>
 						</div>
 					</div>
-
 					<div class="info-block-w-icon">
 						<div class="ci-icon">
-							<i class="linecons linecons-display"></i>
+							<i class="fas fa-paint-brush"></i>
 						</div>
-
 						<div class="ci-text">
-							<h4>CRÉATION & WEBDESIGN</h4>
-							<p class="lead mb-4 text-muted">Des idées, c’est bien. Les mettre en pratique, c’est encore mieux ! Le webdesign de votre futur site internet est construit sous forme de maquettes (charte graphique) qui vous permettront de cadrer graphiquement et de vous projeter sur votre outil.</p>
+							<h4>Création & Webdesign</h4>
+							<p class="lead mb-4 text-muted">Nos designers transforment vos idées en maquettes graphiques saisissantes, créant ainsi une identité visuelle unique pour votre site.</p>
 						</div>
 					</div>
-
 					<div class="info-block-w-icon">
 						<div class="ci-icon">
-							<i class="linecons linecons-calendar"></i>
+							<i class="fas fa-chart-line"></i>
 						</div>
-
 						<div class="ci-text">
-							<h4>SUIVI / STATISTIQUES</h4>
-							<p class="lead mb-4 text-muted">Un interlocuteur dédié, nous vous assurons que ça rassure. Des données chiffrées, ça rassure aussi ! Nous paramétrons tout ça, et ça tombe dans votre boite mail, c’est beau la technologie, n'est-ce pas ?</p>
+							<h4>Contenus & Conversion</h4>
+							<p class="lead mb-4 text-muted">Nous travaillons avec vous pour créer un contenu engageant qui captive votre audience et favorise la conversion, vous aidant ainsi à atteindre vos objectifs en ligne.</p>
 						</div>
 					</div>
 				</div>
 			</div>
-
 			<div class="col-xs-12 col-sm-6">
 				<div class="info-list-w-icon">
 					<div class="info-block-w-icon">
 						<div class="ci-icon">
-							<i class="linecons linecons-shop"></i>
+							<i class="fas fa-code"></i>
 						</div>
-
 						<div class="ci-text">
-							<h4>INTÉGRATION & DÉVELOPPEMENT</h4>
-							<p class="lead mb-4 text-muted">Là on va commencer à entrer dans le vif du sujet : la transformation des visuels en code HTML, CSS et PHP ! C’est à ce moment que nous abordons le côté technique et que nous créons le code de votre nouveau site internet, c’est tout ce qu’il faut retenir !</p>
+							<h4>Intégration & Développement</h4>
+							<p class="lead mb-4 text-muted">Notre équipe transforme les maquettes en code HTML, CSS et PHP, donnant vie à votre site web et assurant son bon fonctionnement technique.</p>
 						</div>
 					</div>
-
 					<div class="info-block-w-icon">
 						<div class="ci-icon">
-							<i class="linecons linecons-megaphone"></i>
+							<i class="fas fa-cogs"></i>
 						</div>
-
 						<div class="ci-text">
-							<h4>CONTENUS & CONVERSION</h4>
-							<p class="lead mb-4 text-muted">Les contenus de qualité et la conversion sont des éléments clés pour réussir en ligne. Lorsque votre site web manque de contenu pertinent, il peut être difficile d'atteindre vos objectifs. Mais ne vous inquiétez pas, vous n'êtes pas seuls dans cette entreprise. Nous sommes là pour vous aider à créer un contenu engageant qui captivera votre audience et favorisera la conversion.</p>
+							<h4>Suivi / Statistiques</h4>
+							<p class="lead mb-4 text-muted">Nous vous offrons un suivi dédié et vous fournissons des statistiques claires pour que vous puissiez suivre les performances de votre site.</p>
 						</div>
 					</div>
-
 					<div class="info-block-w-icon">
 						<div class="ci-icon">
-							<i class="linecons linecons-data"></i>
+							<i class="fas fa-search"></i>
 						</div>
-
 						<div class="ci-text">
-							<h4>RÉFÉRENCEMENT NATUREL</h4>
-							<p class="lead mb-4 text-muted">Cerise sur le gâteau ? Non pas tant que ça en fait. Un beau site tout neuf, ce serait dommage qu’il ne soit pas référencé sur Google, vous ne trouvez pas ? Une stratégie SEO (aussi appelée référencement naturel), simple et efficace, ne mange pas de pain !</p>
+							<h4>Référencement Naturel</h4>
+							<p class="lead mb-4 text-muted">Nous mettons en place une stratégie de référencement naturel pour que votre site soit bien positionné sur les moteurs de recherche tels que Google.</p>
 						</div>
 					</div>
 				</div>
 			</div>
 		</div>
-	</div>
+	</div>#}
 
-
-	<!-- Technologie et outils -->
-	<div class="container p-5" >
+		<ul class="process">
+			<li class="process__item">
+				<span class="process__number"><i class="fas fa-lightbulb"></i></span>
+				<span class="process__title">Analyse &amp; Stratégie</span>
+				<span class="process__subtitle">Nous analysons votre problème et développons une stratégie</span>
+			</li>
+			<li class="process__item">
+				<span class="process__number"><i class="fas fa-file-alt"></i></span>
+				<span class="process__title">Faire une Offre</span>
+				<span class="process__subtitle">Nous vous fournissons une offre détaillée en fonction de notre analyse</span>
+			</li>
+			<li class="process__item">
+				<span class="process__number"><i class="fas fa-cogs"></i></span>
+				<span class="process__title">Développement</span>
+				<span class="process__subtitle">Notre équipe de développement transforme la stratégie en réalité</span>
+			</li>
+			<li class="process__item">
+				<span class="process__number"><i class="fas fa-check-circle"></i></span>
+				<span class="process__title">Finalisation</span>
+				<span class="process__subtitle">Nous effectuons les ajustements finaux et préparons la livraison</span>
+			</li>
+		</ul>
+		</div>
+	</section>
+			<!-- Technologie et outils -->
+	<div class="container">
 		<div class="row">
 			<div class="col-xs-12 col-sm-12">
 				<div class="block-title">
