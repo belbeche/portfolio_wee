@@ -74,6 +74,12 @@
     .button_home a{
         margin-top: 10px;
     }
+    .no-card-mobile span {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+    }
 }
 
 #accept-cookies {

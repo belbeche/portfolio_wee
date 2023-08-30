@@ -23,8 +23,8 @@
 
 				<li class="menu-item"><a href="{{ url('front_home') }}" class="menu-link">Accueil</a></li>
 
-				<a href="{{ url('front_about')}}" class="menu-link">A propos de moi</a>
-				<a href="{{ url('front_project') }}" class="menu-link">Ce que je propose</a>
+				<li class="menu-item"><a href="{{ url('front_about')}}" class="menu-link">A propos de moi</a></li>
+				{#<a href="{{ url('front_project') }}" class="menu-link">Ce que je propose</a>#}
 				{% if app.user %}
 					<li class="menu-item">
 						<a href="{{ url('front_assistance') }}" class="menu-link">Assistance</a>

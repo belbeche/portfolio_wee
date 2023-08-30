@@ -19,15 +19,23 @@
 			<div class="row justify-content-between align-items-center">
 				<div class="col-12 col-md-7 col-lg-6 text-center text-md-left intro">
 					<h1 class="display-2 mb-4">Agence web <br> <span class="inline-block" style="background-color: dodgerblue;">Basée dans la Nièvre</span></h1>
-					<p class="lead mb-4 text-muted">Grâce à mon expertise en développement Web, je vous aide à créer un site professionnel
-						et attractif, adapté à tous les appareils. La sécurité des données est une priorité, et je propose
-						des solutions de gestion de contenu faciles à utiliser.</p>
+					<p class="lead mb-4 text-muted">Grâce à mon expertise en développement Web, je vous accompagne dans
+						la création d'un site professionnel et attractif. Cependant, une conception
+						exceptionnelle ne se limite pas à la première étape. C'est pourquoi je mets en place un suivi
+						dédié, disponible 7 jours sur 7, pour vous assurer que votre présence en ligne prospère de manière continue.
+					</p>
 					<div class="flex-sm-column button_home">
-						<a href="{{ url('front_devis_new') }}" class="btn btn-tertiary mr-3 animate-up-2 inline-block">Obtenir un devis en 24h <span class="ml-2"><span class="fas fa-arrow-right"></span></span></a>
-						<a href="#agence" class="btn btn-danger mr-3 animate-up-2 inline-block">Découvrir l'agence<span class="ml-2"><span class="fas fa-arrow-down"></span></span></a>
+						<a href="{{ url('front_devis_new') }}" class="btn btn-tertiary mr-3 animate-up-2 inline-block">Obtenir un suivi 7j/7 <span class="ml-2"><span class="fas fa-arrow-right"></span></span></a>
+						<a href="#agence" class="btn btn-danger mr-3 animate-up-2 inline-block">Découvrir l'agence<span class="ml-2"><span class="fas fa-arrow-down"></span></span></a><br>
+							<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="green" class="bi bi-check2-circle" viewBox="0 0 16 16">
+								<path d="M2.5 8a5.5 5.5 0 0 1 8.25-4.764.5.5 0 0 0 .5-.866A6.5 6.5 0 1 0 14.5 8a.5.5 0 0 0-1 0 5.5 5.5 0 1 1-11 0z"/>
+								<path d="M15.354 3.354a.5.5 0 0 0-.708-.708L8 9.293 5.354 6.646a.5.5 0 1 0-.708.708l3 3a.5.5 0 0 0 .708 0l7-7z"/>
+							</svg>
+							Aucune carte de crédit n'est requise
 					</div>
 				</div>
 				<div class="col-12 col-md-5 d-none d-md-block text-center"><img src="{{ asset('img/support/support1.svg') }}" alt="scriptzenit" height="100%" width="100%"></div>
+			</div>
 				<!-- Clients Slider -->
 
 				{#<div id="clients_1" class="clients owl-carousel" data-mobile-items="1" data-tablet-items="3" data-items="6">
@@ -114,6 +122,20 @@
 	</section>
 	{# ./ Services de l'Agence #}
 
+	<section class="hero">
+		<div class="container">
+			<div class="row align-items-center">
+				<div class="col-md-6">
+					<h1>BESOIN D'ÉCLAIRAGE ?</h1>
+					<p>Transformez les défis techniques en opportunités. Lorsque vous êtes confronté à des problèmes techniques, vous faites face à des occasions de grandir et d'apprendre. Ne laissez pas les obstacles vous décourager. Au contraire, laissez-moi vous guider vers des solutions brillantes qui illuminent votre parcours.</p>
+				</div>
+				<div class="col-md-6">
+					<img src="{{ asset('img/presentation.png') }}" alt="agence web dans la Nièvre (58)">
+				</div>
+			</div>
+		</div>
+	</section>
+
 	{# Technologie et outils #}
 	<div class="container">
 		<div class="row">
@@ -178,26 +200,6 @@
 		</div>
 	</div>
 	{# ./ Technologie et outils #}
-
-	<!-- FAQ -->
-
-	<section class="py-5 py-sm-5">
-		<div class="container-fluid p-5">
-			<div class="mb-5 text-center">
-				<span class="display-4 font-weight-bold text-primary text-uppercase">BESOIN D'ÉCLAIRAGE ?</span>
-				<h2 class="mt-2">Transformez les défis techniques en opportunités</h2>
-			</div>
-			<div class="col-md-8 mx-auto">
-				<div id="accordion">
-					<p class="text-center mb-4">Lorsque vous êtes confronté à des problèmes techniques, vous faites face à des occasions de grandir et d'apprendre. Ne laissez pas les obstacles vous décourager. Au contraire, laissez-moi vous guider vers des solutions brillantes qui illuminent votre parcours.</p>
-					<p class="d-flex flex-wrap align-items-center justify-content-center">
-						{#<a class="btn btn-primary btn-lg font-weight-bold" href="{{ url('front_project') }}">Voir mes réalisations</a>#}
-
-					</p>
-				</div>
-			</div>
-		</div>
-	</section>
 
 	<!-- Pricing -->
 	<div class="container">

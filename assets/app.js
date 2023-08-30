@@ -9,7 +9,7 @@
 
 import './styles/app.css';
 import './styles/normalize.css';
-import './styles/bootstrap.min.css';
+/*import './styles/bootstrap.min.css';*/
 import './styles/owl.carousel.css';
 import './styles/magnific-popup.css';
 import './styles/email.css';
