@@ -3,8 +3,10 @@
 namespace App\Entity;
 
 use DateTimeImmutable;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Uid\Uuid;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity()
@@ -39,23 +41,30 @@ class Message
      */
     private $status;
 
-    private $receiverEmail;
+    /**
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="receivedMessages")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $receiver;
 
     /**
-     * @ORM\ManyToOne(targetEntity=User::class)
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $attachment;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="sentMessages")
      */
     private $sender;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Devis::class)
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\ManyToOne(targetEntity=Devis::class, inversedBy="messages", cascade={"remove"})
      */
     private $devis;
 
     public function __construct()
     {
-        $this->createdAt = new DateTimeImmutable();
+        $this->createdAt = new DateTimeImmutable('now', new \DateTimeZone('Europe/Paris'));
     }
 
     public function getId(): ?Uuid
@@ -104,18 +113,18 @@ class Message
     /**
      * @return mixed
      */
-    public function getReceiverEmail()
+    public function getReceiver()
     {
-        return $this->receiverEmail;
+        return $this->receiver;
     }
 
     /**
-     * @param mixed $receiverEmail
+     * @param mixed $receiver
      * @return Message
      */
-    public function setReceiverEmail($receiverEmail)
+    public function setReceiver($receiver):self
     {
-        $this->receiverEmail = $receiverEmail;
+        $this->receiver = $receiver;
         return $this;
     }
 
@@ -130,6 +139,24 @@ class Message
         return $this;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getAttachment()
+    {
+        return $this->attachment;
+    }
+
+    /**
+     * @param mixed $attachment
+     * @return Message
+     */
+    public function setAttachment($attachment)
+    {
+        $this->attachment = $attachment;
+        return $this;
+    }
+
     public function getDevis(): ?Devis
     {
         return $this->devis;
@@ -138,6 +165,13 @@ class Message
     public function setDevis(?Devis $devis): self
     {
         $this->devis = $devis;
+        return $this;
+    }
+
+    public function setCreatedAt(\DateTimeImmutable $createdAt): static
+    {
+        $this->createdAt = $createdAt;
+
         return $this;
     }
 }

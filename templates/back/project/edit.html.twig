@@ -9,17 +9,17 @@
 
 		{% if app.request.attributes.get('_route') == 'back_project_edit' %}
 			<h2>Gestion des images</h2>
-			<div>
+			<div class="d-flex">
 				{% for image in project.images %}
-					<a href="{{ asset('image_project/'~image.name) }}"><img src="{{ asset('image_project/'~image.name) }}" class="img-fluid" alt="{{ image.name }}"/></a>
+					<a href="{{ asset('image_project/'~image.name) }}"><img src="{{ asset('image_project/'~image.name) }}" class="img-fluid" alt="{{ image.name }}" width="60" height="80"/></a>
 					<a href="{{ path('back_project_remove_image', {name: image.name})}}" data-delete data-token="{{ csrf_token('delete' ~image.name )}}">
 						<i class="bi bi-file-earmark-x"></i>
 						Supprimer
 					</a>
 				{% endfor %}
 			</div>
-		{% endif %}
 		<br>
+		{% endif %}
 		{% include 'back/includes/_project_form.html.twig' %}
 
 	</div>

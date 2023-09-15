@@ -22,13 +22,18 @@
 			{{ form_widget(form.status) }}
 		</div>
 		<div>
-			{{ form_label(form.receiverEmail)}}
-			{{ form_widget(form.receiverEmail)}}
+			{{ form_label(form.receiver)}}
+			{{ form_widget(form.receiver)}}
 		</div>
 
 		<div>
 			{{ form_label(form.devis) }}
 			{{ form_widget(form.devis) }}
+		</div>
+
+		<div>
+			{{ form_label(form.attachment) }}
+			{{ form_widget(form.attachment) }}
 		</div>
 
 		<button type="submit">Envoyer le message</button>

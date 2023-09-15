@@ -3,7 +3,6 @@
 namespace App\Entity;
 
 
-use App\Entity\User;
 use DateTimeImmutable;
 use Symfony\Component\Uid\Uuid;
 use Doctrine\ORM\Mapping as ORM;
@@ -23,7 +22,7 @@ class Devis
      * @ORM\GeneratedValue(strategy="CUSTOM")
      * @ORM\CustomIdGenerator(class="doctrine.uuid_generator")
      */
-    private  $id;
+    private $id;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
@@ -46,10 +45,9 @@ class Devis
     private $created_at;
 
     /**
-     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="devis")
-     * @ORM\JoinColumn(nullable=true)
+     * @ORM\Column(type="integer", nullable="true")
      */
-    private ?User $user;
+    private $prix;
 
     /**
      * @ORM\Column(type="string", length=255)
@@ -64,14 +62,20 @@ class Devis
     private $statut;
 
     /**
-     * @ORM\OneToMany(targetEntity=Message::class, mappedBy="devis")
+     * @ORM\OneToMany(targetEntity=Message::class, mappedBy="devis", orphanRemoval=true, cascade={"remove"})
      */
     private $messages;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Ticket::class, mappedBy="devis", cascade={"remove"})
+     */
+    private $tickets;
+
     public function __construct()
     {
-        $this->created_at = new DateTimeImmutable('now');
+        $this->created_at = new DateTimeImmutable('now', new \DateTimeZone('Europe/Paris'));
         $this->messages = new ArrayCollection();
+        $this->tickets = new ArrayCollection();
     }
 
     public function getId(): ?Uuid
@@ -133,15 +137,21 @@ class Devis
         return $this;
     }
 
-    public function getUser(): ?User
+    /**
+     * @return mixed
+     */
+    public function getPrix()
     {
-        return $this->user;
+        return $this->prix;
     }
 
-    public function setUser(?User $user): self
+    /**
+     * @param mixed $prix
+     * @return Devis
+     */
+    public function setPrix($prix)
     {
-        $this->user = $user;
-
+        $this->prix = $prix;
         return $this;
     }
 
@@ -170,6 +180,24 @@ class Devis
     }
 
     /**
+     * @return ArrayCollection
+     */
+    public function getTickets(): ArrayCollection
+    {
+        return $this->tickets;
+    }
+
+    /**
+     * @param ArrayCollection $tickets
+     * @return Devis
+     */
+    public function setTickets(ArrayCollection $tickets): Devis
+    {
+        $this->tickets = $tickets;
+        return $this;
+    }
+
+    /**
      * @return Collection<int, Message>
      */
     public function getMessages(): Collection
@@ -187,6 +215,28 @@ class Devis
     public function __toString()
     {
         return $this->type_de_site_web;
+    }
+
+    public function addMessage(Message $message): static
+    {
+        if (!$this->messages->contains($message)) {
+            $this->messages->add($message);
+            $message->setDevis($this);
+        }
+
+        return $this;
+    }
+
+    public function removeMessage(Message $message): static
+    {
+        if ($this->messages->removeElement($message)) {
+            // set the owning side to null (unless already changed)
+            if ($message->getDevis() === $this) {
+                $message->setDevis(null);
+            }
+        }
+
+        return $this;
     }
 
 }

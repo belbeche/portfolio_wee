@@ -6902,10 +6902,6 @@ input[type="button"].btn-block {
     text-decoration: none;
 }
 
-.breadcrumb-item.active {
-    color: #ffffff;
-}
-
 .pagination {
     display: flex;
     padding-left: 0;
@@ -25450,12 +25446,6 @@ button.section-gray-800:focus {
     padding-bottom: 3rem;
 }
 
-.section-header {
-    position: relative;
-    padding-top: 7rem;
-    padding-bottom: 3rem;
-}
-
 @media (min-width: 576px) {
     .section {
         position: relative;
@@ -25465,13 +25455,8 @@ button.section-gray-800:focus {
 
     .section-header {
         position: relative;
-        padding-top: 10rem;
+        /*padding-top: 10rem;*/
         padding-bottom: 10rem;
-    }
-
-    .section-header.section-sm {
-        padding-top: 4rem;
-        padding-bottom: 3rem;
     }
 
     .section-xl {
@@ -25487,6 +25472,11 @@ button.section-gray-800:focus {
     .section-sm {
         padding-top: 4rem;
         padding-bottom: 4rem;
+    }
+
+    .section-header {
+        position: relative;
+        /*padding-top: 7rem;*/
     }
 }
 
@@ -28621,7 +28611,7 @@ button.section-gray-800:focus {
     height: 1.25rem;
     width: 1.25rem;
     background-color: transparent;
-    color: rgba(0, 0, 0, 0.6);
+    color: white;
     line-height: 22px;
     border-radius: 50%;
     font-size: 1.25rem;

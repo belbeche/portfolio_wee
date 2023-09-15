@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Wee - Portfolio
+{% block title %}Accueil
 {% endblock %}
 
 {% block content %}
@@ -12,347 +12,256 @@
 			{% endfor %}
 		{% endfor %}
 	</div>
-	<!-- Introduction -->
-	<section class="section section-lg pt-6">
+
+	{# Hero #}
+	<section class="section-header text-white vh-100 home_background">
 		<div class="container">
-			<div class="row justify-content-center mb-5 mb-md-7">
-				<div class="col-12 col-md-8 text-center">
-					<h2 class="h1 font-weight-bolder mb-4">Agence web à Nevers</h2>
-					<div
-							class="justify-content-center">
-						<!-- Ajout de la classe d-flex justify-content-center -->
-						<img src="{{ asset('img/logo.png')}}" alt="Agence web à Nevers(58)">
+			<div class="row justify-content-between align-items-center">
+				<div class="col-12 col-md-12 col-lg-12 text-md-left intro">
+					<h1 class="display-2 mb-4 text-center">Agence web <br> <span class="inline-block" style="background-color: dodgerblue;">Basée dans la Nièvre</span></h1>
+					<p class="lead mb-4 text-muted text-center">Grâce à mon expertise en développement Web, je vous accompagne dans
+						la création d'un site professionnel et attractif. Cependant, une conception
+						exceptionnelle ne se limite pas à la première étape.
+					</p>
+					<div class="flex-sm-column button_home justify-content-center" style="text-align: center;">
+						<a href="{{ url('front_devis_new') }}" class="btn btn-tertiary mr-3 animate-up-2 inline-block">Obtenir un suivi 7j/7 <span class="ml-2"><span class="fas fa-arrow-right"></span></span></a>
+						<a href="#agence" class="btn btn-danger mr-3 animate-up-2 inline-block">Découvrir l'agence<span class="ml-2"><span class="fas fa-arrow-down"></span></span></a><br>
+							<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="green" class="bi bi-check2-circle" viewBox="0 0 16 16">
+								<path d="M2.5 8a5.5 5.5 0 0 1 8.25-4.764.5.5 0 0 0 .5-.866A6.5 6.5 0 1 0 14.5 8a.5.5 0 0 0-1 0 5.5 5.5 0 1 1-11 0z"/>
+								<path d="M15.354 3.354a.5.5 0 0 0-.708-.708L8 9.293 5.354 6.646a.5.5 0 1 0-.708.708l3 3a.5.5 0 0 0 .708 0l7-7z"/>
+							</svg>
+							Aucune carte de crédit n'est requise
 					</div>
-					<p class="lead">Grâce à mon expertise en développement Web, je vous aide à créer un site professionnel et attractif, adapté à tous les appareils. La sécurité des données est une priorité, et je propose des solutions de gestion de contenu faciles à utiliser.</p>
 				</div>
 			</div>
-			<hr>
-			<h1 class="cover-heading text-center display-4"></h1>
-			<p class="lead"></p>
-			<h3 class="mb-5 text-center">Merci pour votre confiance et bonne visite</h3>
-			{% if not app.user %}
-				<p class="lead text-center">
-					<a href="{{ url('front_devis_new')}}" class="btn btn-lg btn-primary">Réaliser ma demande en ligne</a>
-				</p>
-			{% else %}
-				<p class="lead text-center">
-					<a href="{{ url('front_assistance')}}" class="btn btn-lg btn-primary">Réaliser une demande d'assistance</a>
-				</p>
-			{% endif %}
-		</div>
-	</section>
-	<!--  ./Introduction-->
+				<!-- Clients Slider -->
 
-	<!-- Solutions -->
+				{#<div id="clients_1" class="clients owl-carousel" data-mobile-items="1" data-tablet-items="3" data-items="6">
+					<div class="client-block">
+						<a href="#">
+							<img src="./img/clients/logo-1.png">
+						</a>
+					</div>
 
-	<section class="section section-lg">
-		<div class="container-fluid">
-			<div class="row justify-content-center mb-5 mb-md-7">
-				<div class="col-12 col-md-8 text-center">
-					<h2 class="h1 font-weight-bolder mb-4">Des solutions de développement web adaptées à tous les besoins</h2>
-					<p class="lead">Je conçois la solution optimale de développement web pour chaque situation spécifique, qu'il s'agisse de développer une plateforme complète ou de mettre en place des outils précis pour vos besoins uniques.</p>
+					<div class="client-block">
+						<a href="#">
+						<img src="./img/clients/logo2.png">
+						</a>
+					</div>
+
+					<div class="client-block">
+						<a href="#"itures">
+							<img src="./img/clients/logo3.png">
+						</a>
+					</div>
+
+					<div class="client-block">
+						<a href="#">
+							<img src="./img/clients/logo4.png">
+						</a>
+					</div>
+
+					<div class="client-block">
+						<a href="#">
+							<img src="./img/clients/logo5.png">
+						</a>
+					</div>
+
+					<div class="client-block">
+						<a href="#">
+							<img src="./img/clients/logo6.png">
+						</a>
+					</div>
 				</div>
+				<!-- /Clients Slider -->
+
+				<div class="p-40"></div>
 			</div>
-			<div class="row">
-				<div class="col-12 col-md-6 col-lg-4 mb-5">
-					<div class="card shadow-soft border-light">
-						<div class="card-header p-0">
-							<img src="{{ asset('img/chat-left.svg')}}" class="card-img-top rounded-top" alt="image">
-						</div>
-						<div class="card-body">
-							<h3 class="card-title mt-3">Préparation / communication</h3>
-							<p class="card-text">En comprenant le besoin unique de votre entreprise et de votre marché local, je m'efforce de fournir une solution de développement web et mobile personnalisée qui vous aidera à atteindre vos objectifs spécifiques. Mon service de développement local se concentre sur la création d'une solution sur mesure qui répond à la fois aux exigences de votre entreprise et aux attentes de vos clients.</p>
-							<ul class="list-group d-flex justify-content-center mb-4">
-								<li class="list-group-item d-flex pl-0 pb-1">
-									<span class="mr-2"><i class="fas fa-check-circle text-success"></i></span>
-									<div>Conception tout écrans</div>
-								</li>
-								<li class="list-group-item d-flex pl-0 pb-1">
-									<span class="mr-2"><i class="fas fa-check-circle text-success"></i></span>
-									<div>Optimisation SEO</div>
-								</li>
-								<li class="list-group-item d-flex pl-0 pb-1">
-									<span class="mr-2"><i class="fas fa-check-circle text-success"></i></span>
-									<div>Gestion de la performance du site</div>
-								</li>
-							</ul>
-						</div>
-					</div>
-				</div>
-				<div class="col-12 col-md-6 col-lg-4 mb-5">
-					<div class="card shadow-soft border-light">
-						<div class="card-body">
-							<h3 class="card-title mt-3">Prêt à vous lancer ?</h3>
-							<p class="card-text">Lorsqu'une demande est créée par un client sur notre plateforme, un processus soigneusement conçu est déclenché pour s'assurer que chaque demande est correctement enregistrée et prise en compte.</p>
-							<ul class="list-group d-flex justify-content-center mb-4">
-								<li class="list-group-item d-flex pl-0 pb-1">
-									<span class="mr-2"><i class="fas fa-check-circle text-success"></i></span>
-									<div>Définition des besoins et objectifs</div>
-								</li>
-								<li class="list-group-item d-flex pl-0 pb-1">
-									<span class="mr-2"><i class="fas fa-check-circle text-success"></i></span>
-									<div>Évaluation technique</div>
-								</li>
-								<li class="list-group-item d-flex pl-0 pb-1">
-									<span class="mr-2"><i class="fas fa-check-circle text-success"></i></span>
-									<div>Suivi et reporting de la demande</div>
-								</li>
-							</ul>
-						</div>
-					</div>
-				</div>
-				<div class="col-12 col-md-6 col-lg-4 mb-5">
-					<div class="card shadow-soft border-light">
-						{#<div class="card-header p-0">
-							<img src="{{ asset('img/saas-platform-5.jpg')}}" class="card-img-top rounded-top" alt="image">
-						</div>#}
-						<div class="card-body">
-							<h3 class="card-title mt-3">Gestion des Tickets</h3>
-							<p class="card-text">Notre système de tickets offre un suivi détaillé de chaque demande. Traquez chaque ticket, de sa création à sa résolution, peu importe leur nombre.</p>
-							<ul class="list-group d-flex justify-content-center mb-4">
-								<li class="list-group-item d-flex pl-0 pb-1">
-									<span class="mr-2"><i class="fas fa-check-circle text-success"></i></span>
-									<div>Suivi quotidien des tickets</div>
-								</li>
-								<li class="list-group-item d-flex pl-0 pb-1">
-									<span class="mr-2"><i class="fas fa-check-circle text-success"></i></span>
-									<div>Support multiplateforme (web et mobile)</div>
-								</li>
-								<li class="list-group-item d-flex pl-0 pb-1">
-									<span class="mr-2"><i class="fas fa-check-circle text-success"></i></span>
-									<div>Gestion des tickets et de la demande</div>
-								</li>
-							</ul>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
+		</div>#}
 	</section>
 
-	<!-- ./ Solutions -->
-
-	<!-- Services -->
-	<div class="row">
-		<div class="col-xs-12 col-sm-12">
-			<div class="block-title">
-				<h2>Ce que je fais</h2>
-			</div>
-		</div>
+	<div class="container mt-5 flex-row-reverse" id="agence">
+		<h1 class="display-5 fw-bold lh-1 mb-3 text-center">Des solutions de développement web adaptées à tous les besoins</h1>
+		<p class="lead mb-4 text-muted text-center">Je conçois la solution optimale de développement web pour chaque
+			situation spécifique, qu'il s'agisse de développer une plateforme complète ou de mettre en place des outils précis
+			pour vos besoins uniques.
+		</p>
 	</div>
+	{# End of Hero section #}
 
-	<div class="row">
-		<div class="col-xs-12 col-sm-6">
-			<div class="info-list-w-icon">
-				<div class="info-block-w-icon">
-					<div class="ci-icon">
-						<i class="linecons linecons-pen"></i>
-					</div>
+	<h1 class="display-4 fw-bold text-center">Processus</h1>
 
-					<div class="ci-text">
-						<h4>BRAINSTORM & ERGONOMIE</h4>
-						<p>Le brainstorming est une méthode de créativité très utile en développement logiciel. Cependant, pour que cette méthode soit efficace, il est important de prendre en compte l'ergonomie, c'est-à-dire la manière dont les utilisateurs interagissent avec l'interface. Lors de la phase de brainstorming, il est important de veiller à ce que l'ergonomie de l'interface ne soit pas un obstacle à la créativité des participants.
-						</p>
-					</div>
-				</div>
-
-				<div class="info-block-w-icon">
-					<div class="ci-icon">
-						<i class="linecons linecons-display"></i>
-					</div>
-
-					<div class="ci-text">
-						<h4>CRÉATION & WEBDESIGN</h4>
-						<p>Des idées, c’est bien. Les mettre en en pratique, c’est encore mieux ! Le webdesign de votre
-																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																									futur site internet est construit sous forme de maquettes (charte graphique) qui vous
-																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																permettront de cadrer graphiquement et de vous projeter sur votre outil.</p>
-					</div>
-				</div>
-
-				<div class="info-block-w-icon">
-					<div class="ci-icon">
-						<i class="linecons linecons-calendar"></i>
-					</div>
-
-					<div class="ci-text">
-						<h4>SUIVI / STATISTIQUES</h4>
-						<p>Un interlocuteur dédié, je vous assure que ça rassure. Des données chiffrées, ça rassure aussi ! Je vous paramètre tout ça, et ça tombe dans votre boite mail, c’est beau la
-																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																							technologie vous ne trouvez pas ?</p>
-					</div>
-				</div>
-			</div>
-		</div>
-
-		<div class="col-xs-12 col-sm-6">
-			<div class="info-list-w-icon">
-
-				<div class="info-block-w-icon">
-					<div class="ci-icon">
-						<i class="linecons linecons-shop"></i>
-					</div>
-
-					<div class="ci-text">
-						<h4>INTÉGRATION & DÉVELOPPEMENT</h4>
-						<p>Là on va commencer à entrer dans le vif du sujet : la transformation des visuels en code
-																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																			                            HTML, CSS et PHP ! C’est à ce moment que j'aborde le coté techniques et je vous
-																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																			                            créererai le code de votre nouveau site internet, c’est tout ce qu’il faut retenir !</p>
-					</div>
-				</div>
-
-				<div class="info-block-w-icon">
-					<div class="ci-icon">
-						<i class="linecons linecons-megaphone"></i>
-					</div>
-
-					<div class="ci-text">
-						<h4>CONTENUS & CONVERSION</h4>
-						<p>Les contenus de qualité et la conversion sont des éléments clés pour réussir en ligne. Lorsque votre site web manque de contenu pertinent, il peut être difficile d'atteindre vos objectifs. Mais ne vous inquiétez pas, vous n'êtes pas seul dans cette entreprise. Je suis là pour vous aider à créer un contenu engageant qui captivera votre audience et favorisera la conversion.</p>
-					</div>
-				</div>
-
-				<div class="info-block-w-icon">
-					<div class="ci-icon">
-						<i class="linecons linecons-data"></i>
-					</div>
-
-					<div class="ci-text">
-						<h4>RÉFÉRENCEMENT NATUREL</h4>
-						<p>Cerise sur le gâteau ? Non pas tant que ça en fait. Un beau site tout neuf, ce serait dommage
-																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																			                            qu’il ne soit pas référencé sur Google , vous ne trouvez pas ? Une stratégie SEO (aussi
-																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																			                            appelé référencement naturel), simple et efficace ne mange pas de pain !</p>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-
-	<!-- Clients Slider -->
-	<div class="block-title">
-		<h2>
-			Technologies et outils
-		</h2>
-	</div>
-
-	<div id="clients_1" class="clients owl-carousel" data-mobile-items="1" data-tablet-items="3" data-items="6">
-		<div class="client-block">
-			<img src="./img/clients/spec-1.png" alt="PHP">
-		</div>
-
-		<div class="client-block">
-			<img src="./img/clients/spec-2.png" alt="HTML 5 / CSS 3">
-		</div>
-
-		<div class="client-block">
-			<img src="./img/clients/spec-3.png" alt="Git">
-		</div>
-
-		<div class="client-block">
-			<img src="./img/clients/spec-4.png" alt="Symfony">
-		</div>
-
-		<div class="client-block">
-			<img src="./img/clients/spec-5.png" alt="React">
-		</div>
-
-		<div class="client-block">
-			<img src="./img/clients/spec-6.png" alt="Javascript">
-		</div>
-
-		<div class="client-block">
-			<img src="./img/clients/spec-7.png" alt="Sass">
-		</div>
-	</div>
-	<!-- /Clients Slider -->
-
-	<div class="p-40"></div>
-
-	<!-- FAQ -->
-
-	{#<section class="py-5 py-sm-5">
+	{# Services de l'Agence #}
+	<section>
 		<div class="container">
-			<div class="mb-5 text-center"><span class="display-4 font-weight-bold text-primary text-uppercase">VOUS AVEZ DES QUESTIONS ?</span>
-				<h2 class="mt-2">Voici quelques réponses</h2>
+			<ul class="process">
+				<li class="process__item">
+					<span class="process__number"><i class="fas fa-lightbulb"></i></span>
+					<span class="process__title">Analyse &amp; Stratégie</span>
+					<span class="process__subtitle">J'analyse votre problème et développe une stratégie</span>
+				</li>
+				<li class="process__item">
+					<span class="process__number"><i class="fas fa-file-alt"></i></span>
+					<span class="process__title">Faire une Offre</span>
+					<span class="process__subtitle">Je vous fournis une offre détaillée en fonction de mon analyse</span>
+				</li>
+				<li class="process__item">
+					<span class="process__number"><i class="fas fa-cogs"></i></span>
+					<span class="process__title">Développement</span>
+					<span class="process__subtitle">Je développe, transforme la stratégie en réalité</span>
+				</li>
+				<li class="process__item">
+					<span class="process__number"><i class="fas fa-check-circle"></i></span>
+					<span class="process__title">Finalisation</span>
+					<span class="process__subtitle">J'effectue les ajustements finaux et prépare la livraison</span>
+				</li>
+			</ul>
+		</div>
+	</section>
+	{# ./ Services de l'Agence #}
+
+	<section class="hero">
+		<div class="container">
+			<div class="row align-items-center">
+				<div class="col-md-6">
+					<h1>BESOIN D'ÉCLAIRAGE ?</h1>
+					<p>Transformez les défis techniques en opportunités. Lorsque vous êtes confronté à des problèmes techniques, vous faites face à des occasions de grandir et d'apprendre. Ne laissez pas les obstacles vous décourager. Au contraire, laissez-moi vous guider vers des solutions brillantes qui illuminent votre parcours.</p>
+				</div>
+				<div class="col-md-6">
+					<img src="{{ asset('img/presentation.png') }}" alt="agence web dans la Nièvre (58)">
+				</div>
 			</div>
-			<div class="col-md-8 mx-auto">
-				<div id="accordion">
-					<div class="card border-primary mb-2">
-						<div class="card-header" id="headingOne">
-							<h5 class="mb-0">
-								<button class="btn btn-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-									Calendrier de paiement et options
-								</button>
-							</h5>
-						</div>
-						<div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
-							<div class="card-body">
-								<p>La définition de la portée du projet est le fruit d'une collaboration avec mon client. Ensemble, nous définissons les principales caractéristiques, les fonctionnalités et les éventuelles contraintes qui façonneront le processus de conception. Cette clarté garantit que nous sommes alignés et que nous travaillons pour atteindre les mêmes objectifs.</p>
+		</div>
+	</section>
+
+	{# Technologie et outils #}
+	<div class="container">
+		<div class="row">
+			<div class="col-xs-12 col-sm-12">
+				<div class="block-title">
+					<h2>Outils et technologies</h2>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-xs-12 col-sm-3">
+				<div class="lm-info-block gray-default">
+					<img src="./img/clients/spec-1.png" alt="PHP">
+					<h4>PHP 5/6/7/8.2</h4>
+				</div>
+			</div>
+
+			<div class=" col-xs-12 col-sm-3">
+				<div class="lm-info-block gray-default">
+					<img src="./img/clients/spec-2.png" alt="HTML 5 / CSS 3">
+					<h4>HTML 5 / CSS 3</h4>
+				</div>
+			</div>
+
+			<div class=" col-xs-12 col-sm-3 ">
+				<div class="lm-info-block gray-default">
+					<img src="./img/clients/spec-3.png" alt="Git">
+					<h4>Git + SSH</h4>
+				</div>
+			</div>
+
+			<div class=" col-xs-12 col-sm-3 ">
+				<div class="lm-info-block gray-default">
+					<img src="./img/clients/spec-4.png" alt="Symfony">
+					<h4>Symfony 4/5/6</h4>
+				</div>
+			</div>
+			<div class="col-xs-12 col-sm-3">
+				<div class="lm-info-block gray-default">
+					<img src="./img/clients/spec-5.svg" alt="React">
+					<h4>React / VueJs</h4>
+				</div>
+			</div>
+			<div class="col-xs-12 col-sm-3">
+				<div class="lm-info-block gray-default">
+					<img src="./img/clients/spec-7.png" alt="Sass">
+					<h4>SaaS</h4>
+				</div>
+			</div>
+			<div class="col-xs-12 col-sm-3">
+				<div class="lm-info-block gray-default">
+					<img src="./img/clients/spec-8.svg" alt="Json web token(JWT)" class="text-center">
+					<h4>Json web token</h4>
+				</div>
+			</div>
+			<div class="col-xs-12 col-sm-3">
+				<div class="lm-info-block gray-default">
+					<img src="./img/clients/spec-9.png" alt="Axios / Ajax" class="text-center">
+					<h4>Axios/Ajax</h4>
+				</div>
+			</div>
+		</div>
+	</div>
+	{# ./ Technologie et outils #}
+
+	<!-- Pricing -->
+	<div class="container">
+		<div class="row">
+			<div class=" col-xs-12 col-sm-12 ">
+				<div class="block-title">
+					<h2>Un large choix vous est proposé</h2>
+					<p>Que vous soyez un particulier ou un professionnel !</p>
+				</div>
+			</div>
+
+		</div>
+
+		<div class="row">
+			<div class=" col-xs-12 col-sm-12 ">
+				<div class="fw-pricing clearfix row">
+
+					<div class="fw-package-wrap col-md-6 ">
+						<div class="fw-package">
+							<div class="fw-heading-row">
+								<span class="text-uppercase">Développement entreprise</span>
+							</div>
+
+							<div class="fw-pricing-row">
+								<span>Un prix compétiteur et des fonctionnalités de bases</span>
+							</div>
+
+							<div class="fw-button-row">
+								<a href="{{ url('front_devis_new', {'type': 'site_vitrine'}) }}" target="_self" class="btn btn-primary">Personnaliser</a>
+
+							</div>
+
+							<div class="fw-default-row">Vous êtes une marque souhaitant donner un coup de neuf à son site
+								web ou une entreprise souhaitant redynamiser sa présence sur le web ? Optez pour une
+								création d'application / site web sur mesure, dynamique et novateur. A votre image.
 							</div>
 						</div>
 					</div>
-				<p class="d-flex flex-wrap align-items-center justify-content-center"><span class="mr-1">Vous avez encore des questions ?</span><a class="btn btn-link font-weight-bold" href="{{ url('front_assistance') }}">Créez votre ticket maintenant !</a></p>
-			</div>
-		</div>
-	</section>#}
 
+					<div class="fw-package-wrap col-md-6 highlight-col ">
+						<div class="fw-package">
+							<div class="fw-heading-row">
+								<span>DÉVELOPPEMENT SUR MESURE</span>
+							</div>
 
+							<div class="fw-pricing-row">
+								<span>Pour un besoin spécifique</span>
+							</div>
 
-	<!-- Pricing -->
-	<div class="row">
-		<div class=" col-xs-12 col-sm-12 ">
-			<div class="block-title">
-				<h2>Que souhaitez-vous faire ?</h2>
-			</div>
-		</div>
+							<div class="fw-button-row">
+								<a href="{{ url('front_devis_new', {'type': 'cross_plateforme'}) }}" target="_self" class="btn btn-primary">Personnaliser</a>
 
-	</div>
+							</div>
 
-	<div class="row">
-		<div class=" col-xs-12 col-sm-12 ">
-			<div class="fw-pricing clearfix row">
-
-				<div class="fw-package-wrap col-md-6 ">
-					<div class="fw-package">
-						<div class="fw-heading-row">
-							<span>PRESENTATION ENTREPRISE</span>
-						</div>
-
-						<div class="fw-pricing-row">
-							<span>Sur devis</span>
-						</div>
-
-						<div class="fw-button-row">
-							<a href="{{ url('front_devis_new') }}" target="_self" class="btn btn-secondary">Je fais ma demande</a>
-						</div>
-
-						<div class="fw-default-row">Vous êtes une marque souhaitant donner un coup de neuf à son site
-																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																			                            web ou une entreprise souhaitant redynamiser sa présence sur le web ? Optez pour une
-																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																			                            création de site vitrine sur mesure, dynamique et novateur. A votre image.
-						</div>
-					</div>
-				</div>
-
-				<div class="fw-package-wrap col-md-6 highlight-col ">
-					<div class="fw-package">
-						<div class="fw-heading-row">
-							<span>DÉVELOPPEMENT SUR MESURE</span>
-						</div>
-
-						<div class="fw-pricing-row">
-							<span>Sur devis</span>
-						</div>
-
-						<div class="fw-button-row">
-							<a href="{{ url('front_devis_new') }}" target="_self" class="btn btn-primary">Je fais ma demande</a>
-						</div>
-
-						<div class="fw-default-row">Vous souhaitez aller un peu plus loin et vous avez en tête des
-																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																			                            fonctionnalités bien précises pour votre nouveau site internet ? Tout est possible
-																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																			                            techniquement, discutons ensemble de votre développement web sur mesure !
+							<div class="fw-default-row">Vous souhaitez aller un peu plus loin et vous avez en tête des
+								fonctionnalités bien précises pour votre nouveau site internet ? Tout est possible
+								techniquement, discutons ensemble de votre développement web sur mesure !
+							</div>
 						</div>
 					</div>
 				</div>
 			</div>
+			<!-- /Pricing -->
 		</div>
-		<!-- /Pricing -->
 	</div>
+
 {% endblock %}

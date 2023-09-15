@@ -28,8 +28,13 @@
 						{{ form_errors(formRegister.prenom) }}
 					</div>
 					<div>
+						<label for="nom" class="sr-only">Civilité</label>
+						{{ form_row(formRegister.civility) }}
+						{{ form_errors(formRegister.civility) }}
+					</div>
+					<div>
 						<label for="email-address" class="sr-only">Identifiant de connexion</label>
-						{{ form_row(formRegister.email, {attr: {'class' : 'form-control'}}) }}
+						{{ form_widget(formRegister.email) }}
 						{{ form_errors(formRegister.email) }}
 					</div>
 					<div>
@@ -39,6 +44,10 @@
 					<div>
 						<label for="repeat-password" class="sr-only">Répétez votre mot de passe</label>
 						{{ form_row(formRegister.password.second) }}
+					</div>
+					<div>
+						{{ form_row(formRegister.checked) }}
+						{{ form_errors(formRegister.checked) }}
 					</div>
 					<button type="submit" class="btn btn-primary">Je m'inscris</button>
 				{{ form_end(formRegister) }}

@@ -26,83 +26,6 @@
         });
     }
 
-    // Ajax Pages loader
-   function ajaxLoader() {
-        // Check for hash value in URL
-        var ajaxLoadedContent = $('#page-ajax-loaded');
-
-        function showContent() {
-            ajaxLoadedContent.removeClass('fadeOutLeft closed');
-            ajaxLoadedContent.show();
-            $('body').addClass('ajax-page-visible');
-        }
-
-        function hideContent() {
-            $('#page-ajax-loaded').addClass('fadeOutLeft closed');
-            $('body').removeClass('ajax-page-visible');
-            setTimeout(function(){
-                $('#page-ajax-loaded.closed').html('');
-                ajaxLoadedContent.hide();
-            }, 500);
-        }
-
-        var href = $('.ajax-page-load').each(function(){
-            href = $(this).attr('href');
-            if(location.hash == location.hash.split('/')[0] + '/' + href.substr(0,href.length-5)){
-                var toLoad =  $(this).attr('href');
-                showContent();
-                ajaxLoadedContent.load(toLoad);
-                return false;
-            }
-        });
-
-        $(document)
-            .on("click","#ajax-page-close-button", function (e) { // Hide Ajax Loaded Page on Navigation cleck and Close button
-                e.preventDefault();
-                hideContent();
-                location.hash = location.hash.split('/')[0];
-            })
-            .on("click",".ajax-page-load", function () { // Show Ajax Loaded Page
-                var hash = location.hash.split('/')[0] + '/' + $(this).attr('href').substr(0,$(this).attr('href').length-5);
-                location.hash = hash;
-                showContent();
-
-                return false;
-            });
-    }
-    // /Ajax Pages loader
-
-    // Contact form validator
-    $(function () {
-
-        $('#contact_form').validator();
-
-        $('#contact_form').on('submit', function (e) {
-            if (!e.isDefaultPrevented()) {
-                var url = "contact_form/contact_form.php";
-
-                $.ajax({
-                    type: "POST",
-                    url: url,
-                    data: $(this).serialize(),
-                    success: function (data)
-                    {
-                        var messageAlert = 'alert-' + data.type;
-                        var messageText = data.message;
-
-                        var alertBox = '<div class="alert ' + messageAlert + ' alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>' + messageText + '</div>';
-                        if (messageAlert && messageText) {
-                            $('#contact_form').find('.messages').html(alertBox);
-                            $('#contact_form')[0].reset();
-                        }
-                    }
-                });
-                return false;
-            }
-        });
-    });
-    // /Contact form validator
-
     // Portfolio subpage filters
     function portfolio_init() {
         $( '.portfolio-content' ).each( function() {
@@ -183,20 +106,6 @@
         });
         $('head').append('<style data-styles="leven-theme-skills-css" type="text/css">' + custom_styles + '</style>');
     }
-
-    //On Window load & Resize
-    $(window)
-        .on('load', function() { //Load
-            // Animation on Page Loading
-            $(".preloader").fadeOut( 800, "linear" );
-            animateLayout();
-        })
-        .on('hashchange', function(event) {
-            if(location.hash) {
-                ajaxLoader();
-            }
-        });
-
 
     // On Document Load
     $(document).ready(function () {
@@ -394,21 +303,7 @@
             });
         });
 
-        $('.form-control').val('');
-
-        $(".form-control").on("focusin", function(){
-            $(this).parent('.form-group').addClass('form-group-focus');
-        });
-
-        $(".form-control").on("focusout", function(){
-            if($(this).val().length === 0) {
-                $(this).parent('.form-group').removeClass('form-group-focus');
-            }
-        });
-
-        $('body').append('<div id="page-ajax-loaded" class="page-portfolio-loaded animated fadeInLeft" style="display: none"><div class="preloader-portfolio"><div class="preloader-animation"><div class="preloader-spinner"></div></div></div></div>');
-
-        ajaxLoader();
+        /*$('.form-control').val('');*/
 
         // Sidebar toggle
         $('.sidebar-toggle').on("click", function () {
@@ -421,14 +316,6 @@
                 scrollTop: 0
             }, 400);
             return false;
-        });
-        
-        //Google Maps
-        $("#map").googleMap({
-            zoom: 16 // Google Map ZOOM. You can change this value
-        });
-        $("#map").addMarker({
-            address: "S601 Townsend Street, San Francisco, California, USA", // Your Address. Change it
         });
 
         scrollTop();

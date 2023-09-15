@@ -5,7 +5,7 @@
     max-width: 100%;
     vertical-align: bottom;
     position: absolute;
-    bottom: 32px;
+    bottom: 10px;
 }
 
 .logo-text {
@@ -39,13 +39,82 @@
     margin-bottom: 2.5%;
 }
 
+.home_background{
+    background-image: url('../../../img/home.svg');
+    background-repeat: no-repeat;
+    background-size: cover;
+    height: 100%;
+}
 
+#cookie-consent {
+    position: fixed;       /* Flottant en bas de la page */
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: rgba(0,0,0,0.8); /* Fond noir semi-transparent */
+    color: #fff;          /* Texte blanc */
+    padding: 10px 20px;   /* Espacement à l'intérieur */
+    font-size: 14px;      /* Taille du texte */
+    z-index: 1000;        /* Assure que le bandeau est au-dessus des autres éléments */
+    text-align: center;   /* Centre le texte */
+}
 
-@media screen and (max-width: 767px) {
+@media screen and (min-width: 1024px) {
+    .home_background{
+        padding-top: 9rem;
+    }
+}
+
+@media screen and (min-width: 200px) and (max-width: 1080px) {
+    #cookie-consent{
+        position: fixed;       /* Flottant en bas de la page */
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background-color: rgba(0,0,0,0.8); /* Fond noir semi-transparent */
+        color: #fff;          /* Texte blanc */
+        padding: 10px 20px;   /* Espacement à l'intérieur */
+        font-size: 14px;      /* Taille du texte */
+        text-align: center;   /* Centre le texte */
+    }
+    /*.intro{
+        padding-top: 100px;
+    }*/
+    .section-header.section-sm {
+        padding-top: 4rem;
+        padding-bottom: 3rem;
+    }
+    .button_home a{
+        margin-top: 10px;
+        text-align: center;
+    }
+    .no-card-mobile span {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+    }
+}
+
+#accept-cookies {
+    background-color: #4CAF50; /* Vert pour le bouton Accepter */
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    margin-left: 10px;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+@media screen and (max-width: 922px) {
 
     /* Styles pour les écrans jusqu'à 767px de large (mode téléphone et tablette) */
     .logo img {
         display: none;
+        width:100%;
     }
 
     .logo-text {
@@ -66,5 +135,8 @@
 
     .cover-heading {
         margin-bottom: 50%;
+    }
+    .site-footer-fixed {
+        position: fixed;
     }
 }

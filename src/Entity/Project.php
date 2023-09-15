@@ -40,6 +40,11 @@ class Project
     private ?\DateTime $updated_at;
 
     /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private ?string $category;
+
+    /**
      * @ORM\OneToMany(targetEntity=Image::class, mappedBy="project", cascade={"persist"}, orphanRemoval=true)
      * @ORM\JoinColumn(name="project_id", referencedColumnName="id")
      */
@@ -55,11 +60,14 @@ class Project
      */
     private $link;
 
+    /**
+     * @throws \Exception
+     */
     public function __construct()
     {
         $this->categories = new ArrayCollection();
         $this->images = new ArrayCollection();
-        $this->created_at = new \DateTime('NOW');
+        $this->created_at = new \DateTime('now', new \DateTimeZone('Europe/Paris'));
     }
 
 
@@ -116,6 +124,17 @@ class Project
         return $this;
     }
 
+    public function getCategory(): ?string
+    {
+        return $this->category;
+    }
+
+    public function setCategory(string $category): self
+    {
+        $this->category = $category;
+        return $this;
+    }
+
     /**
      * @return Collection|Image[]
      */
@@ -130,7 +149,6 @@ class Project
             $this->images[] = $image;
             $image->setProject($this);
         }
-
         return $this;
     }
 

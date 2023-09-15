@@ -6,18 +6,21 @@ use App\Entity\User;
 use App\Form\UserType;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 /**
  * @Route("/admin/users")
+ * @IsGranted("ROLE_ADMIN")
  */
 class UserController extends AbstractController
 {
     /**
-     * @Route("/", name="back_user_index", methods={"GET"})
+     * @Route("/back/users", name="back_user_index", methods={"GET"})
      */
     public function index(UserRepository $userRepository): Response
     {
@@ -29,12 +32,17 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("/new", name="back_user_new", methods={"GET","POST"})
+     * @Route("/back/user/new", name="back_user_new", methods={"GET","POST"})
+     * @IsGranted("ROLE_ADMIN")
      */
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
+    public function new(Request $request, EntityManagerInterface $entityManager,UserPasswordHasherInterface $hasher): Response
     {
         $user = new User();
         $form = $this->createForm(UserType::class, $user);
+        $user->setPassword($hasher->hashpassword(
+            $user,
+            $form->get('password')->getData()
+        ));
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -50,7 +58,8 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("/{id}", name="back_user_show", methods={"GET"})
+     * @Route("/back/user/{id}", name="back_user_show", methods={"GET"})
+     * @IsGranted("ROLE_ADMIN")
      */
     public function show(User $user): Response
     {
@@ -60,14 +69,19 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("/{id}/edit", name="back_user_edit", methods={"GET","POST"})
+     * @Route("/back/user/{id}/edit", name="back_user_edit", methods={"GET","POST"})
+     * @IsGranted("ROLE_ADMIN")
      */
-    public function edit(Request $request, User $user, EntityManagerInterface $entityManager): Response
+    public function edit(Request $request, User $user, EntityManagerInterface $entityManager,UserPasswordHasherInterface $hasher): Response
     {
         $form = $this->createForm(UserType::class, $user);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $user->setPassword($hasher->hashpassword(
+                $user,
+                $form->get('password')->getData()
+            ));
             $entityManager->flush();
 
             return $this->redirectToRoute('back_user_index');
@@ -80,7 +94,8 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("/{id}", name="back_user_delete", methods={"DELETE"})
+     * @Route("/admin/user/{id}/delete", name="back_user_delete", methods={"POST"})
+     * @IsGranted("ROLE_ADMIN")
      */
     public function delete(Request $request, User $user, EntityManagerInterface $entityManager): Response
     {

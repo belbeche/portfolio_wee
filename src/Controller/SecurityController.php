@@ -6,57 +6,161 @@ use App\Entity\User;
 use App\Entity\Devis;
 use App\Form\UserType;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class SecurityController extends AbstractController
 {
+
     /**
-     * @Route("/api/register", name="api_register", methods={"POST"})
+     * @Route("/inscription", name="app_register")
+     * 
      */
-    public function Register(Request $request, EntityManagerInterface $entityManager, UserPasswordHasherInterface $hasher): Response
+    public function Register(Request $request, EntityManagerInterface $entityManager, UserPasswordHasherInterface $hasher,MailerInterface $mailer): Response
     {
-        $data = json_decode($request->getContent(), true);
+
         $user = new User();
 
-        // Utilisez $data pour remplir l'entité $user...
+        $form = $this->createForm(UserType::class, $user);
 
-        // Par exemple:
-        $user->setEmail($data['email']);
-        $user->setPassword($hasher->hashPassword($user, $data['password']));
-        $user->setNom($data['nom']);
-        $user->setPrenom($data['prenom']);
-        $user->setRoles($data['roles']);
+        if ($request->isMethod('post')) {
+            $form->handleRequest($request);
 
-        $entityManager->persist($user);
-        $entityManager->flush();
+            if ($form->isSubmitted() && $form->isValid()) {
+                $user->setPassword($hasher->hashpassword(
+                    $user,
+                    $form->get('password')->getData()
+                ));
+                $user->setRoles(['ROLE_USER']);
 
-        return $this->json(['success' => true]);
-    }
 
-    /**
-     * @Route("/api/login_check", name="api_login")
-     */
-    public function login(AuthenticationUtils $authenticationUtils): JsonResponse
-    {
-        // Récupérez l'erreur d'authentification, si elle existe
-        $error = $authenticationUtils->getLastAuthenticationError();
+                $email = (new TemplatedEmail())
+                    ->from('wbelbeche.s@gmail.com')
+                    ->to($user->getEmail())
+                    ->subject('Récapitulatif inscription ScriptZenIT')
+                    ->bcc('wbelbeche.s@gmail.com')
+                    ->context([
+                        'RegistredNumber' => $user->getId(),
+                        'email_address' => $user->getEmail(),
+                        'nom' => $user->getNom(),
+                        'prenom' => $user->getPrenom(),
+                        'civility' => $user->getCivility(),
+                        'password' => $user->getPassword(),
+                    ])
+                    ->htmlTemplate('security/email.html.twig');
 
-        if ($error) {
-            return new JsonResponse(['error' => $error->getMessage()], JsonResponse::HTTP_UNAUTHORIZED);
+                $mailer->send($email);
+
+                $entityManager->persist($user);
+
+                $entityManager->flush();
+
+                return $this->redirectToRoute('app_login');
+            }
         }
 
-        // Si l'authentification a réussi, le bundle JWT prendra le relais.
-        // En cas de succès, un JWT sera retourné, donc aucun autre traitement n'est nécessaire ici.
-        return new JsonResponse(['error' => 'Une erreur inattendue s\'est produite.'], JsonResponse::HTTP_INTERNAL_SERVER_ERROR);
+        return $this->render('security/register.html.twig', [
+            'formRegister' => $form->createView(),
+        ]);
     }
 
     /**
-     * @Route("/logout", name="app_logout")
+     * @Route("/connexion", name="app_login")
+     */
+    public function login(AuthenticationUtils $authenticationUtils): Response
+    {
+        if ($this->getUser()) {
+            return $this->redirectToRoute('front_assistance');
+        }
+
+        // get the login error if there is one
+        $error = $authenticationUtils->getLastAuthenticationError();
+        // last username entered by the user
+        $lastUsername = $authenticationUtils->getLastUsername();
+
+        return $this->render('security/login.html.twig', ['last_username' => $lastUsername, 'error' => $error]);
+    }
+
+    /**
+     * @Route("/mot-de-passe-oublier", name="request_reset_password")
+     */
+    public function requestResetPassword(Request $request, MailerInterface $mailer, EntityManagerInterface $em): Response
+    {
+        if ($request->isMethod('POST')) {
+            $email = $request->request->get('email');
+            $user = $em->getRepository(User::class)->findOneBy(['email' => $email]);
+
+            if ($user) {
+                $token = bin2hex(random_bytes(32));
+                $user->setResetToken($token);
+                $user->setResetTokenExpireAt(new \DateTime('+1 hour'), new \DateTimeZone('Europe/Paris'));
+                $em->flush();
+
+                $resetLink = $this->generateUrl('reset_password', ['token' => $token], UrlGeneratorInterface::ABSOLUTE_URL);
+
+                $email = (new TemplatedEmail())
+                    ->from('wbelbeche.s@gmail.com')
+                    ->to($user->getEmail())
+                    ->subject('Réinitialisation de votre mot de passe')
+                    ->htmlTemplate('reset_password/email.html.twig')
+                    ->context(['resetLink' => $resetLink]);
+
+                $mailer->send($email);
+            }
+
+            // Rediriger vers une page de confirmation, même si l'email n'existe pas.
+            return $this->redirectToRoute('front_check_email');
+        }
+
+        return $this->render('reset_password/request.html.twig');
+    }
+
+    /**
+     * @Route("/message-confirmation-email", name="front_check_email")
+     */
+    public function frontCheckEmail()
+    {
+
+        return $this->render('reset_password/check_email.html.twig');
+    }
+
+    /**
+     * @Route("/reset-password/{token}", name="reset_password")
+     */
+    public function resetPassword($token, Request $request, EntityManagerInterface $em, UserPasswordEncoderInterface $passwordEncoder)
+    {
+        $user = $em->getRepository(User::class)->findOneBy(['resetToken' => $token]);
+
+        if (!$user || $user->getResetTokenExpireAt() < new \DateTime()) {
+            // Token invalide ou expiré.
+            return $this->redirectToRoute('request_reset_password');
+        }
+
+        if ($request->isMethod('POST')) {
+            $password = $request->request->get('password');
+            $hashedPassword = $passwordEncoder->encodePassword($user, $password);
+            $user->setPassword($hashedPassword);
+            $user->setResetToken(null);
+            $user->setResetTokenExpireAt(null);
+            $em->flush();
+
+            // Rediriger vers la page de connexion avec un message de succès.
+            return $this->redirectToRoute('app_login');
+        }
+
+        return $this->render('reset_password/reset.html.twig', ['token' => $token]);
+    }
+
+    /**
+     * @Route("/deconnexion", name="app_logout")
      */
     public function logout(): void
     {

@@ -8,6 +8,7 @@ use App\Entity\Category;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Form\AbstractType;
 use FOS\CKEditorBundle\Form\Type\CKEditorType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -21,9 +22,12 @@ class ProjectType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('title', TextType::class)
+            ->add('title', TextType::class, [
+                'attr' => [
+                    'placeholder' => 'Titre du projet'
+                ]
+            ])
             ->add('description', TextareaType::class, [
-                'required' => true,
                 'attr' => [
                     'placeholder' => 'Merci de décrire votre projet...',
                 ],
@@ -46,18 +50,36 @@ class ProjectType extends AbstractType
                         return $er->createQueryBuilder('ca')
                             ->orderBy('ca.name', 'DESC');
                     },
-                    /*'expanded' => true,*/
                     'multiple'      => true,
                     'choice_label'   => 'name',
                     'expanded' => true,
                     'required'    => false,
                     'attr' => [
-                        'class' => 'select2',
+                        'class' => 'selectpicker',
+                        'placeholder' => 'Choix des catégories'
+                    ]
+                ]
+            )
+            ->add(
+                'category',
+                ChoiceType::class,[
+                    'choices' => [
+                        'détaillé' => 'détaillé',
+                        'lien-direct' => 'lien-direct',
+                        'prototype' => 'prototype',
+                        'toutes_categories' => 'toutes_categories',
+                    ],
+                    'attr' => [
+                        'class' => 'selectpicker',
+                        'placeholder' => 'Choix de la catégorie d\'affichage'
                     ]
                 ]
             )
             ->add('link', TextType::class, [
                 'required' => false,
+                'attr' => [
+                    'placeholder' => 'Lien fonctionnel du projet'
+                ]
             ])
             ;
     }

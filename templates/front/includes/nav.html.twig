@@ -1,54 +1,48 @@
-<!-- Header -->
-<header id="site_header" class="header">
-	<div
-		class="header-content clearfix">
 
+<header id="header">
+	<nav class="navbar container">
 		<!-- Text Logo -->
 		<div class="logo">
 			<a href="{{ url('front_home') }}">
-				<img src="{{ asset('img/logo.png')}}" class="d-sm-none d-md-block d-lg-block" width="10%" height="10%" alt="Agence web à nevers (58)">
+				<img src="{{ asset('img/logo.png')}}" class="d-sm-none d-md-none d-lg-block" width="20%" height="30%" alt="Agence web à nevers (58)">
 			</a>
 			<a href="{{ url('front_home') }}">
-				<div class="logo-text">ScriptZen
+				<div class="logo-text d-md-block d-lg-none d-sm-block">ScriptZen
 					<span>iT</span>
 				</div>
 			</a>
 		</div>
 		<!-- /Text Logo -->
+		<div class="burger" id="burger">
+			<span class="burger-line"></span>
+			<span class="burger-line"></span>
+			<span class="burger-line"></span>
+		</div>
+		<div class="menu" id="menu">
+			<ul class="menu-inner">
 
-		<!-- Navigation -->
-		<div class="site-nav mobile-menu-hide">
-			<ul class="leven-classic-menu site-main-menu">
-				<li class="menu-item">
-					<a href="{{ url('front_home') }}">Accueil</a>
-				</li>
+				<li class="menu-item"><a href="{{ url('front_home') }}" class="menu-link">Accueil</a></li>
 
-				<li class="menu-item">
-					<a href="{{ url('front_about')}}">A propos de moi</a>
-				</li>
-
-				<li class="menu-item">
-					<a href="{{ url('front_project') }}">Ce que je propose</a>
-				</li>
-				{% if is_granted('ROLE_USER') %}
+				<li class="menu-item"><a href="{{ url('front_about')}}" class="menu-link">A propos de moi</a></li>
+				{#<a href="{{ url('front_project') }}" class="menu-link">Ce que je propose</a>#}
+				{% if app.user %}
 					<li class="menu-item">
-						<a href="{{ url('front_assistance') }}">Assistance</a>
+						<a href="{{ url('front_assistance') }}" class="menu-link">Assistance</a>
 					</li>
 				{% else %}
 					<li class="menu-item">
-						<a href="{{ url('front_devis_new') }}">Faire une demande</a>
+						<a href="{{ url('front_devis_new') }}" class="menu-link">Faire une demande</a>
 					</li>
 					<li class="menu-item">
 						<a href="{{ url('app_login') }}" class="btn btn-outline-info">Connexion</a>
 					</li>
+					<a href="{{ url('front_contact') }}" class="btn btn-outline-secondary">Contact</a>
 				{% endif %}
-
-				{% if is_granted('ROLE_USER') %}
+				{% if app.user %}
 					<li class="menu-item">
 						<a href="{{ url('app_logout') }}" class="btn btn-outline-danger">Déconnexion</a>
 					</li>
 				{% endif %}
-
 				{% if is_granted('ROLE_ADMIN') %}
 					<li class="menu-item">
 						<a href="{{ url('back_index') }}" class="btn btn-outline-danger">Admin panel</a>
@@ -56,10 +50,6 @@
 				{% endif %}
 			</ul>
 		</div>
-
-		<a class="menu-toggle mobile-visible">
-			<i class="fa fa-bars"></i>
-		</a>
-	</div>
+		{#<button id="switch">Dark mode</button>#}
+	</nav>
 </header>
-<!-- /Header -->
