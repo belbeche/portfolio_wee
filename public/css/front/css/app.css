@@ -59,6 +59,10 @@
     text-align: center;   /* Centre le texte */
 }
 
+.site-footer{
+    text-align: center;
+}
+
 @media screen and (min-width: 1024px) {
     .home_background{
         padding-top: 9rem;
@@ -109,7 +113,7 @@
     border-radius: 4px;
 }
 
-@media screen and (max-width: 922px) {
+@media screen and (max-width: 950px) {
 
     /* Styles pour les écrans jusqu'à 767px de large (mode téléphone et tablette) */
     .logo img {
@@ -118,7 +122,6 @@
     }
 
     .logo-text {
-        font-size: 200px;
         font-weight: 700;
         display: block;
     }
@@ -136,7 +139,7 @@
     .cover-heading {
         margin-bottom: 50%;
     }
-    .site-footer-fixed {
-        position: fixed;
+    .home_background{
+        padding-top: 3rem;
     }
 }

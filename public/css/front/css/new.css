@@ -51,10 +51,6 @@ body {
     color: var(--color-black-400);
     background-color: var(--color-white-100);
 }
-body .darkmode {
-    color: var(--color-white-100);
-    background-color: var(--color-black-400);
-}
 
 main {
     overflow: hidden;
@@ -218,10 +214,6 @@ video {
     box-shadow: var(--shadow-medium);
     transition: all 0.4s ease-in-out;
 }
-.darkmode .menu {
-    color: var(--color-white-100);
-    background-color: var(--color-black-400);
-}
 .menu.is-active {
     left: 0;
 }
@@ -242,7 +234,7 @@ video {
     text-transform: uppercase;
     transition: all 0.3s ease;
 }
-@media only screen and (min-width: 48rem) {
+@media only screen and (min-width: 64rem) {
     .menu {
         position: relative;
         top: 0;
@@ -287,7 +279,7 @@ video {
     transform: rotate(0deg);
     transition: 0.35s ease;
 }
-@media only screen and (min-width: 48rem) {
+@media only screen and (min-width: 1024px) {
     .burger {
         display: none;
         visibility: hidden;
@@ -306,9 +298,6 @@ video {
     border-radius: 1rem;
     background-color: var(--color-black-300);
     transition: 0.25s ease-in-out;
-}
-.darkmode .burger-line {
-    background-color: var(--color-white-100);
 }
 .burger-line:nth-child(1) {
     top: 0px;
@@ -331,45 +320,6 @@ video {
 .burger.is-active .burger-line:nth-child(3) {
     top: 0.5rem;
     transform: rotate(-135deg);
-}
-
-.switch {
-    position: relative;
-    display: block;
-    cursor: pointer;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-    z-index: 9;
-    margin-left: 5rem;
-    margin-right: 0.5rem;
-}
-.switch-light, .switch-dark {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform-origin: center;
-    transform: translate(-50%, -50%);
-    transition: all 0.3s ease-in;
-}
-.switch-light {
-    font-size: 1.45rem;
-    visibility: visible;
-    color: var(--color-black-300);
-}
-.darkmode .switch-light {
-    font-size: 0rem;
-    visibility: hidden;
-}
-.switch-dark {
-    font-size: 0rem;
-    visibility: hidden;
-    color: var(--color-white-100);
-}
-.darkmode .switch-dark {
-    font-size: 1.45rem;
-    visibility: visible;
 }
 
 .banner-column {

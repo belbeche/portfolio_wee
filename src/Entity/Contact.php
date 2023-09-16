@@ -26,7 +26,7 @@ class Contact
      */
     private mixed $lastName;
     /**
-     * @ORM\Column(type="string", length=180, unique=true)
+     * @ORM\Column(type="string", length=180)
      */
     private mixed $email;
     /**
@@ -38,6 +38,12 @@ class Contact
      * @ORM\Column(type="string", length=255)
      */
     private mixed $service;
+
+    /**
+     * @ORM\Column(type="text")
+     * @Assert\NotBlank
+     */
+    private mixed $content;
 
     /**
      * @return mixed
@@ -147,4 +153,21 @@ class Contact
         return $this;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getContent(): mixed
+    {
+        return $this->content;
+    }
+
+    /**
+     * @param mixed $content
+     * @return Contact
+     */
+    public function setContent(mixed $content): Contact
+    {
+        $this->content = $content;
+        return $this;
+    }
 }

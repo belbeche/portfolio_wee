@@ -16,68 +16,26 @@
 	{# Hero #}
 	<section class="section-header text-white vh-100 home_background">
 		<div class="container">
-			<div class="row justify-content-between align-items-center">
-				<div class="col-12 col-md-12 col-lg-12 text-md-left intro">
-					<h1 class="display-2 mb-4 text-center">Agence web <br> <span class="inline-block" style="background-color: dodgerblue;">Basée dans la Nièvre</span></h1>
-					<p class="lead mb-4 text-muted text-center">Grâce à mon expertise en développement Web, je vous accompagne dans
-						la création d'un site professionnel et attractif. Cependant, une conception
-						exceptionnelle ne se limite pas à la première étape.
-					</p>
-					<div class="flex-sm-column button_home justify-content-center" style="text-align: center;">
-						<a href="{{ url('front_devis_new') }}" class="btn btn-tertiary mr-3 animate-up-2 inline-block">Obtenir un suivi 7j/7 <span class="ml-2"><span class="fas fa-arrow-right"></span></span></a>
-						<a href="#agence" class="btn btn-danger mr-3 animate-up-2 inline-block">Découvrir l'agence<span class="ml-2"><span class="fas fa-arrow-down"></span></span></a><br>
-							<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="green" class="bi bi-check2-circle" viewBox="0 0 16 16">
-								<path d="M2.5 8a5.5 5.5 0 0 1 8.25-4.764.5.5 0 0 0 .5-.866A6.5 6.5 0 1 0 14.5 8a.5.5 0 0 0-1 0 5.5 5.5 0 1 1-11 0z"/>
-								<path d="M15.354 3.354a.5.5 0 0 0-.708-.708L8 9.293 5.354 6.646a.5.5 0 1 0-.708.708l3 3a.5.5 0 0 0 .708 0l7-7z"/>
-							</svg>
-							Aucune carte de crédit n'est requise
-					</div>
+				<div class="justify-content-between align-items-center">
+					<div class="col-12 col-md-12 col-lg-12">
+						<h1 class="display-2 mb-4 text-center">Agence web <br> <span class="inline-block" style="background-color: dodgerblue;">Basée dans la Nièvre</span></h1>
+						<p class="lead mb-4 text-muted text-center">Grâce à mon expertise en développement Web, je vous accompagne dans
+							la création d'un site professionnel et attractif. Cependant, une conception
+							exceptionnelle ne se limite pas à la première étape.
+						</p>
+						<div class="flex-sm-column button_home justify-content-center" style="text-align: center;">
+							<a href="{{ url('front_devis_new') }}" class="btn btn-tertiary mr-3 animate-up-2 inline-block">Obtenir un suivi 7j/7 <span class="ml-2"><span class="fas fa-arrow-right"></span></span></a>
+							<a href="#agence" class="btn btn-danger mr-3 animate-up-2 inline-block">Découvrir l'agence<span class="ml-2"><span class="fas fa-arrow-down"></span></span></a><br>
+								<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="green" class="bi bi-check2-circle" viewBox="0 0 16 16">
+									<path d="M2.5 8a5.5 5.5 0 0 1 8.25-4.764.5.5 0 0 0 .5-.866A6.5 6.5 0 1 0 14.5 8a.5.5 0 0 0-1 0 5.5 5.5 0 1 1-11 0z"/>
+									<path d="M15.354 3.354a.5.5 0 0 0-.708-.708L8 9.293 5.354 6.646a.5.5 0 1 0-.708.708l3 3a.5.5 0 0 0 .708 0l7-7z"/>
+								</svg>
+								<strong>Aucune carte de crédit <span class="text-info">n'est requise</span></strong>
+						</div>
 				</div>
-			</div>
-				<!-- Clients Slider -->
-
-				{#<div id="clients_1" class="clients owl-carousel" data-mobile-items="1" data-tablet-items="3" data-items="6">
-					<div class="client-block">
-						<a href="#">
-							<img src="./img/clients/logo-1.png">
-						</a>
-					</div>
-
-					<div class="client-block">
-						<a href="#">
-						<img src="./img/clients/logo2.png">
-						</a>
-					</div>
-
-					<div class="client-block">
-						<a href="#"itures">
-							<img src="./img/clients/logo3.png">
-						</a>
-					</div>
-
-					<div class="client-block">
-						<a href="#">
-							<img src="./img/clients/logo4.png">
-						</a>
-					</div>
-
-					<div class="client-block">
-						<a href="#">
-							<img src="./img/clients/logo5.png">
-						</a>
-					</div>
-
-					<div class="client-block">
-						<a href="#">
-							<img src="./img/clients/logo6.png">
-						</a>
-					</div>
-				</div>
-				<!-- /Clients Slider -->
-
 				<div class="p-40"></div>
 			</div>
-		</div>#}
+		</div>
 	</section>
 
 	<div class="container mt-5 flex-row-reverse" id="agence">
@@ -212,7 +170,7 @@
 		</div>
 
 		<div class="row">
-			<div class=" col-xs-12 col-sm-12 ">
+			<div class="col-xs-12 col-sm-12 ">
 				<div class="fw-pricing clearfix row">
 
 					<div class="fw-package-wrap col-md-6 ">
@@ -237,8 +195,8 @@
 						</div>
 					</div>
 
-					<div class="fw-package-wrap col-md-6 highlight-col ">
-						<div class="fw-package">
+					<div class="fw-package-wrap col-md-6">
+						<div class="fw-package pt-5">
 							<div class="fw-heading-row">
 								<span>DÉVELOPPEMENT SUR MESURE</span>
 							</div>
@@ -261,6 +219,12 @@
 				</div>
 			</div>
 			<!-- /Pricing -->
+		</div>
+
+		<div class="thank-you">
+			<h2>Merci d'avoir visité notre site !</h2>
+			<p>Nous apprécions votre visite. Si vous avez des questions, des commentaires ou avez besoin de plus d'informations, n'hésitez pas à nous contacter.</p>
+			<a href="{{ url('front_contact') }}" class="btn btn-primary">Nous contacter</a>
 		</div>
 	</div>
 
