@@ -63,6 +63,9 @@
     text-align: center;
 }
 
+.thank-you{
+    padding: 50px;
+}
 @media screen and (min-width: 1024px) {
     .home_background{
         padding-top: 9rem;
