@@ -13,65 +13,68 @@
 		{% endfor %}
 	</div>
 
-	<h1 class="text-center">Liste des tickets</h1>
+	<div class="container">
+		<h1 class="text-center">Liste des tickets</h1>
 
-	{% if tickets is empty %}
-		<div class="d-flex flex-column align-items-center">
-			<p class="text-center">Aucun ticket actif pour le moment.</p>
-			<a href="{{ url('send_message') }}" class="btn btn-outline-primary" style="margin-right: 10px;">Créer un nouveau ticket</a>
-			<br>
-			<a href="{{ url('front_assistance') }}">
-				<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-return-left" viewBox="0 0 16 16">
-					<path fill-rule="evenodd" d="M14.5 1.5a.5.5 0 0 1 .5.5v4.8a2.5 2.5 0 0 1-2.5 2.5H2.707l3.347 3.346a.5.5 0 0 1-.708.708l-4.2-4.2a.5.5 0 0 1 0-.708l4-4a.5.5 0 1 1 .708.708L2.707 8.3H12.5A1.5 1.5 0 0 0 14 6.8V2a.5.5 0 0 1 .5-.5z"/>
-				</svg>
-				Retour en arrière
-			</a>
-		</div>
-	{% else %}
-		<ul>
-			{% for ticket in tickets %}
-				<div class="container">
-					<div class="position-relative p-5 text-center text-muted bg-body border border-dashed rounded-5">
-						<a href="{{ url('respond_to_ticket', {'id': ticket.id}) }}" class="btn btn-success">Répondre</a>
-						<!-- Formulaire de suppression pour le ticket -->
-						<form action="{{ path('front_delete_ticket', {'id': ticket.id}) }}" method="post" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce ticket ?');">
-							<!-- Bouton de fermeture qui va maintenant servir à supprimer le ticket -->
-{#
-							<button type="submit" class="position-absolute top-0 end-0 p-3 m-3 btn-close bg-secondary rounded-pill" aria-label="Supprimer le ticket"></button>
-#}
+		{% if tickets is empty %}
+			<div class="d-flex flex-column align-items-center">
+				<p class="text-center">Aucun ticket actif pour le moment.</p>
+				<a href="{{ url('send_message') }}" class="btn btn-outline-primary" style="margin-right: 10px;">Créer un nouveau ticket</a>
+				<br>
+				<a href="{{ url('front_assistance') }}">
+					<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-return-left" viewBox="0 0 16 16">
+						<path fill-rule="evenodd" d="M14.5 1.5a.5.5 0 0 1 .5.5v4.8a2.5 2.5 0 0 1-2.5 2.5H2.707l3.347 3.346a.5.5 0 0 1-.708.708l-4.2-4.2a.5.5 0 0 1 0-.708l4-4a.5.5 0 1 1 .708.708L2.707 8.3H12.5A1.5 1.5 0 0 0 14 6.8V2a.5.5 0 0 1 .5-.5z"/>
+					</svg>
+					Retour en arrière
+				</a>
+			</div>
+		{% else %}
+			<ul>
+				{% for ticket in tickets %}
+					<div class="container">
+						<div class="position-relative p-5 text-center text-muted bg-body border border-dashed rounded-5">
+							<a href="{{ url('respond_to_ticket', {'id': ticket.id}) }}" class="btn btn-success">Répondre</a>
+							<!-- Formulaire de suppression pour le ticket -->
+							<form action="{{ path('front_delete_ticket', {'id': ticket.id}) }}" method="post" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce ticket ?');">
+								<!-- Bouton de fermeture qui va maintenant servir à supprimer le ticket -->
+								{#
+								<button type="submit" class="position-absolute top-0 end-0 p-3 m-3 btn-close bg-secondary rounded-pill" aria-label="Supprimer le ticket"></button>
+								#}
 
-							<input type="hidden" name="_token" value="{{ csrf_token('delete' ~ ticket.id) }}">
+								<input type="hidden" name="_token" value="{{ csrf_token('delete' ~ ticket.id) }}">
 
-							<svg class="bi mt-5 mb-3" width="48" height="48"><use xlink:href="#check2-circle"/></svg>
-							{% if ticket.status == 'En_cours' %}
-								<h1 class="text-body-emphasis">Réponse du support </h1>
-							{% else %}
-								<h1 class="text-body-emphasis">Message de votre part </h1>
+								<svg class="bi mt-5 mb-3" width="48" height="48"><use xlink:href="#check2-circle"/></svg>
+								{% if ticket.status == 'En_cours' %}
+									<h1 class="text-body-emphasis">Réponse du support </h1>
+								{% else %}
+									<h1 class="text-body-emphasis">Message de votre part </h1>
+								{% endif %}
+								<p class="col-lg-6 mx-auto mb-4">
+									{{ ticket.getContent() }}
+								</p>
+								<hr>
+								<h6>Priorité de la demande</h6>
+								<p class="col-lg-6 mx-auto mb-4">
+									{{ ticket.getPriority }}
+								</p>
+								<h6>
+									Date de création
+								</h6>
+								<p class="col-lg-6 mx-auto mb-4">
+									{{ ticket.createdAt|date('Y-m-d H:i:s') }}
+								</p>
+
+								<!-- Si vous souhaitez toujours avoir un bouton "Supprimer" visible -->
+								<button type="submit" class="btn-primary">Supprimer le message</button>
+							</form>
+							{% if ticket.attachment %}
+								<a href="{{ asset('uploads/' ~ ticket.attachment) }}" target="_blank" class="btn btn-info">Voir le fichier joint</a>
 							{% endif %}
-							<p class="col-lg-6 mx-auto mb-4">
-								{{ ticket.getContent() }}
-							</p>
-							<hr>
-							<h6>Priorité de la demande</h6>
-							<p class="col-lg-6 mx-auto mb-4">
-								{{ ticket.getPriority }}
-							</p>
-							<h6>
-								Date de création
-							</h6>
-							<p class="col-lg-6 mx-auto mb-4">
-								{{ ticket.createdAt|date('Y-m-d H:i:s') }}
-							</p>
-
-							<!-- Si vous souhaitez toujours avoir un bouton "Supprimer" visible -->
-							<button type="submit" class="btn-primary">Supprimer le message</button>
-						</form>
-						{% if ticket.attachment %}
-							<a href="{{ asset('uploads/' ~ ticket.attachment) }}" target="_blank" class="btn btn-info">Voir le fichier joint</a>
-						{% endif %}
+						</div>
 					</div>
-				</div>
-			{% endfor %}
-		</ul>
-	{% endif %}
+				{% endfor %}
+			</ul>
+		{% endif %}
+	</div>
+
 {% endblock %}

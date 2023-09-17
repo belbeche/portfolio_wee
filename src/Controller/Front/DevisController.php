@@ -36,15 +36,6 @@ class DevisController extends AbstractController
             $email = $currentUser->getEmail();
         }*/
 
-        // Vérifier si l'utilisateur a déjà un devis en fonction de l'adresse email
-        /*$existingDevis = $entityManager->getRepository(Devis::class)->findOneBy(['email' => $email]);
-
-        if ($existingDevis) {
-            // Si un devis existe avec cette adresse email, rediriger vers la page d'assistance
-            return $this->redirectToRoute('front_assistance');
-        }*/
-
-
         $devis = new Devis();
 
         // Supposons que "type" est un paramètre GET de la requête
@@ -72,7 +63,17 @@ class DevisController extends AbstractController
                 // Utilisation du Voter ici
                 $this->denyAccessUnlessGranted('CREATE', $devis);
                 $devis->setStatut('en_attente'); // Mettez à jour le statut si nécessaire
+
+                $email = $devis->getEmail();
+                // Vérifier si l'utilisateur a déjà un devis en fonction de l'adresse email
+                $existingDevis = $entityManager->getRepository(Devis::class)->findOneBy(['email' => $email]);
                 /*$devis->setEmail($currentUser->getEmail()); // Définir l'adresse email fournie par l'utilisateur*/
+
+                if ($existingDevis) {
+                    // Si un devis existe avec cette adresse email, rediriger vers la page d'assistance
+                    return $this->redirectToRoute('front_assistance');
+                }
+
                 $entityManager->persist($devis);
                 $entityManager->flush();
 
@@ -94,8 +95,9 @@ class DevisController extends AbstractController
 
                 $this->addFlash('success', 'Votre demande à bien était prise en compte, vérifiez votre adresse email');
 
+
                 return $this->redirectToRoute('front_devis_set_password', [
-                    'id' => $devis->getId()
+                        'id' => $devis->getId()
                 ]);
             }
         }

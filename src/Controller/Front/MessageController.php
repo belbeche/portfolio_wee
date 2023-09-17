@@ -138,7 +138,7 @@ class MessageController extends AbstractController
 
             $mailer->send($email);
 
-            $this->addFlash('info', 'Votre ticket à bien était prise en compte, vérifiez votre adresse email');
+            $this->addFlash('info', 'Votre ticket à bien été crée, vérifiez votre adresse email');
 
             return $this->redirectToRoute('front_show_ticket', [
                 'id' => $message->getSender()->getId()

@@ -6,58 +6,62 @@
 
 {% block content %}
 
-    <h1 class="text-center">Liste des tickets</h1>
+    <div class="container">
+        <h1 class="text-center">Liste des tickets</h1>
 
-    {% if tickets is empty %}
-        <p class="text-center">Aucun ticket actif pour le moment.</p>
-    {% else %}
-        <ul>
-            {% for ticket in tickets %}
-                <div class="container">
-                    <div class="position-relative text-center text-muted bg-body border border-dashed rounded-5">
-                        <a href="{{ url('back_respond_to_ticket', {'id': ticket.id}) }}" class="btn btn-success">Répondre</a>
-                        <!-- Formulaire de suppression pour le ticket -->
-                        <form action="{{ path('back_delete_ticket', {'id': ticket.id}) }}" method="post" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce ticket ?');">
-                            <!-- Bouton de fermeture qui va maintenant servir à fermer le ticket -->
-                            {#
-                            <button type="submit" class="position-absolute top-0 end-0 p-3 m-3 btn-close bg-secondary rounded-pill" aria-label="Supprimer le ticket"></button>
-                            #}
+        {% if tickets is empty %}
+            <p class="text-center">Aucun ticket actif pour le moment.</p>
+        {% else %}
+            <ul>
+                {% for ticket in tickets %}
+                    <div class="container">
+                        <div class="position-relative text-center text-muted bg-body border border-dashed rounded-5">
+                            <a href="{{ url('back_respond_to_ticket', {'id': ticket.id}) }}" class="btn btn-success">Répondre</a>
+                            <!-- Formulaire de suppression pour le ticket -->
+                            <form action="{{ path('back_delete_ticket', {'id': ticket.id}) }}" method="post" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce ticket ?');">
+                                <!-- Bouton de fermeture qui va maintenant servir à fermer le ticket -->
+                                {#
+                                <button type="submit" class="position-absolute top-0 end-0 p-3 m-3 btn-close bg-secondary rounded-pill" aria-label="Supprimer le ticket"></button>
+                                #}
 
-                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ ticket.id) }}">
+                                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ ticket.id) }}">
 
-                            <svg class="bi mt-5 mb-3" width="48" height="48"><use xlink:href="#check2-circle"/></svg>
-                            {% if ticket.status == 'en_cours' %}
-                                <h1 class="text-body-emphasis">Réponse du support </h1>
-                            {% elseif ticket.status == 'en_attente' %}
-                                <h1 class="text-body-emphasis">Message de votre part </h1>
-                            {% elseif ticket.status == 'termine' %}
-                                <h1 class="text-body-emphasis">Cloture du ticket </h1>
-                            {% endif %}
-                            <p class="col-lg-6 mx-auto mb-4">
-                                {{ ticket.getContent() }}
-                            </p>
-                            <hr>
-                            <h6>Priorité de la demande</h6>
-                            <p class="col-lg-6 mx-auto mb-4">
-                                {{ ticket.getPriority }}
-                            </p>
-                            <h6>
-                                Date de création
-                            </h6>
-                            <p class="col-lg-6 mx-auto mb-4">
-                                {{ ticket.createdAt|date('Y-m-d H:i:s') }}
-                            </p>
+                                <svg class="bi mt-5 mb-3" width="48" height="48"><use xlink:href="#check2-circle"/></svg>
+                                {% if ticket.status == 'en_cours' %}
+                                    <h1 class="text-body-emphasis">Réponse du support </h1>
+                                {% elseif ticket.status == 'en_attente' %}
+                                    <h1 class="text-body-emphasis">Message de votre part </h1>
+                                {% elseif ticket.status == 'termine' %}
+                                    <h1 class="text-body-emphasis">Cloture du ticket </h1>
+                                {% endif %}
+                                <p class="col-lg-6 mx-auto mb-4">
+                                    {{ ticket.getContent() }}
+                                </p>
+                                <hr>
+                                <h6>Priorité de la demande</h6>
+                                <p class="col-lg-6 mx-auto mb-4">
+                                    {{ ticket.getPriority }}
+                                </p>
+                                <h6>
+                                    Date de création
+                                </h6>
+                                <p class="col-lg-6 mx-auto mb-4">
+                                    {{ ticket.createdAt|date('Y-m-d H:i:s') }}
+                                </p>
 
-                            <!-- Si vous souhaitez toujours avoir un bouton "Supprimer" visible -->
-                            <button type="submit" class="btn btn-primary px-5 mb-5">Supprimer le message</button>
+                                <!-- Si vous souhaitez toujours avoir un bouton "Supprimer" visible -->
+                                <button type="submit" class="btn btn-primary px-5 mb-5">Supprimer le message</button>
 
-                            {% if ticket.attachment %}
-                                <a href="{{ asset('uploads/' ~ ticket.attachment) }}" target="_blank" class="btn btn-info px-5 mb-5">Voir le fichier joint</a>
-                            {% endif %}
-                        </form>
+                                {% if ticket.attachment %}
+                                    <a href="{{ asset('uploads/' ~ ticket.attachment) }}" target="_blank" class="btn btn-info px-5 mb-5">Voir le fichier joint</a>
+                                {% endif %}
+                            </form>
+                        </div>
                     </div>
-                </div>
-            {% endfor %}
-        </ul>
-    {% endif %}
+                {% endfor %}
+            </ul>
+        {% endif %}
+    </div>
+
+
 {% endblock %}

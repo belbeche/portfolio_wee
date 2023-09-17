@@ -4,19 +4,22 @@
 {% endblock %}
 
 {% block content %}
-	<h1>Créer un devis</h1>
+	<div class="container">
+		<h1>Créer un devis</h1>
 
-	{{ form_start(formDevis) }}
-	{{ form_row(formDevis.email) }}
-	{{ form_row(formDevis.type_de_site_web) }}
-	{{ form_row(formDevis.attentes_design_web) }}
-	{{ form_row(formDevis.description_projet)}}
-	{% if is_granted('ROLE_ADMIN') %}
-		Status :
-		{{ form_row(formDevis.statut, {attr: {style: 'display:block'}}) }}
-	{% endif %}
-	<button type="submit">Enregistrer</button>
-	{{ form_end(formDevis) }}
+		{{ form_start(formDevis) }}
+		{{ form_row(formDevis.email) }}
+		{{ form_row(formDevis.type_de_site_web) }}
+		{{ form_row(formDevis.attentes_design_web) }}
+		{{ form_row(formDevis.description_projet)}}
+		{% if is_granted('ROLE_ADMIN') %}
+			Status :
+			{{ form_row(formDevis.statut, {attr: {style: 'display:block'}}) }}
+		{% endif %}
+		<button type="submit">Enregistrer</button>
+		{{ form_end(formDevis) }}
 
-	<a href="{{ path('back_devis_index') }}">Retour à la liste</a>
+		<a href="{{ path('back_devis_index') }}">Retour à la liste</a>
+	</div>
+
 {% endblock %}

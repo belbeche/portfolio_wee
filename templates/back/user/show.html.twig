@@ -4,10 +4,11 @@
 {% endblock %}
 
 {% block content %}
-	<h1>Utilisateurs</h1>
+	<div class="container">
+		<h1>Utilisateurs</h1>
 
-	<table>
-		<tbody>
+		<table>
+			<tbody>
 			<tr>
 				<th>#</th>
 				<td>{{ user.id }}</td>
@@ -24,8 +25,10 @@
 				<th>Prenom</th>
 				<td>{{ user.prenom }}</td>
 			</tr>
-		</tbody>
-	</table>
+			</tbody>
+		</table>
 
-	<a href="{{ path('back_user_index') }}">Retour</a>
+		<a href="{{ path('back_user_index') }}">Retour</a>
+	</div>
+
 {% endblock %}
