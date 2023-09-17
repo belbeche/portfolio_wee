@@ -27,14 +27,6 @@ class DevisController extends AbstractController
      */
     public function new(Request $request, EntityManagerInterface $entityManager, MailerInterface $mailer): Response
     {
-        /*if (!$currentUser) {
-            // Utilisateur non connecté, renvoyer vers la page d'inscription
-            return $this->redirectToRoute('app_register');
-
-        } else {
-            // Utilisateur connecté, utilisez son adresse email
-            $email = $currentUser->getEmail();
-        }*/
 
         $devis = new Devis();
 
@@ -65,15 +57,20 @@ class DevisController extends AbstractController
                 $devis->setStatut('en_attente'); // Mettez à jour le statut si nécessaire
 
                 $email = $devis->getEmail();
-                // Vérifier si l'utilisateur a déjà un devis en fonction de l'adresse email
-                $existingDevis = $entityManager->getRepository(Devis::class)->findOneBy(['email' => $email]);
-                /*$devis->setEmail($currentUser->getEmail()); // Définir l'adresse email fournie par l'utilisateur*/
 
-                if ($existingDevis) {
-                    // Si un devis existe avec cette adresse email, rediriger vers la page d'assistance
-                    return $this->redirectToRoute('front_assistance');
+                // Vérifier si l'adresse e-mail est pas vide
+                if (!empty($email)) {
+                    // Vérifier si un devis existe avec cette adresse e-mail
+                    $existingDevis = $entityManager->getRepository(Devis::class)->findOneBy(['email' => $email]);
+
+                    if ($existingDevis) {
+                        // Si un devis existe avec cette adresse e-mail, rediriger vers la page d'assistance
+                        $this->addFlash('warning', 'Un devis existe déjà avec cette adresse e-mail.');
+                        return $this->redirectToRoute('front_assistance');
+                    }
                 }
 
+                // Si l'adresse e-mail est vide ou si aucun devis n'a été trouvé, effectuer d'autres actions ici
                 $entityManager->persist($devis);
                 $entityManager->flush();
 
@@ -97,7 +94,7 @@ class DevisController extends AbstractController
 
 
                 return $this->redirectToRoute('front_devis_set_password', [
-                        'id' => $devis->getId()
+                    'id' => $devis->getId()
                 ]);
             }
         }
@@ -111,29 +108,34 @@ class DevisController extends AbstractController
      */
     public function setPassword(Request $request, EntityManagerInterface $entityManager, UserPasswordEncoderInterface $passwordEncoder)
     {
-
         $devisUuid = $request->get('id'); // Récupérer l'UUID depuis la route
 
         // Vérifier si un devis existe avec cet UUID
         $existingDevis = $entityManager->getRepository(Devis::class)->findOneBy(['id' => $devisUuid]);
 
-        if (!$existingDevis) {
-            // Si l'UUID n'existe pas, redirigez vers une page d'erreur ou vers la création d'un devis
-            return $this->redirectToRoute('front_assistance');
-        } else {
-            $email = $existingDevis->getEmail(); // Récupérer l'email associé à ce devis
+        $email = $existingDevis->getEmail(); // Récupérer l'email associé à ce devis
 
-            // Trouver ou créer l'entité User
-            $user = $entityManager->getRepository(User::class)->findOneBy(['email' => $email]) ?? new User();
+        // Vérifier si un utilisateur existe avec cet email
+        $user = $entityManager->getRepository(User::class)->findOneBy(['email' => $email]);
+
+        if (!$user) {
+            // Si aucun utilisateur n'existe avec cet email, c'est un nouvel utilisateur, affichez le formulaire de création de mot de passe
+            $user = new User();
             $user->setEmail($email);
             $user->setRoles(['ROLE_USER']);
+        } else {
+            // Si un utilisateur existe avec cet email, redirigez-le vers la page de message du devis
+            return $this->redirectToRoute('front_message_devis', [
+                'id' => $user->getId()
+            ]);
+        }
 
-            // Créer et traiter le formulaire pour le mot de passe
-            $form = $this->createForm(UserPasswordType::class, $user);
+        // Créer et traiter le formulaire pour le mot de passe
+        $form = $this->createForm(UserPasswordType::class, $user);
 
-            $form->handleRequest($request);
+        $form->handleRequest($request);
+        if($request->isMethod('POST')){
             if ($form->isSubmitted() && $form->isValid()) {
-
                 $user->setPassword($passwordEncoder->encodePassword($user, $user->getPassword()));
 
                 $entityManager->persist($user);
@@ -144,8 +146,6 @@ class DevisController extends AbstractController
                 ]);
             }
         }
-
-
 
         return $this->render('front/devis/set_password.html.twig', [
             'form' => $form->createView(),

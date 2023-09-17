@@ -99,7 +99,7 @@
 				<!-- Formulaire de devis -->
 				{{ form_start(formDevis) }}
 				<label for="">L'adresse email pour recevoir votre devis</label>
-				{{ form_row(formDevis.email) }}
+				{{ form_row(formDevis.email, {'attr': {'name': 'email'}}) }}
 				{{ form_errors(formDevis.email) }}
 				<label for="">Type d'application souhaité</label>
 				{{ form_row(formDevis.type_de_site_web)}}
