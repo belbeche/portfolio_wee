@@ -3,6 +3,7 @@
 namespace App\Controller\Front;
 
 use App\Entity\Contact;
+use App\Entity\Project;
 use App\Entity\User;
 
 use App\Form\ContactType;
@@ -19,10 +20,18 @@ class HomeController extends AbstractController
 {
     /**
      * @Route("/", name="front_home")
+     * * @Route("/realisation/{category}", name="front_home_project_by_category")
      */
-    public function index(): Response
+    public function index(EntityManagerInterface $entityManager, string $category = null): Response
     {
-        return $this->render('front/home/index.html.twig');
+        if ($category) {
+            $projects = $entityManager->getRepository(Project::class)->findBy(['category' => $category]);
+        } else {
+            $projects = $entityManager->getRepository(Project::class)->findAll();
+        }
+        return $this->render('front/home/index.html.twig', [
+            'projects' => $projects,
+        ]);
     }
 
     /**

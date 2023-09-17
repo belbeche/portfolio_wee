@@ -42,6 +42,9 @@ class MessageType extends AbstractType
         $builder
             ->add('content', TextareaType::class, [
                 'label' => 'Contenu du message',
+                'attr' => [
+                    'placeholder' => 'Votre demande en quelques mots...',
+                ],
             ])
             ->add('priority', ChoiceType::class, [
                 'label' => 'Priorité',
@@ -85,6 +88,9 @@ class MessageType extends AbstractType
             ->add('attachment', FileType::class, [
                 'label' => 'Joindre un fichier (optionnel)',
                 'required' => false,
+                'attr' => [
+                    'placeholder' => 'Un ou plusieurs fichiers autorisés',
+                ],
             ]);
 
             // Ajoutez le transformer
