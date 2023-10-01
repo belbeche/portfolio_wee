@@ -224,6 +224,7 @@ video {
     justify-content: center;
     row-gap: 1.25rem;
     margin-top: 7rem;
+    padding-left: 0;
 }
 .menu-link {
     font-family: inherit;
