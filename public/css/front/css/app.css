@@ -40,9 +40,9 @@
 }
 
 .home_background{
-    background-image: url('../../../img/home.svg');
-    background-repeat: no-repeat;
-    background-size: cover;
+    background-image: url('../../../img/home.jpg');
+        background-repeat: no-repeat;
+        background-size: cover;
     height: 100%;
 }
 
@@ -67,9 +67,9 @@
     padding: 50px;
 }
 @media screen and (min-width: 1024px) {
-    .home_background{
+    /* .home_background{
         padding-top: 9rem;
-    }
+    */
 }
 
 @media screen and (min-width: 200px) and (max-width: 1080px) {
@@ -116,6 +116,7 @@
     border-radius: 4px;
 }
 
+
 @media screen and (max-width: 950px) {
 
     /* Styles pour les écrans jusqu'à 767px de large (mode téléphone et tablette) */
@@ -142,13 +143,17 @@
     .cover-heading {
         margin-bottom: 50%;
     }
-    .home_background{
+                                                                                                                                                                                                                                                                .home_background {
         padding-top: 3rem;
     }
 }
 
 @media screen and (max-width: 400px) {
-    .home_background{
-        padding-top: 5rem;
+        .home_background {
+                background-image: url('../../../img/home.jpg');
+                background-repeat: no-repeat;
+                background-size: cover;
+                height: 50%;
+                padding-top: 1rem;
     }
 }

@@ -125,7 +125,7 @@ class DevisController extends AbstractController
             $user->setRoles(['ROLE_USER']);
         } else {
             // Si un utilisateur existe avec cet email, redirigez-le vers la page de message du devis
-            return $this->redirectToRoute('front_message_devis', [
+            return $this->redirectToRoute('front_assistance', [
                 'id' => $user->getId()
             ]);
         }

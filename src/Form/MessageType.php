@@ -52,6 +52,7 @@ class MessageType extends AbstractType
                     'Faible' => 'faible',
                     'Moyenne' => 'moyenne',
                     'Haute' => 'haute',
+                'Urgente' => 'urgente'
                 ],
             ])
             ->add('status', ChoiceType::class, [

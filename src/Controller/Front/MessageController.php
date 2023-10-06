@@ -34,12 +34,6 @@ class MessageController extends AbstractController
 
         $currentUser = $this->getUser();
 
-        // Assurez-vous que l'utilisateur est connecté avant de continuer
-        if ($currentUser === null) {
-            // Gérer l'absence d'utilisateur connecté (rediriger vers une page de connexion par exemple)
-            return $this->redirectToRoute('app_login'); // Remplacez "login" par le nom de votre route de connexion
-        }
-
         // Récupérer l'utilisateur actuellement connecté (l'expéditeur du message)
         $email = $currentUser->getEmail();
 

@@ -5,282 +5,316 @@
 
 {% block content %}
 
-	<div class="container">
-		{% for type, messages in app.flashes %}
-			{% for message in messages %}
-				<div class="alert alert-{{ type }}">{{ message }}</div>
+		<div class="container">
+			{% for type, messages in app.flashes %}
+				{% for message in messages %}
+					<div class="alert alert-{{ type }}">{{ message }}</div>
+				{% endfor %}
 			{% endfor %}
-		{% endfor %}
-	</div>
+		</div>
 
-	{# Hero #}
-	<section class="section-header text-white vh-100 home_background">
-		<div class="container">
-				<div class="justify-content-between align-items-center">
-					<div class="col-12 col-md-12 col-lg-12">
-						<h1 class="display-2 mb-4 text-center">Agence web <br> <span class="inline-block" style="background-color: dodgerblue;">Basée dans la Nièvre</span></h1>
+		<!-- Hero
+		============================================= -->
+		<section id="slider" class="slider-element" style="background: #2646532b url('img/hero-bg.png') center bottom no-repeat; background-size: 100% auto;">
+
+			<div class="container">
+				<div class="row align-items-md-end">
+					<div class="col-lg-5 align-self-center flex-column py-6">
+						<div class="col-12 col-md-12 col-lg-12">
+
+						<h1 class="display-2 mb-4 text-center">Agence web
+							<br>
+							<span class="inline-block" style="background-color: dodgerblue;color:white;">Dans la Nièvre</span>
+						</h1>
 						<p class="lead mb-4 text-muted text-center">Grâce à mon expertise en développement Web, je vous accompagne dans
-							la création d'un site professionnel et attractif. Cependant, une conception
-							exceptionnelle ne se limite pas à la première étape.
+														la création d'un site professionnel et attractif. Cependant, une conception
+														exceptionnelle ne se limite pas à la première étape.
 						</p>
+					</div>
 						<div class="flex-sm-column button_home justify-content-center" style="text-align: center;">
-							<a href="{{ url('front_devis_new') }}" class="btn btn-tertiary mr-3 animate-up-2 inline-block">Réaliser ma demande<span class="ml-2"><span class="fas fa-arrow-right"></span></span></a>
-							<a href="#agence" class="btn btn-danger mr-3 animate-up-2 inline-block">Découvrir l'agence<span class="ml-2"><span class="fas fa-arrow-down"></span></span></a><br>
-								<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="green" class="bi bi-check2-circle" viewBox="0 0 16 16">
-									<path d="M2.5 8a5.5 5.5 0 0 1 8.25-4.764.5.5 0 0 0 .5-.866A6.5 6.5 0 1 0 14.5 8a.5.5 0 0 0-1 0 5.5 5.5 0 1 1-11 0z"/>
-									<path d="M15.354 3.354a.5.5 0 0 0-.708-.708L8 9.293 5.354 6.646a.5.5 0 1 0-.708.708l3 3a.5.5 0 0 0 .708 0l7-7z"/>
-								</svg>
-								<strong>Aucune carte de crédit <span class="text-info">n'est requise</span></strong>
+							<a href="{{ url('front_devis_new') }}" class="btn btn-tertiary mr-3 animate-up-2 inline-block">Réaliser ma demande<span class="ml-2">
+									<span class="fas fa-arrow-right"></span>
+								</span>
+							</a>
+							<a href="#agence" class="btn btn-danger mr-3 animate-up-2 inline-block">Découvrir l'agence<span class="ml-2">
+									<span class="fas fa-arrow-down"></span>
+								</span>
+							</a><br>
+							<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="green" class="bi bi-check2-circle" viewbox="0 0 16 16">
+								<path d="M2.5 8a5.5 5.5 0 0 1 8.25-4.764.5.5 0 0 0 .5-.866A6.5 6.5 0 1 0 14.5 8a.5.5 0 0 0-1 0 5.5 5.5 0 1 1-11 0z"/>
+								<path d="M15.354 3.354a.5.5 0 0 0-.708-.708L8 9.293 5.354 6.646a.5.5 0 1 0-.708.708l3 3a.5.5 0 0 0 .708 0l7-7z"/>
+							</svg>
+							<strong>Aucune carte de crédit <span class="text-success">n'est requise</span>
+							</strong>
 						</div>
-				</div>
-				<div class="p-40"></div>
-			</div>
-		</div>
-	</section>
 
-	<div class="container mt-5 flex-row-reverse" id="agence">
-		<h1 class="display-5 fw-bold lh-1 mb-3 text-center">Des solutions de développement web adaptées à tous les besoins</h1>
-		<p class="lead mb-4 text-muted text-center">Je conçois la solution optimale de développement web pour chaque
-			situation spécifique, qu'il s'agisse de développer une plateforme complète ou de mettre en place des outils précis
-			pour vos besoins uniques.
-		</p>
-	</div>
-	{# End of Hero section #}
-
-	<h1 class="display-4 fw-bold text-center">Processus</h1>
-
-	{# Services de l'Agence #}
-	<section>
-		<div class="container">
-			<ul class="process">
-				<li class="process__item">
-					<span class="process__number"><i class="fas fa-lightbulb"></i></span>
-					<span class="process__title">Analyse &amp; Stratégie</span>
-					<span class="process__subtitle">J'analyse votre problème et développe une stratégie</span>
-				</li>
-				<li class="process__item">
-					<span class="process__number"><i class="fas fa-file-alt"></i></span>
-					<span class="process__title">Faire une Offre</span>
-					<span class="process__subtitle">Je vous fournis une offre détaillée en fonction de mon analyse</span>
-				</li>
-				<li class="process__item">
-					<span class="process__number"><i class="fas fa-cogs"></i></span>
-					<span class="process__title">Développement</span>
-					<span class="process__subtitle">Je développe, transforme la stratégie en réalité</span>
-				</li>
-				<li class="process__item">
-					<span class="process__number"><i class="fas fa-check-circle"></i></span>
-					<span class="process__title">Finalisation</span>
-					<span class="process__subtitle">J'effectue les ajustements finaux et prépare la livraison</span>
-				</li>
-			</ul>
-		</div>
-	</section>
-	{# ./ Services de l'Agence #}
-
-	<section class="my-5">
-		<div class="container-fluid">
-			<div class="row gx-5 align-items-center justify-content-center px-5 pt-5  bg-primary text-white">
-				<div class="col-md-6">
-					<h1>BESOIN D'ÉCLAIRAGE ?</h1>
-					<p class="text-white">Transformez les défis techniques en opportunités. Lorsque vous êtes confronté à des problèmes techniques, vous faites face à des occasions de grandir et d'apprendre.</p>
-				</div>
-				<div class="col-md-6">
-					<img src="{{ asset('img/presentation.svg') }}" alt="agence web dans la Nièvre (58)">
+					</div>
+					<div class="col-lg-7 dotted-bg">
+						<img src="img/man.png" alt="Client" class="d-flex align-self-end mt-5 z-1 mx-auto w-75 position-relative">
+					</div>
 				</div>
 			</div>
-			<div class="wrapper">
-				<div id="content" class="container page-content site-content single-post" role="main">
-					<div class="row">
-						<div class="col-xs-12 col-sm-12">
-							<!-- Portfolio Content -->
-							<div id="portfolio_content_q" class="portfolio-content">
-								<ul class="portfolio-filters">
-									<li>
-										<a class="filter btn btn-sm btn-link" data-group="toutes_categories">Toutes les catégories</a>
-									</li>
-									<li>
-										<a class="filter btn btn-sm btn-link" data-group="détaillé">Projets Détaillés</a>
-									</li>
-									<li>
-										<a class="filter btn btn-sm btn-link" data-group="lien-direct">Liens fonctionnels</a>
-									</li>
-									<li>
-										<a class="filter btn btn-sm btn-link" data-group="prototype">Prototype</a>
-									</li>
-								</ul>
 
-								<!-- Portfolio Grid -->
-								<div class="portfolio-grid four-columns shuffle">
-									{% for project in projects %}
-										{% set dataGroups = ['toutes_categories'] %}
+		</section>
 
-										{% if 'détaillé' in project.category %}
-											{% set dataGroups = dataGroups|merge(['détaillé']) %}
-										{% endif %}
-										{% if 'lien-direct' in project.category %}
-											{% set dataGroups = dataGroups|merge(['lien-direct']) %}
-										{% endif %}
-										{% if 'prototype' in project.category %}
-											{% set dataGroups = dataGroups|merge(['prototype']) %}
-										{% endif %}
+		<div class="container mt-5 flex-row-reverse" id="agence">
+			<h1 class="display-5 fw-bold lh-1 mb-3 text-center">Des solutions de développement web adaptées à tous les besoins</h1>
+			<p class="lead mb-4 text-muted text-center">Je conçois la solution optimale de développement web pour chaque
+							situation spécifique, qu'il s'agisse de développer une plateforme complète ou de mettre en place des outils précis
+							pour vos besoins uniques.
+			</p>
+		</div>
+		{# End of Hero section #}
 
-										<figure class="item standard" data-groups='["{{ dataGroups|join('", "') }}"]'>
-											<div class="portfolio-item-img">
-												{% for image in project.images %}
-													<img src="{{ asset('image_project/'~image.name) }}" alt="{{ image.name }}"/>
-												{% endfor %}
-												<a href="{{ url('front_project_show', {id: project.id}) }}"></a>
-											</div>
+		<h1 class="display-4 fw-bold text-center">Processus</h1>
 
-											<i class="far fa-file-alt"></i>
-											<h4 class="name">{{ project.title }}</h4>
-											<span class="category">{{ project.category|join(', ')|title }}</span>
-										</figure>
-									{% endfor %}
+		{# Services de l'Agence #}
+		<section>
+			<div class="container">
+				<ul class="process">
+					<li class="process__item">
+						<span class="process__number">
+							<i class="fas fa-lightbulb"></i>
+						</span>
+						<span class="process__title">Analyse &amp; Stratégie</span>
+						<span class="process__subtitle">J'analyse votre problème et développe une stratégie</span>
+					</li>
+					<li class="process__item">
+						<span class="process__number">
+							<i class="fas fa-file-alt"></i>
+						</span>
+						<span class="process__title">Faire une Offre</span>
+						<span class="process__subtitle">Je vous fournis une offre détaillée en fonction de mon analyse</span>
+					</li>
+					<li class="process__item">
+						<span class="process__number">
+							<i class="fas fa-cogs"></i>
+						</span>
+						<span class="process__title">Développement</span>
+						<span class="process__subtitle">Je développe, transforme la stratégie en réalité</span>
+					</li>
+					<li class="process__item">
+						<span class="process__number">
+							<i class="fas fa-check-circle"></i>
+						</span>
+						<span class="process__title">Finalisation</span>
+						<span class="process__subtitle">J'effectue les ajustements finaux et prépare la livraison</span>
+					</li>
+				</ul>
+			</div>
+		</section>
+		{# ./ Services de l'Agence #}
+
+		<section class="my-5">
+			<div class="container-fluid">
+				<div class="row gx-5 align-items-center justify-content-center px-5 pt-5  bg-primary text-white">
+					<div class="col-md-6">
+						<h1>BESOIN D'ÉCLAIRAGE ?</h1>
+						<p class="text-white">Transformez les défis techniques en opportunités. Lorsque vous êtes confronté à des problèmes techniques, vous faites face à des occasions de grandir et d'apprendre.</p>
+					</div>
+					<div class="col-md-6">
+						<img src="{{ asset('img/presentation.svg') }}" alt="agence web dans la Nièvre (58)">
+					</div>
+				</div>
+				<div class="wrapper">
+					<div id="content" class="container page-content site-content single-post" role="main">
+						<div class="row">
+							<div
+								class="col-xs-12 col-sm-12">
+								<!-- Portfolio Content -->
+								<div id="portfolio_content_q" class="portfolio-content">
+									<ul class="portfolio-filters">
+										<li>
+											<a class="filter btn btn-sm btn-link" data-group="toutes_categories">Toutes les catégories</a>
+										</li>
+										<li>
+											<a class="filter btn btn-sm btn-link" data-group="détaillé">Projets Détaillés</a>
+										</li>
+										<li>
+											<a class="filter btn btn-sm btn-link" data-group="lien-direct">Liens fonctionnels</a>
+										</li>
+										<li>
+											<a class="filter btn btn-sm btn-link" data-group="prototype">Prototype</a>
+										</li>
+									</ul>
+
+									<!-- Portfolio Grid -->
+									<div class="portfolio-grid four-columns shuffle">
+										{% for project in projects %}
+											{% set dataGroups = ['toutes_categories'] %}
+
+											{% if 'détaillé' in project.category %}
+												{% set dataGroups = dataGroups|merge(['détaillé']) %}
+											{% endif %}
+											{% if 'lien-direct' in project.category %}
+												{% set dataGroups = dataGroups|merge(['lien-direct']) %}
+											{% endif %}
+											{% if 'prototype' in project.category %}
+												{% set dataGroups = dataGroups|merge(['prototype']) %}
+											{% endif %}
+
+											<figure class="item standard" data-groups='["{{ dataGroups|join(' ", " ') }}"]'>
+												<div class="portfolio-item-img">
+													{% for image in project.images %}
+														<img src="{{ asset('image_project/'~image.name) }}" alt="{{ image.name }}"/>
+													{% endfor %}
+													<a href="{{ url('front_project_show', {id: project.id}) }}"></a>
+												</div>
+
+												<i class="far fa-file-alt"></i>
+												<h4 class="name">{{ project.title }}</h4>
+												<span class="category">{{ project.category|join(', ')|title }}</span>
+											</figure>
+										{% endfor %}
+									</div>
 								</div>
 							</div>
 						</div>
 					</div>
 				</div>
 			</div>
-		</div>
-	</section>
+		</section>
 
-	{# Technologie et outils #}
-	<div class="container">
-		<div class="row">
-			<div class="col-xs-12 col-sm-12">
-				<div class="block-title">
-					<h2>Outils et technologies</h2>
-				</div>
-			</div>
-		</div>
-		<div class="row">
-			<div class="col-xs-12 col-sm-3">
-				<div class="lm-info-block gray-default">
-					<img src="./img/clients/spec-1.png" alt="PHP">
-					<h4>PHP 5/6/7/8.2</h4>
-				</div>
-			</div>
-
-			<div class=" col-xs-12 col-sm-3">
-				<div class="lm-info-block gray-default">
-					<img src="./img/clients/spec-2.png" alt="HTML 5 / CSS 3">
-					<h4>HTML 5 / CSS 3</h4>
-				</div>
-			</div>
-
-			<div class=" col-xs-12 col-sm-3 ">
-				<div class="lm-info-block gray-default">
-					<img src="./img/clients/spec-3.png" alt="Git">
-					<h4>Git + SSH</h4>
-				</div>
-			</div>
-
-			<div class=" col-xs-12 col-sm-3 ">
-				<div class="lm-info-block gray-default">
-					<img src="./img/clients/spec-4.png" alt="Symfony">
-					<h4>Symfony 4/5/6</h4>
-				</div>
-			</div>
-			<div class="col-xs-12 col-sm-3">
-				<div class="lm-info-block gray-default">
-					<img src="./img/clients/spec-5.svg" alt="React">
-					<h4>React / VueJs</h4>
-				</div>
-			</div>
-			<div class="col-xs-12 col-sm-3">
-				<div class="lm-info-block gray-default">
-					<img src="./img/clients/spec-7.png" alt="Sass">
-					<h4>SaaS</h4>
-				</div>
-			</div>
-			<div class="col-xs-12 col-sm-3">
-				<div class="lm-info-block gray-default">
-					<img src="./img/clients/spec-8.svg" alt="Json web token(JWT)" class="text-center">
-					<h4>Json web token</h4>
-				</div>
-			</div>
-			<div class="col-xs-12 col-sm-3">
-				<div class="lm-info-block gray-default">
-					<img src="./img/clients/spec-9.png" alt="Axios / Ajax" class="text-center">
-					<h4>Axios/Ajax</h4>
-				</div>
-			</div>
-		</div>
-	</div>
-	{# ./ Technologie et outils #}
-
-	<!-- Pricing -->
-	<div class="container">
-		<div class="row">
-			<div class=" col-xs-12 col-sm-12 ">
-				<div class="block-title">
-					<h2>Un large choix vous est proposé</h2>
-					<p>Que vous soyez un particulier ou un professionnel !</p>
-				</div>
-			</div>
-
-		</div>
-
-		<div class="row">
-			<div class="col-xs-12 col-sm-12 ">
-				<div class="fw-pricing clearfix row">
-
-					<div class="fw-package-wrap col-md-6 ">
-						<div class="fw-package">
-							<div class="fw-heading-row">
-								<span class="text-uppercase">Développement entreprise</span>
-							</div>
-
-							<div class="fw-pricing-row">
-								<span>Un prix compétiteur et des fonctionnalités de bases</span>
-							</div>
-
-							<div class="fw-button-row">
-								<a href="{{ url('front_devis_new', {'type': 'site_vitrine'}) }}" target="_self" class="btn btn-primary">Personnaliser</a>
-
-							</div>
-
-							<div class="fw-default-row">Vous êtes une marque souhaitant donner un coup de neuf à son site
-								web ou une entreprise souhaitant redynamiser sa présence sur le web ? Optez pour une
-								création d'application / site web sur mesure, dynamique et novateur. A votre image.
-							</div>
-						</div>
-					</div>
-
-					<div class="fw-package-wrap col-md-6">
-						<div class="fw-package pt-5">
-							<div class="fw-heading-row">
-								<span>DÉVELOPPEMENT SUR MESURE</span>
-							</div>
-
-							<div class="fw-pricing-row">
-								<span>Pour un besoin spécifique</span>
-							</div>
-
-							<div class="fw-button-row">
-								<a href="{{ url('front_devis_new', {'type': 'cross_plateforme'}) }}" target="_self" class="btn btn-primary">Personnaliser</a>
-
-							</div>
-
-							<div class="fw-default-row">Vous souhaitez aller un peu plus loin et vous avez en tête des
-								fonctionnalités bien précises pour votre nouveau site internet ? Tout est possible
-								techniquement, discutons ensemble de votre développement web sur mesure !
-							</div>
-						</div>
+		{# Technologie et outils #}
+		<div class="container">
+			<div class="row">
+				<div class="col-xs-12 col-sm-12">
+					<div class="block-title">
+						<h2>Outils et technologies</h2>
 					</div>
 				</div>
 			</div>
-			<!-- /Pricing -->
+			<div class="row">
+				<div class="col-xs-12 col-sm-3">
+					<div class="lm-info-block gray-default">
+						<img src="./img/clients/spec-1.png" alt="PHP">
+						<h4>PHP 5/6/7/8.2</h4>
+					</div>
+				</div>
+
+				<div class=" col-xs-12 col-sm-3">
+					<div class="lm-info-block gray-default">
+						<img src="./img/clients/spec-2.png" alt="HTML 5 / CSS 3">
+						<h4>HTML 5 / CSS 3</h4>
+					</div>
+				</div>
+
+				<div class=" col-xs-12 col-sm-3 ">
+					<div class="lm-info-block gray-default">
+						<img src="./img/clients/spec-3.png" alt="Git">
+						<h4>Git + SSH</h4>
+					</div>
+				</div>
+
+				<div class=" col-xs-12 col-sm-3 ">
+					<div class="lm-info-block gray-default">
+						<img src="./img/clients/spec-4.png" alt="Symfony">
+						<h4>Symfony 4/5/6</h4>
+					</div>
+				</div>
+				<div class="col-xs-12 col-sm-3">
+					<div class="lm-info-block gray-default">
+						<img src="./img/clients/spec-5.svg" alt="React">
+						<h4>React / VueJs</h4>
+					</div>
+				</div>
+				<div class="col-xs-12 col-sm-3">
+					<div class="lm-info-block gray-default">
+						<img src="./img/clients/spec-7.png" alt="Sass">
+						<h4>SaaS</h4>
+					</div>
+				</div>
+				<div class="col-xs-12 col-sm-3">
+					<div class="lm-info-block gray-default">
+						<img src="./img/clients/spec-8.svg" alt="Json web token(JWT)" class="text-center">
+						<h4>Json web token</h4>
+					</div>
+				</div>
+				<div class="col-xs-12 col-sm-3">
+					<div class="lm-info-block gray-default">
+						<img src="./img/clients/spec-9.png" alt="Axios / Ajax" class="text-center">
+						<h4>Axios/Ajax</h4>
+					</div>
+				</div>
+			</div>
+		</div>
+		{# ./ Technologie et outils #}
+
+		<!-- Pricing -->
+		<div class="container">
+			<div class="row">
+				<div class=" col-xs-12 col-sm-12 ">
+					<div class="block-title">
+						<h2>Un large choix vous est proposé</h2>
+						<p>Que vous soyez un particulier ou un professionnel !</p>
+					</div>
+				</div>
+
+			</div>
+
+			<div class="row">
+				<div class="col-xs-12 col-sm-12 ">
+					<div class="fw-pricing clearfix row">
+
+						<div class="fw-package-wrap col-md-6 ">
+							<div class="fw-package">
+								<div class="fw-heading-row">
+									<span class="text-uppercase">Développement entreprise</span>
+								</div>
+
+								<div class="fw-pricing-row">
+									<span>Un prix compétiteur et des fonctionnalités de bases</span>
+								</div>
+
+								<div class="fw-button-row">
+									<a href="{{ url('front_devis_new', {'type': 'site_vitrine'}) }}" target="_self" class="btn btn-primary">Personnaliser</a>
+
+								</div>
+
+								<div class="fw-default-row">Vous êtes une marque souhaitant donner un coup de neuf à son site
+																	web ou une entreprise souhaitant redynamiser sa présence sur le web ? Optez pour une
+																	création d'application / site web sur mesure, dynamique et novateur. A votre image.
+								</div>
+							</div>
+						</div>
+
+						<div class="fw-package-wrap col-md-6">
+							<div class="fw-package pt-5">
+								<div class="fw-heading-row">
+									<span>DÉVELOPPEMENT SUR MESURE</span>
+								</div>
+
+								<div class="fw-pricing-row">
+									<span>Pour un besoin spécifique</span>
+								</div>
+
+								<div class="fw-button-row">
+									<a href="{{ url('front_devis_new', {'type': 'cross_plateforme'}) }}" target="_self" class="btn btn-primary">Personnaliser</a>
+
+								</div>
+
+								<div class="fw-default-row">Vous souhaitez aller un peu plus loin et vous avez en tête des
+																	fonctionnalités bien précises pour votre nouveau site internet ? Tout est possible
+																	techniquement, discutons ensemble de votre développement web sur mesure !
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!-- /Pricing -->
+			</div>
+
+			<div class="thank-you">
+				<h2>Merci d'avoir visité notre site !</h2>
+				<p>Nous apprécions votre visite. Si vous avez des questions, des commentaires ou avez besoin de plus d'informations, n'hésitez pas à nous contacter.</p>
+				<a href="{{ url('front_contact') }}" class="btn btn-primary">Nous contacter</a>
+				<!-- Avis Google -->
+				<div class="text-center">
+					<a class="nav-link" href="https://g.page/r/CSj9BKNjCGCBEAI/review">
+						<img src="{{ asset('img/rating.png')}}" class="mx-auto bg-transparant" alt="évaluez-nous" width="10%" height="10%">Évaluez-nous
+					</a>
+				</div>
+			</div>
 		</div>
 
-		<div class="thank-you">
-			<h2>Merci d'avoir visité notre site !</h2>
-			<p>Nous apprécions votre visite. Si vous avez des questions, des commentaires ou avez besoin de plus d'informations, n'hésitez pas à nous contacter.</p>
-			<a href="{{ url('front_contact') }}" class="btn btn-primary">Nous contacter</a>
-		</div>
-	</div>
-
-{% endblock %}
+	{% endblock %}
