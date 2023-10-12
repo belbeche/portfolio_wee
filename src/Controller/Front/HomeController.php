@@ -20,7 +20,7 @@ class HomeController extends AbstractController
 {
     /**
      * @Route("/", name="front_home")
-     * * @Route("/realisation/{category}", name="front_home_project_by_category")
+     * @Route("/realisations/{category}", name="front_project_by_category")
      */
     public function index(EntityManagerInterface $entityManager, string $category = null): Response
     {
