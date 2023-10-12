@@ -21,14 +21,10 @@ Encore
      * Each entry will result in one JavaScript file (e.g. app.js)
      * and one CSS file (e.g. app.css) if your JavaScript imports CSS.
      */
+    /* Front css and js */
+    .addEntry('front', './assets/app.js')
+    /* Back css and js */
 
-    .addEntry('app', './assets/app.js')
-    .addEntry('jquery', './assets/dist/jquery-3.5.1.min.js')
-    .addEntry('imagesloaded', './assets/dist/imagesloaded.pkgd.min.js')
-    .addEntry('owl.carousel', './assets/dist/owl.carousel.min.js')
-    .addEntry('jquery.googlemap', './assets/dist/jquery.googlemap.js')
-    .addEntry('validator', './assets/dist/validator.js')
-    .addEntry('main', './assets/dist/main.js')
 
     // enables the Symfony UX Stimulus bridge (used in assets/bootstrap.js)
     .enableStimulusBridge('./assets/controllers.json')

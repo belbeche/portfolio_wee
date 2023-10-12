@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html>
+<html lang="fr" data-theme="light">
 	<head>
 		<meta charset="UTF-8">
 		<meta name="language" content="fr">
 		<meta name="robots" content="index, follow">
 		<meta name="created" content="2023-08-24">
-		<meta name="image" content="https://scriptzenit.fr/img/logo.png">
+		<meta name="image" content="https://scriptzenit.fr/assets/img/logo.png">
 		<meta name="viewport" content="width=device-width, initial-scale=1"/>
 		<meta name="description" content="Découvrez les services de ScriptZenIT : spécialistes en création de sites internet et d'applications de qualité. De la conception ergonomique au développement technique, je vous accompagne pour donner vie à vos idées en ligne."/>
 		<meta name="keywords" content="création site web, développement web, conception site internet, design web, identité numérique, conseils site internet, agence web, applications web, sites responsives, UX/UI, développement d'applications, solutions digitales"/>
@@ -15,22 +15,26 @@
 			{% endblock %}
 		</title>
 		<!-- Favicon -->
-		<link rel="apple-touch-icon" sizes="180x180" href="{{ asset('medias/favicon/favicon-16x16.png') }}">
+		{#<link rel="apple-touch-icon" sizes="180x180" href="{{ asset('medias/favicon/favicon-16x16.png') }}">
 		<link rel="icon" type="image/png" sizes="32x32" href="{{ asset('medias/favicon/favicon-32x32.png') }}">
 		<link rel="icon" type="image/png" sizes="16x16" href="{{ asset('medias/favicon/favicon-16x16.png') }}">
 		<link rel="manifest" href="{{ asset('medias/favicon/site.webmanifest') }}">
 		<link
-		rel="icon" href="{{ asset('medias/favicon/favicon.ico') }}">
-
+		rel="icon" href="{{ asset('medias/favicon/favicon.ico') }}">#}
+		{#<link rel="shortcut icon" type="image/x-icon" href="{{ asset('images/fav.png') }}">#}
 		<!-- Global CSS -->
-		<link rel="stylesheet" href="{{ asset('css/front/css/about.css')}}">
-		<link rel="stylesheet" href="{{ asset('css/front/css/processus.css') }}">
-		<link rel="stylesheet" href="{{ asset('css/front/css/new.css') }}">
-		<link rel="stylesheet" href="{{ asset('css/front/css/app.css')}}">
-		<link rel="stylesheet" href="{{ asset('css/front/css/canvas_style.css') }}">
-		{% block stylesheets %}
-			{{ encore_entry_link_tags('app') }}
-		{% endblock %}
+
+		<!-- Front CSS -->
+		<link rel="stylesheet" href="{{ asset('assets/front/css/plugins/fontawesome-6.css') }}">
+		<link rel="stylesheet" href="{{ asset('assets/front/css/plugins/swiper.min.css') }}">
+		<link rel="stylesheet" href="{{ asset('assets/front/css/vendor/metismenu.css') }}">
+		<link rel="stylesheet" href="{{ asset('assets/front/css/plugins/animate.min.css') }}">
+		<link rel="stylesheet" href="{{ asset('assets/front/css/vendor/bootstrap.min.css') }}">
+		<link rel="stylesheet" href="{{ asset('assets/front/css/style.css') }}">
+		<link rel="stylesheet" href="{{ asset('assets/front/css/plugins/unicons.css') }}">
+
+
+
 		<!-- Google tag (gtag.js) -->
 		<script async src="https://www.googletagmanager.com/gtag/js?id=G-19D64W6342"></script>
 		<script>
@@ -41,30 +45,35 @@
 			gtag('config', 'G-19D64W6342');
 		</script>
 	</head>
-	<body class="page">
+	<body class="index-one">
 
-		{#<div class="lm-animated-bg"></div>#}
-
-		{#<!-- Loading animation -->
-		<div class="preloader">
-			<div class="preloader-animation">
-				<div class="preloader-spinner"></div>
-			</div>
+		<!-- pre loader start -->
+		<div class="rts-cursor cursor-outer" data-default="yes" data-link="yes" data-slider="no">
+			<span class="fn-cursor"></span>
 		</div>
-		<!-- /Loading animation -->#}
-
-		<!-- Scroll To Top Button -->
-		<div class="lmpixels-scroll-to-top">
-			<i class="lnr lnr-chevron-up"></i>
+		<div class="rts-cursor cursor-inner" data-default="yes" data-link="yes" data-slider="no">
+			<span class="fn-cursor">
+			<span class="fn-left"></span>
+			<span class="fn-right"></span>
+			</span>
 		</div>
-		<!-- /Scroll To Top Button -->
+		<!-- pre loader end -->
 
 		<div class="page-scroll">
 			<div id="page_container" class="page-container bg-move-effect">
+
+				<!-- dark light switcher start-->
+				<div class="modal-sidebar-scroll rts-dark-light">
+					<ul>
+						<li class="go-dark-w"><span>Mode sombre</span><i class="rts-go-dark fal fa-moon"></i></li>
+						<li class="go-light-w"><span>Mode éclairé</span><i class="rts-go-light fa-light fa-brightness"></i></li>
+					</ul>
+				</div>
+				<!-- dark light switcher end -->
 				{% block navbar %}
 					{% include "front/includes/nav.html.twig" %}
 				{% endblock %}
-				<section class="container-fluid">
+				{#<section class="container-fluid">
 					<div id="cookie-consent" class="position-fixed bg-primary text-center" style="bottom:0;z-index: 99999;left: 0;right:0;">
 						<p class="text-white">
 							Nous utilisons des cookies pour améliorer votre expérience. En acceptant, vous consentez à l'utilisation de ces cookies à des fins non commerciales.
@@ -77,111 +86,52 @@
 							Vous avez refusé l'utilisation des cookies. Certains fonctionnalités peuvent ne pas fonctionner correctement.
 						</p>
 					</div>
-				</section>
+				</section>#}
 
 				{% block content %}{% endblock %}
 
-				{% include "front/includes/footer.html.twig" %}
+				{% block footer %}
+					{% include "front/includes/footer.html.twig" %}
+				{% endblock %}
+
+				<!-- Spinner -->
+				<div class="loading-screen" id="loading-screen">
+					<span class="bar top-bar"></span>
+					<span class="bar down-bar"></span>
+					<span class="progress-line"></span>
+					{#<span class="loading-counter"> </span>#}
+					<span>ScriptZenIT - BIENVENUE</span>
+				</div>
 
 			</div>
 		</div>
 
 		<!-- Front script -->
-		{% block javascripts %}
-			<script src="{{ asset('js/jquery-3.5.1.min.js') }}"></script>
-			<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
-			<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-			{{ encore_entry_script_tags('app') }}
-			{{ encore_entry_script_tags('imagesloaded') }}
-			<script src="{{ asset('js/modernizr.custom.js') }}"></script>
-			{# <script src="{{ asset('js/jquery.shuffle.min.js') }}"></script> #}
-			<script src="{{ asset('js/masonry.pkgd.min.js') }}"></script>
-			{{ encore_entry_script_tags('owl.carousel') }}
-			<script src="{{ asset('js/jquery.magnific-popup.min.js') }}"></script>
-			{{ encore_entry_script_tags('validator') }}
-			{{ encore_entry_script_tags('main') }}
-			<script src="{{ asset('js/jquery.shuffle.min.js')}}"></script>
-
-
-			{#  <script src="{{ asset('js/particles.js')}}"></script>#}
-			{#	<script src="{{ asset('js/app.js')}}"></script> #}
-
-
-			<script>
-				document.addEventListener("DOMContentLoaded", function() {
-					const navbarMenu = document.getElementById("menu");
-					const burgerMenu = document.getElementById("burger");
-					const headerMenu = document.getElementById("header");
-					const overlayMenu = document.querySelector(".overlay");
-
-					// Open Close Navbar Menu on Click Burger
-					if (burgerMenu && navbarMenu) {
-						burgerMenu.addEventListener("click", () => {
-							burgerMenu.classList.toggle("is-active");
-							navbarMenu.classList.toggle("is-active");
-						});
-					}
-
-					// Close Navbar Menu on Click Links
-					document.querySelectorAll(".menu-link").forEach((link) => {
-						link.addEventListener("click", () => {
-							burgerMenu.classList.remove("is-active");
-							navbarMenu.classList.remove("is-active");
-						});
-					});
-
-					// Fixed Navbar Menu on Window Resize
-					window.addEventListener("resize", () => {
-						if (window.innerWidth <= 750) {
-							if (navbarMenu.classList.contains("is-active")) {
-								navbarMenu.classList.remove("is-active");
-								overlayMenu.classList.remove("is-active");
-							}
-						}
-					})
-				})
-			</script>
-			<script>
-				document.getElementById('accept-cookies').addEventListener('click', function() {
-					document.getElementById('cookie-consent').style.display = 'none';
-					// Définir le cookie pour indiquer que l'utilisateur a accepté
-					document.cookie = "cookie-consent=true; path=/";
-				});
-
-				document.getElementById('refuse-cookies').addEventListener('click', function() {
-					document.getElementById('cookie-consent').style.display = 'none';
-
-					// Afficher le message de refus
-					const refusedMessage = document.getElementById('cookie-refused-message');
-					refusedMessage.style.display = 'block';
-					setTimeout(() => {
-						refusedMessage.style.display = 'none';
-					}, 5000);  // Ce message disparaîtra après 5 secondes.
-
-					// Définir le cookie pour indiquer que l'utilisateur a refusé
-					document.cookie = "cookie-consent=false; path=/";
-				});
-
-				// Vérifier si le cookie d'acceptation existe déjà
-				if (document.cookie.split(';').some((item) => item.trim().startsWith('cookie-consent='))) {
-					document.getElementById('cookie-consent').style.display = 'none';
-				} else {
-					document.getElementById('cookie-consent').style.display = 'block';
-				}
-			</script>
-			<script>
-				(() => {
-					const footer = document.querySelector('footer')
-					footer.classList.add('site-footer-fixed')
-
-					let displayFixed = () => {
-						footer.classList.remove('site-footer-fixed')
-					}
-
-					document.addEventListener('scroll', displayFixed)
-				})()
-			</script>
-		{% endblock %}
+		<script src="{{ asset('assets/front/js/vendor/jquery.min.js') }}"></script>
+		<script src="{{ asset('assets/front/js/plugins/bootstrap.min.js') }}"></script>
+		<script src="{{ asset('assets/front/js/plugins/contact.form.js') }}"></script>
+		<script src="{{ asset('assets/front/js/vendor/waypoint.js') }}"></script>
+		<script src="{{ asset('assets/front/js/plugins/swiper.js') }}"></script>
+		<script src="{{ asset('assets/front/js/plugins/resizer-sensor.js') }}"></script>
+		<script src="{{ asset('assets/front/js/plugins/sticky-sidebar.js') }}"></script>
+		<script src="{{ asset('assets/front/js/plugins/isotop.js') }}"></script>
+		<script src="{{ asset('assets/front/js/plugins/imagesloaded.pkgd.min.js') }}"></script>
+		<script src="{{ asset('assets/front/js/plugins/smoothscroll-varticle.js') }}"></script>
+		<script src="{{ asset('assets/front/js/vendor/gsap.js') }}"></script>
+		<script src="{{ asset('assets/front/js/plugins/scrolltiger.js') }}"></script>
+		<script src="{{ asset('assets/front/js/plugins/scrolltoplugin.js') }}"></script>
+		<script src="{{ asset('assets/front/js/plugins/splittext.js') }}"></script>
+		<script src="{{ asset('assets/front/js/plugins/smoothscroll.js') }}"></script>
+		<script src="{{ asset('assets/front/js/plugins/scrollmagic.js') }}"></script>
+		<script src="{{ asset('assets/front/js/plugins/tilt.js') }}"></script>
+		<script src="{{ asset('assets/front/js/plugins/counterup.js') }}"></script>
+		<script src="{{ asset('assets/front/js/vendor/waw.js') }}"></script>
+		<script src="{{ asset('assets/front/js/main.js') }}"></script>
+		<!-- Additional Dist -->
+		<script src="{{ asset('assets/front/js/vendor/js.cookie.js') }}"></script>
+		<script src="{{ asset('assets/front/js/vendor/metismenu.js') }}"></script>
+		<script src="{{ asset('assets/front/js/plugins/animate-scrollmagic.js') }}"></script>
+		<script src="{{ asset('assets/front/js/plugins/rule-plugins.js') }}"></script>
 
 	</body>
 </html>

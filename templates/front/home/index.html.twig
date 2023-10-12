@@ -13,158 +13,39 @@
 			{% endfor %}
 		</div>
 
-		{# hero home page #}
-		<section id="slider" class="slider-element" style="background: #2646532b url('img/hero-bg.png') center bottom no-repeat; background-size: 100% auto;">
-
-			<div class="container">
-				<div class="row align-items-md-end">
-					<div class="col-lg-5 align-self-center flex-column py-6">
-						<div class="col-12 col-md-12 col-lg-12">
-							<h1 class="display-2 mb-4 text-center">Agence web dans la Nièvre</h1>
-							<p class="lead mb-4 text-muted text-center">
-								Grâce à notre expertise en développement Web, je vous accompagne dans
-								la création d'un site professionnel et attractif. Cependant, une conception
-								exceptionnelle ne se limite pas à la première étape.
-							</p>
-						</div>
-						<div class="flex-sm-column button_home justify-content-center" style="text-align: center;">
-							<a href="#agence" class="btn btn-danger mr-3 animate-up-2 inline-block">Découvrir l'agence<span class="ml-2">
-									<span class="fas fa-arrow-down"></span>
-								</span>
-							</a><br>
-							<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="green" class="bi bi-check2-circle" viewbox="0 0 16 16">
-								<path d="M2.5 8a5.5 5.5 0 0 1 8.25-4.764.5.5 0 0 0 .5-.866A6.5 6.5 0 1 0 14.5 8a.5.5 0 0 0-1 0 5.5 5.5 0 1 1-11 0z"/>
-								<path d="M15.354 3.354a.5.5 0 0 0-.708-.708L8 9.293 5.354 6.646a.5.5 0 1 0-.708.708l3 3a.5.5 0 0 0 .708 0l7-7z"/>
-							</svg>
-							<strong>Aucune carte de crédit <span class="text-success">n'est requise</span>
-							</strong>
-						</div>
-					</div>
-					<div class="col-lg-7 dotted-bg">
-						<img src="img/man.png" alt="Client" class="d-flex align-self-end mt-5 z-1 mx-auto w-75 position-relative">
-					</div>
-				</div>
+<div id="smooth-wrapper">
+	<div id="smooth-content">
+		<!-- scriptzen banner area start -->
+		<div class="banner-area banner-style-one banner-bg-1 hero__area-3 banner__jump">
+			<div class="shape-image">
+				<img src="{{ asset('assets/front/images/banner/19.png') }}" alt="banner">
 			</div>
-		</section>
-
-		<div class="text-white bg-tertiary text-center vh-lg-25 vh-sm-40 pt-5">
-			<h1 class="display-5 fw-bold lh-1 mb-3 text-center">Soyez Zen, On s'occupe de tout !</h1>
-			<p class="fw-bold mb-3 text-center lead text-white">Transitionnez de la planification au site grâce à ScriptZenIT, le créateur de sites Web destiné aux professionnels et aux artisans.</p>
-			<a href="{{ url('front_devis_new') }}" class="btn btn-black mr-3 animate-up-2 inline-block text-white">Démarrer ma demande
-				<span class="ml-2">
-					<span class="fas fa-arrow-right"></span>
-				</span>
-			</a>
-		</div>
-
-		<div class="container" id="agence">
-			<p class="lead mb-4 text-muted text-center">On conçois la solution optimale de développement web pour chaque
-							situation spécifique, qu'il s'agisse de développer une plateforme complète ou de mettre en place des outils précis
-							pour vos besoins uniques.
-			</p>
-		</div>
-		{# End of Hero section #}
-
-		<h1 class="display-4 fw-bold text-center">Processus</h1>
-
-		{# Services de l'Agence #}
-		<section>
-			<div class="container">
-				<ul class="process">
-					<li class="process__item">
-						<span class="process__number">
-							<i class="fas fa-lightbulb"></i>
-						</span>
-						<span class="process__title">Analyse &amp; Stratégie</span>
-						<span class="process__subtitle">J'analyse votre problème et développe une stratégie</span>
-					</li>
-					<li class="process__item">
-						<span class="process__number">
-							<i class="fas fa-file-alt"></i>
-						</span>
-						<span class="process__title">Faire une Offre</span>
-						<span class="process__subtitle">Je vous fournis une offre détaillée en fonction de mon analyse</span>
-					</li>
-					<li class="process__item">
-						<span class="process__number">
-							<i class="fas fa-cogs"></i>
-						</span>
-						<span class="process__title">Développement</span>
-						<span class="process__subtitle">Je développe, transforme la stratégie en réalité</span>
-					</li>
-					<li class="process__item">
-						<span class="process__number">
-							<i class="fas fa-check-circle"></i>
-						</span>
-						<span class="process__title">Finalisation</span>
-						<span class="process__subtitle">J'effectue les ajustements finaux et prépare la livraison</span>
-					</li>
-				</ul>
+			<div class="top-center-image rts-scroll-down-circle-wrapper-3">
 			</div>
-		</section>
-		{# ./ Services de l'Agence #}
-
-		<section class="my-5">
-			<div class="container-fluid">
-				<div class="row gx-5 align-items-center bg-black justify-content-center px-5 pt-5 text-white">
-					<div class="col-md-4">
-						<h1>BESOIN D'ÉCLAIRAGE ?</h1>
-						<p class="text-white">Transformez les défis techniques en opportunités. Lorsque vous êtes confronté à des problèmes techniques, vous faites face à des occasions de grandir et d'apprendre.</p>
-					</div>
-					<div class="col-md-8">
-						<img src="{{ asset('img/home_section.jpg') }}" alt="agence web dans la Nièvre (58)" height="100%">
-					</div>
-				</div>
-				<div class="wrapper">
-					<div id="content" class="container page-content site-content single-post" role="main">
-						<div class="row">
-							<div
-								class="col-xs-12 col-sm-12">
-								<!-- Portfolio Content -->
-								<div id="portfolio_content_q" class="portfolio-content">
-									<ul class="portfolio-filters">
-										<li>
-											<a class="filter btn btn-sm btn-link" data-group="toutes_categories">Toutes les catégories</a>
-										</li>
-										<li>
-											<a class="filter btn btn-sm btn-link" data-group="détaillé">Projets Détaillés</a>
-										</li>
-										<li>
-											<a class="filter btn btn-sm btn-link" data-group="lien-direct">Liens fonctionnels</a>
-										</li>
-										<li>
-											<a class="filter btn btn-sm btn-link" data-group="prototype">Prototype</a>
-										</li>
-									</ul>
-
-									<!-- Portfolio Grid -->
-									<div class="portfolio-grid four-columns shuffle">
-										{% for project in projects %}
-											{% set dataGroups = ['toutes_categories'] %}
-
-											{% if 'détaillé' in project.category %}
-												{% set dataGroups = dataGroups|merge(['détaillé']) %}
-											{% endif %}
-											{% if 'lien-direct' in project.category %}
-												{% set dataGroups = dataGroups|merge(['lien-direct']) %}
-											{% endif %}
-											{% if 'prototype' in project.category %}
-												{% set dataGroups = dataGroups|merge(['prototype']) %}
-											{% endif %}
-
-											<figure class="item standard" data-groups='["{{ dataGroups|join(' ", " ') }}"]'>
-												<div class="portfolio-item-img">
-													{% for image in project.images %}
-														<img src="{{ asset('image_project/'~image.name) }}" alt="{{ image.name }}"/>
-													{% endfor %}
-													<a href="{{ url('front_project_show', {id: project.id}) }}"></a>
-												</div>
-
-												<i class="far fa-file-alt"></i>
-												<h4 class="name">{{ project.title }}</h4>
-												<span class="category">{{ project.category|join(', ')|title }}</span>
-											</figure>
-										{% endfor %}
+			<div class="container">
+				<div class="row  ptb--200 ptb_sm--150">
+					<div class="col-lg-9">
+						<div class="banner-one-wrapper mt--80 mt_sm--0">
+							<h1 class="title rts_hero__title">
+								Agence web <br>
+								Dans <span class="border-bottom-1">la Nièvre</span> <br>
+								Solutions numérique
+							</h1>
+							<div class="para-wraph">
+								<p class="disc hero__sub-title ptb--50">
+									Je conçois la solution optimale de développement web pour chaque
+									situation spécifique, qu'il s'agisse de développer une plateforme complète ou de mettre en place des outils précis
+									pour vos besoins uniques.
+								</p>
+							</div>
+							<div class="bannerJump_animation banner-jump-button rts-scroll-down-circle-wrapper-4">
+								<div class="jump__anim rts_round_btn_wrap scroll-down-circle-4">
+									<div class="rts-mouse-move-button">
+										<div class="btn_wrapper">
+											<a href="#suite" class="rts-btn-mouse-move btn-hover btn-item">
+												Nos services
+												<i class="fa-solid fa-arrow-up-right"></i></a>
+										</div>
 									</div>
 								</div>
 							</div>
@@ -172,148 +53,446 @@
 					</div>
 				</div>
 			</div>
-		</section>
-
-		{# Technologie et outils #}
-		<div class="container">
-			<div class="row">
-				<div class="col-xs-12 col-sm-12">
-					<div class="block-title">
-						<h2>Outils et technologies</h2>
-					</div>
-				</div>
-			</div>
-			<div class="row">
-				<div class="col-xs-12 col-sm-3">
-					<div class="lm-info-block gray-default">
-						<img src="./img/clients/spec-1.png" alt="PHP">
-						<h4>PHP 5/6/7/8.2</h4>
-					</div>
-				</div>
-
-				<div class=" col-xs-12 col-sm-3">
-					<div class="lm-info-block gray-default">
-						<img src="./img/clients/spec-2.png" alt="HTML 5 / CSS 3">
-						<h4>HTML 5 / CSS 3</h4>
-					</div>
-				</div>
-
-				<div class=" col-xs-12 col-sm-3 ">
-					<div class="lm-info-block gray-default">
-						<img src="./img/clients/spec-3.png" alt="Git">
-						<h4>Git + SSH</h4>
-					</div>
-				</div>
-
-				<div class=" col-xs-12 col-sm-3 ">
-					<div class="lm-info-block gray-default">
-						<img src="./img/clients/spec-4.png" alt="Symfony">
-						<h4>Symfony 4/5/6</h4>
-					</div>
-				</div>
-				<div class="col-xs-12 col-sm-3">
-					<div class="lm-info-block gray-default">
-						<img src="./img/clients/spec-5.svg" alt="React">
-						<h4>React / VueJs</h4>
-					</div>
-				</div>
-				<div class="col-xs-12 col-sm-3">
-					<div class="lm-info-block gray-default">
-						<img src="./img/clients/spec-7.png" alt="Sass">
-						<h4>SaaS</h4>
-					</div>
-				</div>
-				<div class="col-xs-12 col-sm-3">
-					<div class="lm-info-block gray-default">
-						<img src="./img/clients/spec-8.svg" alt="Json web token(JWT)" class="text-center">
-						<h4>Json web token</h4>
-					</div>
-				</div>
-				<div class="col-xs-12 col-sm-3">
-					<div class="lm-info-block gray-default">
-						<img src="./img/clients/spec-9.png" alt="Axios / Ajax" class="text-center">
-						<h4>Axios/Ajax</h4>
-					</div>
-				</div>
-			</div>
 		</div>
-		{# ./ Technologie et outils #}
+		<!-- scriptzen banner area end -->
 
-		<!-- Pricing -->
-		<div class="container">
-			<div class="row">
-				<div class=" col-xs-12 col-sm-12 ">
-					<div class="block-title">
-						<h2>Un large choix vous est proposé</h2>
-						<p>Que vous soyez un particulier ou un professionnel !</p>
-					</div>
-				</div>
-
+		<!-- scriptzen about area start -->
+		<div class="rts-about-area-1 rts-section-gapBottom">
+			<div class="shape-about-one">
+				<img src="{{ asset('assets/front/images/about/05.png') }}" alt="about">
 			</div>
-
-			<div class="row">
-				<div class="col-xs-12 col-sm-12 ">
-					<div class="fw-pricing clearfix row">
-
-						<div class="fw-package-wrap col-md-6 ">
-							<div class="fw-package">
-								<div class="fw-heading-row">
-									<span class="text-uppercase">Développement entreprise</span>
-								</div>
-
-								<div class="fw-pricing-row">
-									<span>Un prix compétiteur et des fonctionnalités de bases</span>
-								</div>
-
-								<div class="fw-button-row">
-									<a href="{{ url('front_devis_new', {'type': 'site_vitrine'}) }}" target="_self" class="btn btn-primary">Personnaliser</a>
-
-								</div>
-
-								<div class="fw-default-row">Vous êtes une marque souhaitant donner un coup de neuf à son site
-																	web ou une entreprise souhaitant redynamiser sa présence sur le web ? Optez pour une
-																	création d'application / site web sur mesure, dynamique et novateur. A votre image.
-								</div>
-							</div>
-						</div>
-
-						<div class="fw-package-wrap col-md-6">
-							<div class="fw-package pt-5">
-								<div class="fw-heading-row">
-									<span>DÉVELOPPEMENT SUR MESURE</span>
-								</div>
-
-								<div class="fw-pricing-row">
-									<span>Pour un besoin spécifique</span>
-								</div>
-
-								<div class="fw-button-row">
-									<a href="{{ url('front_devis_new', {'type': 'cross_plateforme'}) }}" target="_self" class="btn btn-primary">Personnaliser</a>
-
-								</div>
-
-								<div class="fw-default-row">Vous souhaitez aller un peu plus loin et vous avez en tête des
-																	fonctionnalités bien précises pour votre nouveau site internet ? Tout est possible
-																	techniquement, discutons ensemble de votre développement web sur mesure !
-								</div>
+			<div class="container-full">
+				<div class="row">
+					<div class="col-lg-12">
+						<div class="grid-lines-wrapper">
+							<div class="grid-lines">
+								<div class="grid-line"></div>
+								<div class="grid-line"></div>
+								<div class="grid-line"></div>
+								<div class="grid-line"></div>
 							</div>
 						</div>
 					</div>
 				</div>
-				<!-- /Pricing -->
+				<div class="row">
+					<div class="col-lg-12">
+						<div class="gsap-inner sec1">
+							<div class="image-wrapper-main-about mt-dec-135 rts-reveal-one">
+								<img src="{{ asset('assets/front/images/about/01.jpg') }}" alt="about" class="rts-reveal-image-one">
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="text-split-wrap-about scrolltext-wrapper">
+					<div class="text-split scrollingText-two">
+						<h2 class="title">
+							Solutions d'agence numérique <span>pour votre entreprise</span>
+						</h2>
+					</div>
+				</div>
 			</div>
+			<!-- about main inner wrapper -->
+			<div class="container mt--100">
+				<div class="row">
+					<div class="col-lg-5">
+						<div class="left-main-about-inner">
+							<img src="{{ asset('assets/front/images/about/02.png') }}" alt="about">
+							<div class="shape-about-two">
+								<img src="{{ asset('assets/front/images/about/06.png') }}" alt="about">
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-7 pl--60 pl_sm--15 pt_md--50 pt_sm--30">
+						<!-- about right area start -->
+						<div class="about-area-right-start">
+							<div class="inner-about-wrapper">
+								<h2 class="title quote">Des solutions innovantes
+									pour votre entreprise</h2>
+								<p class="disc rts-text-anim">
+									Fondée en 2023, ScriptzenIT fait son entrée dans le domaine numérique en redéfinissant les frontières de l'innovation et de l'excellence. Portée par une vision avant-gardiste, notre entreprise s'engage à remodeler le monde numérique. Notre approche est centrée sur nos clients, et nous collaborons avec des entreprises de toutes tailles et de tous secteurs pour concevoir des stratégies sur mesure qui répondent précisément à leurs besoins et objectifs spécifiques. ScriptzenIT est prête à laisser une empreinte indélébile dans le domaine numérique en proposant des solutions inégalées et en réimaginant l'avenir de la technologie.
+								</p>
+								<div class="btn--area-left mt--50">
+									<a href="{{  url('front_devis_new') }}" class="text-white">Démarrer ma demande<i
+												class="fa-solid fa-arrow-up-right"></i></a>
+								</div>
+							</div>
+						</div>
+						<!-- about right area end -->
+					</div>
+				</div>
+			</div>
+			<!-- about main inner wrapper main -->
+		</div>
+		<!-- scriptzen about area end -->
 
-			<div class="thank-you">
-				<h2>Merci d'avoir visité notre site !</h2>
-				<p>Nous apprécions votre visite. Si vous avez des questions, des commentaires ou avez besoin de plus d'informations, n'hésitez pas à nous contacter.</p>
-				<a href="{{ url('front_contact') }}" class="btn btn-primary">Nous contacter</a>
-				<!-- Avis Google -->
-				<div class="text-center">
-					<a class="nav-link" href="https://g.page/r/CSj9BKNjCGCBEAI/review">
-						<img src="{{ asset('img/rating.png')}}" class="mx-auto bg-transparant" alt="évaluez-nous" width="10%" height="10%">Évaluez-nous
-					</a>
+		<!-- our approach area start -->
+		<div class="our-approach-area-style-one rts-section-gap bg-dark-2">
+			<div class="container">
+				<div class="row">
+					<div class="col-lg-12">
+						<div class="grid-lines-wrapper">
+							<div class="grid-lines">
+								<div class="grid-line"></div>
+								<div class="grid-line"></div>
+								<div class="grid-line"></div>
+								<div class="grid-line"></div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-lg-6 col-md-6 rts-slide-right-gsap">
+						<!-- Start of the left approach area -->
+						<div class="approach-area-left">
+							<div class="title-area-left-wrapper">
+								<span class="pre-title">Notre Approche</span>
+								<h2 class="title quote">Expertise en Stratégie, Design et Développement</h2>
+							</div>
+							<p class="disc rts-text-anim">
+								Le processus de travail de l'agence ScriptZenIT est une véritable fusion d'art et de
+								technologie, où chaque projet est abordé avec une précision méticuleuse. Notre expertise en
+								stratégie, design et développement garantit des solutions numériques exceptionnelles et uniques.
+							</p>
+							<a href="#" class="learn-more-btn text-white">En savoir plus <i class="fa-solid fa-arrow-up-right"></i></a>
+						</div>
+						<!-- End of the left approach area -->
+					</div>
+					<div class="col-lg-6 col-md-6 rts-slide-left-gsap mt_sm--30">
+						<!-- Start of a single approach area -->
+						<div class="single-approach-area-start">
+							<div class="left-area">
+								<h3 class="title">Découverte</h3>
+								<p class="disc rts-text-anim">La première étape cruciale de notre processus est la découverte. Nous
+									plongeons dans la compréhension de votre entreprise, de vos besoins et de vos objectifs. Cela
+									nous permet de personnaliser la solution pour vous.</p>
+							</div>
+						</div>
+						<!-- End of the single approach area -->
+						<!-- Start of a single approach area -->
+						<div class="single-approach-area-start two">
+							<div class="left-area">
+								<h3 class="title">Stratégie</h3>
+								<p class="disc rts-text-anim">Sur la base des informations recueillies lors de la découverte, j'élabore une feuille de route précise. Cette
+									stratégie définit les étapes clés pour atteindre vos objectifs avec succès.</p>
+							</div>
+						</div>
+						<!-- End of the single approach area -->
+						<!-- Start of a single approach area -->
+						<div class="single-approach-area-start three mb--0">
+							<div class="left-area">
+								<h3 class="title">Développement</h3>
+								<p class="disc rts-text-anim">Le développement est l'art de transformer des concepts en réalité
+									fonctionnelle. En tant que développeur travaillent pour
+									créer des sites web et des applications hautement performants, conviviaux et esthétiquement
+									exceptionnels.</p>
+							</div>
+						</div>
+						<!-- End of the single approach area -->
+					</div>
 				</div>
 			</div>
 		</div>
+		<!-- our approach area end -->
+		<!-- Our show case -->
+		<div class="rts-use-case-area-one rts-section-gap bg-light-2">
+			<div class="container-full">
+				<div class="col-lg-12">
+					<div class="main-wrapper-case-studies scrolltext-wrapper">
+						<div class="scrollingText">
+							<h2 class="title">
+								Nos <span>Études de cas</span> .
+								Nos <span>Études de cas</span> .
+								Nos <span>Études de cas</span> .
+								Nos <span>Études de cas</span> .
+							</h2>
+						</div>
+					</div>
+				</div>
+			</div>
 
-	{% endblock %}
+			<main class="carticle-slide-active">
+				<div class="scroller-wrapper">
+					<div class="scroller">
+						{% for project in projects %}
+							<div class="slide">
+								<div class="container-full-150 mt--110 mt_md--50 mt_sm--30">
+									<div class="flot-right-150">
+										<div class="use-case-area-start">
+											<div class="content-wrapper">
+												<span class="sub-title">{{ project.title }}</span>
+												<h4 class="title">{{ project.category|join(', ')|title }}</h4>
+												<p class="text-justify">{{ project.description }}.</p>
+												<a href="{{ url('front_project_show', {id: project.id}) }}" class="learn-more-btn">Voir l'étude <i
+															class="fa-solid fa-arrow-up-right"></i></a>
+											</div>
+											{% for image in project.images %}
+												<a href="{{ url('front_project_show', {id: project.id}) }}">
+													<img class="images" src="{{ asset('image_project/'~image.name) }}" alt="{{ image.name }}"/>
+												</a>
+
+											{% endfor %}
+											{#<a href="portfolio-details.html" class="img-wrapper">
+												<img class="images" src="assets/front/img/home_section.jpg" alt="produit">
+											</a>#}
+										</div>
+									</div>
+								</div>
+								<!-- Fin de la zone d'étude de cas -->
+							</div>
+						{% endfor %}
+					</div>
+				</div>
+			</main>
+		</div>
+		<!-- rts pricing area start -->
+		<div class="rts-pricing-area rts-section-gap position-relative">
+			<div class="container-2">
+				<div class="row">
+					<div class="col-lg-12">
+						<div class="grid-lines-wrapper">
+						<div class="grid-lines">
+							<div class="grid-line"></div>
+							<div class="grid-line"></div>
+							<div class="grid-line"></div>
+							<div class="grid-line"></div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row g-5">
+				<div class="col-lg-4 col-md-12 col-sm-12 col-12">
+					<div class="pricing-left-area">
+						<div class="title-area">
+							<span class="sub-title">Découvrez Nos Tarifs</span>
+							<h2 class="title mt--30 quote">Des Plans Abordables pour Vous</h2>
+						</div>
+					</div>
+					<div class="accordion-area-start-one">
+						<div class="accordion" id="accordionExample">
+							<div class="accordion-item rts-slide-up-gsap">
+								<h2 class="accordion-header" id="headingOne">
+									<button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+										Comment Établissons-nous nos Tarifs Horaires ?
+									</button>
+								</h2>
+								<div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+									<div class="accordion-body">
+										Nos tarifs horaires sont soigneusement déterminés en fonction du niveau d'expertise requis pour chaque service. Nous les ajustons également pour être compétitifs sur le marché des services numériques de notre région.
+									</div>
+								</div>
+							</div>
+							<div class="accordion-item rts-slide-up-gsap">
+								<h2 class="accordion-header" id="headingTwo">
+								<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+									Bénéficiez-vous de Remises ou Promotions ?
+								</button>
+								</h2>
+								<div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
+									<div class="accordion-body">
+										Chez nous, vous bénéficiez de tarifs concurrentiels dès le départ. Nous ne cessons d'optimiser nos offres pour vous proposer les meilleurs tarifs possibles sur le marché des services numériques de notre région.
+									</div>
+								</div>
+							</div>
+							<div class="accordion-item rts-slide-up-gsap">
+								<h2 class="accordion-header" id="headingThree">
+									<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+										Comment Déterminons-nous nos Tarifs Horaires ?
+									</button>
+								</h2>
+								<div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionExample">
+									<div class="accordion-body">
+										Notre approche tarifaire repose sur une évaluation précise de l'expertise requise pour chaque service que nous offrons. Cela nous permet de garantir que vous obtenez une valeur exceptionnelle pour votre investissement.
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-8 col-md-12 pl--100 pl_md--15 pl_sm--15 plr_md--20 plr_sm--20">
+					<div class="row g-5 rts-slide-left-gsap">
+						<div class="col-lg-6 col-md-6">
+							<div class="single-pricing-area-start active card-tilt">
+								<span class="pre-title">Forfait Mensuel</span>
+								<h2 class="title">Suivant devis et facture</h2>
+								<p class="dsic">
+									Soyez Zen, optez pour la mensualisation, payez a la fin du mois, un acompte sera nécessaire suivant la complexité projet.
+								</p>
+								<div class="single-fc">
+									<i class="fa-solid fa-check"></i>
+									<p>GESTION DE PROJETS WEB</p>
+								</div>
+								<div class="single-fc">
+									<i class="fa-solid fa-check"></i>
+									<p>CONCEPTION GRAPHIQUE & WEBDESIGN</p>
+								</div>
+								<div class="single-fc">
+									<i class="fa-solid fa-check"></i>
+									<p>APPLICATIONS SPÉCIFIQUES ET INTERFACE D'ADMINISTRATION</p>
+								</div>
+								<div class="single-fc">
+									<i class="fa-solid fa-check"></i>
+									<p>MISE EN PLACE / MODIFICATION / GESTION DE CMS</p>
+								</div>
+								<div class="single-fc">
+									<i class="fa-solid fa-check"></i>
+									<p>INTÉGRATION (X)HTML / CSS</p>
+								</div>
+								<div class="single-fc">
+									<i class="fa-solid fa-check"></i>
+									<p>CONCEPTION MULTI-PLATEFORMES</p>
+								</div>
+								<a href="{{ url('front_devis_new') }}" class="pricing-btn">Choisir le forfait</a>
+							</div>
+						</div>
+						<div class="col-lg-6 col-md-6">
+							<div class="single-pricing-area-start card-tilt">
+								<div class="badge">
+									<span>Maintenance</span>
+								</div>
+								<span class="pre-title">à chaque tâche</span>
+								<h2 class="title">250 € /<span>jour</span> </h2>
+								<p class="dsic">
+									Soyez Zen, payer nos services à la semaine, suivant votre besoin !
+								</p>
+								<div class="single-fc">
+									<i class="fa-solid fa-check"></i>
+									<p>Mises à jour site internet & plugins</p>
+								</div>
+								<div class="single-fc">
+									<i class="fa-solid fa-check"></i>
+									<p>Petites modifications graphiques ou de contenu</p>
+								</div>
+								<div class="single-fc">
+									<i class="fa-solid fa-check"></i>
+									<p>Sauvegardes externalisées mensuelles</p>
+								</div>
+								<div class="single-fc">
+									<i class="fa-solid fa-check"></i>
+									<p>Optimisation performances</p>
+								</div>
+								<a href="{{ url('front_assistance') }}" class="pricing-btn">Choisir le forfait</a>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- rts pricing area end -->
+		<!-- large-image sections starts -->
+		<div class="large-image-option-start rts-section-gap bg-dark-1 position-relative rts_jump_counter__animation">
+			<div class="container">
+				<div class="row">
+					<div class="col-lg-12">
+						<div class="grid-lines-wrapper">
+							<div class="grid-lines">
+								<div class="grid-line"></div>
+								<div class="grid-line"></div>
+								<div class="grid-line"></div>
+								<div class="grid-line"></div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-lg-12">
+						<div class="title-area-inner large-image">
+							<h2 class="title quote">Service de qualité <br> <span> Digitalisez votre entreprise.</span>
+							</h2>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="container-160">
+				<div class="row">
+					<div class="col-lg-12">
+						<div class="large-video-playing grow">
+							<video autoplay muted loop playsinline preload="metadata">
+								<source src="assets/front/images/video/02.mp4" type="video/mp4">
+							</video>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- large-image sections end -->
+		{#<!-- our trusted clienbts area start -->
+		<div class="trusted-clients-area-start rts-section-gap">
+			<div class="right-shape-testi">
+				<img src="assets/front/images/testimonials/03.png" alt="testimonials">
+			</div>
+			<div class="container-full">
+				<div class="row">
+					<div class="col-lg-12">
+						<div class="main-wrapper-case-studies scrolltext-wrapper">
+							<div class="scrollingText-three">
+								<h2 class="title">
+									Ils <span>en parlent</span> mieux que nous .
+									Ils <span>en parlent</span> mieux que nous .
+									Ils <span>en parlent</span> mieux que nous .
+								</h2>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="container">
+				<div class="row g-5 mt--80 mt_sm--30">
+					<div class="col-lg-8 pr--100 pr_md--50 pr_sm--20">
+						<div class="swiper-testimonails-style-one-main-wrapper">
+							<div class="swiper mySwiper-testimonial-1">
+								<div class="swiper-wrapper">
+									<div class="swiper-slide">
+										<!-- single tesinmonials area start -->
+										<div class="single-testimonials-main-wrapper">
+											<div class="star-area-start">
+												<i class="fa-solid fa-star"></i>
+												<i class="fa-solid fa-star"></i>
+												<i class="fa-solid fa-star"></i>
+												<i class="fa-solid fa-star"></i>
+												<i class="fa-solid fa-star"></i>
+											</div>
+											<div class="body">
+												<div class="quote-img">
+													<img src="assets/front/images/testimonials/02.png" alt="">
+												</div>
+												<p class="disc">
+													The group at Baroque is unimaginably committed, <br> educated,
+													and supportive. The completed item was <br> delightful, and
+													worth each penny. I would totally <br> suggest Baroque...
+												</p>
+												<div class="author-area">
+													<div class="thumbnail">
+														<img src="assets/front/images/testimonials/01.png" alt="testimonials">
+													</div>
+													<div class="info-wrapper">
+														<h6 class="title">Adam Daniel Smith</h6>
+														<span>Product Designer</span>
+													</div>
+												</div>
+											</div>
+										</div>
+										<!-- single tesinmonials area start -->
+									</div>
+								</div>
+								<div class="button-area-next-prev">
+									<div class="swiper-button-next"></div>
+									<div class="swiper-button-prev"></div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-4">
+						<div class="after-effect-testi-right-img">
+							<div class="thumbnail-clients-img rts-reveal-two">
+								<img class="rts-reveal-image-two" src="assets/front/images/about/04.jpg" alt="">
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- our trusted clienbts area end -->#}
+
+
+{% endblock %}

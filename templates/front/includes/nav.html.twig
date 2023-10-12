@@ -1,4 +1,4 @@
-
+{#
 <header id="header">
 	<nav class="navbar container">
 		<!-- Text Logo -->
@@ -19,14 +19,12 @@
 		<div class="menu" id="menu">
 			<ul class="menu-inner">
 
-				<li class="menu-item {{ app.request.get('_route') == 'front_home' ? 'active' : '' }}">
-					<a class="nav-link" href="{{ url('front_home') }}">Accueil</a>
-				</li>
 
-				<li class="menu-item {{ app.request.get('_route') == 'front_about' ? 'active' : '' }}">
-					<a class="nav-link" href="{{ url('front_about') }}">A propos de moi</a>
-				</li>
-				{#<a href="{{ url('front_project') }}" class="menu-link">Ce que je propose</a>#}
+
+
+				#}
+{#<a href="{{ url('front_project') }}" class="menu-link">Ce que je propose</a>#}{#
+
 				{% if app.user %}
 					<li class="menu-item {{ app.request.get('_route') == 'front_assistance' ? 'active' : '' }}">
 						<a class="nav-link" href="{{ url('front_assistance') }}">Assistance</a>
@@ -54,7 +52,180 @@
 				{% endif %}
 			</ul>
 		</div>
-		{#<button id="switch">Dark mode</button>#}
+		#}
+{#<button id="switch">Dark mode</button>#}{#
+
 
 	</nav>
+</header>#}
+
+
+<!-- header area start -->
+<header class="header-area header-one  mb--25">
+	<div class="header-container-one">
+		<div class="header-wrapper">
+			<a href="{{ url('front_home') }}" class="logo">
+				<img src="{{ asset('assets/front/img/logo-header.png') }}" alt="ScriptZenIT Créateur d'internet de qualité" width="70%" height="70%">
+			</a>
+			<div class="header-right">
+
+				<nav class="nav-area drop-down-rts">
+					<ul class="navbar-nav-1">
+						<li class="menu-item">
+							<a href="{{ url('front_home') }}">
+									<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-house-door-fill" viewBox="0 0 16 16">
+										<path d="M6.5 14.5v-3.505c0-.245.25-.495.5-.495h2c.25 0 .5.25.5.5v3.5a.5.5 0 0 0 .5.5h4a.5.5 0 0 0 .5-.5v-7a.5.5 0 0 0-.146-.354L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293L8.354 1.146a.5.5 0 0 0-.708 0l-6 6A.5.5 0 0 0 1.5 7.5v7a.5.5 0 0 0 .5.5h4a.5.5 0 0 0 .5-.5Z"/>
+									</svg>
+							</a>
+						</li>
+						<li class="menu-item">
+							<a href="{{ url('front_home') }}"><span class="rolling-text">Services</span></a>
+						</li>
+						<li class="menu-item">
+							<a href="{{ url('front_home') }}"><span class="rolling-text">portfolio</span></a>
+						</li>
+						<li class="menu-item">
+							<a href="{{ url('front_home') }}"><span class="rolling-text">Tarifs</span></a>
+						</li>
+						<li class="menu-item">
+							<a href="{{ url('front_home') }}"><span class="rolling-text">Services</span></a>
+						</li>
+						<li class="menu-item {{ app.request.get('_route') == 'front_about' ? 'active' : '' }}">
+							<a class="nav-link" href="{{ url('front_about') }}">L'agence</a>
+						</li>
+						<li class="menu-item {{ app.request.get('_route') == 'front_contact' ? 'active' : '' }}">
+							<a class="btn btn-outline-secondary" href="{{ url('front_contact') }}">Contact</a>
+						</li>
+					</ul>
+				</nav>
+
+				<div class="action-area">
+					<div class="text-center">
+						<a href="https://g.page/r/CSj9BKNjCGCBEAI/review">
+							AVIS
+						</a>
+					</div>
+					<div class="menu-btn">
+
+						<div class="rts-offcanvas-wrapper">
+							<div class="container-menu">
+								<div class="action-menu">
+									<div class="close-event"></div>
+									<div class="open-event">
+										{#<div class="text">
+											<span>Menu</span>
+											<span>Close</span>
+										</div>#}
+										<div class="burger">
+											<svg viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg" class="icon-close" data-v-649bbaab="">
+												<line x1="13.788" y1="1.28816" x2="1.06011" y2="14.0161" stroke="currentColor" stroke-width="1.2"></line>
+												<line x1="1.06049" y1="1.43963" x2="13.7884" y2="14.1675" stroke="currentColor" stroke-width="1.2"></line>
+											</svg>
+											<svg viewBox="0 0 18 12" fill="none" xmlns="http://www.w3.org/2000/svg" class="icon-burger" data-v-649bbaab="">
+												<line x1="18" y1="0.6" y2="0.6" stroke="currentColor" stroke-width="1.2" data-v-649bbaab=""></line>
+												<line x1="18" y1="5.7167" y2="5.7167" stroke="currentColor" stroke-width="1.2" data-v-649bbaab=""></line>
+												<line x1="18" y1="10.8334" y2="10.8334" stroke="currentColor" stroke-width="1.2" data-v-649bbaab=""></line>
+											</svg>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="rts-fs-menu">
+								<div class="rts-fs-container row">
+
+									<div class="rts-fs--nav col-12 col-md-6">
+										<ul id="primary-menu" class="navbar-nav-button">
+											<li id="menu-item-76" class="menu-item">
+												<a href="{{ url('front_home') }}">Accueil
+													<span>
+														<svg height="24" viewBox="0 0 24 24" width="24"
+																		   xmlns="http://www.w3.org/2000/svg">
+															<path class="heroicon-ui"
+																  d="M18.59 13H3a1 1 0 0 1 0-2h15.59l-5.3-5.3a1 1 0 1 1 1.42-1.4l7 7a1 1 0 0 1 0 1.4l-7 7a1 1 0 0 1-1.42-1.4l5.3-5.3z">
+															</path>
+														</svg>
+													</span>
+												</a>
+												{#<ul class="sub-menu">
+													<li class="menu-item menu-item-home current-menu-item page_item">
+														<a href="index.html" aria-current="page">Agence dans la Nièvre</a>
+													</li>
+													<li class="menu-item">
+														<a href="index-two.html">Creative Agency</a>
+													</li>
+													<li class="menu-item">
+														<a href="index-three.html">Personal Portfolio</a>
+													</li>
+													<li class="menu-item">
+														<a href="index-four.html">Design Agency</a>
+													</li>
+													<li class="menu-item">
+														<a href="index-five.html">Creative Portfolio</a>
+													</li>
+													<li class="menu-item">
+														<a href="index-six.html">Business Agency</a>
+													</li>
+												</ul>#}
+											</li>
+											<li class="menu-item">
+												<a href="{{ url('front_home') }}">Services</a>
+											</li>
+											<li class="menu-item">
+												<a href="{{ url('front_home') }}">portfolio</a>
+											</li>
+											<li class="menu-item">
+												<a href="{{ url('front_home') }}">Tarifs</a>
+											</li>
+											<li class="menu-item">
+												<a href="{{ url('front_home') }}">Services</a>
+											</li>
+											<li class="menu-item {{ app.request.get('_route') == 'front_about' ? 'active' : '' }}">
+												<a class="nav-link" href="{{ url('front_about') }}">L'agence</a>
+											</li>
+											<li class="menu-item {{ app.request.get('_route') == 'front_contact' ? 'active' : '' }}">
+												<a class="btn btn-outline-secondary" href="{{ url('front_contact') }}">Contact</a>
+											</li>
+										</ul>
+									</div>
+
+									<div class="rts-fs--contacts col-12 col-md-6">
+										<div class="contact-inner">
+											<div class="contact-information">
+												<h2 class="heading-title">Notre agence</h2>
+												<div class="address">
+													<ul>
+														<li>
+															<p>2 les buissons, 58190, Nièvre</p>
+														</li>
+													</ul>
+												</div>
+											</div>
+											<div class="contact-information">
+												<h2 class="heading-title">Me contacter</h2>
+												<div class="contact">
+													<ul>
+														<li><a href="mailto:wbelbeche.s@gmail.com" class="mail">wbelbeche.s@gmail.com</a></li>
+														<li><a href="tel:0762972691" class="number">+33 (0)7 62 97 26 91</a></li>
+													</ul>
+												</div>
+												<div class="rts-social-area-one">
+													<ul>
+														<li><a href="#"><i class="fa-brands fa-facebook-f"></i></a></li>
+														<li><a href="#"><i class="fa-brands fa-twitter"></i></a></li>
+														<li><a href="#"><i class="fa-brands fa-whatsapp"></i></a></li>
+														<li><a href="#"><i class="fa-brands fa-skype"></i></a></li>
+													</ul>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 </header>
+<!-- header area end -->
