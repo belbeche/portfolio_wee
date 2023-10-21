@@ -26,7 +26,10 @@
 				<li class="menu-item {{ app.request.get('_route') == 'front_about' ? 'active' : '' }}">
 					<a class="nav-link" href="{{ url('front_about') }}">A propos de moi</a>
 				</li>
-				{#<a href="{{ url('front_project') }}" class="menu-link">Ce que je propose</a>#}
+
+				<li class="menu-item {{ app.request.get('_route') == 'front_project' ? 'active' : '' }}">
+					<a class="nav-link" href="{{ url('front_project') }}">Ce que je propose</a>
+				</li>
 				{% if app.user %}
 					<li class="menu-item {{ app.request.get('_route') == 'front_assistance' ? 'active' : '' }}">
 						<a class="nav-link" href="{{ url('front_assistance') }}">Assistance</a>
