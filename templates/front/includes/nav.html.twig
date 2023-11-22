@@ -61,7 +61,9 @@
 
 
 <!-- header area start -->
-<header class="header-area header-one  mb--25">
+<header class="header-area header-one mb--25">
+
+
 	<div class="header-container-one">
 		<div class="header-wrapper">
 			<a href="{{ url('front_home') }}" class="logo">
@@ -79,31 +81,27 @@
 							</a>
 						</li>
 						<li class="menu-item">
-							<a href="{{ url('front_home') }}"><span class="rolling-text">Services</span></a>
+							<a href="{{ url('front_project') }}">
+								<span class="rolling-text">portfolio</span>
+							</a>
 						</li>
 						<li class="menu-item">
-							<a href="{{ url('front_home') }}"><span class="rolling-text">portfolio</span></a>
-						</li>
-						<li class="menu-item">
-							<a href="{{ url('front_home') }}"><span class="rolling-text">Tarifs</span></a>
-						</li>
-						<li class="menu-item">
-							<a href="{{ url('front_home') }}"><span class="rolling-text">Services</span></a>
+							<a href="{{ url('front_devis_new') }}">
+							<span class="rolling-text">Tarifs</span>
+							</a>
 						</li>
 						<li class="menu-item {{ app.request.get('_route') == 'front_about' ? 'active' : '' }}">
-							<a class="nav-link" href="{{ url('front_about') }}">L'agence</a>
+							<a class="nav-link" href="{{ url('front_about') }}"><span class="rolling-text">L'agence</span></a>
 						</li>
-						<li class="menu-item {{ app.request.get('_route') == 'front_contact' ? 'active' : '' }}">
-							<a class="btn btn-outline-secondary" href="{{ url('front_contact') }}">Contact</a>
+						<li class="menu-item">
+							<a href="{{ url('app_login') }}"><span class="rolling-text">Connexion</span></a>
 						</li>
 					</ul>
 				</nav>
 
 				<div class="action-area">
 					<div class="text-center">
-						<a href="https://g.page/r/CSj9BKNjCGCBEAI/review">
-							AVIS
-						</a>
+						<a href="{{ url('front_contact') }}" class="text-white">Contact</a>
 					</div>
 					<div class="menu-btn">
 

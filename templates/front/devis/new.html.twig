@@ -4,7 +4,7 @@
 {% endblock %}
 
 {% block content %}
-	<div class="container">
+	{# <div class="container mt-50">
 		<div class="text-center">
 			<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" fill="currentColor" class="bi bi-chat-left-quote" viewBox="0 0 16 16">
 				<path d="M14 1a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H4.414A2 2 0 0 0 3 11.586l-2 2V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12.793a.5.5 0 0 0 .854.353l2.853-2.853A1 1 0 0 1 4.414 12H14a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z"/>
@@ -98,16 +98,16 @@
 			<div class="col-lg-12 mx-auto padding-top-xxl">
 				<!-- Formulaire de devis -->
 				{{ form_start(formDevis) }}
-				<label for="">L'adresse email pour recevoir votre devis</label>
+				<label>L'adresse email pour recevoir votre devis</label>
 				{{ form_row(formDevis.email, {'attr': {'name': 'email'}}) }}
 				{{ form_errors(formDevis.email) }}
-				<label for="">Type d'application souhaité</label>
+				<label>Type d'application souhaité</label>
 				{{ form_row(formDevis.type_de_site_web)}}
 				{{ form_errors(formDevis.type_de_site_web)}}
-				<label for="">Quelles sont vos attentes concernant le design ?</label>
+				<label>Quelles sont vos attentes concernant le design ?</label>
 				{{ form_row(formDevis.attentes_design_web)}}
 				{{ form_errors(formDevis.attentes_design_web)}}
-				<label for="">Parlez moi un peu plus de votre projet !</label>
+				<label>Parlez moi un peu plus de votre projet !</label>
 				{{ form_row(formDevis.description_projet)}}
 				{{ form_errors(formDevis.description_projet)}}
 				<button type="submit">Recevoir mon récapitulatif de devis</button>
@@ -115,5 +115,120 @@
 			</div>
 		</div>
 		{{ form_end(formDevis) }}
-	</div>
+	</div> #}
+
+
+
+    <div class="cta-style-one rts-section-gapTop section-gap banner-bg-1" style="height: auto;">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h2 class="title-elements-parent">
+                        Discutons de votre projet
+                    </h2>
+					<div class="title-elements-parent">
+						<h3 class="pre">Vous avez un projet en tête et souhaitez obtenir un devis personnalisé ?</h3>
+						<h2 class="title quote mb--5">
+							Vous êtes au bon endroit. <br>
+						</h2>
+					</div>
+                </div>
+            </div>
+			<!-- appoinment area two start -->
+			<div class="appoinmnet-area-two rts-section-gapBottom bg-white">
+				<div class="container">
+					<div class="row">
+						<div class="col-lg-12">
+							<!-- appoinment area two start -->
+							<div class="appoinment-area-two plr--120 plr_sm--20 plr_md--20">
+								<div class="appoinment-h2 rts-slide-up-gsap">
+									<!-- Formulaire de devis -->
+										{{ form_start(formDevis, {'attr': {'id': 'form_new_devis'}}) }}
+											<label>L'adresse email pour recevoir votre devis</label>
+											{{ form_row(formDevis.email) }}
+											{{ form_errors(formDevis.email) }}
+											<label>Type d'application souhaité</label>
+											{{ form_row(formDevis.type_de_site_web)}}
+											{{ form_errors(formDevis.type_de_site_web)}}
+											<label>Quelles sont vos attentes concernant le design ?</label>
+											{{ form_row(formDevis.attentes_design_web)}}
+											{{ form_errors(formDevis.attentes_design_web)}}
+											<label>Parlez moi un peu plus de votre projet !</label>
+											{{ form_row(formDevis.description_projet) }}
+											{{ form_errors(formDevis.description_projet)}}
+					
+											<button type="submit" id="cursor_form_success">
+												Recevoir mon récapitulatif de devis <i class="fa-solid fa-arrow-up-right"></i>
+											</button>
+										</div>
+										{{ form_end(formDevis) }}
+								</div>
+							</div>
+
+							{# <div class="appoinment-area-two plr--120 plr_sm--20 plr_md--20">
+								<form class="appoinment-h2 rts-slide-up-gsap" action="#">
+									<div class="input-line">
+										<div class="input-half">
+											<label for="name">Your Name*</label>
+											<input id="name" type="text" placeholder="Andrew Davis Kino...." required>
+										</div>
+										<div class="input-half">
+											<label for="email">Your Email*</label>
+											<input id="email" type="text" placeholder="info@mighty.net">
+										</div>
+									</div>
+									<div class="input-line mt--40">
+										<div class="input-half">
+											<label for="name">What you are interested*</label>
+											<select class="form-select" aria-label="Default select example">
+												<option selected>Design & Branding</option>
+												<option value="1">One</option>
+												<option value="2">Two</option>
+												<option value="3">Three</option>
+											</select>
+										</div>
+										<div class="input-half">
+											<label for="email">Project Budget*</label>
+											<select class="form-select" aria-label="Default select example">
+												<option selected>Design & Branding</option>
+												<option value="1">One</option>
+												<option value="2">Two</option>
+												<option value="3">Three</option>
+											</select>
+										</div>
+									</div>
+									<div class="text-area mt--40">
+										<label for="message">Message*</label>
+										<textarea id="message" cols="30" rows="10" placeholder="Let tell us about your projects"></textarea>
+										<button type="submit" class="rts-btn btn-subnit-h2">Send Message</button>
+									</div>
+								</form> #}
+							</div>
+							<!-- appoinment area two end -->
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- appoinment area two end -->
+        </div>
+    </div>
+
+	<script>
+		document.addEventListener('DOMContentLoaded', function () {
+			var form = document.getElementById('form_new_devis');
+			var submitButton = document.getElementById('cursor_form_success');
+
+			form.addEventListener('input', function () {
+				// Vérifiez si tous les champs du formulaire sont valides
+				var isValid = form.checkValidity();
+
+				// Ajoutez ou supprimez la classe Bootstrap 'btn-success' en fonction de la validité
+				if (isValid) {
+					submitButton.classList.add('btn', 'btn-success');
+				} else {
+					submitButton.classList.remove('btn', 'btn-success');
+				}
+			});
+		});
+	</script>
 {% endblock %}

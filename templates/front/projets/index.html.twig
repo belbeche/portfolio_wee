@@ -5,85 +5,83 @@
 
 {% block content %}
 
-	<div id="main" class="site-main container">
-		<div id="main-content" class="single-page-content">
-			<div id="primary" class="content-area">
+	<!-- Scripts style two -->
+    <!-- rts bread crumba rea start -->
+    <div class="rts-breadcrumb-area banner-bg-1">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="baread-crumb-main-wrapper pt--100">
+                        <div class="inner">
+                            <span class="works">Portfolio</span>
+                            <h1 class="title rts_hero__title">Voici quelques-unes de nos réalisations</h1>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- rts bread crumba rea end -->
+    <!-- Scripts style two End -->
 
-				<div class="page-title">
-					<h1>Mes réalisations</h1>
-					<div class="page-subtitle">
-						<br>
-						<a href="#devis">Voir des exemples de solutions.</a>
-						<h4></h4>
-					</div>
-				</div>
 
+    <!-- rts case studyes area start -->
+    <div class="rts-portfolio-grid-area ptb--80">
+        <div class="container-140">
+			{# <div id="portfolio_content_q" class="portfolio-content">
+				<ul class="portfolio-filters d-flex pl-5">
+					<li>
+						<a class="filter btn btn-sm btn-link" data-group="toutes_categories">Toutes les catégories</a>
+					</li>
+					<li>
+						<a class="filter btn btn-sm btn-link" data-group="detaillé">Projets Détaillés</a>
+					</li>
+					<li>
+						<a class="filter btn btn-sm btn-link" data-group="lien-direct">Liens fonctionnels</a>
+					</li>
+					<li>
+						<a class="filter btn btn-sm btn-link" data-group="prototype">Prototype</a>
+					</li>
+				</ul>
+			</div> #}
+            <div class="row g-0 g-md-5 g-sm-5 separetor-portfolio-bottom">
+				{% for project in projects %}
+					{# {% set dataGroups = ['toutes_categories'] %}
 
-				{% include "front/includes/project.html.twig" %}
-
-				<h1 class="pb-4"></h1>
-				<div class="page-title" id="devis">
-					<h1>Envie d'avoir une visibilité sur le web ? </h1>
-					<div class="page-subtitle">
-						<br>
-						<a href="{{ url('front_devis_new')}}">Cliquez ici pour personnaliser votre demande !</a>
-						<h4>Ou bien, choisissez parmi la sélection ci-dessous.</h4>
-					</div>
-				</div>
-
-				<div class="container">
-					<div
-						class="row">
-
-						<!-- Rélisation d'un site d'agence -->
-						<div class="col-md-3 col-xs-12 mb-5 mt-2">
-							<div class="card">
-								<img src="{{ asset('img/quote/agency.svg') }}" alt="Realisation de site d'agence"/>
-								<div class="card-body">
-									<h5 class="card-title">Rélisation de site d'agence</h5>
-									<p class="card-text">Une réalisation sur mesure pour votre site d'agence, afin de garantir une présence permanente en ligne..</p>
-									<a href="{{ url('front_devis_new', {'type': 'site_vitrine'}) }}" class="btn btn-primary">Je crée mon devis</a>
+					{% if 'detaillé' in project.category %}
+						{% set dataGroups = dataGroups|merge(['detaillé']) %}
+					{% endif %}
+					
+					{% if 'lien-direct' in project.category %}
+						{% set dataGroups = dataGroups|merge(['lien-direct']) %}
+					{% endif %}
+					{% if 'prototype' in project.category %}
+						{% set dataGroups = dataGroups|merge(['prototype']) %}
+					{% endif %} #}
+					<div class="col-lg-6 col-md-6 col-sm-12">
+					<figure class="item standard">
+						<!-- single portfolio area start -->
+							<div class="signle-portfolio-style-four-inner ptb--80 ptb_md--50 ptb_sm--30 item standard">
+								{% for image in project.images %}
+									<img src="{{ asset('image_project/'~image.name) }}" alt="{{ image.name }}"/>
+								{% endfor %}
+								<a href="{{ url('front_project_show', {id: project.id}) }}"></a>
+								<div class="inner-content">
+									<span class="category">{{ project.category|join(', ')|title }}</span>
+									<a href="portfolio-details.html">
+										<h5 class="name">{{ project.title }}</h5>
+									</a>
 								</div>
 							</div>
+							<!-- single portfolio area end -->
 						</div>
+					</figure>
+				{% endfor %}
+            </div>
+        </div>
+    </div>
+    <!-- rts case studyes area end -->
+</div>
 
-						<!-- Réalisation de site d'annonce immobilière -->
-						<div class="col-md-3 col-xs-12 mb-5 mt-2">
-							<div class="card">
-								<img src="{{ asset('img/quote/real_estate_or_travel.svg') }}" alt="Réalisation de site d'annonce immobilière"/>
-								<div class="card-body">
-									<h5 class="card-title">Réalisation de site d'annonce immobilière</h5>
-									<p class="card-text">Une réalisation sur mesure pour votre site d'annonce immobilière ou de voyage, afin de garantir une présence permanente en ligne..</p>
-									<a href="{{ url('front_devis_new', {'type': 'site_real_estate'}) }}" class="btn btn-primary">Je crée mon devis</a>
-								</div>
-							</div>
-						</div>
 
-						<!-- Rélisation de site eCommerce -->
-						<div class="col-md-3 col-xs-12 mb-5 mt-2">
-							<div class="card">
-								<img src="{{ asset('img/quote/Ecommerce.svg') }}" alt="Rélisation de site eCommerce"/>
-								<div class="card-body">
-									<h5 class="card-title">Rélisation de site eCommerce</h5>
-									<p class="card-text">Une réalisation sur mesure pour votre site de boutique en ligne..</p>
-									<a href="{{ url('front_devis_new', {'type': 'site_e-commerce'}) }}" class="btn btn-primary">Je crée mon devis</a>
-								</div>
-							</div>
-						</div>
-
-						<!-- Réalisation de site portfolio -->
-						<div class="col-md-3 col-xs-12 mb-5 mt-2">
-							<div class="card">
-								<img src="{{ asset('img/quote/portfolio.svg') }}" alt="Réalisation de site portfolio"/>
-								<div class="card-body">
-									<h5 class="card-title">Réalisation de site portfolio</h5>
-									<p class="card-text">Une réalisation sur mesure pour votre site portfolio, afin de présenter vos meilleure créations et d'acquérir de nouveau client..</p>
-									<a href="{{ url('front_devis_new', {'type': 'site_portfolio'}) }}" class="btn btn-primary">Je crée mon devis</a>
-								</div>
-							</div>
-						</div>
-
-					</div>
-				</div>
-
-			{% endblock %}
+{% endblock %}

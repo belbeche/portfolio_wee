@@ -32,6 +32,7 @@
 		<link rel="stylesheet" href="{{ asset('assets/front/css/vendor/bootstrap.min.css') }}">
 		<link rel="stylesheet" href="{{ asset('assets/front/css/style.css') }}">
 		<link rel="stylesheet" href="{{ asset('assets/front/css/plugins/unicons.css') }}">
+		<link rel="stylesheet" href="{{ asset('assets/front/css/app.css')}}">
 
 
 
@@ -63,12 +64,12 @@
 			<div id="page_container" class="page-container bg-move-effect">
 
 				<!-- dark light switcher start-->
-				<div class="modal-sidebar-scroll rts-dark-light">
+				{# <div class="modal-sidebar-scroll rts-dark-light">
 					<ul>
 						<li class="go-dark-w"><span>Mode sombre</span><i class="rts-go-dark fal fa-moon"></i></li>
 						<li class="go-light-w"><span>Mode éclairé</span><i class="rts-go-light fa-light fa-brightness"></i></li>
 					</ul>
-				</div>
+				</div> #}
 				<!-- dark light switcher end -->
 				{% block navbar %}
 					{% include "front/includes/nav.html.twig" %}
@@ -132,6 +133,5 @@
 		<script src="{{ asset('assets/front/js/vendor/metismenu.js') }}"></script>
 		<script src="{{ asset('assets/front/js/plugins/animate-scrollmagic.js') }}"></script>
 		<script src="{{ asset('assets/front/js/plugins/rule-plugins.js') }}"></script>
-
 	</body>
 </html>
