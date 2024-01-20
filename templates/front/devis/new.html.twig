@@ -4,31 +4,23 @@
 {% endblock %}
 
 {% block content %}
-	<div class="container">
-		<div class="text-center">
-            <svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" fill="currentColor" class="bi bi-chat-left-quote" viewBox="0 0 16 16">
-                <path d="M14 1a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H4.414A2 2 0 0 0 3 11.586l-2 2V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12.793a.5.5 0 0 0 .854.353l2.853-2.853A1 1 0 0 1 4.414 12H14a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z"/>
-                <path d="M7.066 4.76A1.665 1.665 0 0 0 4 5.668a1.667 1.667 0 0 0 2.561 1.406c-.131.389-.375.804-.777 1.22a.417.417 0 1 0 .6.58c1.486-1.54 1.293-3.214.682-4.112zm4 0A1.665 1.665 0 0 0 8 5.668a1.667 1.667 0 0 0 2.561 1.406c-.131.389-.375.804-.777 1.22a.417.417 0 1 0 .6.58c1.486-1.54 1.293-3.214.682-4.112z"/>
-            </svg>
-            <h1 class="display-5 fw-bold text-body-emphasis">Discutons de votre projet</h1>
-			<div class="col-lg-6 mx-auto">
-				<div class="lead mb-4">
-					<p class="mb-3 fw-bold text-body-emphasis desc-more">Vous avez un projet en tête et souhaitez obtenir un devis personnalisé ? Vous êtes au bon endroit.</p>
-				</div>
-			</div>
-			<p class="lead mb-5">
-				Remplissez le formulaire ci-dessous pour détailler vos besoins. Une fois votre demande de devis soumise,
-				vous pourrez suivre son avancement en temps réel grâce à notre onglet <a href="{{ path('front_assistance') }}">Assistance</a>.
-				Je suis là pour vous accompagner à chaque étape.
-			</p>
-			<div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
-				<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#combinedModal">
-					Voir explications
-				</button>
-			</div>
+	<section class="container text-center">
+		<div class="container d-flex justify-content-center">
+			<img src="{{ asset('img/workflow.png') }}" alt="scriptzenit workflow" width="60%" height="60%">
 		</div>
 
 		<div class="b-example-divider"></div>
+
+		<p class="lead mb-5">
+			Remplissez le formulaire ci-dessous pour détailler vos besoins. Une fois votre demande de devis soumise,
+			vous pourrez suivre son avancement en temps réel grâce à notre onglet <a href="{{ path('front_assistance') }}">Assistance</a>.
+			Je suis là pour vous accompagner à chaque étape.
+		</p>
+		<div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
+			<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#combinedModal">
+				Voir explications
+			</button>
+		</div>
 
 		<!-- La Modal -->
 		<div class="modal fade" id="combinedModal" tabindex="-1" role="dialog" aria-labelledby="combinedModalLabel" aria-hidden="true">
@@ -94,6 +86,7 @@
 				</div>
 			</div>
 		</div>
+		<!-- Début du formulaire -->
 		<div class="px-4">
 			<div class="col-lg-12 mx-auto padding-top-xxl">
 				<!-- Formulaire de devis -->
@@ -115,5 +108,5 @@
 			</div>
 		</div>
 		{{ form_end(formDevis) }}
-	</div>
+	</section>
 {% endblock %}
