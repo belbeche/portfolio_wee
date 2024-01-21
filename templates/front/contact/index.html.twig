@@ -3,6 +3,12 @@
 {% block title %} Contact {% endblock %}
 
 {% block content %}
+    <div class="cta-style-one rts-section-gapTop section-gap banner-bg-1 text-center" style="height: auto;">
+        <h1>Et si nous discutions ?</h1>
+        <div class="page-subtitle">
+            <h4>Construisons quelque chose d'exceptionnel ensemble !</h4>
+        </div>
+    </div>
     <div class="container">
         {% for type, messages in app.flashes %}
             {% for message in messages %}
@@ -10,121 +16,97 @@
             {% endfor %}
         {% endfor %}
     </div>
+    <div class="messages text-center"></div>
     <script src='https://www.google.com/recaptcha/api.js'></script>
+    {{ form_start(form, {'action': path('front_contact'), 'attr': {'id': 'contact_form'}}) }}
 
-    <div class="inner-page contact-page">
-        <div class="rts-breadcrumb-area bg_image">
-            <div>
-
-                {#<div>
-                    <h1>Et si nous discutions ?</h1>
-                    <div class="page-subtitle">
-                        <h4>Construisons quelque chose d'exceptionnel ensemble !</h4>
-                    </div>
-                </div>#}
-
-                <div class="appoinment-area-one plr--120 plr_md--40 plr_sm--30">
-
-                    <div class="row">
-                        {#<div class="col-xs-12 col-sm-4">
-
-                            <div id="info_list_1" class="info-list-w-icon">
-
-                                <div class="info-block-w-icon">
-                                    <div class="ci-icon">
-                                        <i class="linecons linecons-phone"></i>
-                                    </div>
-                                    <div class="ci-text">
-                                        <a href="tel:0762972691" class="display-4">07 62 97 26 91</a>
-                                        <p>Vous pouvez me joindre à ce numéro pour toute demande.</p>
-                                    </div>
-                                </div>
-
-                                <div class="info-block-w-icon">
-                                    <div class="ci-icon">
-                                        <i class="linecons linecons-location"></i>
-                                    </div>
-                                    <div class="ci-text">
-                                        <h4 class="display-4">France</h4>
-                                        <p>Situé dans la Nièvre(58), je suis disponible pour des projets locaux comme nationaux.</p>
-                                    </div>
-                                </div>
-
-                                <div class="info-block-w-icon">
-                                    <div class="ci-icon">
-                                        <i class="linecons linecons-mail"></i>
-                                    </div>
-                                    <div class="ci-text">
-                                        <a href="mailto:wbelbeche.s@gmail.com" class="display-4" style="font-size: 20px;">wbelbeche.s@gmail.com</a>
-                                        <p>N'hésitez pas à m'envoyer un e-mail pour toute question ou proposition de projet.</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>#}
-                        <div class="col-xs-6 col-sm- col-lg-6">
-
-                            <div class="block-title">
-                                <h2>Comment puis-je vous aider ?</h2>
-                            </div>
-                            {{ form_start(form, {'action': path('front_contact'), 'attr': {'id': 'contact_form'}}) }}
-
-                            <div class="messages"></div>
-
-                            <div class="appoinment-h2 rts-slide-up-gsap">
-                                <div class="fields clearfix">
-                                    <div class="left-column input-half">
-                                        {{ form_row(form.firstName, {'attr': {'class': 'form-control', 'placeholder': 'Prénom'}}) }}
-                                        {{ form_row(form.lastName, {'attr': {'class': 'form-control', 'placeholder': 'Nom'}}) }}
-                                        {{ form_row(form.email, {'attr': {'class': 'form-control', 'placeholder': 'Adresse email'}}) }}
-                                    </div>
-                                    <div class="right-column input-half">
-                                        {{ form_row(form.phone, {'attr': {'class': 'form-control', 'placeholder': 'Téléphone'}}) }}
-                                        {{ form_row(form.service) }}
-                                        {{ form_row(form.content, {'attr': {'class': 'form-control', 'placeholder': 'Votre demande en quelques mots ...'}}) }}
-                                        <input type="submit" class="button btn-send disabled" value="Envoyer la demande">
-                                    </div>
-                                </div>
-                            </div>
-                            {{ form_end(form) }}
-                        </div>
-                    </div>
-                </div>
+    <div class="appoinment-h2 rts-slide-up-gsap container">
+        <div class="fields clearfix">
+            <div class="left-column input-half">
+                {{ form_row(form.firstName, {'attr': {'class': 'form-control', 'placeholder': 'Prénom'}}) }}
+                {{ form_row(form.lastName, {'attr': {'class': 'form-control', 'placeholder': 'Nom'}}) }}
+                {{ form_row(form.email, {'attr': {'class': 'form-control', 'placeholder': 'Adresse email'}}) }}
+            </div>
+            <div class="right-column input-half">
+                {{ form_row(form.phone, {'attr': {'class': 'form-control', 'placeholder': 'Téléphone'}}) }}
+                {{ form_row(form.service) }}
+                {{ form_row(form.content, {'attr': {'class': 'form-control', 'placeholder': 'Votre demande en quelques mots ...'}}) }}
+                <input type="submit" class="btn btn-secondary" value="Envoyer la demande">
             </div>
         </div>
     </div>
+    {{ form_end(form) }}
+
     <script>
-        document.getElementById("contact_form").addEventListener("submit", function(event) {
+        document.addEventListener('DOMContentLoaded', function() {
+            // Sélectionner le formulaire et le bouton d'envoi
             let form = document.getElementById('contact_form');
-            event.preventDefault();
+            let submitButton = document.querySelector('.btn-send');
 
-            let formData = new FormData(this);
+            // Écouter les changements dans le formulaire
+            form.addEventListener('input', function() {
+                // Vérifier si le formulaire est valide
+                if (form.checkValidity()) {
+                    // Si le formulaire est valide, changer la couleur du bouton en vert
+                    submitButton.classList.add('btn-send btn btn-success');
+                } else {
+                    // Si le formulaire n'est pas valide, enlever la couleur verte du bouton
+                    submitButton.classList.remove('btn-send btn btn-success');
+                }
+            });
 
-            fetch(this.getAttribute('action'), {
-                method: 'POST',
-                body: formData
-            })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        // Cacher le formulaire
-                        document.getElementById("contact_form").style.display = "none";
+            // Écouter l'événement de soumission du formulaire
+            form.addEventListener('submit', function(event) {
+                // Empêcher la soumission réelle du formulaire
+                event.preventDefault();
 
-                        // Afficher un message de remerciement
-                        let thanksMsg = document.createElement('p');
-                        thanksMsg.textContent = 'Merci de nous avoir contactés. Nous traitons votre demande.';
-                        form.parentNode.appendChild(thanksMsg);
-                    } else {
-                        // Gérer les erreurs de validation ici
-                        alert("Des erreurs sont survenues !");
-                        for (let field in data.errors) {
-                            // Affichez l'erreur à côté du champ concerné.
-                            alert(field + ": " + data.errors[field]);
-                        }
-                    }
+                // Ajouter votre logique d'envoi du formulaire ici
+                let formData = new FormData(form);
+
+                fetch(form.getAttribute('action'), {
+                    method: 'POST',
+                    body: formData
                 })
-                .catch((error) => {
-                    console.error('Error:', error);
-                });
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            // Cacher le formulaire
+                            form.style.display = "none";
+
+                            // Trouver la div avec la classe "messages"
+                            let messagesDiv = document.querySelector('.messages');
+
+                            // Vérifier si la div existe avant d'ajouter l'élément
+                            if (messagesDiv) {
+                                // Créer un élément <p> pour le message de remerciement
+                                let thanksMsg = document.createElement('p');
+                                thanksMsg.textContent = 'Merci de nous avoir contactés. Nous traitons votre demande.';
+
+                                // Ajouter l'élément à la div avec la classe "messages"
+                                messagesDiv.appendChild(thanksMsg);
+
+                                // Faire défiler la fenêtre pour afficher le message
+                                thanksMsg.scrollIntoView({ behavior: 'smooth' });
+                            } else {
+                                console.error('La div avec la classe "messages" n\'a pas été trouvée.');
+                            }
+                        } else {
+                            // Gérer les erreurs de validation ici
+                            alert("Des erreurs sont survenues !");
+                            for (let field in data.errors) {
+                                // Affichez l'erreur à côté du champ concerné.
+                                alert(field + ": " + data.errors[field]);
+                            }
+                        }
+                    })
+                    .catch((error) => {
+                        console.error('Error:', error);
+                    })
+                    .finally(() => {
+                        // Réinitialiser la couleur du bouton après l'envoi du formulaire
+                        submitButton.classList.remove('btn-success');
+                    });
+            });
         });
     </script>
 {% endblock %}

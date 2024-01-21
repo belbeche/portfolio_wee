@@ -150,9 +150,11 @@
 											<label>Type d'application souhaité</label>
 											{{ form_row(formDevis.type_de_site_web)}}
 											{{ form_errors(formDevis.type_de_site_web)}}
-											<label>Quelles sont vos attentes concernant le design ?</label>
-											{{ form_row(formDevis.attentes_design_web)}}
-											{{ form_errors(formDevis.attentes_design_web)}}
+											<div class="attentes-design-web">
+												<label>Quelles sont vos attentes concernant le design ?</label>
+												{{ form_row(formDevis.attentes_design_web, {'attr': {'class': 'select-attentes'}})}}
+												{{ form_errors(formDevis.attentes_design_web)}}
+											</div>
 											<label>Parlez moi un peu plus de votre projet !</label>
 											{{ form_row(formDevis.description_projet) }}
 											{{ form_errors(formDevis.description_projet)}}

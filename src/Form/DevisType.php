@@ -42,7 +42,7 @@ class DevisType extends AbstractType
                     'Application spécifique (Décrivez vos besoins)' => 'autre'
                 ],
                 'attr' => [
-                    'class' => 'devisForm selectpicker',
+                    'class' => 'selectpicker',
                 ],
                 'multiple' => false,
                 'data' => $options['default_type_de_site_web'], // Utilisez l'option passée depuis le contrôleur
@@ -62,10 +62,6 @@ class DevisType extends AbstractType
                     'Branding complet inclus' => 'full_branding',
                     'Personnalisation avancée' => 'high_customization',
                 ],
-                'multiple' => false,
-                'attr' => [
-                    'class' => 'selectpicker',
-                ]
             ])
             ->add('description_projet', TextareaType::class, [
                 'label' => false,

@@ -2,3 +2,14 @@
     background-color: green;
     color: white;
 }
+
+.attentes-design-web #devis_attentes_design_web {
+    display:flex;
+    flex-direction:row;
+    flex-wrap: wrap;
+    gap: 1em;
+}
+
+.attentes-design-web input[type=checkbox]{
+    background:white!important;
+}

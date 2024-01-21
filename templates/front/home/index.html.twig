@@ -5,13 +5,13 @@
 
 {% block content %}
 
-		<div class="container">
-			{% for type, messages in app.flashes %}
-				{% for message in messages %}
-					<div class="alert alert-{{ type }}">{{ message }}</div>
-				{% endfor %}
-			{% endfor %}
-		</div>
+<div class="container">
+	{% for type, messages in app.flashes %}
+		{% for message in messages %}
+			<div class="alert alert-{{ type }}">{{ message }}</div>
+		{% endfor %}
+	{% endfor %}
+</div>
 
 <div id="smooth-wrapper">
 	<div id="smooth-content">
@@ -28,7 +28,7 @@
 						<div class="banner-one-wrapper mt--80 mt_sm--0">
 							<h1 class="title rts_hero__title">
 								Agence web <br>
-								Dans <span class="border-bottom-1">la Nièvre</span> <br>
+								Dans <span class="border-bottom-1">l'Yonne</span> <br>
 								Solutions numérique
 							</h1>
 							<div class="para-wraph">
@@ -142,7 +142,7 @@
 								technologie, où chaque projet est abordé avec une précision méticuleuse. Notre expertise en
 								stratégie, design et développement garantit des solutions numériques exceptionnelles et uniques.
 							</p>
-							<a href="{{ url('front_project') }}" class="learn-more-btn text-white">Démonstration <i class="fa-solid fa-arrow-up-right"></i></a>
+							<a href="{{ url('front_project') }}" class="learn-more-btn text-white">Voir nos réalisations <i class="fa-solid fa-arrow-up-right"></i></a>
 						</div>
 						<!-- End of the left approach area -->
 					</div>

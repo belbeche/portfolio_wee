@@ -87,15 +87,21 @@
 						</li>
 						<li class="menu-item">
 							<a href="{{ url('front_devis_new') }}">
-							<span class="rolling-text">Tarifs</span>
+							<span class="rolling-text">Démo</span>
 							</a>
 						</li>
 						<li class="menu-item {{ app.request.get('_route') == 'front_about' ? 'active' : '' }}">
 							<a class="nav-link" href="{{ url('front_about') }}"><span class="rolling-text">L'agence</span></a>
 						</li>
-						<li class="menu-item">
-							<a href="{{ url('app_login') }}"><span class="rolling-text">Connexion</span></a>
-						</li>
+						{% if app.user %}
+							<li class="menu-item">
+								<a href="{{ url('app_logout') }}"><span class="rolling-text">Déconnexion</span></a>
+							</li>
+						{% else %}
+							<li class="menu-item">
+								<a href="{{ url('app_login') }}"><span class="rolling-text">Connexion</span></a>
+							</li>
+						{% endif %}
 					</ul>
 				</nav>
 
