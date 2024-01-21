@@ -5,23 +5,10 @@
 
 {% block content %}
 
-	<!-- Scripts style two -->
-    <!-- rts bread crumba rea start -->
-    <div class="rts-breadcrumb-area banner-bg-1">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-12">
-                    <div class="baread-crumb-main-wrapper pt--100">
-                        <div class="inner">
-                            <span class="works">Portfolio</span>
-                            <h1 class="title rts_hero__title">Voici quelques-unes de nos réalisations</h1>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+    <div class="cta-style-one rts-section-gapTop section-gap banner-bg-1 text-center" style="height: auto;">
+        <span class="works">Portfolio</span>
+        <h1 class="title rts_hero__title">Voici quelques-unes de nos réalisations</h1>
     </div>
-    <!-- rts bread crumba rea end -->
     <!-- Scripts style two End -->
 
 
@@ -68,7 +55,7 @@
 								<a href="{{ url('front_project_show', {id: project.id}) }}"></a>
 								<div class="inner-content">
 									<span class="category">{{ project.category|join(', ')|title }}</span>
-									<a href="portfolio-details.html">
+									<a href="{{ url('front_project_show', {id: project.id}) }}">
 										<h5 class="name">{{ project.title }}</h5>
 									</a>
 								</div>
