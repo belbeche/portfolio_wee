@@ -210,7 +210,7 @@
 											<div class="content-wrapper">
 												<span class="sub-title">{{ project.title }}</span>
 												<h4 class="title">{{ project.category|join(', ')|title }}</h4>
-												<p class="text-justify">{{ project.description }}.</p>
+												{#<p class="text-justify">{{ project.description }}.</p>#}
 												<a href="{{ url('front_project_show', {id: project.id}) }}" class="learn-more-btn">Voir l'étude <i
 															class="fa-solid fa-arrow-up-right"></i></a>
 											</div>
