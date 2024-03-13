@@ -58,7 +58,7 @@ class HomeController extends AbstractController
                 $entityManager->flush();
 
                 $email = (new TemplatedEmail())
-                    ->from('wbelbeche.s@gmail.com')
+                    ->from('support@scriptzenit.fr')
                     ->to($contact->getEmail())
                     ->bcc('wbelbeche.s@gmail.com')
                     ->subject('Prise de contact,ScriptZenIT')
