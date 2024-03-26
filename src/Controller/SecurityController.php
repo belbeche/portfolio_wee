@@ -7,6 +7,7 @@ use App\Entity\Devis;
 use App\Form\UserType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Mailer\MailerInterface;
@@ -24,25 +25,15 @@ class SecurityController extends AbstractController
      * @Route("/inscription", name="app_register")
      * 
      */
-    public function Register(Request $request, EntityManagerInterface $entityManager, UserPasswordHasherInterface $hasher,MailerInterface $mailer): Response
+    public function renderRegister(MailerInterface $mailer): Response
     {
 
         $user = new User();
 
         $form = $this->createForm(UserType::class, $user);
 
-        if ($request->isMethod('post')) {
-            $form->handleRequest($request);
 
-            if ($form->isSubmitted() && $form->isValid()) {
-                $user->setPassword($hasher->hashpassword(
-                    $user,
-                    $form->get('password')->getData()
-                ));
-                $user->setRoles(['ROLE_USER']);
-
-
-                $email = (new TemplatedEmail())
+                /*$email = (new TemplatedEmail())
                     ->from('wbelbeche.s@gmail.com')
                     ->to($user->getEmail())
                     ->subject('Récapitulatif inscription ScriptZenIT')
@@ -57,19 +48,41 @@ class SecurityController extends AbstractController
                     ])
                     ->htmlTemplate('security/email.html.twig');
 
-                $mailer->send($email);
-
-                $entityManager->persist($user);
-
-                $entityManager->flush();
-
-                return $this->redirectToRoute('app_login');
-            }
-        }
+                $mailer->send($email);*/
 
         return $this->render('security/register.html.twig', [
             'formRegister' => $form->createView(),
         ]);
+    }
+
+    /**
+     * @Route("/api/register", name="api_register")
+     */
+    public function register(Request $request,EntityManagerInterface $entityManager,UserPasswordHasherInterface $hasher): jsonResponse
+    {
+        $data = json_decode($request->getContent(), true);
+
+        $user = new User();
+
+        $user
+            ->setNom($data['userLastName'])
+            ->setPrenom($data['userFirstName'])
+            ->setEmail($data['userEmail'])
+            ->setCivility($data['userCivility'])
+            ->setRoles(['ROLE_USER'])
+        ;
+
+        $user
+            ->setPassword($hasher->hashpassword(
+                $user,
+                $data['userFirstPassword']
+            ))
+        ;
+        // $entityManager->persist($user);
+
+        // $entityManager->flush();
+
+        return new jsonResponse('success');
     }
 
     /**

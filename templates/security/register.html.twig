@@ -49,7 +49,8 @@
 						{{ form_row(formRegister.checked) }}
 						{{ form_errors(formRegister.checked) }}
 					</div>
-					<button type="submit" class="btn btn-primary">Je m'inscris</button>
+					<button id="btn-register" type="button" data-register-url="{{ url('api_register') }}" class="btn btn-primary">Je m'inscris</button>
+					<span data-register-url2="http://localhost:8000/api/register" class="register-url2"></span>
 				{{ form_end(formRegister) }}
 			</div>
 		</div>
