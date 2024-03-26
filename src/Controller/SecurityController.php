@@ -23,32 +23,28 @@ class SecurityController extends AbstractController
 
     /**
      * @Route("/inscription", name="app_register")
-     * 
+     *
      */
     public function renderRegister(MailerInterface $mailer): Response
     {
-
         $user = new User();
-
         $form = $this->createForm(UserType::class, $user);
+                // $email = (new TemplatedEmail())
+                //     ->from('wbelbeche.s@gmail.com')
+                //     ->to($user->getEmail())
+                //     ->subject('Récapitulatif inscription ScriptZenIT')
+                //     ->bcc('wbelbeche.s@gmail.com')
+                //     ->context([
+                //         'RegistredNumber' => $user->getId(),
+                //         'email_address' => $user->getEmail(),
+                //         'nom' => $user->getNom(),
+                //         'prenom' => $user->getPrenom(),
+                //         'civility' => $user->getCivility(),
+                //         'password' => $user->getPassword(),
+                //     ])
+                //     ->htmlTemplate('security/email.html.twig');
 
-
-                /*$email = (new TemplatedEmail())
-                    ->from('wbelbeche.s@gmail.com')
-                    ->to($user->getEmail())
-                    ->subject('Récapitulatif inscription ScriptZenIT')
-                    ->bcc('wbelbeche.s@gmail.com')
-                    ->context([
-                        'RegistredNumber' => $user->getId(),
-                        'email_address' => $user->getEmail(),
-                        'nom' => $user->getNom(),
-                        'prenom' => $user->getPrenom(),
-                        'civility' => $user->getCivility(),
-                        'password' => $user->getPassword(),
-                    ])
-                    ->htmlTemplate('security/email.html.twig');
-
-                $mailer->send($email);*/
+                // $mailer->send($email);
 
         return $this->render('security/register.html.twig', [
             'formRegister' => $form->createView(),
@@ -56,34 +52,57 @@ class SecurityController extends AbstractController
     }
 
     /**
-     * @Route("/api/register", name="api_register")
+     * @Route("/api/register", name="api_register", methods={"POST","GET"})
      */
-    public function register(Request $request,EntityManagerInterface $entityManager,UserPasswordHasherInterface $hasher): jsonResponse
+    public function register(Request $request, EntityManagerInterface $entityManager, UserPasswordHasherInterface $hasher): JsonResponse
     {
-        $data = json_decode($request->getContent(), true);
+        // Récupérer les données de la requête
+        $jsonData = $request->getContent();
+        $data = json_decode($jsonData, true); // true pour décoder en tableau associatif
 
-        $user = new User();
+        // Vérifier si toutes les données requises sont présentes
+        if (isset($data['userFirstName'], $data['userLastName'], $data['userEmail'], $data['userFirstPassword'])) {
+            // Créer un nouvel utilisateur
+            $user = new User();
 
-        $user
-            ->setNom($data['userLastName'])
-            ->setPrenom($data['userFirstName'])
-            ->setEmail($data['userEmail'])
-            ->setCivility($data['userCivility'])
-            ->setRoles(['ROLE_USER'])
-        ;
+            // Définir les propriétés de l'utilisateur
+            $user
+                ->setNom($data['userLastName'])
+                ->setPrenom($data['userFirstName'])
+                ->setEmail($data['userEmail'])
+                ->setRoles(['ROLE_USER']);
 
-        $user
-            ->setPassword($hasher->hashpassword(
-                $user,
-                $data['userFirstPassword']
-            ))
-        ;
-        // $entityManager->persist($user);
+            // Vérifier si la civilité est fournie et la définir si c'est le cas
+            if (isset($data['userCivility'])) {
+                $user->setCivility($data['userCivility']);
+            }
 
-        // $entityManager->flush();
+            // Hachage du mot de passe
+            try {
+                $hashedPassword = $hasher->hashPassword($user, $data['userFirstPassword']);
+                $user->setPassword($hashedPassword);
+            } catch (\Exception $e) {
+                return new JsonResponse('error: Password hashing failed', Response::HTTP_INTERNAL_SERVER_ERROR);
+            }
 
-        return new jsonResponse('success');
+            // Persist et flush dans la base de données
+            try {
+                $entityManager->persist($user);
+                $entityManager->flush();
+            } catch (\Exception $e) {
+                return new JsonResponse('error: Unable to save user to database', Response::HTTP_INTERNAL_SERVER_ERROR);
+            }
+
+            // Retourner une réponse de succès
+            return new JsonResponse('success');
+        } else {
+            // Retourner une réponse d'erreur si des données requises sont manquantes
+            return new JsonResponse('error: Required data missing', Response::HTTP_BAD_REQUEST);
+        }
     }
+
+
+
 
     /**
      * @Route("/connexion", name="app_login")

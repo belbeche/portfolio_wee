@@ -18,12 +18,12 @@
 			<div class="col-md-10 mx-auto col-lg-5">
 				{{ form_start(formRegister, {attr: {'class' : 'p-4 p-md-5 border rounded-3'}}) }}
 					<div>
-						<label for="nom" class="sr-only">Nom</label>
+						<label for="user_nom" class="sr-only">Nom</label>
 						{{ form_row(formRegister.nom) }}
 						{{ form_errors(formRegister.nom) }}
 					</div>
 					<div>
-						<label for="prenom" class="sr-only">Prenom</label>
+						<label for="user_prenom" class="sr-only">Prenom</label>
 						{{ form_row(formRegister.prenom) }}
 						{{ form_errors(formRegister.prenom) }}
 					</div>
@@ -49,8 +49,8 @@
 						{{ form_row(formRegister.checked) }}
 						{{ form_errors(formRegister.checked) }}
 					</div>
-					<button id="btn-register" type="button" data-register-url="{{ url('api_register') }}" class="btn btn-primary">Je m'inscris</button>
-					<span data-register-url2="http://localhost:8000/api/register" class="register-url2"></span>
+					<button id="btn-register" type="submit" data-register-url="{{ url('api_register') }}" class="btn btn-primary">Je m'inscris</button>
+					<span data-register-url2="http://localhost:8000/api/register" data-redirect-to-login="{{ url('app_login') }}" class="register-url2"></span>
 				{{ form_end(formRegister) }}
 			</div>
 		</div>

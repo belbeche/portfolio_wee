@@ -33,19 +33,19 @@ btnRegister.addEventListener('click', function(e) {
         userSecondPassword: userSecondPassword.value,
         userChecked: userChecked.value
     }
+    console.log(formData);
 
     axios.post(btnRegister.dataset.registerUrl, formData)
         .then(response => {
-            console.log(response.data)
+            // envoie à la base de données du site support de scriptzenit
+            const url2 = document.querySelector('.register-url2')    
+            // console.log(url2)
+            // console.log(url2.dataset.registerUrl2)
+            axios.post(url2.dataset.registerUrl2, formData)
+                .then(response => {
+                    location.href=url2.dataset.redirectToLogin
+                })
+                .catch(error => console.log(error))
         })
         .catch(error => console.log(error))
-
-    // envoie à la base de données du site support de scriptzenit
-    const url2 = document.querySelector('.register-url2')    
-    axios.post(url2.dataset.registerUrl2, formData)
-        .then(response => {
-            console.log(response.data)
-        })
-        .catch(error => console.log(error))
-
 })

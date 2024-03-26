@@ -87,6 +87,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @ORM\OneToMany(targetEntity=Devis::class, mappedBy="user", orphanRemoval=true)
      */
     private $devis;
+
     public function __construct()
     {
         $this->devis = new ArrayCollection();
@@ -177,6 +178,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     public function getUsername()
+    {
+    }
+    public function setUsername()
     {
     }
 
@@ -377,4 +381,5 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
         return $this;
     }
+
 }
