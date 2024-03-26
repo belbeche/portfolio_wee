@@ -39,7 +39,7 @@
 						<a class="nav-link" href="{{ url('front_devis_new') }}">Faire une demande</a>
 					</li>
 					<li class="menu-item {{ app.request.get('_route') == 'app_login' ? 'active' : '' }}">
-						<a class="btn btn-info" href="{{ url('app_login') }}">Connexion</a>
+						<a class="btn btn-info" href="{{ url('api_login') }}">Connexion</a>
 					</li>
 					<li class="menu-item {{ app.request.get('_route') == 'front_contact' ? 'active' : '' }}">
 						<a class="btn btn-outline-secondary" href="{{ url('front_contact') }}">Contact</a>
