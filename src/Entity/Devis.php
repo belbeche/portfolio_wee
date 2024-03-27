@@ -71,6 +71,11 @@ class Devis
      */
     private $tickets;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="devis")
+     */
+    private $user;
+
     public function __construct()
     {
         $this->created_at = new DateTimeImmutable('now', new \DateTimeZone('Europe/Paris'));
@@ -239,4 +244,21 @@ class Devis
         return $this;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getUser()
+    {
+        return $this->user;
+    }
+
+    /**
+     * @param mixed $user
+     * @return Devis
+     */
+    public function setUser($user)
+    {
+        $this->user = $user;
+        return $this;
+    }
 }

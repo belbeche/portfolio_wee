@@ -118,9 +118,8 @@ class DevisController extends AbstractController
         // Vérifier si un utilisateur existe avec cet email
         $user = $entityManager->getRepository(User::class)->findOneBy(['email' => $email]);
 
-        if (!$user) {
+        if ($user === $this->getUser()->getPassword()) {
             // Si aucun utilisateur n'existe avec cet email, c'est un nouvel utilisateur, affichez le formulaire de création de mot de passe
-            $user = new User();
             $user->setEmail($email);
             $user->setRoles(['ROLE_USER']);
         } else {

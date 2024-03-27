@@ -95,15 +95,15 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("/admin/user/{id}/delete", name="back_user_delete", methods={"POST"})
+     * @Route("/admin/user/{id}/delete", name="back_user_delete")
      * @IsGranted("ROLE_ADMIN")
      */
-    public function delete(Request $request, User $user, EntityManagerInterface $entityManager): Response
+    public function delete(Request $request, EntityManagerInterface $entityManager,$id): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$user->getId(), $request->request->get('_token'))) {
-            $entityManager->remove($user);
-            $entityManager->flush();
-        }
+        $user = $entityManager->getRepository(User::class)->find($id);
+
+        $entityManager->remove($user);
+        $entityManager->flush();
 
         return $this->redirectToRoute('back_user_index');
     }

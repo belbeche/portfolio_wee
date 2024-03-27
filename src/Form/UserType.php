@@ -20,18 +20,35 @@ class UserType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('nom', TextType::class)
-            ->add('prenom', TextType::class)
+            ->add('nom', TextType::class, [
+                'attr' => [
+                    'placeholder' => 'Votre nom'
+                ],
+                'required' => true
+            ])
+            ->add('prenom', TextType::class, [
+                'attr' => [
+                    'placeholder' => 'Votre prénom'
+                ],
+                'required' => true
+            ])
             ->add('civility', ChoiceType::class, [
                 'label' => 'Civilité',
                 'choices' => [
-                    'M.' => 'M',
-                    'Mme.' => 'Mme',
+                    'M' => 'M',
+                    'Mme' => 'Mme',
                 ],
                 'expanded' => true,   // Utilisez ceci si vous souhaitez des boutons radio
-                'multiple' => false,  // Gardez ceci sur false pour ne permettre qu'un seul choix
+                'multiple' => false,  // Gardez ceci sur false pour ne permettre qu'un seul choix,
+                'required' => false,
             ])
-            ->add('email', EmailType::class)
+            ->add('email', EmailType::class, [
+                'label' => 'Email de connexion',
+                'attr' => [
+                    'placeholder' => 'Email de connexion'
+                ],
+                'required' => true,
+            ])
             ->add('roles', HiddenType::class, [
                     'data' => ['ROLE_USER'],
                 ]
@@ -43,12 +60,18 @@ class UserType extends AbstractType
                 'required' => true,
                 'first_options'  => ['label' => 'Mot de passe'],
                 'second_options' => ['label' => 'Répétez le mot de passe'],
+                'attr' => [
+                    'placeholder' => 'Votre mot de passe'
+                ],
             ])
             ->add('checked', CheckboxType::class, [
                 'label' => 'Je reconnais avoir lu et compris les CGU et je les accepte',
+                'attr' => [
+                    'placeholder' => 'Confirmation mdp'
+                ],
                 'required' => true,
                 'mapped' => false,
-                'help' => 'Les conditions générales d\'utilisations ainsi que les mentions légales sont accessible en bas de page',
+                'help' => 'En cochant cette case, vous donnez l\'accord pour être contacté par un membre de l\'équipe.',
             ])
         ;
 

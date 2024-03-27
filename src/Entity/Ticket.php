@@ -44,7 +44,7 @@ class Ticket
     private $updatedAt;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Devis::class)
+     * @ORM\ManyToOne(targetEntity=Devis::class, inversedBy="tickets")
      */
     private $devis;
 

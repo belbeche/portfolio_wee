@@ -17,7 +17,7 @@ btnRegister.addEventListener('click', function(e) {
     let userCivility = null;
 
     if (userCivility0.checked === true){
-        userCivility = 'M.'
+        userCivility = 'M'
     } else if (userCivility1.checked === true){
         userCivility = 'Mme'
     } else {

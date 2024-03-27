@@ -17,6 +17,8 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
 class SecurityController extends AbstractController
 {
@@ -52,57 +54,66 @@ class SecurityController extends AbstractController
     }
 
     /**
-     * @Route("/api/register", name="api_register", methods={"POST","GET"})
+     * @Route("/api/register", name="api_register", methods={"POST"})
      */
-    public function register(Request $request, EntityManagerInterface $entityManager, UserPasswordHasherInterface $hasher): JsonResponse
+    public function register(Request $request, EntityManagerInterface $entityManager, ValidatorInterface $validator, UserPasswordEncoderInterface $passwordEncoder): JsonResponse
     {
-        // Récupérer les données de la requête
-        $jsonData = $request->getContent();
-        $data = json_decode($jsonData, true); // true pour décoder en tableau associatif
+        $data = json_decode($request->getContent(), true);
 
-        // Vérifier si toutes les données requises sont présentes
-        if (isset($data['userFirstName'], $data['userLastName'], $data['userEmail'], $data['userFirstPassword'])) {
-            // Créer un nouvel utilisateur
-            $user = new User();
+        // Utilisation des annotations Assert pour valider les données
+        $constraints = new Assert\Collection([
+            'userFirstName' => new Assert\NotBlank(),
+            'userLastName' => new Assert\NotBlank(),
+            'userEmail' => [new Assert\NotBlank(), new Assert\Email()],
+            'userFirstPassword' => new Assert\NotBlank(),
+            'userCivility' => new Assert\Optional(), // Autorise userCivility comme champ facultatif
+            'userChecked' => new Assert\NotBlank(),
+            'userSecondPassword' => [
+                new Assert\Regex([
+                    'pattern' => '/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$/',
+                    'message' => 'Le mot de passe doit contenir au moins 8 caractères, une lettre majuscule, une lettre minuscule et un chiffre.'
+                ])
+            ],
+        ]);
 
-            // Définir les propriétés de l'utilisateur
-            $user
-                ->setNom($data['userLastName'])
-                ->setPrenom($data['userFirstName'])
-                ->setEmail($data['userEmail'])
-                ->setRoles(['ROLE_USER']);
+        $violations = $validator->validate($data, $constraints);
 
-            // Vérifier si la civilité est fournie et la définir si c'est le cas
-            if (isset($data['userCivility'])) {
-                $user->setCivility($data['userCivility']);
+        if (count($violations) > 0) {
+            // Il y a des violations des contraintes de validation
+            $errorMessages = [];
+            foreach ($violations as $violation) {
+                $errorMessages[] = $violation->getMessage();
             }
-
-            // Hachage du mot de passe
-            try {
-                $hashedPassword = $hasher->hashPassword($user, $data['userFirstPassword']);
-                $user->setPassword($hashedPassword);
-            } catch (\Exception $e) {
-                return new JsonResponse('error: Password hashing failed', Response::HTTP_INTERNAL_SERVER_ERROR);
-            }
-
-            // Persist et flush dans la base de données
-            try {
-                $entityManager->persist($user);
-                $entityManager->flush();
-            } catch (\Exception $e) {
-                return new JsonResponse('error: Unable to save user to database', Response::HTTP_INTERNAL_SERVER_ERROR);
-            }
-
-            // Retourner une réponse de succès
-            return new JsonResponse('success');
-        } else {
-            // Retourner une réponse d'erreur si des données requises sont manquantes
-            return new JsonResponse('error: Required data missing', Response::HTTP_BAD_REQUEST);
+            return new JsonResponse($errorMessages, JsonResponse::HTTP_BAD_REQUEST);
         }
+
+        // Créer un nouvel utilisateur
+        $user = new User();
+        $user
+            ->setNom($data['userLastName'])
+            ->setPrenom($data['userFirstName'])
+            ->setEmail($data['userEmail'])
+            ->setRoles(['ROLE_USER']);
+
+        // Hachage du mot de passe
+        try {
+            $hashedPassword = $passwordEncoder->encodePassword($user, $data['userFirstPassword']);
+            $user->setPassword($hashedPassword);
+        } catch (\Exception $e) {
+            return new JsonResponse('error: Password hashing failed', JsonResponse::HTTP_INTERNAL_SERVER_ERROR);
+        }
+
+        // Persist et flush dans la base de données
+        try {
+            $entityManager->persist($user);
+            $entityManager->flush();
+        } catch (\Exception $e) {
+            return new JsonResponse('error: Unable to save user to database', JsonResponse::HTTP_INTERNAL_SERVER_ERROR);
+        }
+
+        // Retourner une réponse de succès
+        return new JsonResponse('success');
     }
-
-
-
 
     /**
      * @Route("/connexion", name="app_login")

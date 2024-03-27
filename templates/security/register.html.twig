@@ -28,12 +28,12 @@
 						{{ form_errors(formRegister.prenom) }}
 					</div>
 					<div>
-						<label for="nom" class="sr-only">Civilité</label>
+						<label for="nom" class="sr-only">Civilité (Optionel)</label>
 						{{ form_row(formRegister.civility) }}
 						{{ form_errors(formRegister.civility) }}
 					</div>
 					<div>
-						<label for="email-address" class="sr-only">Identifiant de connexion</label>
+						{#<label for="email-address" class="sr-only">Identifiant de connexion</label>#}
 						{{ form_widget(formRegister.email) }}
 						{{ form_errors(formRegister.email) }}
 					</div>
@@ -49,8 +49,12 @@
 						{{ form_row(formRegister.checked) }}
 						{{ form_errors(formRegister.checked) }}
 					</div>
-					<button id="btn-register" type="submit" data-register-url="{{ url('api_register') }}" class="btn btn-primary">Je m'inscris</button>
-					<span data-register-url2="http://localhost:8000/api/register" data-redirect-to-login="{{ url('app_login') }}" class="register-url2"></span>
+					<p>En cliquant sur "Je m'inscris", un compte sera automatiquement créé sur notre site d'assistance. La sécurité de vos données est notre priorité absolue, et nos applications sont entièrement conformes aux normes de la
+					<a href="https://www.cnil.fr/fr/guide-rgpd-du-developpeur">CNIL</a>. Vous avez la possibilité de supprimer vos données instantanément depuis votre espace personnel.</p>
+					<div class="container">
+						<button id="btn-register" type="submit" data-register-url="{{ url('api_register') }}" class="btn btn-primary">Je m'inscris</button>
+						<span data-register-url2="http://localhost:8000/api/register" data-redirect-to-login="{{ url('app_login') }}" class="register-url2"></span>
+					</div>
 				{{ form_end(formRegister) }}
 			</div>
 		</div>

@@ -247,10 +247,10 @@ class MessageController extends AbstractController
      */
     public function remove(EntityManagerInterface $entityManager, Message $ticket, Request $request, Filesystem $filesystem): RedirectResponse
     {
-        if ($this->isCsrfTokenValid('delete' . $ticket->getId(), $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid('delete', $request->request->get('_token'))) {
 
             // Récupérer le chemin du fichier associé au ticket
-            $attachmentPath = $this->getParameter('uploads_directory') . '/' . $ticket->getAttachment();
+            $attachmentPath = $this->getParameter('uploads_directory');
 
             // Supprimer le fichier si il existe
             if ($filesystem->exists($attachmentPath)) {
