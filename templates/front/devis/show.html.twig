@@ -122,11 +122,15 @@
 
 
             <div class="container">
-                <h1 class="txt-center-title">DEMANDE EN FORMAT PAPIER</h1>
+                <h1 class="txt-center-title">Mon devis</h1>
                 <h3>Bonjour {{ app.user.civility }}. {{ app.user.nom }} {{ app.user.prenom }},</h3>
-                <p>Ceci est votre demande en format accessible sur votre espace ScriptZenIT </p>
+                <p>Ceci est votre devis en format papier accessible sur votre espace ScriptZenIT.fr </p>
                 <p>Votre souhait concernant votre besoin de {{ devis.typeDeSiteWeb }} crée le {{ devis.createdAt|date('d/m/Y') }} à {{ devis.createdAt|date('H:i') }}.</p>
-                <p>Consulter toutes explications sur les types de sites web et les choix de design sur <a href="https://scriptzenit.fr/devis-en-ligne">scriptzenit.fr</a>rubrique "Faire une demande"</p>
+                <p>A bien était pris en compte</p>
+                <hr>
+                <br>
+                <h3>Assistance</h3>
+                <p>Consulter toutes explications sur les types de sites web et les choix de design sur <a href="https://scriptzenit.fr/devis-en-ligne">scriptzenit.fr</a> <strong>menu principal</strong> "Faire une demande"</p>
                 <p>Merci de votre confiance, à bientôt.</p>
                 <hr>
                 <h3>Vos préférences</h3>

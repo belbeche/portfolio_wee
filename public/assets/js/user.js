@@ -10,20 +10,45 @@ const userSecondPassword = document.querySelector('#user_password_second');
 const userChecked = document.querySelector('#user_checked');
 
 btnRegister.addEventListener('click', function(e) {
-    e.preventDefault()
+    e.preventDefault();
 
-    console.log(userCivility0.checked)
-    console.log(userCivility1.checked)
+    // Vérification de la civilité
     let userCivility = null;
-
-    if (userCivility0.checked === true){
-        userCivility = 'M'
-    } else if (userCivility1.checked === true){
-        userCivility = 'Mme'
+    if (userCivility0.checked === true) {
+        userCivility = 'M';
+    } else if (userCivility1.checked === true) {
+        userCivility = 'Mme';
     } else {
-        userCivility = null
+        alert('Veuillez sélectionner une civilité.');
+        return; // Arrête la soumission si la civilité n'est pas sélectionnée
     }
 
+    // Vérification du nom et prénom
+    if (userLastName.value.trim() === '' || userFirstName.value.trim() === '') {
+        alert('Veuillez saisir votre nom et prénom.');
+        return; // Arrête la soumission si le nom ou prénom est vide
+    }
+
+    // Vérification de l'email
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(userEmail.value)) {
+        alert('Veuillez saisir une adresse email valide.');
+        return; // Arrête la soumission si l'email est invalide
+    }
+
+    // Vérification du mot de passe
+    if (userFirstPassword.value !== userSecondPassword.value) {
+        alert('Les mots de passe ne correspondent pas.');
+        return; // Arrête la soumission si les mots de passe ne correspondent pas
+    }
+
+    // Vérification de l'acceptation des conditions
+    if (!userChecked.checked) {
+        alert('Veuillez accepter les conditions.');
+        return; // Arrête la soumission si les conditions ne sont pas acceptées
+    }
+
+    // Si toutes les vérifications sont réussies, créer l'objet formData et envoyer la requête
     const formData = {
         userLastName: userLastName.value,
         userFirstName: userFirstName.value,
@@ -32,7 +57,7 @@ btnRegister.addEventListener('click', function(e) {
         userFirstPassword: userFirstPassword.value,
         userSecondPassword: userSecondPassword.value,
         userChecked: userChecked.value
-    }
+    };
     console.log(formData);
 
     axios.post(btnRegister.dataset.registerUrl, formData)
