@@ -24,11 +24,11 @@
 				</li>
 
 				<li class="menu-item {{ app.request.get('_route') == 'front_about' ? 'active' : '' }}">
-					<a class="nav-link" href="{{ url('front_about') }}">A propos de moi</a>
+					<a class="nav-link" href="{{ url('front_about') }}">A propos</a>
 				</li>
 
 				<li class="menu-item {{ app.request.get('_route') == 'front_project' ? 'active' : '' }}">
-					<a class="nav-link" href="{{ url('front_project') }}">Ce que je propose</a>
+					<a class="nav-link" href="{{ url('front_project') }}">Nos réalisations</a>
 				</li>
 				{% if app.user %}
 					<li class="menu-item {{ app.request.get('_route') == 'front_assistance' ? 'active' : '' }}">

@@ -116,15 +116,19 @@
                 Numéro d'entreprise : 848 967 816 <br>
                 Numéro de TVA : FR68848967816 <br>
                 Numéro de téléphone : 0762972691 <br>
-                Adresse email : wbelbeche.s@gmail.com <br>
+                Adresse email : contact@scriptzenit.fr <br>
                 Site internet : https://scriptzenit.fr
             </div>
 
 
             <div class="container">
                 <h1 class="txt-center-title">DEMANDE EN FORMAT PAPIER</h1>
-                <h3>Bonjour {{ app.user.civility }} {{ app.user.nom }},</h3>
-                <p>Ceci est votre demande en format PDF {{ devis.typeDeSiteWeb }} que vous avez effectuée sur ScriptZenIT.fr.</p>
+                <h3>Bonjour {{ app.user.civility }}. {{ app.user.nom }} {{ app.user.prenom }},</h3>
+                <p>Ceci est votre demande en format accessible sur votre espace ScriptZenIT </p>
+                <p>Votre souhait concernant votre besoin de {{ devis.typeDeSiteWeb }} crée le {{ devis.createdAt|date('d/m/Y') }} à {{ devis.createdAt|date('H:i') }}.</p>
+                <p>Consulter toutes explications sur les types de sites web et les choix de design sur <a href="https://scriptzenit.fr/devis-en-ligne">scriptzenit.fr</a>rubrique "Faire une demande"</p>
+                <p>Merci de votre confiance, à bientôt.</p>
+                <hr>
                 <h3>Vos préférences</h3>
                 Type de site web: {{ devis.typeDeSiteWeb }}<br />
                 Attentes design: {{ devis.attentesDesignWeb }}<br />

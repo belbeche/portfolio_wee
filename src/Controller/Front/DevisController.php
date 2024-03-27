@@ -7,12 +7,14 @@ use App\Entity\User;
 use App\Form\DevisType;
 use App\Form\UserPasswordType;
 use App\Form\UserType;
+use Doctrine\DBAL\Driver\PDO\Exception;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Snappy\Pdf;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
+use Symfony\Component\Mime\Address;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Mailer\MailerInterface;
@@ -23,82 +25,102 @@ class DevisController extends AbstractController
 {
     /**
      * @Route("/devis-en-ligne", name="front_devis_new")
-     * @throws TransportExceptionInterface
      */
     public function new(Request $request, EntityManagerInterface $entityManager, MailerInterface $mailer): Response
     {
-
         $devis = new Devis();
+        /*if ($form->isSubmitted() && $form->isValid()) {
+            // Utilisation du Voter ici
+            $this->denyAccessUnlessGranted('CREATE', $devis);
+            $devis->setStatut('en_attente'); // Mettez à jour le statut si nécessaire
+            $devis->setPrix('0'); // prix à 0 au moment de la création
 
-        // Supposons que "type" est un paramètre GET de la requête
-        $type = $request->query->get('type');
+            // Génération du code temporaire
+            $tempCode = bin2hex(random_bytes(6)); // Génère un code hexadécimal de 6 caractères
 
-        $defaultValue = 'site_vitrine'; // valeur par défaut
-        if ($type === 'cross_plateforme') {
-            $defaultValue = 'application_cross_plateforme';
-        } elseif ($type === 'site_real_estate'){
-            $defaultValue = 'site_real_estate';
-        } elseif ($type === 'site_e-commerce'){
-            $defaultValue = 'site_e-commerce';
-        } elseif ($type === 'site_portfolio'){
-            $defaultValue = 'site_portfolio';
-        }
+            // Vérifier si l'adresse e-mail est vide
+            if (!empty($email)) {
 
-        $form = $this->createForm(DevisType::class, $devis, [
-            'default_type_de_site_web' => $defaultValue
-        ]);
 
-        $form->handleRequest($request);
+                dd($devisUuid);
+                // Vérifier si un devis existe avec cette adresse e-mail
 
-        if ($request->isMethod('post')) {
-            if ($form->isSubmitted() && $form->isValid()) {
-                // Utilisation du Voter ici
-                $this->denyAccessUnlessGranted('CREATE', $devis);
-                $devis->setStatut('en_attente'); // Mettez à jour le statut si nécessaire
+                $email->setPassword($tempCode);
+            }
 
-                $email = $devis->getEmail();
+            // Si l'adresse e-mail est vide ou si aucun devis n'a été trouvé, effectuer d'autres actions ici
+            /*$entityManager->persist($devis);
+            $entityManager->flush();
 
-                // Vérifier si l'adresse e-mail est pas vide
-                if (!empty($email)) {
-                    // Vérifier si un devis existe avec cette adresse e-mail
-                    $existingDevis = $entityManager->getRepository(Devis::class)->findOneBy(['email' => $email]);
+            
+        }*/
+            // Supposons que "type" est un paramètre GET de la requête
+            // $type = $request->query->get('type');
+            // throw new Exception('le type est null');
 
-                    if ($existingDevis) {
-                        // Si un devis existe avec cette adresse e-mail, rediriger vers la page d'assistance
-                        $this->addFlash('warning', 'Un devis existe déjà avec cette adresse e-mail.');
-                        return $this->redirectToRoute('front_assistance');
-                    }
-                }
+            // $defaultValue = 'site_vitrine'; // valeur par défaut
+            // if ($type === 'cross_plateforme') {
+            //     $defaultValue = 'application_cross_plateforme';
+            // } elseif ($type === 'site_real_estate') {
+            //     $defaultValue = 'site_real_estate';
+            // } elseif ($type === 'site_e-commerce') {
+            //     $defaultValue = 'site_e-commerce';
+            // } elseif ($type === 'site_portfolio') {
+            //     $defaultValue = 'site_portfolio';
+            // }
 
-                // Si l'adresse e-mail est vide ou si aucun devis n'a été trouvé, effectuer d'autres actions ici
+            $form = $this->createForm(DevisType::class, $devis);
+
+            $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            // Utilisation du Voter ici
+            $this->denyAccessUnlessGranted('CREATE', $devis);
+            $devis->setStatut('en_attente'); // Mettez à jour le statut si nécessaire
+            $devis->setPrix('0'); // prix à 0 au moment de la création
+
+            // Génération du code temporaire
+            // $tempCode = bin2hex(random_bytes(6)); // Génère un code hexadécimal de 6 caractères
+
+            // // Vérifier si l'adresse e-mail est vide
+            // if (!empty($email)) {
+
+
+            //     dd($devisUuid);
+            //     // Vérifier si un devis existe avec cette adresse e-mail
+
+            //     $email->setPassword($tempCode);
+            // }
+
+            // Envoi de l'email avec le code temporaire
+            $email = (new TemplatedEmail())
+                ->from(new Address('support@scriptzenit.fr', 'L\'equipe Scriptzenit'))
+                ->to($devis->getEmail())
+                ->subject('Récapitulatif de demande de devis - Walid BELBECHE')
+                ->context([
+                    'registredNumber' => $devis->getId(),
+                    'emailAddress' => $devis->getEmail(),
+                    'subject' => $devis->getTypeDeSiteWeb(),
+                    'designWebsite' => $devis->getAttentesDesignWeb(),
+                    'message' => $devis->getDescriptionProjet()
+                    // 'temporaryCode' => $tempCode,
+                ])
+                ->htmlTemplate('front/devis/email.html.twig');
+
+            try {
                 $entityManager->persist($devis);
                 $entityManager->flush();
-
-                $email = (new TemplatedEmail())
-                    ->from('wbelbeche.s@gmail.com')
-                    ->to($devis->getEmail())
-                    ->subject('Récapitulatif de demande devis, Walid BELBECHE')
-                    ->bcc('wbelbeche.s@gmail.com')
-                    ->context([
-                        'RegistredNumber' => $devis->getId(),
-                        'email_address' => $devis->getEmail(),
-                        'subject' => $devis->getTypeDeSiteWeb(),
-                        'designWebsite' => $devis->getAttentesDesignWeb(),
-                        'message' => $devis->getDescriptionProjet(),
-                    ])
-                    ->htmlTemplate('front/devis/email.html.twig');
-
                 $mailer->send($email);
-
-                $this->addFlash('success', 'Votre demande à bien était prise en compte, vérifiez votre adresse email');
-
-
-                return $this->redirectToRoute('front_devis_set_password', [
-                    'id' => $devis->getId()
-                ]);
+            } catch (TransportExceptionInterface $e) {
+                $this->addFlash('error', 'Erreur lors de l\'envoi de l\'e-mail');
+                return $this->redirectToRoute('front_devis_new');
             }
-        }
 
+            $this->addFlash('success', 'Votre demande a bien été prise en compte, vérifiez votre adresse e-mail.');
+
+            // Rediriger vers la page de confirmation
+            return $this->redirectToRoute('app_login');
+        }
         return $this->render('front/devis/new.html.twig', [
             'formDevis' => $form->createView(),
         ]);
@@ -110,40 +132,45 @@ class DevisController extends AbstractController
     {
         $devisUuid = $request->get('id'); // Récupérer l'UUID depuis la route
 
-        // Vérifier si un devis existe avec cet UUID
-        $existingDevis = $entityManager->getRepository(Devis::class)->findOneBy(['id' => $devisUuid]);
+        // Vérifier si l'UUID est valide
+        if (!Uuid::isValid($devisUuid)) {
+            throw $this->createNotFoundException('Devis non trouvé');
+        }
 
-        $email = $existingDevis->getEmail(); // Récupérer l'email associé à ce devis
+        // Récupérer le devis correspondant à l'UUID
+        $devis = $entityManager->getRepository(Devis::class)->findOneBy(['id' => $devisUuid]);
+
+        // Vérifier si le devis existe
+        if (!$devis) {
+            throw $this->createNotFoundException('Devis non trouvé');
+        }
+
+        $email = $devis->getEmail(); // Récupérer l'email associé à ce devis
 
         // Vérifier si un utilisateur existe avec cet email
         $user = $entityManager->getRepository(User::class)->findOneBy(['email' => $email]);
 
-        if ($user === $this->getUser()->getPassword()) {
+        if (!$user) {
             // Si aucun utilisateur n'existe avec cet email, c'est un nouvel utilisateur, affichez le formulaire de création de mot de passe
+            $user = new User();
             $user->setEmail($email);
             $user->setRoles(['ROLE_USER']);
         } else {
             // Si un utilisateur existe avec cet email, redirigez-le vers la page de message du devis
-            return $this->redirectToRoute('front_assistance', [
-                'id' => $user->getId()
-            ]);
+            return $this->redirectToRoute('front_assistance', ['id' => $user->getId()]);
         }
 
         // Créer et traiter le formulaire pour le mot de passe
         $form = $this->createForm(UserPasswordType::class, $user);
 
         $form->handleRequest($request);
-        if($request->isMethod('POST')){
-            if ($form->isSubmitted() && $form->isValid()) {
-                $user->setPassword($passwordEncoder->encodePassword($user, $user->getPassword()));
+        if ($form->isSubmitted() && $form->isValid()) {
+            $user->setPassword($passwordEncoder->encodePassword($user, $user->getPassword()));
 
-                $entityManager->persist($user);
-                $entityManager->flush();
+            $entityManager->persist($user);
+            $entityManager->flush();
 
-                return $this->redirectToRoute('front_message_devis', [
-                    'id' => $user->getId()
-                ]);
-            }
+            return $this->redirectToRoute('front_message_devis', ['id' => $user->getId()]);
         }
 
         return $this->render('front/devis/set_password.html.twig', [

@@ -5,10 +5,19 @@
 
 {% block content %}
 	<section class="container text-center">
-		<div class="container d-flex justify-content-center">
-			<img src="{{ asset('img/workflow.png') }}" alt="scriptzenit workflow" width="60%" height="60%">
-		</div>
 
+		<div class="px-4 pt-5 my-5 text-center border-bottom">
+			<h1 class="display-4 fw-bold text-body-emphasis">Par où commencer ?</h1>
+			<div class="col-lg-6 mx-auto">
+				<p class="lead mb-4">Nous comprenons qu'aborder la création ou la refonte d'un site web ou d'une application mobile peut être intimidant. C'est pourquoi notre approche commence par une écoute attentive de vos besoins. Nous suivons un processus clair et transparent pour garantir que chaque étape de votre projet est parfaitement alignée avec vos objectifs..</p>
+			</div>
+			<div class="overflow-hidden" style="max-height: 40vh;">
+				<div class="container px-5">
+					<img src="{{ asset('img/devis.png') }}" class="img-fluid border rounded-3 shadow-lg mb-4" alt="Panel en ligne" width="700" height="500" loading="lazy" style="margin:auto;">
+				</div>
+			</div>
+		</div>
+		<hr>
 		<div class="b-example-divider"></div>
 
 		<p class="lead mb-5">
@@ -16,6 +25,7 @@
 			vous pourrez suivre son avancement en temps réel grâce à notre onglet <a href="{{ path('front_assistance') }}">Assistance</a>.
 			Je suis là pour vous accompagner à chaque étape.
 		</p>
+
 		<div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
 			<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#combinedModal">
 				Voir explications
@@ -103,7 +113,7 @@
 				<label for="">Parlez moi un peu plus de votre projet !</label>
 				{{ form_row(formDevis.description_projet)}}
 				{{ form_errors(formDevis.description_projet)}}
-				<button type="submit">Recevoir mon récapitulatif de devis</button>
+				<button type="submit">Je crée le devis</button>
 				{{ form_end(formDevis) }}
 			</div>
 		</div>

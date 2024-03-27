@@ -29,6 +29,10 @@ class SecurityController extends AbstractController
      */
     public function renderRegister(MailerInterface $mailer): Response
     {
+        if($this->getUser()){
+            return $this->redirectToRoute('front_assistance');
+        }
+        
         $user = new User();
         $form = $this->createForm(UserType::class, $user);
                 // $email = (new TemplatedEmail())

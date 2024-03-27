@@ -40,7 +40,6 @@ class UserType extends AbstractType
                 ],
                 'expanded' => true,   // Utilisez ceci si vous souhaitez des boutons radio
                 'multiple' => false,  // Gardez ceci sur false pour ne permettre qu'un seul choix,
-                'required' => false,
             ])
             ->add('email', EmailType::class, [
                 'label' => 'Email de connexion',

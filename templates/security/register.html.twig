@@ -5,6 +5,23 @@
 
 {% block content %}
 
+	{% if app.user %}
+
+		<div class="px-4 pt-5 my-5 text-center border-bottom">
+			<h1 class="display-4 fw-bold text-body-emphasis">Oups, vous êtes déjà connecté !</h1>
+			<div class="col-lg-6 mx-auto">
+			<p class="lead mb-4">En tant que {{ app.user.userIdentifier }},
+			<div class="d-grid gap-2 d-sm-flex justify-content-sm-center mb-5">
+				<a href="{{ path('app_logout') }}" class="btn btn-primary btn-lg px-4 me-sm-3">Déconnexion</a>
+				<a href="{{ path('front_project') }}" class="btn btn-primary btn-lg px-4 me-sm-3">Voir nos réalisations</a>
+			</div>
+			</div>
+			<div class="overflow-hidden" style="max-height: 30vh;">
+			</div>
+		</div>
+
+	{% else %}
+
 	<div class="container col-xl-10 col-xxl-8 px-4 py-5">
 		<div class="row align-items-center g-lg-5 py-5">
 			<div class="col-lg-7 text-center text-lg-start">
@@ -59,4 +76,8 @@
 			</div>
 		</div>
 	</div>
+
+	{% endif %}
+
+	
 {% endblock %}
