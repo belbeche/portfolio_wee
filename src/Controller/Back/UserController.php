@@ -13,10 +13,7 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
-/**
- * @Route("/admin/users")
- * @IsGranted("ROLE_ADMIN")
- */
+
 class UserController extends AbstractController
 {
     /**
@@ -33,7 +30,7 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("/back/user/new", name="back_user_new", methods={"GET","POST"})
+     * @Route("/back/users/new", name="back_user_new", methods={"GET","POST"})
      * @IsGranted("ROLE_ADMIN")
      */
     public function new(Request $request, EntityManagerInterface $entityManager,UserPasswordHasherInterface $hasher): Response
@@ -95,10 +92,10 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("/admin/user/{id}/delete", name="back_user_delete")
+     * @Route("/back/users/{id}/delete", name="back_user_delete")
      * @IsGranted("ROLE_ADMIN")
      */
-    public function delete(Request $request, EntityManagerInterface $entityManager,$id): Response
+    public function delete(EntityManagerInterface $entityManager,$id): Response
     {
         $user = $entityManager->getRepository(User::class)->find($id);
 

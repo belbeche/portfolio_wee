@@ -5,42 +5,159 @@
 
 {% block content %}
 
-	<div class="page-title">
+	<div class="container-fluid text-center jumbotron">
 		<h1>L'équipe</h1>
 		<div class="page-subtitle">
-			<h4>Découvrez notre histoire et notre vision.</h4>
+			<h4>Découvrez notre équipe, notre expertise, et ce que l'ont peut vous apporter</h4>
+			<a href="{{ url('front_contact')}}" target="_self" class="btn btn-primary btn-lg px-4 rounded-pill">Nous contacter</a>
 		</div>
 	</div>
 
 	
-	<div class="container">
-		<div class="inner-content inner-text-block">
-			<div>
-				<section class="about-content rounded-3">
-					<div class="sp-subtitle">Chemin d'un développeur</div>
-					<h2 class="hp-main-title">Walid BELBECHE</h2>
-					<p>
-						Mon voyage dans le monde de la programmation a commencé de manière assez ordinaire. J'ai pris des cours, passé des examens, mais quelque chose manquait. C'était lors de mes premières lignes de code pour le web que j'ai ressenti une passion naissante, une étincelle qui a allumé un feu d'ambition et d'innovation.
-					</p>
-					<p>
-						Mon amour pour le développement Web m'a emmené à travailler d'avantage afin d'approfondir mes connaissances dans ce domaine humain, forgeant une expertise forte et une vision unique. Rendant les idées vivantes avec des designs intuitifs et une technologie de pointe.
-					</p>
-					<p>
-						Mais au-delà des codes et des pixels, je crois fermement que chaque projet est une histoire, un rêve en transformation. Je suis là pour guider ce rêve, pour le transformer en réalité, et pour assurer que votre vision brille dans chaque détail.
-					</p>
-					<p>
-						La sécurité en ligne est primordiale à mes yeux. Tout comme un forgeron perfectionne son armure, je veille à protéger chaque site contre les cyber-menaces, garantissant une présence en ligne solide et sécurisée.
-					</p>
-					<p>
-						Votre site web est une entité vivante, évolutive. Avec des outils de gestion de contenu adaptés, je vous donne le pouvoir de le nourrir, le faire grandir et adapter son message au rythme de vos ambitions. Et à chaque étape, je suis là, scrutant les données, analysant le trafic, optimisant l'expérience, et s'assurant que votre histoire se poursuit avec succès.
-					</p>
-				</section>
-				<h3 class="text-center mt-5">Liens utiles</h3>
-				<div class="d-flex justify-content-center">
-					<a href="{{ asset('belbeche_walid_cv.pdf')}}" target="_blank" class="btn btn-secondary btn-lg px-4 rounded-pill">Télécharger CV</a>
-					<a href="{{ url('front_contact')}}" target="_self" class="btn btn-primary btn-lg px-4 rounded-pill">Me contacter</a>
+	<div class="container px-15">
+		<div class="row">
+		<!-- PDG -->
+		<div class="col-md-4 mb-4">
+			<div class="card">
+				<img src="{{ asset('img/moi2.jpg')}}" class="card-img-top rounded-circle" alt="PDG - Walid BELBECHE" width="200" height="200">
+				<div class="card-body">
+					<h5 class="card-title">Walid BELBECHE</h5>
+					<h6 class="card-subtitle mb-2 text-body-secondary">PDG - Développeur</h6>
+					<p class="card-text">Indépandant en développement web et gestion d'entreprise.</p>
+					<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal_walid">
+						En savoir plus
+					</button>
+					<a href="{{ asset('img/belbeche_walid.pdf') }}" class="card-link">Curriculum vitae</a>
+					<p href="mailto: wbelbeche@scriptzenit.fr">Contact : wbelbeche@scriptzenit.fr</p>
 				</div>
 			</div>
+		</div>
+		<!-- /endpdg -->
+		<!-- Modal -->
+		<div class="modal fade" id="modal_walid" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="exampleModalLabel">Walid BELBECHE</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<p>Chemin d'un développeur</p>
+					<p>Walid BELBECHE</p>
+					<p>De cours en examens, j'ai cherché ma voie. Puis, les premières lignes de code m'ont captivé, allumant en moi une passion pour le web.</p>
+					<p>J'ai forgé mon expertise avec dévouement, créant des designs intuitifs et sécurisés, où chaque projet est une histoire en devenir.</p>
+					<p>Je suis là pour transformer vos rêves en réalité en sécurisant chaque site et en offrant des outils de gestion flexibles, optimisant ainsi votre présence en ligne.</p>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+				</div>
+				</div>
+			</div>
+		</div>
+		<script>
+			$('#myModal').on('shown.bs.modal', function () {
+				$('#myInput').trigger('focus')
+			})
+		</script>
+
+		<!-- Commercial -->
+			<div class="col-md-4 mb-4">
+				<div class="card">
+					<img src="{{ asset('img/youss_ousmane.jpg')}}" class="card-img-top rounded-circle" alt="Commercial - Youssouf Ousmane" width="200" height="200">
+					<div class="card-body">
+						<h5 class="card-title">Youssouf Ousmane</h5>
+						<h6 class="card-subtitle mb-2 text-body-secondary">Responsable commercial</h6>
+						<p class="card-text">Expert en commercialisation de produits et services informatiques et télécom.</p>
+						<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal_youssouf">
+							En savoir plus
+						</button>
+						<a href="{{ asset('img/youss.pdf') }}" class="card-link">Curriculum vitae</a>
+						<p href="mailto: y.ousmane@scriptzenit.fr">Contact : y.ousmane@scriptzenit.fr</p>
+					</div>
+				</div>
+			</div>
+			<!-- ./end-commercial -->
+			<!-- Modal -->
+				<div class="modal fade" id="modal_youssouf" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+					<div class="modal-dialog">
+						<div class="modal-content">
+							<div class="modal-header">
+								<h5 class="modal-title" id="exampleModalLabel">Youssouf Ousmane</h5>
+								<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+								<span aria-hidden="true">&times;</span>
+								</button>
+							</div>
+							<div class="modal-body">
+								<p>Le parcours d'un champion de la vente dans les télécoms innovants</p>
+								<p>Youssouf Ousmane</p>
+								<p>Explorez le chemin fascinant d'un expert en télécoms innovants.</p>
+								<p>Découvrez comment transformer les défis en opportunités, et les clients potentiels en partenaires fidèles.</p>
+								<p>Préparez-vous à une aventure où la passion pour la technologie rencontre l'art de la persuasion.</p>
+							</div>
+							<div class="modal-footer">
+								<button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+							</div>
+						</div>
+					</div>
+			</div>
+			<script>
+				$('#myModal').on('shown.bs.modal', function () {
+					$('#myInput').trigger('focus')
+				})
+			</script>
+			<!-- Admin sytème -->
+			<div class="col-md-4 mb-4">
+				<div class="card">
+					<img src="{{ asset('img/youss.png')}}" class="card-img-top rounded-circle" alt="admin système - Youss_">
+					<div class="card-body">
+						<h5 class="card-title">Youss_</h5>
+						<h6 class="card-subtitle mb-2 text-body-secondary">Administrateur Système</h6>
+						<p class="card-text">Expert en gestion et sécurisation des systèmes informatiques.</p>
+						<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal_youss">
+							En savoir plus
+						</button>
+						<p href="mailto: youss@youss.dev">Contact : youss@youss.dev</p>
+					</div>
+				</div>
+			</div>
+			<!-- ./ endAdmin Sytème -->
+			<!-- Modal -->
+			<div class="modal fade" id="modal_youss" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+				<div class="modal-dialog">
+					<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="exampleModalLabel">Youss_</h5>
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+						</button>>
+					</div>
+					<div class="modal-body">
+						<p>Chemin d'un administrateur système</p>
+						<p>Youss_</p>
+						<p>De formations en défis techniques, j'ai tracé mon chemin. Les premières lignes de code m'ont intrigué, éveillant une passion pour les systèmes informatiques.</p>
+						<p>J'ai acquis mon expertise avec persévérance, construisant des infrastructures fiables et sécurisées où chaque projet est une saga en évolution.</p>
+						<p>Je suis là pour concrétiser vos objectifs en assurant la sécurité et la flexibilité de vos systèmes, vous permettant ainsi de prospérer dans le monde numérique.</p>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+					</div>
+					</div>
+				</div>
+			</div>
+			<script>
+				$('#myModal').on('shown.bs.modal', function () {
+					$('#myInput').trigger('focus')
+				})
+			</script>
+		</div>
+	</div>
+
+	<div class="jumbotron jumbotron-fluid bg-primary">
+		<div class="container">
+			<h1 class="display-4 text-white">Des solutions innovantes pour votre entreprise.</h1>
+			<p class="lead text-white">Que vous soyez gérant ou particulier avec un projet en tête, faites appel à nos service pour une présence en ligne digital.</p>
 		</div>
 	</div>
 

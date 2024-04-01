@@ -240,3 +240,19 @@
     background-color: #000 !important;
     color: #fff;
 }
+
+.bg-home-image{
+    background-image: url('../../../img/home.jpg');
+    background-repeat: no-repeat;
+    background-size: cover;
+    height: 100%;
+    opacity: 90%;
+}
+
+
+
+@media screen and (max-width: 500px){
+    .man_mobile{
+        margin-top: 10px;
+    }
+}

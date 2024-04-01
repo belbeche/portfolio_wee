@@ -1,63 +1,64 @@
+<div>
+	<header id="header">
+		<nav class="navbar navbar-expand-lg fixed-top container-fluid text-dark pt-5 pb-5 px-5" style="background-color: #ffffff;">
+			<!-- Text Logo -->
+			<div class="logo">
+				<a href="{{ url('front_home') }}">
+					<img src="{{ asset('img/logo.png')}}" class="d-sm-none d-md-none d-lg-block" width="20%" height="30%" alt="Agence web à nevers (58)">
+				</a>
+				<a href="{{ url('front_home') }}">
+					<div class="logo-text d-md-block d-lg-none d-sm-block">ScriptZeniT</div>
+				</a>
+			</div>
+			<!-- /Text Logo -->
+			<div class="burger" id="burger">
+				<span class="burger-line"></span>
+				<span class="burger-line"></span>
+				<span class="burger-line"></span>
+			</div>
+			<div class="menu" id="menu">
+				<ul class="menu-inner">
 
-<header id="header">
-	<nav class="navbar container">
-		<!-- Text Logo -->
-		<div class="logo">
-			<a href="{{ url('front_home') }}">
-				<img src="{{ asset('img/logo.png')}}" class="d-sm-none d-md-none d-lg-block" width="20%" height="30%" alt="Agence web à nevers (58)">
-			</a>
-			<a href="{{ url('front_home') }}">
-				<div class="logo-text d-md-block d-lg-none d-sm-block">ScriptZenIT</div>
-			</a>
-		</div>
-		<!-- /Text Logo -->
-		<div class="burger" id="burger">
-			<span class="burger-line"></span>
-			<span class="burger-line"></span>
-			<span class="burger-line"></span>
-		</div>
-		<div class="menu" id="menu">
-			<ul class="menu-inner">
+					<li class="menu-item {{ app.request.get('_route') == 'front_home' ? 'active' : '' }}">
+						<a class="nav-link" href="{{ url('front_home') }}">Accueil</a>
+					</li>
 
-				<li class="menu-item {{ app.request.get('_route') == 'front_home' ? 'active' : '' }}">
-					<a class="nav-link" href="{{ url('front_home') }}">Accueil</a>
-				</li>
+					<li class="menu-item {{ app.request.get('_route') == 'front_about' ? 'active' : '' }}">
+						<a class="nav-link" href="{{ url('front_about') }}">A propos</a>
+					</li>
 
-				<li class="menu-item {{ app.request.get('_route') == 'front_about' ? 'active' : '' }}">
-					<a class="nav-link" href="{{ url('front_about') }}">A propos</a>
-				</li>
+					<li class="menu-item {{ app.request.get('_route') == 'front_project' ? 'active' : '' }}">
+						<a class="nav-link" href="{{ url('front_project') }}">Nos réalisations</a>
+					</li>
+					{% if app.user %}
+						<li class="menu-item {{ app.request.get('_route') == 'front_assistance' ? 'active' : '' }}">
+							<a class="nav-link" href="{{ url('front_assistance') }}">Assistance</a>
+						</li>
+					{% else %}
+						<li class="menu-item {{ app.request.get('_route') == 'front_devis_new' ? 'active' : '' }}">
+							<a class="nav-link" href="{{ url('front_devis_new') }}">Faire une demande</a>
+						</li>
+						<li class="menu-item {{ app.request.get('_route') == 'app_login' ? 'active' : '' }}">
+							<a class="btn btn-info" href="{{ url('app_login') }}">Connexion</a>
+						</li>
+						<li class="menu-item {{ app.request.get('_route') == 'front_contact' ? 'active' : '' }}">
+							<a class="btn btn-outline-secondary" href="{{ url('front_contact') }}">Contact</a>
+						</li>
+					{% endif %}
+					{% if app.user %}
+						<li class="menu-item {{ app.request.get('_route') == 'app_logout' ? 'active' : '' }}">
+							<a class="btn btn-danger" href="{{ url('app_logout') }}">Déconnexion</a>
+						</li>
+					{% endif %}
+					{% if is_granted('ROLE_ADMIN') %}
+						<li class="menu-item {{ app.request.get('_route') == 'back_index' ? 'active' : '' }}">
+							<a class="btn btn-danger" href="{{ url('back_index') }}">Admin panel</a>
+						</li>
+					{% endif %}
+				</ul>
+			</div>
+			{#<button id="switch">Dark mode</button>#}
 
-				<li class="menu-item {{ app.request.get('_route') == 'front_project' ? 'active' : '' }}">
-					<a class="nav-link" href="{{ url('front_project') }}">Nos réalisations</a>
-				</li>
-				{% if app.user %}
-					<li class="menu-item {{ app.request.get('_route') == 'front_assistance' ? 'active' : '' }}">
-						<a class="nav-link" href="{{ url('front_assistance') }}">Assistance</a>
-					</li>
-				{% else %}
-					<li class="menu-item {{ app.request.get('_route') == 'front_devis_new' ? 'active' : '' }}">
-						<a class="nav-link" href="{{ url('front_devis_new') }}">Faire une demande</a>
-					</li>
-					<li class="menu-item {{ app.request.get('_route') == 'app_login' ? 'active' : '' }}">
-						<a class="btn btn-info" href="{{ url('app_login') }}">Connexion</a>
-					</li>
-					<li class="menu-item {{ app.request.get('_route') == 'front_contact' ? 'active' : '' }}">
-						<a class="btn btn-outline-secondary" href="{{ url('front_contact') }}">Contact</a>
-					</li>
-				{% endif %}
-				{% if app.user %}
-					<li class="menu-item {{ app.request.get('_route') == 'app_logout' ? 'active' : '' }}">
-						<a class="btn btn-danger" href="{{ url('app_logout') }}">Déconnexion</a>
-					</li>
-				{% endif %}
-				{% if is_granted('ROLE_ADMIN') %}
-					<li class="menu-item {{ app.request.get('_route') == 'back_index' ? 'active' : '' }}">
-						<a class="btn btn-danger" href="{{ url('back_index') }}">Admin panel</a>
-					</li>
-				{% endif %}
-			</ul>
-		</div>
-		{#<button id="switch">Dark mode</button>#}
-
-	</nav>
-</header>
+		</nav>
+	</header>
+</div>

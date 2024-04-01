@@ -21,7 +21,7 @@
 /* Media Query pour rendre le contenu adaptatif sur les petits écrans */
 @media screen and (max-width: 768px) {
     header {
-        padding: 20px;
+        width: 100%;
     }
 
     .profile-pic {

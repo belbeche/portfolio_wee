@@ -74,6 +74,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $resetTokenExpireAt;
 
     /**
+     * @ORM\Column(type="string")
+     */
+    private $avatar;
+
+    /**
      * @ORM\OneToMany(targetEntity=Message::class, mappedBy="sender")
      */
     private $sentMessages;
@@ -93,6 +98,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->devis = new ArrayCollection();
         $this->sentMessages = new ArrayCollection();
         $this->receivedMessages = new ArrayCollection();
+        $this->avatar = 'uploads/avatar/support0.svg';
         $this->roles = ['ROLE_USER'];
     }
 
@@ -382,4 +388,21 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getAvatar()
+    {
+        return $this->avatar;
+    }
+
+    /**
+     * @param mixed $avatar
+     * @return User
+     */
+    public function setAvatar($avatar)
+    {
+        $this->avatar = $avatar;
+        return $this;
+    }
 }

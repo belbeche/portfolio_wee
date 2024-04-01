@@ -27,9 +27,9 @@
 						<td>{{ user.nom }}</td>
 						<td>{{ user.prenom }}</td>
 						<td>
-							<a href="{{ path('back_user_show', {'id': user.id}) }}">Afficher</a>
-							<a href="{{ path('back_user_edit', {'id': user.id}) }}">Modifier</a>
-							<a href="{{ path('back_user_delete', {'id': user.id}) }}">Supprimer</a>
+							<a href="{{ url('back_user_show', {id: user.id}) }}">Afficher</a>
+							<a href="{{ url('back_user_edit', {id: user.id}) }}">Modifier</a>
+							<a href="{{ url('back_user_delete', {id: user.id}) }}">Supprimer</a>
 						</td>
 					</tr>
 				{% endfor %}

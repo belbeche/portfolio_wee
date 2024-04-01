@@ -1,23 +1,22 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Mes réalisations
+{% block title %}Nos réalisations
 {% endblock %}
 
 {% block content %}
 
+	<div class="container-fluid text-center jumbotron">
+		<h1>Ce qu'on propose</h1>
+		<div class="page-subtitle">
+			<br>
+			<a href="#devis" class="btn btn-primary">Voir des exemples de solutions.</a>
+			<h4></h4>
+		</div>
+	</div>
+
 	<div id="main" class="site-main container">
 		<div id="main-content" class="single-page-content">
 			<div id="primary" class="content-area">
-
-				<div class="page-title">
-					<h1>Mes réalisations</h1>
-					<div class="page-subtitle">
-						<br>
-						<a href="#devis">Voir des exemples de solutions.</a>
-						<h4></h4>
-					</div>
-				</div>
-
 
 				{% include "front/includes/project.html.twig" %}
 

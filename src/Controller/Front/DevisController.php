@@ -55,21 +55,22 @@ class DevisController extends AbstractController
             
         }*/
             // Supposons que "type" est un paramètre GET de la requête
-            // $type = $request->query->get('type');
-            // throw new Exception('le type est null');
+            $type = $request->query->get('type');
 
-            // $defaultValue = 'site_vitrine'; // valeur par défaut
-            // if ($type === 'cross_plateforme') {
-            //     $defaultValue = 'application_cross_plateforme';
-            // } elseif ($type === 'site_real_estate') {
-            //     $defaultValue = 'site_real_estate';
-            // } elseif ($type === 'site_e-commerce') {
-            //     $defaultValue = 'site_e-commerce';
-            // } elseif ($type === 'site_portfolio') {
-            //     $defaultValue = 'site_portfolio';
-            // }
+            $defaultValue = 'site_vitrine'; // valeur par défaut
+            if ($type === 'cross_plateforme') {
+                $defaultValue = 'application_cross_plateforme';
+            } elseif ($type === 'site_real_estate') {
+                $defaultValue = 'site_real_estate';
+            } elseif ($type === 'site_e-commerce') {
+                $defaultValue = 'site_e-commerce';
+            } elseif ($type === 'site_portfolio') {
+                $defaultValue = 'site_portfolio';
+            }
 
-            $form = $this->createForm(DevisType::class, $devis);
+            $form = $this->createForm(DevisType::class, $devis, [
+                'default_type_de_site_web' => $defaultValue
+            ]);
 
             $form->handleRequest($request);
 
