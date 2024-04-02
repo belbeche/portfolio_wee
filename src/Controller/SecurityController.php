@@ -122,6 +122,69 @@ class SecurityController extends AbstractController
     }
 
     /**
+     * @Route("/api/edit/profile", name="api_register", methods={"POST"})
+     */
+    public function EditProfile(Request $request, EntityManagerInterface $entityManager, ValidatorInterface $validator, UserPasswordEncoderInterface $passwordEncoder): JsonResponse
+    {
+        $data = json_decode($request->getContent(), true);
+
+        // Utilisation des annotations Assert pour valider les données
+        $constraints = new Assert\Collection([
+            'userFirstName' => new Assert\NotBlank(),
+            'userLastName' => new Assert\NotBlank(),
+            'userEmail' => [new Assert\NotBlank(), new Assert\Email()],
+            'userFirstPassword' => new Assert\NotBlank(),
+            'userCivility' => new Assert\Optional(), // Autorise userCivility comme champ facultatif
+            'userChecked' => new Assert\NotBlank(),
+            'userSecondPassword' => [
+                new Assert\Regex([
+                    'pattern' => '/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$/',
+                    'message' => 'Le mot de passe doit contenir au moins 8 caractères, une lettre majuscule, une lettre minuscule et un chiffre.'
+                ])
+            ],
+        ]);
+
+        $violations = $validator->validate($data, $constraints);
+
+        if (count($violations) > 0) {
+            // Il y a des violations des contraintes de validation
+            $errorMessages = [];
+            foreach ($violations as $violation) {
+                $errorMessages[] = $violation->getMessage();
+            }
+            return new JsonResponse($errorMessages, JsonResponse::HTTP_BAD_REQUEST);
+        }
+
+        // Créer un nouvel utilisateur
+        $user = $entityManager->getRepository(User::class)->findOneBy(['email' => $data['userEmail']]);
+        $user
+            ->setNom($data['userLastName'])
+            ->setPrenom($data['userFirstName'])
+            ->setEmail($data['userEmail'])
+            ->setAvatar('support0.svg')
+            ->setRoles(['ROLE_USER']);
+
+        // Hachage du mot de passe
+        try {
+            $hashedPassword = $passwordEncoder->encodePassword($user, $data['userFirstPassword']);
+            $user->setPassword($hashedPassword);
+        } catch (\Exception $e) {
+            return new JsonResponse('error: Password hashing failed', JsonResponse::HTTP_INTERNAL_SERVER_ERROR);
+        }
+
+        // Persist et flush dans la base de données
+        try {
+            $entityManager->persist($user);
+            $entityManager->flush();
+        } catch (\Exception $e) {
+            return new JsonResponse('error: Unable to save user to database', JsonResponse::HTTP_INTERNAL_SERVER_ERROR);
+        }
+
+        // Retourner une réponse de succès
+        return new JsonResponse('success');
+    }
+
+    /**
      * @Route("/connexion", name="app_login")
      */
     public function login(AuthenticationUtils $authenticationUtils): Response
@@ -286,65 +349,64 @@ class SecurityController extends AbstractController
     /**
      * @Route("/api/users/{email}", name="api_update_user", methods={"PUT"})
      */
-    public function updateUser(Request $request, EntityManagerInterface $entityManager, UserPasswordEncoderInterface $passwordEncoder, ValidatorInterface $validator, $email): JsonResponse
-    {
-        $user = $entityManager->getRepository(User::class)->findOneBy(['email' => $email]);
+    // public function updateUser(Request $request, EntityManagerInterface $entityManager, UserPasswordEncoderInterface $passwordEncoder, ValidatorInterface $validator, $email): JsonResponse
+    // {
+    //     $user = $entityManager->getRepository(User::class)->findOneBy(['email' => $email]);
 
-        if (!$user) {
-            return new JsonResponse(['message' => 'Utilisateur non trouvé'], JsonResponse::HTTP_NOT_FOUND);
-        }
+    //     if (!$user) {
+    //         return new JsonResponse(['message' => 'Utilisateur non trouvé'], JsonResponse::HTTP_NOT_FOUND);
+    //     }
 
-        $data = json_decode($request->getContent(), true);
+    //     $data = json_decode($request->getContent(), true);
 
-        // Utilisation des annotations Assert pour valider les données
-        $constraints = new Assert\Collection([
-            'userFirstName' => new Assert\NotBlank(),
-            'userLastName' => new Assert\NotBlank(),
-            'userEmail' => [new Assert\NotBlank(), new Assert\Email()],
-            'userFirstPassword' => new Assert\NotBlank(),
-            'userSecondPassword' => [
-                new Assert\Regex([
-                    'pattern' => '/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$/',
-                    'message' => 'Le mot de passe doit contenir au moins 8 caractères, une lettre majuscule, une lettre minuscule et un chiffre.'
-                ])
-            ],
-        ]);
+    //     // Utilisation des annotations Assert pour valider les données
+    //     $constraints = new Assert\Collection([
+    //         'userFirstName' => new Assert\NotBlank(),
+    //         'userLastName' => new Assert\NotBlank(),
+    //         'userEmail' => [new Assert\NotBlank(), new Assert\Email()],
+    //         'userFirstPassword' => new Assert\NotBlank(),
+    //         'userSecondPassword' => [
+    //             new Assert\Regex([
+    //                 'pattern' => '/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$/',
+    //                 'message' => 'Le mot de passe doit contenir au moins 8 caractères, une lettre majuscule, une lettre minuscule et un chiffre.'
+    //             ])
+    //         ],
+    //     ]);
 
-        $violations = $validator->validate($data, $constraints);
+    //     $violations = $validator->validate($data, $constraints);
 
-        if (count($violations) > 0) {
-            // Il y a des violations des contraintes de validation
-            $errorMessages = [];
-            foreach ($violations as $violation) {
-                $errorMessages[] = $violation->getMessage();
-            }
-            return new JsonResponse($errorMessages, JsonResponse::HTTP_BAD_REQUEST);
-        }
+    //     if (count($violations) > 0) {
+    //         // Il y a des violations des contraintes de validation
+    //         $errorMessages = [];
+    //         foreach ($violations as $violation) {
+    //             $errorMessages[] = $violation->getMessage();
+    //         }
+    //         return new JsonResponse($errorMessages, JsonResponse::HTTP_BAD_REQUEST);
+    //     }
 
-        $user
-            ->setUsername($data['userFirstName'] . ' ' . $data['userLastName'])
-            ->setEmail($data['userEmail'])
-            ->setRoles(['ROLE_USER'])
-            ->setAvatar($user->getAvatar()); // Garder l'avatar existant
+    //     $user
+    //         ->setUsername($data['userFirstName'] . ' ' . $data['userLastName'])
+    //         ->setEmail($data['userEmail'])
+    //         ->setRoles(['ROLE_USER'])
+    //         ->setAvatar($user->getAvatar()); // Garder l'avatar existant
 
-        // Hachage du nouveau mot de passe
-        try {
-            $hashedPassword = $passwordEncoder->encodePassword($user, $data['userFirstPassword']);
-            $user->setPassword($hashedPassword);
-        } catch (\Exception $e) {
-            return new JsonResponse('error: Password hashing failed', JsonResponse::HTTP_INTERNAL_SERVER_ERROR);
-        }
+    //     // Hachage du nouveau mot de passe
+    //     try {
+    //         $hashedPassword = $passwordEncoder->encodePassword($user, $data['userFirstPassword']);
+    //         $user->setPassword($hashedPassword);
+    //     } catch (\Exception $e) {
+    //         return new JsonResponse('error: Password hashing failed', JsonResponse::HTTP_INTERNAL_SERVER_ERROR);
+    //     }
 
-        // Persist et flush dans la base de données
-        try {
-            $entityManager->persist($user);
-            $entityManager->flush();
-        } catch (\Exception $e) {
-            return new JsonResponse('error: Unable to update user in database', JsonResponse::HTTP_INTERNAL_SERVER_ERROR);
-        }
+    //     // Persist et flush dans la base de données
+    //     try {
+    //         $entityManager->persist($user);
+    //         $entityManager->flush();
+    //     } catch (\Exception $e) {
+    //         return new JsonResponse('error: Unable to update user in database', JsonResponse::HTTP_INTERNAL_SERVER_ERROR);
+    //     }
 
-        // Retourner une réponse de succès
-        return new JsonResponse('success');
-    }
-
+    //     // Retourner une réponse de succès
+    //     return new JsonResponse('success');
+    // }
 }

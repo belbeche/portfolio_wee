@@ -1,0 +1,50 @@
+<!-- Header -->
+<header id="site_header" class="header">
+	<div
+		class="header-content clearfix">
+
+		<!-- Text Logo -->
+		<div class="text-logo">
+			<a href="{{ url('back_index') }}">
+				<div class="logo-symbol"><span>{{ app.user.prenom|slice(0, 1) ~ app.user.nom|slice(0, 1) }}</span></div>
+				<div class="logo-text">{{ app.user.prenom }}
+					<span>{{ app.user.nom }}</span>
+				</div>
+			</a>
+		</div>
+		<!-- /Text Logo -->
+
+		<!-- Navigation -->
+		<div class="site-nav mobile-menu-hide">
+			<ul class="leven-classic-menu site-main-menu">
+				<li class="menu-item">
+					<a href="{{ url('back_devis_index') }}">Voir devis</a>
+				</li>
+
+				<li class="menu-item">
+					<a href="{{ url('back_project_index') }}">Voir projets</a>
+				</li>
+
+				<li class="menu-item">
+					<a href="{{ url('back_category_index')}}">Voir Les categories</a>
+				</li>
+
+				<li class="menu-item">
+					<a href="{{ url('back_user_index')}}">Voir utilisateur</a>
+				</li>
+				<li class="menu-item">
+					<a href="{{ url('back_ticket') }}">Voir ticket</a>
+				</li>
+
+				<li class="menu-item">
+					<a href="{{ url('app_logout') }}" class="btn btn-outline-danger">Déconnexion</a>
+				</li>
+			</ul>
+		</div>
+
+		<a class="menu-toggle mobile-visible">
+			<i class="fa fa-bars"></i>
+		</a>
+	</div>
+</header>
+<!-- /Header -->
