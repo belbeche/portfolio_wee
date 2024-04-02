@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Site en maintenance
+{% endblock %}
+
+{% block content %}
+
+	<div id="main" class="site-main">
+		<div id="main-content" class="single-page-content nothing-found">
+			<div id="primary" class="content-area">
+
+				<div id="content" class="page-content site-content single-post" role="main">
+
+					<div class="page-content">
+						<h6 class="display-6">Notre équipe travail dur à l'heure actuel</h6>
+                        <p>Des correctifs sont en cours de développement, merci de votre comphérension.</p><br>
+						<p class="lead">Bientôt les services serons rétablis, restée connecté(e)s.</p><br>
+                        <a href="{{ url('front_contact') }}" class="btn btn-primary pt-5 pb-5">Contactez-nous</a>
+					</div>
+
+				</div>
+			</div>
+		</div>
+	</div>
+
+{% endblock %}
