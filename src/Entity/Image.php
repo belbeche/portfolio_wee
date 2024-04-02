@@ -28,6 +28,12 @@ class Image
      */
     private $project;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=Article::class, inversedBy="images")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $article;
+
     public function getProject(): ?Project
     {
         return $this->project;
@@ -60,5 +66,16 @@ class Image
     public function __toString()
     {
         return $this->name ?? '';
+    }
+    public function getArticle(): ?Article
+    {
+        return $this->article;
+    }
+
+    public function setArticle(?Article $article): self
+    {
+        $this->article = $article;
+
+        return $this;
     }
 }

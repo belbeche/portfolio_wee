@@ -29,6 +29,7 @@ class DevisController extends AbstractController
     public function new(Request $request, EntityManagerInterface $entityManager, MailerInterface $mailer): Response
     {
         $devis = new Devis();
+        $user = $entityManager->getRepository(User::class)->find($this->getUser());
         /*if ($form->isSubmitted() && $form->isValid()) {
             // Utilisation du Voter ici
             $this->denyAccessUnlessGranted('CREATE', $devis);
@@ -77,6 +78,10 @@ class DevisController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             // Utilisation du Voter ici
             $this->denyAccessUnlessGranted('CREATE', $devis);
+
+            if($user){
+                $devis->setEmail($user->getEmail());
+            }
             $devis->setStatut('en_attente'); // Mettez à jour le statut si nécessaire
             $devis->setPrix('0'); // prix à 0 au moment de la création
 

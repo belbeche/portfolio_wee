@@ -102,9 +102,11 @@
 			<div class="col-lg-12 mx-auto padding-top-xxl">
 				<!-- Formulaire de devis -->
 				{{ form_start(formDevis) }}
-				<label for="">L'adresse email pour recevoir votre devis</label>
-				{{ form_row(formDevis.email, {'attr': {'name': 'email'}}) }}
-				{{ form_errors(formDevis.email) }}
+				{% if not app.user %}
+					<label for="">L'adresse email pour recevoir votre devis</label>
+					{{ form_row(formDevis.email, {'attr': {'name': 'email'}}) }}
+					{{ form_errors(formDevis.email) }}
+				{% endif %}
 				<label for="">Type d'application souhaité</label>
 				{{ form_row(formDevis.type_de_site_web)}}
 				{{ form_errors(formDevis.type_de_site_web)}}

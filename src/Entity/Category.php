@@ -30,6 +30,11 @@ class Category
      */
     private $projects;
 
+    /**
+     * @ORM\ManyToMany(targetEntity=Article::class, mappedBy="categories")
+     */
+    private $articles;
+
     public function __construct()
     {
         $this->projects = new ArrayCollection();
@@ -77,5 +82,25 @@ class Category
         }
 
         return $this;
+    }
+    public function getArticles(): ArrayCollection
+    {
+        return $this->articles;
+    }
+
+    public function setArticles(ArrayCollection $articles): Category
+    {
+        $this->articles = $articles;
+        return $this;
+    }
+
+    public function addArticle(Article $article)
+    {
+        $this->articles[] = $article;
+    }
+
+    public function removeArticle(Article $article)
+    {
+        $this->articles->removeElement($article);
     }
 }

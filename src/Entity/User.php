@@ -2,12 +2,14 @@
 
 namespace App\Entity;
 
+use App\Entity\Devis;
+use DateTimeImmutable;
 use Symfony\Component\Uid\Uuid;
 use Doctrine\ORM\Mapping as ORM;
-use App\Entity\Devis;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -38,9 +40,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $roles = [];
 
     /**
-     * @var string The hashed password
-     * @ORM\Column(type="string")
-     */
+    * @var string The hashed password
+    * @ORM\Column(type="string")
+    * 
+    * @Assert\Regex(
+    *     pattern="/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$/",
+    *     message="Le mot de passe doit contenir au moins 8 caractères, une lettre majuscule, une lettre minuscule et un chiffre."
+    * )
+    */
     private $password;
 
     /**
@@ -93,6 +100,26 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private $devis;
 
+    /**
+     * @ORM\Column(type="string")
+     */
+    private $username;
+
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $date;
+
+    /**
+     * @ORM\OneToMany (targetEntity=Comment::class, mappedBy="user", orphanRemoval=true)
+     */
+    private $comments;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Article::class, mappedBy="user", orphanRemoval=true)
+     */
+    private Collection $articles;
+
     public function __construct()
     {
         $this->devis = new ArrayCollection();
@@ -100,6 +127,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->receivedMessages = new ArrayCollection();
         $this->avatar = 'uploads/avatar/support0.svg';
         $this->roles = ['ROLE_USER'];
+
+        $this->articles = new ArrayCollection();
+        $this->comments = new ArrayCollection();
+        $this->likes = new ArrayCollection();
+        $this->date = new DateTimeImmutable();
     }
 
     public function getId(): ?Uuid
@@ -115,6 +147,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setEmail(string $email): self
     {
         $this->email = $email;
+        $this->username = $this->email;
 
         return $this;
     }
@@ -183,11 +216,29 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         // $this->plainPassword = null;
     }
 
-    public function getUsername()
+    /**
+     * @ORM\OneToMany(
+     *     targetEntity="UserLike",
+     *     mappedBy="user",
+     *     orphanRemoval=true,
+     *     cascade={"persist"}
+     * )
+     */
+    private Collection $likes;
+
+    public function getUsername(): string
     {
+        return $this->username;
     }
-    public function setUsername()
+
+    /**
+     * @param mixed $username
+     * @return User
+     */
+    public function setUsername($username)
     {
+        $this->username = $username;
+        return $this;
     }
 
     public function isVerified(): bool
@@ -317,11 +368,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function isIsVerified(): ?bool
-    {
-        return $this->isVerified;
-    }
-
     public function addSentMessage(Message $sentMessage): static
     {
         if (!$this->sentMessages->contains($sentMessage)) {
@@ -403,6 +449,105 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setAvatar($avatar)
     {
         $this->avatar = $avatar;
+        return $this;
+    }
+
+    public function getComments()
+    {
+        return $this->comments;
+    }
+
+    /**
+     * @param mixed $comments
+     * @return User
+     */
+    public function setComments($comments)
+    {
+        $this->comments = $comments;
+        return $this;
+    }
+
+    public function addComment(Comment $comment)
+    {
+        $this->comments[] = $comment;
+    }
+
+    public function removeComment(Comment $comment)
+    {
+        $this->comments->removeElement($comment);
+    }
+    /**
+     * @return Collection
+     */
+    public function getLikes()
+    {
+        return $this->likes;
+    }
+
+    /**
+     * @param Collection $likes
+     * @return User
+     */
+    public function setLikes($likes)
+    {
+        $this->likes = $likes;
+        return $this;
+    }
+
+    /**
+     * @param UserLike $like
+     * @return void
+     */
+    public function addLike(UserLike $like)
+    {
+        $this->likes[] = $like;
+    }
+
+    /**
+     * @param UserLike $like
+     * @return void
+     */
+    public function removeLike(UserLike $like)
+    {
+        $this->likes->removeElement($like);
+    }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getArticles(): Collection
+    {
+        return $this->articles;
+    }
+
+    /**
+     * @param ArrayCollection $articles
+     * @return User
+     */
+    public function setArticles(ArrayCollection $articles): User
+    {
+        $this->articles = $articles;
+        return $this;
+    }
+
+    public function addArticle(Article $article)
+    {
+        $this->articles[] = $article;
+    }
+
+    public function removeArticle(Article $article)
+    {
+        $this->articles->removeElement($article);
+    }
+    public function getDate(): ?\DateTimeInterface
+    {
+        return $this->date;
+    }
+
+    public function setDate(\DateTimeInterface $date): self
+    {
+        $this->date = $date;
+
         return $this;
     }
 }
