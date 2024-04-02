@@ -98,7 +98,7 @@ class SecurityController extends AbstractController
             ->setNom($data['userLastName'])
             ->setPrenom($data['userFirstName'])
             ->setEmail($data['userEmail'])
-            ->setAvatar('support0.svg')
+            ->setAvatar('uploads/avatar/support0.svg')
             ->setRoles(['ROLE_USER']);
 
         // Hachage du mot de passe
@@ -122,11 +122,12 @@ class SecurityController extends AbstractController
     }
 
     /**
-     * @Route("/api/edit/profile", name="api_register", methods={"POST"})
+     * @Route("/api/edit/profile", name="api_edit_profile", methods={"POST"})
      */
     public function EditProfile(Request $request, EntityManagerInterface $entityManager, ValidatorInterface $validator, UserPasswordEncoderInterface $passwordEncoder): JsonResponse
     {
         $data = json_decode($request->getContent(), true);
+        dd($data);
 
         // Utilisation des annotations Assert pour valider les données
         $constraints = new Assert\Collection([

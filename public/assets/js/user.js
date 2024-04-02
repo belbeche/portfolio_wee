@@ -81,17 +81,6 @@ btnRegister.addEventListener('click', function(e) {
 btnEditProfile.addEventListener('click', function(e) {
     e.preventDefault();
 
-    // Vérification de la civilité
-    let userCivility = null;
-    if (userCivility0.checked === true) {
-        userCivility = 'M';
-    } else if (userCivility1.checked === true) {
-        userCivility = 'Mme';
-    } else {
-        alert('Veuillez sélectionner une civilité.');
-        return; // Arrête la soumission si la civilité n'est pas sélectionnée
-    }
-
     // Vérification du nom et prénom
     if (userLastName.value.trim() === '' || userFirstName.value.trim() === '') {
         alert('Veuillez saisir votre nom et prénom.');
@@ -129,7 +118,7 @@ btnEditProfile.addEventListener('click', function(e) {
     };
     console.log(formData);
 
-    axios.post(btnRegister.dataset.registerUrl, formData)
+    axios.patch(btnEditProfile.dataset.registerUrl, formData)
         .then(response => {
             // envoie à la base de données du site support de scriptzenit
             const url2 = document.querySelector('.register-url2')    
