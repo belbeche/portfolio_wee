@@ -53,12 +53,12 @@ class Project
      * @ORM\ManyToMany(targetEntity=Category::class, inversedBy="projects", cascade={"persist"})
      * @ORM\JoinTable(name="project_category")
      */
-    private $categories;
+    private ArrayCollection $categories;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
-    private $link;
+    private ?string $link;
 
     /**
      * @throws \Exception
@@ -73,7 +73,7 @@ class Project
 
     public function getId(): ?int
     {
-        return $this->id;
+        return $this->id ? $this->id->toRfc4122() : null;
     }
 
     public function getTitle(): ?string

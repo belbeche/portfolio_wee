@@ -1,0 +1,60 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Profil{% endblock %}
+
+{% block content %}
+
+    <!-- Page Title
+		============================================= -->
+    <section class="page-title bg-primary border-bottom-0">
+        <div class="container">
+            <div class="page-title-row">
+
+                <div class="page-title-content">
+                    <div class="d-flex align-items-center">
+                        <img src="{% if app.user %}{{ asset('img/support/'~app.user.avatar) }} {% else %} {{ asset('img/support/support0.svg') }} {% endif %}" width="35" height="35" class="rounded-circle me-3 border border-width-3 border-white" alt="{{ app.user.username }}" width="120" height="120">
+                        <div>
+                            <h2 class="h1 border-bottom border-dark border-width-4" style="font-weight: 800;color:white;">Profil de {{ app.user.prenom }}</h2>
+                            <p class="mb-0 text-white-50">Rôle du forum : <strong>{% for role in app.user.roles %}{{ role }}{% if not loop.last %}, {% endif %}{% endfor %}</strong></p>
+                            <a href="{{ url('front_edit_profile', {id: app.user.id }) }}" class="btn btn-warning">Modifier mon profil</a>
+                            <a href="{{ url('front_articles_new') }}" class="btn btn-secondary">Écrire au support</a>
+                        </div>
+                    </div>
+                </div>
+
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a class="alt-color" href="{{ url('front_home') }}">Accueil</a></li>
+                        <li class="breadcrumb-item text-black-50 active" aria-current="page">{{ app.user.username }}</li>
+                    </ol>
+                </nav>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Content
+    ============================================= -->
+    <section>
+        <div class="container">
+            <div class="block-profil-informations">
+                <div class="block-information-user">
+                    <ul class="list-unstyled">
+                        <li class="py-2 text-larger">Rôle du forum: <strong>{% for role in app.user.roles %}{{ role }}{% if not loop.last %}, {% endif %}{% endfor %}</strong></li>
+                        <li class="py-2 text-larger">Sujets abordés: <strong>{{ app.user.articles|length }}</strong></li>
+                        <li class="py-2 text-larger">Réponses créées: <strong>{{ app.user.comments|length }}</strong></li>
+                        <li class="py-2 text-larger">Mes favoris: <strong>{{ app.user.likes|length }}</strong></li>
+                        <li class="py-2 text-larger">Sujets fermées: <strong>0</strong></li>
+                        {#<li class="py-2 text-larger">Pack assistance: <strong class="text-success">Actif</strong></li>#}
+                        <li class="py-2 text-larger">identifiant: <strong>{{ app.user.email }}</strong></li>
+                    </ul>
+                    <a href="{{ url('front_user_remove', {id: app.user.id.toRfc4122}) }}" class="btn btn-lg btn-block btn-outline-danger">Effacer mes données et mon compte</a>
+                </div>
+                <div class="block-hidden-resources"><div class="await-resources overflow-style-1"></div></div>
+                <a href="{{ url('front_devis_new') }}" class="btn btn-block btn-outline-primary mt-3">Faite une nouvelle demande</a>
+            </div>
+        </div>
+    </section>
+    <!-- #content end -->
+
+{% endblock %}

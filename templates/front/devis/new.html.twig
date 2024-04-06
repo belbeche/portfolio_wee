@@ -4,23 +4,20 @@
 {% endblock %}
 
 {% block content %}
-	<section class="container text-center">
 
-		<div class="container-fluid text-center" style="margin-top: 4rem !important;">
-
-			<h1 class="display-4 fw-bold text-body-emphasis">Par où commencer ?</h1>
-			<div class="col-lg-6 mx-auto">
-				<p class="lead mb-4">Nous comprenons qu'aborder la création ou la refonte d'un site web ou d'une application mobile peut être intimidant. C'est pourquoi notre approche commence par une écoute attentive de vos besoins. Nous suivons un processus clair et transparent pour garantir que chaque étape de votre projet est parfaitement alignée avec vos objectifs..</p>
-			</div>
-			<div class="overflow-hidden" style="max-height: 40vh;">
-				<div class="container px-5">
-					<img src="{{ asset('img/devis.png') }}" class="img-fluid border rounded-3 shadow-lg mb-4" alt="Panel en ligne" width="700" height="500" loading="lazy" style="margin:auto;">
-				</div>
-			</div>
+	<div class="container-fluid text-center jumbotron" style="margin-bottom: 1rem;">
+		<h1>Demande en ligne</h1>
+		<div class="page-subtitle">
+			<br>
+			<p class="lead mb-4">Nous comprenons qu'aborder la création ou la refonte d'un site web ou d'une application mobile peut être intimidant. </p>
+			<p>C'est pourquoi notre approche commence par une écoute attentive de vos besoins.</p>
+			<p>Nous suivons un processus clair et transparent pour garantir que chaque étape de votre projet est parfaitement alignée avec vos objectifs.</p>
 		</div>
-		<hr>
-		<div class="b-example-divider"></div>
+	</div>
 
+	<img src="{{ asset('img/keep_it_simple.png') }}" alt="Création de demande en ligne ScriptZenIT, solution digital sur mesure">
+	<div class="b-example-divider"></div>
+	<section class="container text-center">
 		<p class="lead mb-5">
 			Remplissez le formulaire ci-dessous pour détailler vos besoins. Une fois votre demande de devis soumise,
 			vous pourrez suivre son avancement en temps réel grâce à notre onglet <a href="{{ path('front_assistance') }}">Assistance</a>.
@@ -101,25 +98,33 @@
 		<div class="px-4">
 			<div class="col-lg-12 mx-auto padding-top-xxl">
 				<!-- Formulaire de devis -->
-				{{ form_start(formDevis) }}
 				{% if not app.user %}
-					<label for="">L'adresse email pour recevoir votre devis</label>
-					{{ form_row(formDevis.email, {'attr': {'name': 'email'}}) }}
+					{{ form_start(formDevis) }}
+					<label for="devis_email">L'adresse email pour recevoir votre devis</label>
+					{{ form_row(formDevis.email, {'attr': {'class': 'form-control'}}) }}
+					{{ form_errors(formDevis.email) }}
+				{% else %}
+					{{ form_start(formDevis) }}
+					<label for="" class="d-none">L'adresse email pour recevoir votre devis</label>
+					{{ form_row(formDevis.email, {'row_attr': {'class': 'd-none'}}) }}
 					{{ form_errors(formDevis.email) }}
 				{% endif %}
+
 				<label for="">Type d'application souhaité</label>
 				{{ form_row(formDevis.type_de_site_web)}}
 				{{ form_errors(formDevis.type_de_site_web)}}
+
 				<label for="">Quelles sont vos attentes concernant le design ?</label>
 				{{ form_row(formDevis.attentes_design_web)}}
 				{{ form_errors(formDevis.attentes_design_web)}}
+
 				<label for="">Parlez moi un peu plus de votre projet !</label>
 				{{ form_row(formDevis.description_projet)}}
 				{{ form_errors(formDevis.description_projet)}}
-				<button type="submit">Je crée le devis</button>
+
+				<button type="submit">Valider</button>
 				{{ form_end(formDevis) }}
 			</div>
 		</div>
-		{{ form_end(formDevis) }}
 	</section>
 {% endblock %}

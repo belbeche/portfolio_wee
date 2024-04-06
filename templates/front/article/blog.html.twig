@@ -1,0 +1,61 @@
+{% extends 'base.html.twig' %}
+
+{% block content %}
+
+	<div class="jumbotron bg-primary">
+		<h3 class="lead text-white text-center">Les derniers articles</h3>
+	</div>
+
+
+	<!-- Blog start -->
+	<div class="container">
+		<section
+			id="promo" class="section offset-header">
+			<!-- blog start -->
+			<section class="blog-area pb-5">
+				<div class="container">
+					<div class="row justify-content-center">
+						{% for article in articles %}
+							<div class="col-lg-3 col-md-3 col-sm-10">
+								<div class="single-blog blog-style-one">
+									<div class="blog-image">
+										<a href="{{ path('front_articles_show', {'slug': article.slug}) }}">
+											{% for image in article.images %}
+												<img class="card-img-top rounded-0" src="{{ asset('uploads/' ~ image.name) }}" alt="{{ article.title }}">
+											{% endfor %}
+										</a>
+									</div>
+									<div class="blog-content">
+										<h5 class="blog-title">
+											<a href="{{ path('front_articles_show', {'slug': article.slug}) }}">
+												<h5 class="card-title">{{ article.title }}</h5>
+											</a>
+										</h5>
+										{% for categorie in article.categories %}
+											{{ categorie.name }}
+										{% endfor %}
+										<br>
+										<span>
+											<i class="bi bi-calendar"></i>
+											{{ article.createdAt|format_datetime('medium', locale="fr") }}</span>
+										<span>
+											<i class="bi bi-chat-dots"></i>
+											{{ article.commentaires|length }}</span>
+										<span><img src="{{ asset('uploads/avatar/' ~article.user.avatar) }}" alt="{{ article.user.username }}" class="rounded-0 img-thumbnail" width="50" height="50">
+											{{ article.user.username }}</span>
+									</div>
+								</div>
+							</div>
+						{% endfor %}
+					</div>
+				</div>
+			</section>
+		</div>
+		<!-- ./ End blog start -->
+	</div>
+
+	<div class="navigation pagination justify-content-center my-4">
+		{{ knp_pagination_render(articles) }}
+	</div>
+
+{% endblock %}

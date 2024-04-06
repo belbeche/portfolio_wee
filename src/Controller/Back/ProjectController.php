@@ -2,9 +2,13 @@
 
 namespace App\Controller\Back;
 
+use App\Entity\User;
 use App\Entity\Image;
+use App\Entity\Article;
 use App\Entity\Project;
 use App\Form\ProjectType;
+use Symfony\Component\Uid\Ulid;
+use Symfony\Component\Uid\Uuid;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -37,6 +41,12 @@ class ProjectController extends AbstractController
      */
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
+        // Récupérer l'utilisateur actuellement connecté
+        $user = $this->getUser();
+
+        // Créer un nouvel article
+        $article = new Article();
+
         $project = new Project();
 
         $form = $this->createForm(ProjectType::class, $project);
@@ -45,6 +55,12 @@ class ProjectController extends AbstractController
             $form->handleRequest($request);
             if ($form->isSubmitted() && $form->isValid()) {
                 $project->setUpdatedAt(new \DateTime());
+                $project->setCreatedAt(new \DateTime());
+
+                // Ajouter l'article à la collection d'articles de l'utilisateur
+                $user->addArticle($article->setUser($user));
+
+                $entityManager->persist($user);
 
                 // Récupérer les fichiers d'images uploadés
                 $this->extracted($form, $project, $entityManager);
@@ -198,7 +214,6 @@ class ProjectController extends AbstractController
                 $project->addImage($image);
             }
         }
-
         $entityManager->persist($project);
         $entityManager->flush();
     }

@@ -41,9 +41,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     /**
     * @var string The hashed password
-    * @ORM\Column(type="string")
+    * @ORM\Column(type="string", nullable=true)
     */
-    private $password;
+    private ?string $password;
 
     /**
      * @ORM\Column(type="boolean")
@@ -113,21 +113,32 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @ORM\OneToMany(targetEntity=Article::class, mappedBy="user", orphanRemoval=true)
      */
-    private Collection $articles;
+    private ?Collection $articles;
 
     public function __construct()
     {
         $this->devis = new ArrayCollection();
         $this->sentMessages = new ArrayCollection();
         $this->receivedMessages = new ArrayCollection();
-        $this->avatar = 'uploads/avatar/support0.svg';
-        $this->roles = ['ROLE_USER'];
+        $this->avatar = 'support0.svg';
+        $this->roles = ['ROLE_GUEST'];
 
         $this->articles = new ArrayCollection();
         $this->comments = new ArrayCollection();
         $this->likes = new ArrayCollection();
         $this->date = new DateTimeImmutable();
     }
+
+    /**
+     * Génère un UUID unique pour chaque article et l'ajoute à la collection
+     */
+    // public function generateArticleIds(): void
+    // {
+    //     foreach ($this->articles as $article) {
+    //         // Génération de l'UUID et affectation à l'article
+    //         $this->id
+    //     }
+    // }
 
     public function getId(): ?Uuid
     {
@@ -176,15 +187,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    /**
-     * @see PasswordAuthenticatedUserInterface
-     */
-    public function getPassword(): string
+    public function getPassword(): ?string
     {
         return $this->password;
     }
 
-    public function setPassword(string $password): self
+    public function setPassword(?string $password): self
     {
         $this->password = $password;
 
@@ -208,7 +216,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function eraseCredentials()
     {
         // If you store any temporary, sensitive data on the user, clear it here
-        // $this->plainPassword = null;
+         $this->password = null;
     }
 
     /**
@@ -519,13 +527,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @param ArrayCollection $articles
      * @return User
      */
-    public function setArticles(ArrayCollection $articles): User
+    public function setArticles(ArrayCollection $articles): ?User
     {
         $this->articles = $articles;
         return $this;
     }
 
-    public function addArticle(Article $article)
+    public function addArticle(Article $article): self
     {
         $this->articles[] = $article;
     }

@@ -1,0 +1,25 @@
+{% extends 'base_back.html.twig' %}
+
+{% block content %}
+    <div class="container mt-4">
+        <h1>Ajouter un article</h1>
+
+        {% if app.request.attributes.get('_route') == 'back_articles_new' %}
+            <hr>
+            <h2>Gestion des images</h2>
+            {% for image in article.images %}
+                <div>
+                    <img src="{{ asset('/uploads/'~image.name) }}" alt="{{ article.name }}" width="150">
+
+                    {# We add a link to delete an image (will be managed in Ajax in images.js) #}
+                    <a href="{{ path('back_articles_remove_image', {id: image.id})}}" data-delete data-token="{{ csrf_token('delete' ~ image.id )}}">
+                        <i class="bi bi-file-earmark-x"></i>
+                        Supprimer
+                    </a>
+                </div>
+            {% endfor %}
+        {% endif %}
+        <br>
+        {% include 'back/includes/_article_form.html.twig' %}
+    </div>
+{% endblock %}

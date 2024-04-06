@@ -4,10 +4,13 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Entity\Devis;
+use App\Form\EditProfileType;
+use App\Form\UserPasswordType;
 use App\Form\UserType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -26,217 +29,90 @@ class SecurityController extends AbstractController
 
     /**
      * @Route("/inscription", name="app_register")
-     *
      */
-    public function renderRegister(Request $request,MailerInterface $mailer,EntityManagerInterface $entityManager,UserPasswordEncoderInterface $passwordEncoder): Response
+    public function renderRegister(Request $request, MailerInterface $mailer, EntityManagerInterface $entityManager, UserPasswordEncoderInterface $passwordEncoder): Response
     {
-        if($this->getUser()){
+        if ($this->getUser()) {
             return $this->redirectToRoute('front_assistance');
         }
-        
+
         $user = new User();
         $form = $this->createForm(UserType::class, $user);
         $form->handleRequest($request);
 
-        if($form->isSubmitted() && $form->isValid()){
-
-            $hashedPassword = $passwordEncoder->encodePassword($user, $user->getPassword());
-            $user->setPassword($hashedPassword);
-            
+        if ($form->isSubmitted() && $form->isValid()) {
+            $user->setPassword(null);
+            $user->setUsername($user->getUsername());
+            // Envoi de l'email
             $email = (new TemplatedEmail())
-            ->from('contact@scriptzenit.fr')
-            ->to($user->getEmail())
-            ->subject('Récapitulatif inscription ScriptZenIT')
-            ->bcc('wbelbeche.s@gmail.com')
-            ->context([
-                'RegistredNumber' => $user->getId(),
-                'email_address' => $user->getEmail(),
-                'nom' => $user->getNom(),
-                'prenom' => $user->getPrenom(),
-                'civility' => $user->getCivility(),
-                'password' => $user->getPassword(),
-            ])
-            ->htmlTemplate('security/email.html.twig');
-
+                ->from('contact@scriptzenit.fr')
+                ->to($user->getEmail())
+                ->subject('Récapitulatif inscription ScriptZenIT')
+                ->bcc('wbelbeche.s@gmail.com')
+                ->context([
+                    'RegistredNumber' => $user->getId(),
+                    'email_address' => $user->getEmail(),
+                    'nom' => $user->getNom(),
+                    'prenom' => $user->getPrenom(),
+                    'civility' => $user->getCivility(),
+                ])
+                ->htmlTemplate('security/email.html.twig');
             $mailer->send($email);
-
-            $this->addFlash('success', 'Votre inscription a bien été prise en compte, un email de confirmation vous a été envoyé.');
 
             $entityManager->persist($user);
             $entityManager->flush();
+
+            return $this->redirectToRoute('front_devis_set_password', [
+                'id' => $user->getId(),
+            ]);
         }
-        
+
         return $this->render('security/register.html.twig', [
             'formRegister' => $form->createView(),
         ]);
     }
 
     /**
-     * @Route("/api/register", name="api_register", methods={"POST"})
+     * @Route("/continuer/{id}", name="front_devis_set_password")
      */
-    // public function register(Request $request, EntityManagerInterface $entityManager, ValidatorInterface $validator, UserPasswordEncoderInterface $passwordEncoder): JsonResponse
-    // {
-    //     $data = json_decode($request->getContent(), true);
-
-    //     dd($data);
-
-    //     // Utilisation des annotations Assert pour valider les données
-    //     $constraints = new Assert\Collection([
-    //         'userFirstName' => new Assert\NotBlank(),
-    //         'userLastName' => new Assert\NotBlank(),
-    //         'userEmail' => [new Assert\NotBlank(), new Assert\Email()],
-    //         'userFirstPassword' => new Assert\NotBlank(),
-    //         'userCivility' => new Assert\Optional(), // Autorise userCivility comme champ facultatif
-    //         'userChecked' => new Assert\NotBlank(),
-    //         'userSecondPassword' => [
-    //             new Assert\Regex([
-    //                 'pattern' => '/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$/',
-    //                 'message' => 'Le mot de passe doit contenir au moins 8 caractères, une lettre majuscule, une lettre minuscule et un chiffre.'
-    //             ])
-    //         ],
-    //     ]);
-
-    //     $violations = $validator->validate($data, $constraints);
-
-    //     if (count($violations) > 0) {
-    //         // Il y a des violations des contraintes de validation
-    //         $errorMessages = [];
-    //         foreach ($violations as $violation) {
-    //             $errorMessages[] = $violation->getMessage();
-    //         }
-    //         return new JsonResponse($errorMessages, JsonResponse::HTTP_BAD_REQUEST);
-    //     }
-
-    //     // Créer un nouvel utilisateur
-    //     $user = new User();
-    //     $user
-    //         ->setNom($data['userLastName'])
-    //         ->setPrenom($data['userFirstName'])
-    //         ->setEmail($data['userEmail'])
-    //         ->setAvatar('uploads/avatar/support0.svg')
-    //         ->setRoles(['ROLE_USER']);
-
-    //     // Hachage du mot de passe
-    //     try {
-    //         $hashedPassword = $passwordEncoder->encodePassword($user, $data['userFirstPassword']);
-    //         $user->setPassword($hashedPassword);
-    //     } catch (\Exception $e) {
-    //         return new JsonResponse('error: Password hashing failed', JsonResponse::HTTP_INTERNAL_SERVER_ERROR);
-    //     }
-
-    //     // Persist et flush dans la base de données
-    //     try {
-    //         $entityManager->persist($user);
-    //         $entityManager->flush();
-    //     } catch (\Exception $e) {
-    //         return new JsonResponse('error: Unable to save user to database', JsonResponse::HTTP_INTERNAL_SERVER_ERROR);
-    //     }
-
-    //     // Retourner une réponse de succès
-    //     return new JsonResponse('success');
-    // }
-
-    // /**
-    //  * @Route("/api/edit/profile", name="api_edit_profile", methods={"POST"})
-    //  */
-    // public function EditProfile(Request $request, EntityManagerInterface $entityManager, ValidatorInterface $validator, UserPasswordEncoderInterface $passwordEncoder): JsonResponse
-    // {
-    //     $data = json_decode($request->getContent(), true);
-    //     dd($data);
-
-    //     // Utilisation des annotations Assert pour valider les données
-    //     $constraints = new Assert\Collection([
-    //         'userFirstName' => new Assert\NotBlank(),
-    //         'userLastName' => new Assert\NotBlank(),
-    //         'userEmail' => [new Assert\NotBlank(), new Assert\Email()],
-    //         'userFirstPassword' => new Assert\NotBlank(),
-    //         'userCivility' => new Assert\Optional(), // Autorise userCivility comme champ facultatif
-    //         'userChecked' => new Assert\NotBlank(),
-    //         'userSecondPassword' => [
-    //             new Assert\Regex([
-    //                 'pattern' => '/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$/',
-    //                 'message' => 'Le mot de passe doit contenir au moins 8 caractères, une lettre majuscule, une lettre minuscule et un chiffre.'
-    //             ])
-    //         ],
-    //     ]);
-
-    //     $violations = $validator->validate($data, $constraints);
-
-    //     if (count($violations) > 0) {
-    //         // Il y a des violations des contraintes de validation
-    //         $errorMessages = [];
-    //         foreach ($violations as $violation) {
-    //             $errorMessages[] = $violation->getMessage();
-    //         }
-    //         return new JsonResponse($errorMessages, JsonResponse::HTTP_BAD_REQUEST);
-    //     }
-
-    //     // Créer un nouvel utilisateur
-    //     $user = $entityManager->getRepository(User::class)->findOneBy(['email' => $data['userEmail']]);
-    //     $user
-    //         ->setNom($data['userLastName'])
-    //         ->setPrenom($data['userFirstName'])
-    //         ->setEmail($data['userEmail'])
-    //         ->setAvatar('support0.svg')
-    //         ->setRoles(['ROLE_USER']);
-
-    //     // Hachage du mot de passe
-    //     try {
-    //         $hashedPassword = $passwordEncoder->encodePassword($user, $data['userFirstPassword']);
-    //         $user->setPassword($hashedPassword);
-    //     } catch (\Exception $e) {
-    //         return new JsonResponse('error: Password hashing failed', JsonResponse::HTTP_INTERNAL_SERVER_ERROR);
-    //     }
-
-    //     // Persist et flush dans la base de données
-    //     try {
-    //         $entityManager->persist($user);
-    //         $entityManager->flush();
-    //     } catch (\Exception $e) {
-    //         return new JsonResponse('error: Unable to save user to database', JsonResponse::HTTP_INTERNAL_SERVER_ERROR);
-    //     }
-
-    //     // Retourner une réponse de succès
-    //     return new JsonResponse('success');
-    // }
-
-    /**
-     * @Route("/modification/profil/{id}", name="front_edit_profile", methods={"GET","POST","DELETE"})
-     */
-    public function editProfile(Request $request, EntityManagerInterface $entityManager, UserPasswordEncoderInterface $hasher): Response
+    public function setPassword(Request $request, EntityManagerInterface $entityManager, $id, UserPasswordHasherInterface $passwordHasher): Response
     {
+        // Vérifier si un utilisateur existe avec cet ID
+        // $user = $entityManager->getRepository(User::class)->find($id);
 
-        $user = $this->getUser();
+        // Vérifier si un utilisateur existe avec cet ID
+        $user = $entityManager->getRepository(User::class)->find($id);
 
-
-        $userFirstName = $request->request->get('userFirstName');
-        $userLastName = $request->request->get('userLastName');
-        $userEmail = $request->request->get('userEmail');
-        $userFirstPassword = $request->request->get('userFirstPassword');
-
-        $form = $this->createForm(UserType::class, $user);
-
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-
-            // Modification des informations de l'utilisateur
-                $user
-                ->setUsername($userFirstName . ' ' . $userLastName)
-                ->setEmail($userEmail);
-
-            // Si un nouveau mot de passe est fourni, le mettre à jour
-            if (!empty($userFirstPassword)) {
-                $user->setPassword($hasher->hashPassword($user, $userFirstPassword));
-            }
-
-            // Persistez les modifications de l'utilisateur
-            $entityManager->persist($user);
-            $entityManager->flush();
+        if (!$user) {
+            return $this->redirectToRoute('front_register');
         }
 
-        // Renvoyer une réponse simple
-        return $this->render('front/profile/edit.html.twig', [
+        // Créer et traiter le formulaire pour le mot de passe
+        $form = $this->createForm(UserPasswordType::class, $user);
+
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            // Encodage du mot de passe uniquement si le champ de mot de passe est rempli
+            $plainPassword = $form->get('password')->getData();
+
+            // Encodage du mot de passe uniquement si le champ de mot de passe est rempli
+            $plainPassword = $form->get('password')->getData();
+            if ($plainPassword !== '') {
+                if (!empty($plainPassword)) {
+                    $hashedPassword = $passwordHasher->hashPassword($user, $plainPassword);
+                    $user->setPassword($hashedPassword);
+                }
+            }
+
+            // Enregistrement de l'utilisateur
+            $entityManager->persist($user);
+            $entityManager->flush();
+
+            // Redirection vers la page de connexion
+            return $this->redirectToRoute('app_login');
+        }
+
+        return $this->render('front/devis/set_password.html.twig', [
             'form' => $form->createView(),
         ]);
     }
@@ -246,16 +122,52 @@ class SecurityController extends AbstractController
      */
     public function login(AuthenticationUtils $authenticationUtils): Response
     {
-        if ($this->getUser()) {
-            return $this->redirectToRoute('front_assistance');
-        }
-
         // get the login error if there is one
         $error = $authenticationUtils->getLastAuthenticationError();
         // last username entered by the user
         $lastUsername = $authenticationUtils->getLastUsername();
 
         return $this->render('security/login.html.twig', ['last_username' => $lastUsername, 'error' => $error]);
+    }
+
+    /**
+     * @Route("/utilisateur/modifier/profil", name="front_edit_profile")
+     * @return Response
+     */
+    public function EditProfile(Request $request,EntityManagerInterface $entityManager,UserPasswordHasherInterface $userPasswordHasher): Response
+    {
+        $user = $this->getUser();
+
+        $form = $this->createForm(EditProfileType::class, $user);
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            // Encodage du mot de passe uniquement si le champ de mot de passe est rempli
+            $plainPassword = $form->get('password')->getData();
+            if (!empty($plainPassword)) {
+                $user->setPassword($userPasswordHasher->hashPassword($user, $plainPassword));
+            }
+
+            // Gestion de l'avatar
+            $avatar = $form->get('avatar')->getData();
+            if ($avatar) {
+                $fileName = md5(uniqid()) . '.' . $avatar->guessExtension();
+                $avatar->move($this->getParameter('uploads_directory'), $fileName);
+                $user->setAvatar($fileName);
+            }
+
+            $entityManager->persist($user);
+            $entityManager->flush();
+
+            $this->addFlash('success', 'Profil mis à jour avec succès.');
+
+            return $this->redirectToRoute('front_porfile');
+        }
+
+        return $this->render('front/profil/edit.html.twig', [
+            'form' => $form->createView(),
+        ]);
     }
 
     /**
@@ -335,135 +247,4 @@ class SecurityController extends AbstractController
     {
         throw new \LogicException('This method can be blank - it will be intercepted by the logout key on your firewall.');
     }
-
-    // /**
-    //  * @Route("/api/users", name="api_get_user", methods={"GET","POST"})
-    //  */
-    // public function getUsers(Request $request, EntityManagerInterface $entityManager, ValidatorInterface $validator, UserPasswordEncoderInterface $passwordEncoder)
-    // : JsonResponse 
-    // {
-    //     // Recherche de l'utilisateur par email
-    //     $data = json_decode($request->getContent(), true);
-
-    //     dd($data);
-
-    //     // Utilisation des annotations Assert pour valider les données
-    //     $constraints = new Assert\Collection([
-    //         'userFirstName' => new Assert\NotBlank(),
-    //         'userLastName' => new Assert\NotBlank(),
-    //         'userEmail' => [new Assert\NotBlank(), new Assert\Email()],
-    //         'userFirstPassword' => new Assert\NotBlank(),
-    //         'userCivility' => new Assert\Optional(), // Autorise userCivility comme champ facultatif
-    //         'userChecked' => new Assert\NotBlank(),
-    //         'userSecondPassword' => [
-    //             new Assert\Regex([
-    //                 'pattern' => '/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$/',
-    //                 'message' => 'Le mot de passe doit contenir au moins 8 caractères, une lettre majuscule, une lettre minuscule et un chiffre.'
-    //             ])
-    //         ],
-    //     ]);
-
-    //     $violations = $validator->validate($data, $constraints);
-
-    //     if (count($violations) > 0) {
-    //         // Il y a des violations des contraintes de validation
-    //         $errorMessages = [];
-    //         foreach ($violations as $violation) {
-    //             $errorMessages[] = $violation->getMessage();
-    //         }
-    //         return new JsonResponse($errorMessages, JsonResponse::HTTP_BAD_REQUEST);
-    //     }
-
-    //     // Créer un nouvel utilisateur
-    //     $user = new User();
-    //     $user
-    //         ->setNom($data['userLastName'])
-    //         ->setPrenom($data['userFirstName'])
-    //         ->setEmail($data['userEmail'])
-    //         ->setAvatar('img/support/support0.svg')
-    //         ->setRoles(['ROLE_USER']);
-
-    //     // Hachage du mot de passe
-    //     try {
-    //         $hashedPassword = $passwordEncoder->encodePassword($user, $data['userFirstPassword']);
-    //         $user->setPassword($hashedPassword);
-    //     } catch (\Exception $e) {
-    //         return new JsonResponse('error: Password hashing failed', JsonResponse::HTTP_INTERNAL_SERVER_ERROR);
-    //     }
-
-    //     // Persist et flush dans la base de données
-    //     try {
-    //         $entityManager->persist($user);
-    //         $entityManager->flush();
-    //     } catch (\Exception $e) {
-    //         return new JsonResponse('error: Unable to save user to database', JsonResponse::HTTP_INTERNAL_SERVER_ERROR);
-    //     }
-
-    //     // Retourner une réponse de succès
-    //     return new JsonResponse('success');
-    // }
-
-    /**
-     * @Route("/api/users/{email}", name="api_update_user", methods={"PUT"})
-     */
-    // public function updateUser(Request $request, EntityManagerInterface $entityManager, UserPasswordEncoderInterface $passwordEncoder, ValidatorInterface $validator, $email): JsonResponse
-    // {
-    //     $user = $entityManager->getRepository(User::class)->findOneBy(['email' => $email]);
-
-    //     if (!$user) {
-    //         return new JsonResponse(['message' => 'Utilisateur non trouvé'], JsonResponse::HTTP_NOT_FOUND);
-    //     }
-
-    //     $data = json_decode($request->getContent(), true);
-
-    //     // Utilisation des annotations Assert pour valider les données
-    //     $constraints = new Assert\Collection([
-    //         'userFirstName' => new Assert\NotBlank(),
-    //         'userLastName' => new Assert\NotBlank(),
-    //         'userEmail' => [new Assert\NotBlank(), new Assert\Email()],
-    //         'userFirstPassword' => new Assert\NotBlank(),
-    //         'userSecondPassword' => [
-    //             new Assert\Regex([
-    //                 'pattern' => '/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$/',
-    //                 'message' => 'Le mot de passe doit contenir au moins 8 caractères, une lettre majuscule, une lettre minuscule et un chiffre.'
-    //             ])
-    //         ],
-    //     ]);
-
-    //     $violations = $validator->validate($data, $constraints);
-
-    //     if (count($violations) > 0) {
-    //         // Il y a des violations des contraintes de validation
-    //         $errorMessages = [];
-    //         foreach ($violations as $violation) {
-    //             $errorMessages[] = $violation->getMessage();
-    //         }
-    //         return new JsonResponse($errorMessages, JsonResponse::HTTP_BAD_REQUEST);
-    //     }
-
-    //     $user
-    //         ->setUsername($data['userFirstName'] . ' ' . $data['userLastName'])
-    //         ->setEmail($data['userEmail'])
-    //         ->setRoles(['ROLE_USER'])
-    //         ->setAvatar($user->getAvatar()); // Garder l'avatar existant
-
-    //     // Hachage du nouveau mot de passe
-    //     try {
-    //         $hashedPassword = $passwordEncoder->encodePassword($user, $data['userFirstPassword']);
-    //         $user->setPassword($hashedPassword);
-    //     } catch (\Exception $e) {
-    //         return new JsonResponse('error: Password hashing failed', JsonResponse::HTTP_INTERNAL_SERVER_ERROR);
-    //     }
-
-    //     // Persist et flush dans la base de données
-    //     try {
-    //         $entityManager->persist($user);
-    //         $entityManager->flush();
-    //     } catch (\Exception $e) {
-    //         return new JsonResponse('error: Unable to update user in database', JsonResponse::HTTP_INTERNAL_SERVER_ERROR);
-    //     }
-
-    //     // Retourner une réponse de succès
-    //     return new JsonResponse('success');
-    // }
 }

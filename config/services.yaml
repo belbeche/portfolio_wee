@@ -6,6 +6,8 @@
 parameters:
     images_directory: "%kernel.project_dir%/public/image_project"
     uploads_directory: "%kernel.project_dir%/public/uploads/avatar"
+    api_resource_token: "%env(API_RESOURCE_TOKEN)%"
+    api_resource_url: "%env(API_RESOURCE_URL)%"
 services:
     App\Controller\ExceptionController:
         arguments:

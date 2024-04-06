@@ -12,7 +12,7 @@
 
                 <div class="page-title-content">
                     <div class="d-flex align-items-center">
-                        <img src="{{ asset('/uploads/avatar/'~app.user.avatar) }}" width="35" height="35" class="rounded-circle me-3 border border-width-3 border-white" alt="{{ app.user.username }}" width="120" height="120">
+                        <img src="{{ asset({{ asset('/uploads/avatar/'~app.user.avatar) }}" width="35" height="35" class="rounded-circle me-3 border border-width-3 border-white" alt="{{ app.user.username }}" width="120" height="120">
                         <div>
                             <h2 class="h1 border-bottom border-dark border-width-4" style="font-weight: 800">Profil de {{ app.user.username }}</h2>
                             <p class="mb-0">Rôle du forum : <strong>{% for role in app.user.roles %}{{ role }}{% endfor %}</strong></p>
@@ -40,11 +40,11 @@
 
                     <nav class="page-menu-nav">
                         <ul class="page-menu-container">
-                            <li class="page-menu-item"><a href="{{ url('front_profil') }}"><div>Profil</div></a></li>
+                            <li class="page-menu-item"><a href="{{ url('front_profile') }}"><div>Profil</div></a></li>
                             <li class="page-menu-item"><a href="{{ url('front_user_subject', {id: app.user.id}) }}"><div>Sujets abordés</div></a>
                             </li>
-                            <li class="page-menu-item"><a href="{{ url('front_user_response_subject', {id: app.user.id}) }}"><div>Réponses créées</div></a></li>
-                            <li class="page-menu-item current"><a href="{{ url('front_edit_profile') }}"><div>Modifier</div></a></li>
+                            <li class="page-menu-item current"><a href="#"><div>Réponses créées</div></a></li>
+                            <li class="page-menu-item"><a href="{{ url('front_edit_profile') }}"><div>Modifier</div></a></li>
                         </ul>
                     </nav>
 
@@ -56,15 +56,10 @@
     </div><!-- #page-menu end -->
 
     <div class="container">
-        <h1>Modification du profil de {{ app.user.username }}</h1>
-
-        {{ form_start(form) }}
-        {{ form_widget(form) }}
-
-        <div class="container">
-            <button id="btnEditProfile" type="submit"  data-register-url="{{ url('api_register') }}" class="btn btn-success">Modifier</button>
-            <span data-register-url2="http://127.0.0.1:8001/api/editProfile/{{ app.user.email }}" data-redirect-to-login="{{ url('app_login_authenticator') }}" class="updateProfileUser"></span>
-        </div>
-        {{ form_end(form) }}
+        <h1>Réponses apportées de {{ app.user.username }} ({{ app.user.comments|length }})</h1>
+        {% for comment in app.user.comments %}
+            <div class="col-xs-3"><a href="{{ url('front_articles_show', {slug: article.slug}) }}">{{ comment.content }}</a><div class="col-xs-3"><img src="{{ asset('uploads/avatar/'~app.user.avatar) }}" width="35" height="35" class="rounded-circle me-3 border border-width-3 border-white" alt="{{ app.user.username }}" width="120" height="120">
+                </div></div>
+        {% endfor %}
     </div>
 {% endblock %}

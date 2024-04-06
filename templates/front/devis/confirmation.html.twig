@@ -6,12 +6,11 @@
 
     <div class="text-center">
         <img class="d-block mx-auto mb-4" src="{{ asset('img/merci.png') }}" alt="scriptzenit">
-        <h1 class="display-5 fw-bold text-body-emphasis">Vous avez effectué une demande, un email vous a été envoyé</h1>
+        <h1 class="display-5 fw-bold text-body-emphasis">Inscription terminée, un email vous a été envoyé</h1>
         <div class="col-lg-6 mx-auto">
             <p class="lead mb-4">consulter votre boîte e-mail, si vous ne voyez pas le message dans la boite de réception, il ce peut qu'il soit dans les spams.</p>
             <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
                 <a href="{{ url('app_login') }}" class="btn btn-primary btn-lg px-4 gap-3">Me connecter</a>
-                <a href="{{ url('front_devis_register', {id: user.id }) }}" class="btn btn-secondary btn-lg px-4 gap-3">Compléter mes informations</a>
             </div>
         </div>
     </div>

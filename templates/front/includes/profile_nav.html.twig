@@ -1,5 +1,5 @@
 <!-- Header -->
-<header id="site_header" class="header">
+<header id="site_header" class="header" style="margin-bottom: 4rem; !important;">
 	<div
 		class="header-content clearfix">
 
@@ -7,7 +7,7 @@
 		<div class="text-logo">
 			<a href="{{ url('front_home') }}">
 				<div class="logo-symbol"><span>{{ app.user.prenom|slice(0, 1) ~ app.user.nom|slice(0, 1) }}</span></div>
-				<div class="logo-text">{{ app.user.civility }} .{{ app.user.nom }}
+				<div class="logo-text">{{ app.user.civility }}. {{ app.user.nom }}
 					<span>{{ app.user.prenom }}</span>
 				</div>
 			</a>

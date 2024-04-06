@@ -9,7 +9,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 class MaintenanceController extends AbstractController
 {
     /**
-     * @Route("/", name="front_maintenance")
+     * @Route("/maintenance", name="front_maintenance")
      */
     public function maintenance()
     {

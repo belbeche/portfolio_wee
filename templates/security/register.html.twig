@@ -30,10 +30,11 @@
 				<div class="login">
 					<h6>Vous êtes membre ?</h6>
 					<p>Connectez-vous-en suivant ce lien <a href="{{ url('app_login') }}">Je me connecte</a>.</p>
+					<img src="{{ asset('img/register.png') }}" alt="Inscription ScriptZenIT">
 				</div>
 			</div>
 			<div class="col-md-10 mx-auto col-lg-5">
-				{{ form_start(formRegister, {attr: {'class' : 'p-4 p-md-5 border rounded-3'}}) }}
+				{{ form_start(formRegister, {attr: {'class' : 'p-4 p-md-5 border rounded-3 no-validate'}}) }}
 					<div>
 						<label for="user_nom" class="sr-only">Nom</label>
 						{{ form_row(formRegister.nom) }}
@@ -50,27 +51,18 @@
 						{{ form_errors(formRegister.civility) }}
 					</div>
 					<div>
-						{#<label for="email-address" class="sr-only">Identifiant de connexion</label>#}
+						<label for="user_email" class="sr-only mb-5">Identifiant de connexion</label>
 						{{ form_widget(formRegister.email) }}
 						{{ form_errors(formRegister.email) }}
-					</div>
-					<div>
-						<label for="password" class="sr-only">Mot de passe</label>
-						{{ form_row(formRegister.password.first) }}
-					</div>
-					<div>
-						<label for="repeat-password" class="sr-only">Répétez votre mot de passe</label>
-						{{ form_row(formRegister.password.second) }}
 					</div>
 					<div>
 						{{ form_row(formRegister.checked) }}
 						{{ form_errors(formRegister.checked) }}
 					</div>
-					<p>En cliquant sur "Je m'inscris", un compte sera automatiquement créé sur notre site d'assistance. La sécurité de vos données est notre priorité absolue, et nos applications sont entièrement conformes aux normes de la
+					<p>La sécurité de vos données est notre priorité absolue, et nos applications sont entièrement conformes aux normes de la
 					<a href="https://www.cnil.fr/fr/guide-rgpd-du-developpeur">CNIL</a>. Vous avez la possibilité de supprimer vos données instantanément depuis votre espace personnel.</p>
 					<div class="container">
-						<button id="btn-register" type="submit" class="btn btn-primary">Je m'inscris</button>
-						{# <span data-register-url2="http://127.0.0.1:8000/api/register" data-redirect-to-login="{{ url('app_login') }}" class="register-url2"></span> #}
+						<button id="btn-register" type="submit" class="btn btn-primary">Valider</button>
 					</div>
 				{{ form_end(formRegister) }}
 			</div>

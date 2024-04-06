@@ -1,0 +1,195 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+	-
+	{{ article.title }}
+	-
+{% endblock %}
+
+{% block content %}
+
+<!-- Document Wrapper
+============================================= -->
+<div id="wrapper">
+
+    <!-- Page Title
+    ============================================= -->
+    <section class="page-title bg-color py-6 page-title-center">
+        <div class="container">
+            <div class="page-title-row">
+
+                <div class="page-title-content">
+                    <h2 class="h2" style="font-weight: 800">{{ article.slug }}</h2>
+                </div>
+
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb mt-4">
+                        <li class="breadcrumb-item"><a class="alt-color" href="{{ url('front_blog') }}">Forum</a></li>
+                        <li class="breadcrumb-item"><a class="alt-color" href="#">{% for category in article.categories %}{{ category.name }} | {% endfor %}</a></li>
+                        <li class="breadcrumb-item text-black-50 active" aria-current="page">{{ article.slug }}</li>
+                    </ol>
+                </nav>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Content
+    ============================================= -->
+    <section id="content">
+        <div class="content-wrap">
+            <div class="container mw-md">
+
+                <div class="topic-post">
+                    <div class="row g-0 justify-content-between align-items-center border-top border-bottom py-3 mb-4">
+                        <div class="col-9">
+                            <div class="d-flex align-items-center">
+                                <img src="{{ asset('' ~article.user.avatar) }}" alt="{{ article.user.username }}" class="rounded-circle me-2" width="50" height="50">
+                                <div>
+                                    <h5 class="mb-0 h6 fw-semibold"><a class="text-dark" href="#">{{ article.user.username }}</a></h5>
+                                    <small class="text-muted mb-0 fw-normal">| le
+                                        {{ article.createdAt|format_datetime('full', 'short', locale='fr') }}</small>
+                                    <small class="text-muted mb-0 fw-normal"> | modifié le
+                                        {{ article.updatedAt|format_datetime('full', 'short', locale='fr') }} </small>
+                                </div>
+                            </div>
+                        </div>
+
+                        {#<div class="col-auto">
+                            <a href="#" id="editlink" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="uil uil-ellipsis-h icon-2x alt-color"></i></a>
+                            <div class="dropdown-menu dropdown-menu-links rounded shadow-sm dropdown-menu-end py-0 m-0" aria-labelledby="editlink">
+                                <a class="dropdown-item rounded-top" href="#"><i class="bi-pencil-square me-2"></i>Edit</a>
+                                <a class="dropdown-item" href="#"><i class="bi-x-circle me-2"></i>Close</a>
+                                <a class="dropdown-item" href="#"><i class="bi-arrow-up me-2"></i>Stick On Top</a>
+                                <a class="dropdown-item" href="#"><i class="fa-solid fa-code-merge me-2"></i>Merge</a>
+                                <a class="dropdown-item" href="#"><i class="bi-trash3 me-2"></i>Trash</a>
+                                <a class="dropdown-item" href="#"><i class="bi-exclamation-triangle me-2"></i>Spam</a>
+                                <a class="dropdown-item" href="#message-reply" data-scrollto="#message-reply"><i class="bi-arrow-90deg-left me-2"></i>Reply</a>
+                            </div>
+                        </div>#}
+                    </div>
+
+                    <div class="clear"></div>
+
+
+                    <p>{{ article.content|raw }}.</p>
+
+                    <div class="col-1 pb-3 px-0">
+                        <hr>
+                    </div>
+                </div>
+
+                <div class="topic-post reply mt-5 p-4 p-md-5 border-top border-width-5 border-color">
+                    {#<div class="row justify-content-between align-items-center mb-4">
+                        <div class="col-9">
+
+                        </div>
+                        <div class="col-auto">
+                            <a href="#" class="badge bg-success text-white p-2">Résolu</a>
+                        </div>
+                    </div>#}
+                    <div class="row g-0 justify-content-between align-items-center border-top border-bottom border-color py-3 mb-4">
+                        {% for comment in comments %}
+                        <div class="col-9">
+                            <div class="d-flex align-items-center">
+                                <div>
+                                    <h5 class="mb-0 h6 fw-semibold align-middle"><a class="text-dark" href="#">{{ comment.user.username }}</a>{#<span class="badge bg-info text-white p-1 ms-1">{{ comment.user.roles }}</span>#}</h5>
+                                    <small class="text-muted mb-0 fw-normal">{{ comment.createdAt|format_datetime('short', 'short' , locale="fr") }}</small>
+                                    <p>{{ comment.content|raw }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% else %}
+                    <p>Pas de commentaires...</p>
+                    {% endfor %}
+                    {% if app.user %}
+                        <div id="message-reply" class="topic-form mt-5 container">
+                            <h3 class="h2 fw-bolder mb-4">Répondre au message</h3>
+
+                            <div class="form-group">
+                                {{ form_start(form) }}
+                                {{ form_widget(form.content) }}
+                                {{ form_rest(form) }}
+
+                                <button type="submit" class="btn btn-secondary">Laisser une solution</button>
+
+                                {{ form_end(form) }}
+                            </div>
+
+                        </div>
+                    {% endif %}
+                    <div class="clear"></div>
+                </div>
+            </div>
+
+        </div>
+    </section><!-- #content end -->
+{#
+	<div class="container">
+		<nav aria-label="breadcrumb">
+			<ol class="breadcrumb">
+				<li class="breadcrumb-item">
+					<a href="{{ url('front_home') }}">Accueil</a>
+				</li>
+				<li class="breadcrumb-item active" aria-current="page">{{ article.slug }}
+				</li>
+			</ol>
+		</nav>
+	</div>
+
+	<article class="container mt-4 text-center">
+		<h1>{{ article.title }}</h1>
+		<br>
+		<p class="text-secondary">Par
+			<img src="{{ asset('uploads/avatar/' ~article.user.avatar) }}" alt="{{ article.user.username }}" class="rounded-0 img-thumbnail" width="50" height="50">
+			{{ article.user.username }}
+			| le
+			{{ article.createdAt|format_datetime('full', 'short', locale='fr') }}
+			|  modifié le
+			{{ article.updatedAt|format_datetime('full', 'short', locale='fr') }}</p>
+
+
+		{% for image in article.images %}
+			<img src="{{ asset('uploads/' ~image.name) }}" alt="{{ article.slug }}" class="img-fluid">
+		{% endfor %}
+
+		<div class="mt-4">
+			<pre>
+
+			</pre>
+		</div>
+
+		<h1>Commentaires</h1>
+
+		{% for comment in comments %}
+			#}{# dump the data in twig #}{#
+			#}{#{{ dump(comment.user.username) }}#}{#
+
+			<!-- the comments -->
+				<h3><i class="fa fa-comment"> </i>
+				{{ comment.user.username }}
+				:
+				<small>{{ comment.createdAt|format_datetime('short', 'short' , locale="fr") }}</small>
+			</h3>
+			<p>{{ comment.content|raw }}</p>
+
+		{% else %}
+			<p>Pas de commentaires...</p>
+		{% endfor %}
+
+		{% if app.user %}
+			<div class="form-group">
+				{{ form_start(form) }}
+				<label for="">Laisser un commentaire  en tant que
+					{{ app.user.username }}</label>
+				{{ form_widget(form.content) }}
+				{{ form_rest(form) }}
+
+				<button type="submit" class="btn btn-primary">Laisser un commentaire !</button>
+
+				{{ form_end(form) }}
+			</div>
+		{% endif %}
+	</article>#}
+{% endblock %}

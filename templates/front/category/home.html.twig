@@ -1,0 +1,63 @@
+{% extends 'base.html.twig' %}
+
+{% block content %}
+
+    <div class="container p-xxl-5">
+        <h1>page de categorie : {{ categorie.name }}</h1>
+    </div>
+
+    <!-- blog start -->
+        <section class="blog-area pb-5">
+            <div class="container">
+                <div class="row justify-content-center">
+                    {% for article in articles %}
+                        <div class="col-lg-3 col-md-3 col-sm-10">
+                            <div class="single-blog blog-style-one">
+                                <div class="blog-image">
+                                    <a href="{{ path('front_articles_show', {'slug': article.slug}) }}">
+                                        {% for image in article.images %}
+                                            <img class="card-img-top rounded-0" src="{{ asset('uploads/' ~ image.name) }}" alt="{{ article.title }}">
+                                        {% endfor %}
+                                    </a>
+                                </div>
+                                <div class="blog-content">
+                                    <h5 class="blog-title">
+                                        <a href="{{ path('front_articles_show', {'slug': article.slug}) }}">
+                                            <h5 class="card-title">{{ article.title }}</h5>
+                                        </a>
+                                    </h5>
+                                    {% for categorie in article.categories %}
+                                        {{ categorie.name }}
+                                    {% endfor %}
+                                    <br>
+                                    <span><i class="bi bi-calendar"></i> {{ article.createdAt|format_datetime('medium', locale="fr") }}</span>
+                                    <span><i class="bi bi-chat-dots"></i>{{ article.commentaires|length }}</span>
+                                    {# <span class="favoris"><i class="bi bi-heart-fill"></i>{{ article.favoris|length }}</span> #}
+                                    <span><img src="{{ asset('uploads/avatar/' ~article.user.avatar) }}" alt="{{ article.user.username }}" class="rounded-0 img-thumbnail" width="50" height="50">  {{ article.user.username }}</span>
+                                </div>
+                                {# <div class="txt-red">
+                                    {% if app.user %}
+                                        {% set isFavorite = false %}
+                                        {% for favoris in article.favoris %}
+                                            {% if favoris.id == app.user.id %}
+                                                {% set isFavorite = true %}
+                                            {% endif %}
+                                        {% endfor %}
+                                        {% if isFavorite %}
+                                            <button class="btn-favorite" type="button" data-href="{{ url('front_remove_favoris', {id: article.id}) }}" data-id="{{ article.id }}"><i class="bi bi-hand-thumbs-up-fill"></i>
+                                            </button>
+                                        {% else %}
+                                            <button class="btn-favorite" type="button" data-href="{{ url('front_add_favoris', {id: article.id}) }}" data-id="{{ article.id }}"><i class="bi bi-hand-thumbs-up"></i>
+                                            </button>
+                                        {% endif %}
+
+                                    {% endif %}
+                                </div> #}
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </section><!-- ./ End blog start -->
+    </div>
+{% endblock %}

@@ -1,0 +1,185 @@
+{% extends 'base.html.twig' %}
+
+
+{% block content %}
+
+	<!-- Start header Area -->
+	<section
+		class="header-area header-twelve">
+		{#<h1>Résultats de la recherche pour {{ term }}</h1>#}
+		{% for type, messages in app.flashes %}
+			{% for message in messages %}
+				<div class="alert alert-{{ type }}">{{ message }}</div>
+			{% endfor %}
+		{% endfor %}
+		{#{% if not formSearch.vars.valid %}
+					<ul class="alert alert-danger">
+		        #}
+	{# on affiche en premier les erreurs globales (cas classiques) #}
+		{#
+		        {% for error in formSearch.vars.errors %}
+		            <li>{{error.message}}</li>
+		        {% endfor %}
+		        #}
+		{# ainsi que les erreurs concernant chaque champs #}
+		{#
+		        {% for child in formSearch.children %}
+		        #}
+		{# si le champ à des erreur #}
+		{#
+		        {% if child.vars.errors is defined %}
+		            {% for error in child.vars.errors %}
+		                <li>{{ child.vars.label }} : {{ error.message }} </li> #}
+		{# on ajoute le label du champ devant l'erreur pour plus de précisions. #}
+		{#
+		        {% endfor %}
+		    {% endif %}
+		{% endfor %}
+		</ul>
+		{% endif %}#}
+	</section>
+
+	<!-- Blog start -->
+	<section id="promo" class="section offset-header">
+		<div class="container text-center">
+			<h2>Access center<span> Support</span>
+			</h2>
+
+			<div class="container pt-xxl-5 intro">
+				{{ render(controller('App\\Controller\\Front\\FrontController::search')) }}
+			</div>
+
+			<!-- blog start -->
+			<section class="blog-area pb-5">
+				<div class="container">
+					<div class="row justify-content-center">
+						{% for article in articles %}
+							<div class="col-lg-3 col-md-3 col-sm-10">
+								<div class="single-blog blog-style-one">
+									<div class="blog-image">
+										<a href="{{ path('front_articles_show', {'slug': article.slug}) }}">
+											{% for image in article.images %}
+												<img class="card-img-top rounded-0" src="{{ asset('uploads/' ~ image.name) }}" alt="{{ article.title }}">
+											{% endfor %}
+										</a>
+									</div>
+									<div class="blog-content">
+										<h5 class="blog-title">
+											<a href="{{ path('front_articles_show', {'slug': article.slug}) }}">
+												<h5 class="card-title">{{ article.title }}</h5>
+											</a>
+										</h5>
+										{% for categorie in article.categories %}
+											{{ categorie.name }}
+										{% endfor %}
+										<br>
+										<span>
+											<i class="bi bi-calendar"></i>
+											{{ article.createdAt|format_datetime('medium', locale="fr") }}</span>
+										<span>
+											<i class="bi bi-chat-dots"></i>
+											{{ article.commentaires|length }}</span>
+										{#                                        <span><i class="bi bi-star-fill"></i> <span class="nb-likes"> {{ article.likes|length }}</span></span>#}
+										<span><img src="{{ asset('uploads/avatar/' ~article.user.avatar) }}" alt="{{ article.user.username }}" class="rounded-0 img-thumbnail" width="50" height="50">
+											{{ article.user.username }}</span>
+									</div>
+									{# <div class="favorite">
+									                                        {% if app.user %}
+									                                            {% set isLikes = false %}
+									
+									                                            {% for userLike in article.likes %}
+									
+									                                                {% if userLike.user == app.user %}
+									                                                    {% set isLikes = true %}
+									                                                {% endif %}
+									
+									                                            {% endfor %}
+									
+									                                            {% if isLikes %}
+									                                                <button data-nb-likes="{{ article.likes|length }}" type="button" data-url="{{ url('front_like', { id: article.id }) }}" class="remove-like"><i class="bi bi-hand-thumbs-up-fill"></i></button>
+									                                                <span class="nb-likes"> {{ article.likes|length }}</span>
+									                                            {% else %}
+									                                                <button data-nb-likes="{{ article.likes|length }}" type="button" data-url="{{ url('front_like', { id: article.id }) }}" class="add-like"><i class="bi bi-hand-thumbs-up"></i></button>
+									                                                <span class="nb-likes"> {{ article.likes|length }}</span>
+									                                            {% endif %}
+									                                        {% endif %}
+									
+									                                    </div> #}
+								</div>
+							</div>
+						{% endfor %}
+					</div>
+				</div>
+			</section>
+
+			<!-- ./ End blog start -->
+		</div>
+		{#<div class="social-media">
+					<div class="social-media-inner container text-center">
+		        #}
+	{#<ul class="list-inline mb-2">
+						<li class="list-inline-item twitter-follow"><a href="https://twitter.com/3rdwave_themes" class="twitter-follow-button" data-show-count="false">Follow @3rdwave_themes</a>
+							<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+						</li><!--//twitter-follow-->
+						<li class="list-inline-item twitter-tweet">
+							<a href="https://twitter.com/share" class="twitter-share-button" data-via="3rdwave_themes" data-hashtags="bootstrap">Tweet</a>
+							<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+						</li><!--//twitter-tweet-->
+						<li class="list-inline-item facebook-like">
+							<div class="fb-like" data-href="https://themes.3rdwavemedia.com/" data-layout="button_count" data-action="like" data-show-faces="false" data-share="false"></div>
+						</li><!--//facebook-like-->
+						<!--// Generate github buttons: https://github.com/mdo/github-buttons -->
+						<li class="list-inline-item github-star">
+							<a class="github-button" href="https://github.com/xriley/devaid-theme" data-icon="octicon-star" aria-label="Star xriley/devaid-theme on GitHub">Star</a></li>
+						<li class="list-inline-item github-follow"><!-- Place this tag where you want the button to render. -->
+							<a class="github-button" href="https://github.com/xriley" aria-label="Follow @xriley on GitHub">Follow @xriley</a></li>
+					</ul>#}
+		{#
+		        </div>
+		    </div>#}
+	</section>
+	<!--//promo-->
+
+	{#<div class="container mt-4">
+			<div class="relative container mx-auto px-4 pb-16 xl:pb-24 xl:pt-14">
+				<p class="text-4xl font-bold text-shadow mb-2 xl:text-6xl">Apprendre le développement</p>
+				<p class="text-3xl font-bold text-shadow xl:text-4xl">facilement et simplement</p>
+				<div class="mt-12">
+					<a href="/inscription"
+					   title="Ouvrir un compte" aria-label="Ouvrir un compte"
+					   class="btn btn-gradient-red py-3"
+					>
+						Rejoins-nous !
+					</a>
+					<a href="/connexion"
+					   title="Se connecter" aria-label="Se connecter"
+					   class="btn btn-green py-3 ml-4 xl:hidden"
+					>
+						Connexion
+					</a>
+				</div>
+			</div>
+		</div>#}
+
+	{#<div class="header d-none d-lg-block">
+			<strong>Meet your friends</strong>
+			<p>
+				Lorem ipsum dolor sit amet, consectetur adipisicing elit. Error inventore laudantium obcaecati rem tenetur. At et fuga illo illum inventore maxime quas quia quo suscipit tempore. Aspernatur consequuntur maiores veritatis.
+			</p>
+		</div>#}
+
+	<!-- Home Start -->
+	{#<section class="py-5 text-center container">
+			<div class="row py-lg-5">
+				<div class="col-lg-6 col-md-8 mx-auto">
+					<h1 class="fw-light">Bienvenue sur le blog Stay Online</h1>
+					<code class="w3-codespan">('hello World!') !</code>
+				</div>
+			</div>
+		</section>#}
+	<!-- Home End -->
+
+		<div class="navigation pagination justify-content-center my-4"> {{ knp_pagination_render(articles) }}
+	</div>
+
+{% endblock %}

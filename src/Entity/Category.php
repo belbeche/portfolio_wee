@@ -26,12 +26,13 @@ class Category
 
     /**
      * @ORM\ManyToMany(targetEntity=Project::class, mappedBy="categories", cascade={"persist"})
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(nullable=true)
      */
     private $projects;
 
     /**
-     * @ORM\ManyToMany(targetEntity=Article::class, mappedBy="categories")
+     * @ORM\ManyToMany(targetEntity=Article::class, mappedBy="categories", cascade={"persist"})
+     * @ORM\JoinColumn(nullable=true)
      */
     private $articles;
 
@@ -82,25 +83,5 @@ class Category
         }
 
         return $this;
-    }
-    public function getArticles(): ArrayCollection
-    {
-        return $this->articles;
-    }
-
-    public function setArticles(ArrayCollection $articles): Category
-    {
-        $this->articles = $articles;
-        return $this;
-    }
-
-    public function addArticle(Article $article)
-    {
-        $this->articles[] = $article;
-    }
-
-    public function removeArticle(Article $article)
-    {
-        $this->articles->removeElement($article);
     }
 }

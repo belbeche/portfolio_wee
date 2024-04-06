@@ -40,7 +40,7 @@
 							<a class="btn btn-info" href="{{ url('app_login') }}">Connexion</a>
 						</li>
 					{% endif %}
-					{% if app.user%}
+					{% if app.user %}
 						<li class="menu-item {{ app.request.get('_route') == 'app_logout' ? 'active' : '' }}">
 							<a class="btn btn-danger" href="{{ url('app_logout') }}">Déconnexion</a>
 						</li>

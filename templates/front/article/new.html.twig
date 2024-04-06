@@ -1,0 +1,51 @@
+{% extends 'base.html.twig' %}
+
+{% block content %}
+
+    <script src="https://cdn.ckeditor.com/ckeditor5/36.0.1/classic/ckeditor.js"></script>
+
+    <div class="container-fluid text-center jumbotron">
+        <h1>Support Technique</h1>
+        <div class="page-subtitle">
+            <br>
+            <p class="fs-5 mb-4">Vous êtes sur le point de créer un sujet, afin de débloquer votre situation soit par un personnel de l'entreprise ou bien un membre qualifié vous répondra et notre support également.</p>
+
+            <h4></h4>
+        </div>
+    </div>
+
+    <div class="b-example-divider"></div>
+
+    <div class="overflow-hidden">
+        <div class="container">
+
+            {% include 'front/includes/_article_form.html.twig' %}
+            {% if app.request.attributes.get('_route') == 'back_articles_new' %}
+                <hr>
+                <h2>Gestion des images</h2>
+                {% for image in article.images %}
+                    <div>
+                        <img src="{{ asset('/uploads/subject'~image.name) }}" alt="{{ article.name }}" width="150">
+
+                        {# We add a link to delete an image (will be managed in Ajax in images.js) #}
+                        <a href="{{ path('back_articles_remove_image', {id: image.id})}}" data-delete data-token="{{ csrf_token('delete' ~ image.id )}}">
+                            <i class="bi bi-file-earmark-x"></i>
+                            Supprimer
+                        </a>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        </div>
+    </div>
+
+    <script>
+        ClassicEditor
+            .create( document.querySelector( '#contenu' ) )
+            .then( editor => {
+                console.log( 'Editor was initialized', editor );
+            } )
+            .catch( error => {
+                console.error( error );
+            } );
+    </script>
+{% endblock %}

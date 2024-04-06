@@ -9,6 +9,7 @@ use App\Entity\Project;
 use App\Form\ContactType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\HttpFoundation\Response;
@@ -91,18 +92,8 @@ class HomeController extends AbstractController
     /**
      * @Route("/conditions-utilisations", name="front_conditions")
      */
-    public function conditionUtilisation(): Response{
+    public function conditionUtilisation(): Response
+    {
         return $this->render('front/administrative/conditions.html.twig');
     }
-
-    /**
-     * @Route("/profil", name="front_profile")
-     * @return Response
-     * @throws \Exception
-     * @IsGranted("ROLE_USER", statusCode=404, message="Page not found 404")
-     */
-    public function frontProfile(): Response{
-        return $this->render('front/profile/index.html.twig');
-    }
-
 }

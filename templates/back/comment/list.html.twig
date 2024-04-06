@@ -1,0 +1,49 @@
+{% extends 'base_back.html.twig' %}
+
+{% block content %}
+
+    <div class="container">
+
+        <h1 class="mb-4">Commentaires</h1>
+
+        <table class="table table-responsive">
+            <thead class="thead-dark">
+            <tr>
+                <th>#</th>
+                <th>Titre du commentaire</th>
+                <th>Autheur</th>
+                <th>Etat</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for comment in comments %}
+                <tr>
+                    <td>{{ comment.id }}</td>
+                    <td>{{ comment.content }}</td>
+                    <td>
+                        {{ comment.user.username }}
+                    </td>
+                    <td>
+                        {% if comment.active == true %}
+                            Activé
+                            {% else %}
+                            Désactivé
+                        {% endif %}
+                    </td>
+                    <td>
+                        <a href="{{ url('back_comments_show', {id: comment.id }) }}">Voir</a>
+                        <a href="{{ url('back_comments_disable', {id: comment.id }) }}">Désactiver</a>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+        <div class="navigation">
+            {{ knp_pagination_render(comments) }}
+        </div>
+
+    </div>
+
+{% endblock %}

@@ -1,0 +1,32 @@
+{% extends 'base_back.html.twig' %}
+
+{% block content %}
+    <div class="container">
+
+        <div class="card">
+            {% for image in article.images %}
+                <img src="{{ asset('uploads/' ~ image.name) }}" alt="{{ article.title }}" class="img-fluid">
+            {% endfor %}
+        </div>
+
+        <h1>{{ article.slug }}</h1><br>
+        <p>Par {{ article.user.username }}</p>
+        <img src="{{ asset('uploads/avatar/' ~article.user.avatar) }}" alt="{{ article.user.username }}" class="rounded-0 img-thumbnail" width="50" height="50">
+
+        <pre>
+            <code>
+                {{ article.content|raw }}
+            </code>
+        </pre>
+
+        <p>
+            Crée le : {{ article.createdAt|format_datetime('full', 'short', locale='fr') }}
+        </p>
+        <p>
+            Modifier le :  {{ article.updatedAt|format_datetime('full', 'short', locale='fr') }}
+        </p>
+
+        <a href="{{ url('front_articles_show', {slug: article.slug}) }}">Voir l'article</a>
+    </div>
+
+{% endblock %}

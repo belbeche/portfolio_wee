@@ -23,8 +23,9 @@ class Article
 {
     /**
      * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="uuid")
+     * @ORM\GeneratedValue(strategy="CUSTOM")
+     * @ORM\CustomIdGenerator(class="doctrine.uuid_generator")
      */
     private $id;
 
@@ -82,9 +83,9 @@ class Article
 
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="articles")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(nullable=true)
      */
-    private $user;
+    private ?Collection $user;
 
     /**
      * @ORM\OneToMany(targetEntity=Image::class, mappedBy="article", orphanRemoval=true, cascade={"persist"})
@@ -99,7 +100,7 @@ class Article
      *     cascade={"persist"}
      * )
      */
-    private Collection $likes;
+    private ?Collection $likes;
 
     public function __construct()
     {
@@ -110,9 +111,9 @@ class Article
         $this->likes = new ArrayCollection();
     }
 
-    public function getId(): ?int
+    public function getId(): ?Uuid
     {
-        return $this->id;
+        return $this->id ? $this->id->toRfc4122() : null;
     }
 
     public function getTitle(): ?string
@@ -244,7 +245,7 @@ class Article
         $this->categories->removeElement($category);
     }
 
-    public function getUser(): ?User
+    public function getUser(): User
     {
         return $this->user;
     }

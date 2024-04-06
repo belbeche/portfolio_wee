@@ -38,7 +38,7 @@ class MessageController extends AbstractController
         $email = $currentUser->getEmail();
 
         // Récupérer le devis associé à l'utilisateur actuellement connecté
-        $devis = $entityManager->getRepository(Devis::class)->findBy(['email' => $email]);
+        $devis = $entityManager->getRepository(Devis::class)->findOneBy(['email' => $email]);
 
         // Récupérer le message associé à l'utilisateur actuellement connecté
         /*$message = $entityManager->getRepository(Message::class)->findBy(['sender' => $email]);*/

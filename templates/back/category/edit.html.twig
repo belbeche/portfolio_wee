@@ -1,0 +1,22 @@
+{% extends 'base_back.html.twig' %}
+
+{% block content %}
+
+    <div class="container p-xxl-5">
+        <h1>Editer {{ categorie.name }}</h1>
+
+        {{ form_start(form) }}
+
+        <label for="">Titre : </label>
+        {{ form_widget(form.name) }}
+
+
+
+        {{ form_rest(form) }}
+
+        <button type="submit">Confirmer</button>
+
+        {{ form_end(form) }}
+    </div>
+
+{% endblock %}

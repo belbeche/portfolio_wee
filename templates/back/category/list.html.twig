@@ -1,0 +1,41 @@
+{% extends 'base_back.html.twig' %}
+
+{% block content %}
+
+    <div class="container mt-4">
+
+        <h1>Categorie</h1>
+
+        <div class="text-right">
+            <a href="{{ url('back_category_add') }}" class="btn btn-primary mb-4">Ajouter une nouvelle categorie</a>
+        </div>
+
+        <table class="table table-responsive">
+            <thead class="thead-dark">
+            <tr>
+                <th>#</th>
+                <th>Titre de la Categorie</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for categorie in categories %}
+                <tr>
+                    <td>{{ categorie.id }}</td>
+                    <td>{{ categorie.name }}</td>
+                    <td>
+                        <a href="{{ url('back_categories_show', {id: categorie.id }) }}">Voir</a>
+                        <a href="{{ url('back_categories_edit', {id: categorie.id }) }}">Editer</a>
+                        <a href="{{ url('back_categories_remove', {id: categorie.id }) }}">Supprimer</a>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="navigation">
+        {{ knp_pagination_render(categories) }}
+    </div>
+
+{% endblock %}

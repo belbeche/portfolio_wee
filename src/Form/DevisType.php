@@ -73,6 +73,14 @@ class DevisType extends AbstractType
                     'placeholder' => 'Merci de décrire votre projet...',
                 ]
             ])
+            ->add('email', EmailType::class, [
+                'label' => false,
+                'required' => false,
+                'mapped' => true,
+                'attr' => [
+                    'placeholder' => 'Votre adresse email',
+                ],
+            ])
             // Ajouter le champ "status" sans le mapper avec l'entité
             ->add('statut', ChoiceType::class, [
                 'choices' => [
