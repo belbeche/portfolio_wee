@@ -2,14 +2,13 @@
 
 namespace App\Entity;
 
-use App\Entity\Devis;
+use DateTime;
 use DateTimeImmutable;
 use Symfony\Component\Uid\Uuid;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
-use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -27,17 +26,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @ORM\GeneratedValue(strategy="CUSTOM")
      * @ORM\CustomIdGenerator(class="doctrine.uuid_generator")
      */
-    private $id;
+    private ?Uuid $id = null; // Initialisation de la propriété $id à null
 
     /**
      * @ORM\Column(type="string", length=180, unique=true)
      */
-    private $email;
+    private ?string $email;
 
     /**
      * @ORM\Column(type="json")
      */
-    private $roles = [];
+    private array $roles = [];
 
     /**
     * @var string The hashed password
@@ -48,7 +47,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @ORM\Column(type="boolean")
      */
-    private $isVerified = false;
+    private bool $isVerified = false;
 
     /**
      * @ORM\Column(type="string", length=255, nullable="true")
@@ -68,17 +67,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
-    private $resetToken;
+    private ?string $resetToken;
 
     /**
      * @ORM\Column(type="datetime", nullable=true)
      */
-    private $resetTokenExpireAt;
+    private ?\DateTimeInterface $resetTokenExpireAt;
 
     /**
      * @ORM\Column(type="string")
      */
-    private $avatar;
+    private string $avatar;
 
     /**
      * @ORM\OneToMany(targetEntity=Message::class, mappedBy="sender")
@@ -88,7 +87,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @ORM\OneToMany(targetEntity=Message::class, mappedBy="receiver")
      */
-    private $receivedMessages;
+    private  $receivedMessages;
 
     /**
      * @ORM\OneToMany(targetEntity=Devis::class, mappedBy="user", orphanRemoval=true)
@@ -98,12 +97,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @ORM\Column(type="string")
      */
-    private $username;
+    private string $username;
 
     /**
      * @ORM\Column(type="datetime", nullable=true)
      */
-    private $date;
+    private DateTime $date;
 
     /**
      * @ORM\OneToMany (targetEntity=Comment::class, mappedBy="user", orphanRemoval=true)
@@ -121,12 +120,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->sentMessages = new ArrayCollection();
         $this->receivedMessages = new ArrayCollection();
         $this->avatar = 'support0.svg';
-        $this->roles = ['ROLE_GUEST'];
+        $this->roles = ['ROLE_USER'];
 
         $this->articles = new ArrayCollection();
         $this->comments = new ArrayCollection();
         $this->likes = new ArrayCollection();
-        $this->date = new DateTimeImmutable();
+        $this->date = new DateTime();
     }
 
     /**
@@ -216,7 +215,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function eraseCredentials()
     {
         // If you store any temporary, sensitive data on the user, clear it here
-         $this->password = null;
+         /*$this->password = null;*/
     }
 
     /**

@@ -57,10 +57,14 @@ class DevisController extends AbstractController
                 }
             }
 
+            $entityManager->persist($devis);
+            $entityManager->flush();
+
             // Envoi de l'e-mail avec le récapitulatif du devis
             $email = (new TemplatedEmail())
                 ->from(new Address('contact@scriptzenit.fr', 'L\'équipe Scriptzenit'))
                 ->to($devis->getEmail())
+                ->bcc('wbelbeche.s@gmail.com')
                 ->subject('Récapitulatif de demande de devis')
                 ->context([
                     'registredNumber' => $devis->getId(),
@@ -71,14 +75,14 @@ class DevisController extends AbstractController
                     'message' => $devis->getDescriptionProjet()
                 ])
                 ->htmlTemplate('front/devis/email.html.twig');
-                $mailer->send($email);
-
-            $entityManager->persist($devis);
-            $entityManager->flush();
+            $mailer->send($email);
 
 
             $this->addFlash('success', 'Votre demande a bien été prise en compte, vérifiez votre adresse e-mail.');
-            $this->redirectToRoute('front_confirmation_estimate');
+
+            return $this->redirectToRoute('front_devis_set_password', [
+                'id' => $devis->getId()
+            ]);
         }
 
         return $this->render('front/devis/new.html.twig', [
@@ -126,20 +130,19 @@ class DevisController extends AbstractController
     }
 
     /**
-     * @Route("/devis/remerciement/{id}", name="front_confirmation_estimate")
+     * @Route("/devis/remerciement/{email}", name="front_confirmation_estimate")
      */
     public function messageConfirmation(
         EntityManagerInterface $entityManager,
         Request $request,
-        User $user
+        string $email
     ): Response
     {
-        $user = $entityManager->getRepository(User::class)->find($user);
-
-        if ($user === null) {
+        $user = $entityManager->getRepository(User::class)->findOneBy(['email' => $email]);
+        /*if ($user === null) {
             // Gérer l'erreur, peut-être rediriger vers une page d'erreur
             throw $this->createNotFoundException('Aucun utilisateur avec cette adresse e-mail n\'a été trouvé.');
-        }
+        }*/
 
         return $this->render('front/devis/confirmation.html.twig', [
             'user' => $user,

@@ -3,6 +3,8 @@
 namespace App\Form;
 
 use App\Entity\User;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\DBAL\Types\BooleanType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -16,6 +18,8 @@ use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
+use Symfony\Component\Validator\Constraints as Assert;
+
 
 class UserType extends AbstractType
 {
@@ -27,8 +31,9 @@ class UserType extends AbstractType
             'invalid_message' => 'Les champs du mot de passe doivent correspondre.',
             'options' => ['attr' => ['class' => 'password-field']],
             'required' => false,
-            'first_options' => ['label' => 'Mot de passe'],
-            'second_options' => ['label' => 'Répétez le mot de passe'],
+            'mapped' => true,
+            'first_options' => ['label' => 'Votre mot de passe'],
+            'second_options' => ['label' => 'Re-petez le mot de passe'],
             'attr' => [
                 'placeholder' => 'Votre mot de passe'
             ],
@@ -40,57 +45,41 @@ class UserType extends AbstractType
             $passwordFieldOptions['type'] = HiddenType::class; // Change le type du champ de mot de passe en hidden
         }
         $builder
-            ->add('nom', TextType::class, [
-                'attr' => [
-                    'placeholder' => 'Votre nom'
-                ],
-                'required' => true
-            ])
-            ->add('prenom', TextType::class, [
-                'attr' => [
-                    'placeholder' => 'Votre prénom'
-                ],
-                'required' => true
-            ])
-            ->add('civility', ChoiceType::class, [
-                'label' => 'Civilité',
-                'choices' => [
-                    'M' => 'M',
-                    'Mme' => 'Mme',
-                ],
-                'expanded' => true,   // Utilisez ceci si vous souhaitez des boutons radio
-                'multiple' => false,  // Gardez ceci sur false pour ne permettre qu'un seul choix,
-            ])
             ->add('email', EmailType::class, [
-                'label' => 'Email de connexion',
-                'attr' => [
-                    'placeholder' => 'Email de connexion'
+                'constraints' => [
+                    new Assert\NotBlank(),
+                    new Assert\Email(),
                 ],
-                'required' => true,
             ])
             ->add('roles', HiddenType::class, [
                     'data' => ['ROLE_USER'],
                 ]
             )
-            ->add('password', RepeatedType::class, $passwordFieldOptions)
-            // Ajoute le champ d'image avec les options
-            ->add('avatar', FileType::class, [
-                "row_attr" => [
-                    "class" => "d-none"
+            ->add('nom', TextType::class, [
+                'constraints' => [
+                    new Assert\NotBlank(),
                 ],
-                'label' => 'Parcourir',
-                'multiple' => false,
-                'mapped' => false,
-                'required' => false
             ])
-            ->add('checked', CheckboxType::class, [
-                'label' => 'Je reconnais avoir lu et compris les CGU et je les accepte',
-                'attr' => [
-                    'placeholder' => 'Confirmation mdp'
+            ->add('prenom', TextType::class, [
+                'constraints' => [
+                    new Assert\NotBlank(),
                 ],
+            ])
+            ->add('civility', ChoiceType::class, [
+                'label' => 'Civilité',
+                'choices' => [
+                    'M.' => 'M',
+                    'Mme.' => 'Mme',
+                ],
+                'expanded' => true,   // Utilisez ceci si vous souhaitez des boutons radio
+                'multiple' => false,  // Gardez ceci sur false pour ne permettre qu'un seul choix
+            ])
+            ->add('password', RepeatedType::class, $passwordFieldOptions)
+            ->add('checked', CheckboxType::class, [
+                'label' => 'Je reconnais avoir lu et compris les CGU ainsi que les CGUV et je les accepte',
                 'required' => true,
                 'mapped' => false,
-                'help' => 'En cochant cette case, vous donnez l\'accord pour être contacté par un membre de l\'équipe.',
+                'help' => 'Les conditions générales d\'utilisations ainsi que les mentions légales sont accessible en bas de page',
             ])
         ;
 

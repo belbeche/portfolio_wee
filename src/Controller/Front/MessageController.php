@@ -27,7 +27,6 @@ class MessageController extends AbstractController
 
     /**
      * @Route("/assistance", name="front_assistance")
-     * @IsGranted("ROLE_USER")
      */
     public function home(EntityManagerInterface $entityManager): Response
     {
@@ -57,7 +56,6 @@ class MessageController extends AbstractController
 
     /**
      * @Route("/devis/nouveau-ticket", name="send_message", methods={"GET","POST"})
-     * @IsGranted("ROLE_USER")
      */
     public function sendMessage(Request $request, EntityManagerInterface $entityManager, MailerInterface $mailer): Response
     {
@@ -148,7 +146,6 @@ class MessageController extends AbstractController
 
     /**
      * @Route("/voir-ticket/{id}", name="front_show_ticket", methods={"GET"})
-     * @IsGranted("ROLE_USER")
      */
     public function show(EntityManagerInterface $entityManager, $id,Request $request)
     {
@@ -176,7 +173,6 @@ class MessageController extends AbstractController
     /**
      * @Route("/repondre-ticket/{id}", name="respond_to_ticket", methods={"GET","POST"})
      * @throws TransportExceptionInterface
-     * @IsGranted("ROLE_USER")
      */
     public function respondToTicket(Request $request, EntityManagerInterface $entityManager, MailerInterface $mailer, Message $originalMessage): Response
     {
@@ -243,7 +239,6 @@ class MessageController extends AbstractController
 
     /**
      * @Route("supprimer/{id}/ticket", name="front_delete_ticket", methods={"POST"})
-     * @IsGranted("ROLE_USER")
      */
     public function remove(EntityManagerInterface $entityManager, Message $ticket, Request $request, Filesystem $filesystem): RedirectResponse
     {

@@ -5,6 +5,15 @@
 
 {% block content %}
 
+	<script src="https://cdn.jsdelivr.net/npm/simple-parallax-js@5.6.1/dist/simpleParallax.min.js"></script>
+
+	<script>
+		var image = document.getElementsByClassName('thumbnail');
+		new simpleParallax(image, {
+			maxTransition: 60
+		});
+	</script>
+
 	<div class="container-fluid text-center jumbotron" style="margin-bottom: 1rem;">
 		<h1>Demande en ligne</h1>
 		<div class="page-subtitle">
@@ -15,7 +24,7 @@
 		</div>
 	</div>
 
-	<img src="{{ asset('img/keep_it_simple.png') }}" alt="Création de demande en ligne ScriptZenIT, solution digital sur mesure">
+	<img src="{{ asset('img/keep_it_simple.png') }}" alt="Création de demande en ligne ScriptZenIT, solution digital sur mesure" class="thumbnail">
 	<div class="b-example-divider"></div>
 	<section class="container text-center">
 		<p class="lead mb-5">

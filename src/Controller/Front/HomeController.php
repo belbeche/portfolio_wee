@@ -9,6 +9,7 @@ use App\Entity\Project;
 use App\Form\ContactType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
+use Symfony\Component\Finder\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Mailer\MailerInterface;
@@ -95,5 +96,18 @@ class HomeController extends AbstractController
     public function conditionUtilisation(): Response
     {
         return $this->render('front/administrative/conditions.html.twig');
+    }
+
+    /**
+     * @Route("/profil/", name="front_profile")
+     */
+    public function frontProfile(): RedirectResponse {
+        // Vérifie si l'utilisateur a le rôle nécessaire
+        if (!$this->isGranted('ROLE_USER')) {
+            throw new AccessDeniedException("Access denied");
+        }
+
+        // Redirection vers la page d'inscription
+        return $this->redirectToRoute('app_register');
     }
 }

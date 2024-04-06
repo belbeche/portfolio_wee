@@ -8,7 +8,10 @@ use App\Form\EditProfileType;
 use App\Form\UserPasswordType;
 use App\Form\UserType;
 use Doctrine\ORM\EntityManagerInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
+use Symfony\Component\Finder\Exception\AccessDeniedException;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Mailer\MailerInterface;
@@ -42,7 +45,7 @@ class SecurityController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $user->setPassword(null);
-            $user->setUsername($user->getUsername());
+            $user->setEmail($form->getData('email'));
             // Envoi de l'email
             $email = (new TemplatedEmail())
                 ->from('contact@scriptzenit.fr')
@@ -75,16 +78,16 @@ class SecurityController extends AbstractController
     /**
      * @Route("/continuer/{id}", name="front_devis_set_password")
      */
-    public function setPassword(Request $request, EntityManagerInterface $entityManager, $id, UserPasswordHasherInterface $passwordHasher): Response
+    public function setPassword(Request $request, EntityManagerInterface $entityManager, UserPasswordHasherInterface $passwordHasher,$id): Response
     {
         // Vérifier si un utilisateur existe avec cet ID
         // $user = $entityManager->getRepository(User::class)->find($id);
 
         // Vérifier si un utilisateur existe avec cet ID
-        $user = $entityManager->getRepository(User::class)->find($id);
+        $user = $entityManager->getRepository(User::class)->findOneBy(['id' => $id]);
 
         if (!$user) {
-            return $this->redirectToRoute('front_register');
+            return $this->redirectToRoute('app_register');
         }
 
         // Créer et traiter le formulaire pour le mot de passe
@@ -132,6 +135,9 @@ class SecurityController extends AbstractController
 
     /**
      * @Route("/utilisateur/modifier/profil", name="front_edit_profile")
+     * @param Request $request
+     * @param EntityManagerInterface $entityManager
+     * @param UserPasswordHasherInterface $userPasswordHasher
      * @return Response
      */
     public function EditProfile(Request $request,EntityManagerInterface $entityManager,UserPasswordHasherInterface $userPasswordHasher): Response
@@ -162,7 +168,7 @@ class SecurityController extends AbstractController
 
             $this->addFlash('success', 'Profil mis à jour avec succès.');
 
-            return $this->redirectToRoute('front_porfile');
+            return $this->redirectToRoute('front_profile');
         }
 
         return $this->render('front/profil/edit.html.twig', [

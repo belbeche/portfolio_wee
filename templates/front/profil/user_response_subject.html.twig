@@ -12,7 +12,7 @@
 
                 <div class="page-title-content">
                     <div class="d-flex align-items-center">
-                        <img src="{{ asset({{ asset('/uploads/avatar/'~app.user.avatar) }}" width="35" height="35" class="rounded-circle me-3 border border-width-3 border-white" alt="{{ app.user.username }}" width="120" height="120">
+                        <img src="{{ asset('/uploads/avatar/'~app.user.avatar) }}" width="35" height="35" class="rounded-circle me-3 border border-width-3 border-white" alt="{{ app.user.username }}" width="120" height="120">
                         <div>
                             <h2 class="h1 border-bottom border-dark border-width-4" style="font-weight: 800">Profil de {{ app.user.username }}</h2>
                             <p class="mb-0">Rôle du forum : <strong>{% for role in app.user.roles %}{{ role }}{% endfor %}</strong></p>

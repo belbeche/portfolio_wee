@@ -36,6 +36,11 @@
 			<div class="col-md-10 mx-auto col-lg-5">
 				{{ form_start(formRegister, {attr: {'class' : 'p-4 p-md-5 border rounded-3 no-validate'}}) }}
 					<div>
+						<label for="nom" class="sr-only">Civilité</label>
+						{{ form_row(formRegister.civility) }}
+						{{ form_errors(formRegister.civility) }}
+					</div>
+					<div>
 						<label for="user_nom" class="sr-only">Nom</label>
 						{{ form_row(formRegister.nom) }}
 						{{ form_errors(formRegister.nom) }}
@@ -46,14 +51,17 @@
 						{{ form_errors(formRegister.prenom) }}
 					</div>
 					<div>
-						<label for="nom" class="sr-only">Civilité (Optionel)</label>
-						{{ form_row(formRegister.civility) }}
-						{{ form_errors(formRegister.civility) }}
+						<label for="user_email" class="sr-only mb-5">Identifiant de connexion</label>
+						{{ form_row(formRegister.email) }}
+						{{ form_errors(formRegister.email) }}
 					</div>
 					<div>
-						<label for="user_email" class="sr-only mb-5">Identifiant de connexion</label>
-						{{ form_widget(formRegister.email) }}
-						{{ form_errors(formRegister.email) }}
+						{{ form_row(formRegister.password.first) }}
+						{{ form_errors(formRegister.password.first) }}
+					</div>
+					<div>
+						{{ form_row(formRegister.password.second) }}
+						{{ form_errors(formRegister.password.second) }}
 					</div>
 					<div>
 						{{ form_row(formRegister.checked) }}
@@ -62,7 +70,7 @@
 					<p>La sécurité de vos données est notre priorité absolue, et nos applications sont entièrement conformes aux normes de la
 					<a href="https://www.cnil.fr/fr/guide-rgpd-du-developpeur">CNIL</a>. Vous avez la possibilité de supprimer vos données instantanément depuis votre espace personnel.</p>
 					<div class="container">
-						<button id="btn-register" type="submit" class="btn btn-primary">Valider</button>
+						<button type="submit" class="btn btn-primary">Valider</button>
 					</div>
 				{{ form_end(formRegister) }}
 			</div>
