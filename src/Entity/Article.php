@@ -85,7 +85,7 @@ class Article
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="articles")
      * @ORM\JoinColumn(nullable=true)
      */
-    private ?Collection $user;
+    private ?User $user;
 
     /**
      * @ORM\OneToMany(targetEntity=Image::class, mappedBy="article", orphanRemoval=true, cascade={"persist"})
@@ -111,7 +111,7 @@ class Article
         $this->likes = new ArrayCollection();
     }
 
-    public function getId(): ?Uuid
+    public function getId()
     {
         return $this->id ? $this->id->toRfc4122() : null;
     }
@@ -245,7 +245,7 @@ class Article
         $this->categories->removeElement($category);
     }
 
-    public function getUser(): User
+    public function getUser(): ?User
     {
         return $this->user;
     }

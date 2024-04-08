@@ -53,29 +53,6 @@ class MessageController extends AbstractController
     }
 
     /**
-     * @Route("/support", name="front_subject")
-     * @param EntityManagerInterface $entityManager
-     * @return Response
-     */
-    public function getSupport(EntityManagerInterface $entityManager, Request $request, PaginatorInterface $paginator): Response
-    {
-        $data = $entityManager->getRepository(Article::class)->findBy(['isPublished' => true], ['id' => 'desc']);
-
-        $articles = $paginator->paginate(
-            $data,
-            $request->query->getInt('page', 1),
-            4
-        );
-
-        $categories = $entityManager->getRepository(Category::class)->findAll();
-
-        return $this->render('front/subject/index.html.twig', [
-            'articles' => $articles,
-            'categories' => $categories
-        ]);
-    }
-
-    /**
      * @Route("/devis/nouveau-ticket", name="send_message", methods={"GET","POST"})
      */
     public function sendMessage(Request $request, EntityManagerInterface $entityManager, MailerInterface $mailer): Response
@@ -94,6 +71,7 @@ class MessageController extends AbstractController
         // L'utilisateur a déjà des devis, nous afficherons le formulaire pour remplir le message avec la sélection de devis
         $message = new Message();
         $message->setSender($this->getUser()); // Fix: Set the sender of the message
+        $message->setDevis($message->getDevis());
 
         // Récupérer les devis associés à l'email de l'utilisateur
         $devisList = $entityManager->getRepository(Devis::class)->findBy(['email' => $email]);

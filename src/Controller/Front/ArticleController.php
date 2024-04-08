@@ -71,18 +71,18 @@ class ArticleController extends AbstractController
 
                 $this->addFlash('success', 'Demande en cours de traitement ajouté en brouillon, en attente de validation.');
 
-                return $this->redirectToRoute('front_articles_show', ['slug' => $article->getSlug()]);
+                return $this->redirectToRoute('front_articles_show', ['title' => $article->getTitle()]);
             }
         }
 
-        return $this->render('front/sbuject/new.html.twig', [
+        return $this->render('front/subject/new.html.twig', [
             'form' => $form->createView(),
             'article' => $article,
         ]);
     }
 
     /**
-     * @Route("/articles/{slug}", name="front_articles_show")
+     * @Route("/articles/{title}", name="front_articles_show")
      * @return Response
      */
     public function show(
@@ -108,7 +108,7 @@ class ArticleController extends AbstractController
                 $entityManager->persist($comment);
                 $entityManager->flush();
 
-                return $this->redirectToRoute('front_articles_show', ['slug' => $article->getSlug()]);
+                return $this->redirectToRoute('front_articles_show', ['title' => $article->getTitle()]);
             }
         }
 

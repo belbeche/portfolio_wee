@@ -4,7 +4,7 @@
 
         console.log(resourcesDiv)
 
-        await axios.get('https://scriptzenit.fr/api/resources')
+        await axios.get('/api/resources')
             .then(response => {
                 const resources = response.data.resources
 

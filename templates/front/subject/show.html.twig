@@ -6,27 +6,27 @@
 	-
 {% endblock %}
 
-{% block content_support %}
+{% block content %}
 
 <!-- Document Wrapper
 ============================================= -->
 <div id="wrapper">
 
     <!-- Page Title
-    ============================================= -->
-    <section class="page-title bg-color py-6 page-title-center">
+   ============================================= -->
+    <section class="container-fluid page-title bg-primary py-6 page-title-center">
         <div class="container">
             <div class="page-title-row">
 
                 <div class="page-title-content">
-                    <h2 class="h2" style="font-weight: 800">{{ article.slug }}</h2>
+                    <h2 class="h2 text-white" style="font-weight: 800">{{ article.title }}</h2>
                 </div>
 
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb mt-4">
-                        <li class="breadcrumb-item"><a class="alt-color" href="{{ url('front_blog') }}">Forum</a></li>
+                        <li class="breadcrumb-item"><a class="alt-color" href="{{ url('front_support') }}">Forum</a></li>
                         <li class="breadcrumb-item"><a class="alt-color" href="#">{% for category in article.categories %}{{ category.name }} | {% endfor %}</a></li>
-                        <li class="breadcrumb-item text-black-50 active" aria-current="page">{{ article.slug }}</li>
+                        <li class="breadcrumb-item text-black-50 active" aria-current="page">{{ article.title }}</li>
                     </ol>
                 </nav>
 
@@ -44,9 +44,16 @@
                     <div class="row g-0 justify-content-between align-items-center border-top border-bottom py-3 mb-4">
                         <div class="col-9">
                             <div class="d-flex align-items-center">
-                                <img src="{{ asset('' ~article.user.avatar) }}" alt="{{ article.user.username }}" class="rounded-circle me-2" width="50" height="50">
+                                <img src="{{ asset('uploads/avatar/'~article.user.avatar) }}"
+                                     alt="{{ article.user.username }}"
+                                     class="rounded-circle me-2"
+                                     width="50"
+                                     height="50"
+                                >
                                 <div>
-                                    <h5 class="mb-0 h6 fw-semibold"><a class="text-dark" href="#">{{ article.user.username }}</a></h5>
+                                    <h5 class="mb-0 h6 fw-semibold">
+                                        <a class="text-dark" href="#">{{ article.user.username }}</a>
+                                    </h5>
                                     <small class="text-muted mb-0 fw-normal">| le
                                         {{ article.createdAt|format_datetime('full', 'short', locale='fr') }}</small>
                                     <small class="text-muted mb-0 fw-normal"> | modifié le
