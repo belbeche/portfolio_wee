@@ -1,7 +1,7 @@
 knp_snappy:
     pdf:
         enabled:    true
-        binary:     '"C:\Program Files\wkhtmltopdf\bin\wkhtmltopdf.exe"' # Notez les guillemets doubles autour du chemin
+        binary:     '%env(WKHTMLTOPDF_PATH)%'
         options:    []
     image:
         enabled:    true

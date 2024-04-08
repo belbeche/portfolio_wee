@@ -39,7 +39,7 @@ class ArticleController extends AbstractController
 
             if ($form->isSubmitted() && $form->isValid()) {
 
-                $article->getUser()->setUsername($article->getUser()->getUserIdentifier());
+                $article->setUser($this->getUser());
 
                 $article->setCreatedAt(new \DateTime);
 

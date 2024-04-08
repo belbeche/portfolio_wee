@@ -104,6 +104,7 @@ class Article
 
     public function __construct()
     {
+        $this->user = null;
         $this->active = true;
         $this->commentaires = new ArrayCollection();
         $this->categories = new ArrayCollection();
@@ -350,4 +351,5 @@ class Article
     {
         $this->likes->removeElement($like);
     }
+
 }

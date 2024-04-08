@@ -526,7 +526,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @param ArrayCollection $articles
      * @return User
      */
-    public function setArticles(ArrayCollection $articles): ?User
+    public function setArticles(ArrayCollection $articles): Collection
     {
         $this->articles = $articles;
         return $this;
