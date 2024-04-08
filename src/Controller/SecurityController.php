@@ -46,6 +46,7 @@ class SecurityController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $user->setPassword(null);
             $user->setEmail($form->getData('email'));
+            $user->addDevi($this->getUser());
             // Envoi de l'email
             $email = (new TemplatedEmail())
                 ->from('contact@scriptzenit.fr')
@@ -66,7 +67,7 @@ class SecurityController extends AbstractController
             $entityManager->flush();
 
             return $this->redirectToRoute('front_devis_set_password', [
-                'id' => $user->getId(),
+                'email' => $user->getUserIdentifier(),
             ]);
         }
 
@@ -76,30 +77,32 @@ class SecurityController extends AbstractController
     }
 
     /**
-     * @Route("/continuer/{id}", name="front_devis_set_password")
+     * @Route("/continuer/{email}", name="front_devis_set_password")
      */
-    public function setPassword(Request $request, EntityManagerInterface $entityManager, UserPasswordHasherInterface $passwordHasher,$id): Response
+    public function setPassword(Request $request, EntityManagerInterface $entityManager, UserPasswordHasherInterface $passwordHasher,$email): Response
     {
         // Vérifier si un utilisateur existe avec cet ID
         // $user = $entityManager->getRepository(User::class)->find($id);
 
         // Vérifier si un utilisateur existe avec cet ID
-        $user = $entityManager->getRepository(User::class)->findOneBy(['id' => $id]);
+        $user = $entityManager->getRepository(User::class)->findOneBy(['email' => $email]);
 
         // Créer et traiter le formulaire pour le mot de passe
         $form = $this->createForm(UserPasswordType::class, $user);
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            // Encodage du mot de passe uniquement si le champ de mot de passe est rempli
-            $plainPassword = $form->get('password')->getData();
+            if($$this->getUser()){
+                // Encodage du mot de passe uniquement si le champ de mot de passe est rempli
+                $plainPassword = $form->get('password')->getData();
 
-            // Encodage du mot de passe uniquement si le champ de mot de passe est rempli
-            $plainPassword = $form->get('password')->getData();
-            if ($plainPassword !== '') {
-                if (!empty($plainPassword)) {
-                    $hashedPassword = $passwordHasher->hashPassword($user, $plainPassword);
-                    $user->setPassword($hashedPassword);
+                // Encodage du mot de passe uniquement si le champ de mot de passe est rempli
+                $plainPassword = $form->get('password')->getData();
+                if ($plainPassword !== '') {
+                    if (!empty($plainPassword)) {
+                        $hashedPassword = $passwordHasher->hashPassword($user, $plainPassword);
+                        $user->setPassword($hashedPassword);
+                    }
                 }
             }
 

@@ -55,6 +55,7 @@ class DevisController extends AbstractController
                 if ($user instanceof UserInterface && $user->getUserIdentifier()) {
                     // Utilisateur déjà inscrit, utiliser son e-mail
                     $devis->setEmail($user->getUserIdentifier());
+                    $devis->setUser($user);
                 }
             }
 
@@ -81,9 +82,7 @@ class DevisController extends AbstractController
 
             $this->addFlash('success', 'Votre demande a bien été prise en compte, vérifiez votre adresse e-mail.');
 
-            return $this->redirectToRoute('front_set_password_devis', [
-                'id' => $devis->getId()
-            ]);
+            return $this->redirectToRoute('front_assistance');
         }
 
         return $this->render('front/devis/new.html.twig', [
@@ -92,30 +91,32 @@ class DevisController extends AbstractController
     }
 
     /**
-     * @Route("/continuer/{id}", name="front_set_password_devis")
+     * @Route("/continuer/{email}", name="front_devis_set_password")
      */
-    public function setPassword(Request $request, EntityManagerInterface $entityManager, UserPasswordHasherInterface $passwordHasher,User $user): Response
+    public function setPassword(Request $request, EntityManagerInterface $entityManager, UserPasswordHasherInterface $passwordHasher,$email): Response
     {
         // Vérifier si un utilisateur existe avec cet ID
         // $user = $entityManager->getRepository(User::class)->find($id);
 
         // Vérifier si un utilisateur existe avec cet ID
-        $user = $entityManager->getRepository(User::class)->find(['id' => $user]);
+        $user = $entityManager->getRepository(User::class)->findOneBy(['email' => $email]);
 
         // Créer et traiter le formulaire pour le mot de passe
         $form = $this->createForm(UserPasswordType::class, $user);
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            // Encodage du mot de passe uniquement si le champ de mot de passe est rempli
-            $plainPassword = $form->get('password')->getData();
+            if(!$this->getUser()){
+                // Encodage du mot de passe uniquement si le champ de mot de passe est rempli
+                $plainPassword = $form->get('password')->getData();
 
-            // Encodage du mot de passe uniquement si le champ de mot de passe est rempli
-            $plainPassword = $form->get('password')->getData();
-            if ($plainPassword !== '') {
-                if (!empty($plainPassword)) {
-                    $hashedPassword = $passwordHasher->hashPassword($user, $plainPassword);
-                    $user->setPassword($hashedPassword);
+                // Encodage du mot de passe uniquement si le champ de mot de passe est rempli
+                $plainPassword = $form->get('password')->getData();
+                if ($plainPassword !== '') {
+                    if (!empty($plainPassword)) {
+                        $hashedPassword = $passwordHasher->hashPassword($user, $plainPassword);
+                        $user->setPassword($hashedPassword);
+                    }
                 }
             }
 

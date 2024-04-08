@@ -8,3 +8,7 @@ exception:
 front_maintenance:
     path: /
     controller: App\Controller\Front\MaintenanceController::maintenance
+
+front_devis_set_password:
+  path: /continuer/{email}
+  controller: App\Controller\YourController::setPassword
