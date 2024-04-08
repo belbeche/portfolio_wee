@@ -11,7 +11,6 @@
             color: #333;
             margin: 0;
             padding: 0;
-            background-color: #f9f9f9;
         }
 
         .invoice-box {
@@ -107,7 +106,18 @@
 <body>
     <div class="invoice-box container">
         <div class="container">
-            
+
+            <div class="container" style="position: absolute;right: 30px;">
+                <div class="row">
+                    <img src="https://scriptzenit.fr/img/logo.png" style="width: 100%; max-width: 300px;"  alt="ScriptZenIT logo"/>
+                </div>
+                <div class="row">
+                    Numéro de devis : {{ devis.id }}<br />
+                    Date de création : {{ devis.createdAt|date('d/m/Y') }} à {{ devis.createdAt|date('H:i') }}<br />
+                    Statut de la demande : <strong>{{ devis.statut }}</strong>
+                </div>
+            </div>
+
             <div class="container d-flex">
                 <span>Émetteur</span><br>
                 Société : ScriptZenIT <br>
@@ -141,23 +151,6 @@
                 Email: {{ devis.email }}
             </div>
             <table cellpadding="0" cellspacing="0">
-                <tr class="top">
-                    <td colspan="2">
-                        <table>
-                            <tr>
-                                <td class="title">
-                                    <img src="http://scriptzenit.fr/img/logo.png" style="width: 100%; max-width: 300px;" />
-                                </td>
-                                <td>
-                                    Numéro de devis #: {{ devis.id }}<br />
-                                    Date de création: {{ devis.createdAt|date('d/m/Y') }} à {{ devis.createdAt|date('H:i') }}<br />
-                                    Statut de la demande: <strong>{{ devis.statut }}</strong>
-                                </td>
-                            </tr>
-                        </table>
-                    </td>
-                </tr>
-
                 <tr class="heading">
                     <td>Description</td>
                     <td></td>

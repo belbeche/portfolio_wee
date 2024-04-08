@@ -77,10 +77,10 @@ class MessageType extends AbstractType
                 },
                 'required' => true,
             ])
-            ->add('receiver', ChoiceType::class, [
+            ->add('sender', ChoiceType::class, [
                 'choices' => [
-                    'Avancement projet' => 'wbelbeche.s@gmail.com',
-                    'Problème lié à la demande' => 'wbelbeche.s@gmail.com'
+                    'Avancement projet' => 'contact@scriptzenit.fr',
+                    'Problème lié à la demande' => 'support@scriptzenit.fr'
                 ],
                 'placeholder' => 'Choisissez un destinataire',
                 'required' => true,
@@ -92,7 +92,9 @@ class MessageType extends AbstractType
                 'attr' => [
                     'placeholder' => 'Un ou plusieurs fichiers autorisés',
                 ],
-            ]);
+            ])
+            ->add('receiver')
+            ;
 
             // Ajoutez le transformer
             $builder->get('receiver')

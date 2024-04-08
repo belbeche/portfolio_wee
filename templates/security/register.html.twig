@@ -34,7 +34,7 @@
 				</div>
 			</div>
 			<div class="col-md-10 mx-auto col-lg-5">
-				{{ form_start(formRegister, {attr: {'class' : 'p-4 p-md-5 border rounded-3 no-validate'}}) }}
+				{{ form_start(formRegister, {attr: {'class' : 'p-4 px-5 border rounded-3 no-validate'}}) }}
 					<div>
 						<label for="nom" class="sr-only">Civilité</label>
 						{{ form_row(formRegister.civility) }}
@@ -51,9 +51,8 @@
 						{{ form_errors(formRegister.prenom) }}
 					</div>
 					<div>
-						<label for="user_email" class="sr-only mb-5">Identifiant de connexion</label>
+						<label for="user_email" class="sr-only">Identifiant de connexion</label>
 						{{ form_row(formRegister.email) }}
-						{{ form_errors(formRegister.email) }}
 					</div>
 					<div>
 						{{ form_row(formRegister.password.first) }}

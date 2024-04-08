@@ -49,6 +49,7 @@ class DevisController extends AbstractController
             if($this->getUser()){
                 // Récupérer l'utilisateur actuellement authentifié s'il existe
                 $user = $security->getUser();
+                $devis->setEmailFromUser($user);
 
                 // Vérifier si l'utilisateur est authentifié et s'il a un e-mail
                 if ($user instanceof UserInterface && $user->getUserIdentifier()) {
@@ -80,13 +81,54 @@ class DevisController extends AbstractController
 
             $this->addFlash('success', 'Votre demande a bien été prise en compte, vérifiez votre adresse e-mail.');
 
-            return $this->redirectToRoute('front_devis_set_password', [
+            return $this->redirectToRoute('front_set_password_devis', [
                 'id' => $devis->getId()
             ]);
         }
 
         return $this->render('front/devis/new.html.twig', [
             'formDevis' => $form->createView(),
+        ]);
+    }
+
+    /**
+     * @Route("/continuer/{id}", name="front_set_password_devis")
+     */
+    public function setPassword(Request $request, EntityManagerInterface $entityManager, UserPasswordHasherInterface $passwordHasher,User $user): Response
+    {
+        // Vérifier si un utilisateur existe avec cet ID
+        // $user = $entityManager->getRepository(User::class)->find($id);
+
+        // Vérifier si un utilisateur existe avec cet ID
+        $user = $entityManager->getRepository(User::class)->find(['id' => $user]);
+
+        // Créer et traiter le formulaire pour le mot de passe
+        $form = $this->createForm(UserPasswordType::class, $user);
+
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            // Encodage du mot de passe uniquement si le champ de mot de passe est rempli
+            $plainPassword = $form->get('password')->getData();
+
+            // Encodage du mot de passe uniquement si le champ de mot de passe est rempli
+            $plainPassword = $form->get('password')->getData();
+            if ($plainPassword !== '') {
+                if (!empty($plainPassword)) {
+                    $hashedPassword = $passwordHasher->hashPassword($user, $plainPassword);
+                    $user->setPassword($hashedPassword);
+                }
+            }
+
+            // Enregistrement de l'utilisateur
+            $entityManager->persist($user);
+            $entityManager->flush();
+
+            // Redirection vers la page de connexion
+            return $this->redirectToRoute('app_login');
+        }
+
+        return $this->render('front/devis/set_password.html.twig', [
+            'form' => $form->createView(),
         ]);
     }
 

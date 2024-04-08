@@ -110,4 +110,12 @@ class HomeController extends AbstractController
         // Redirection vers la page d'inscription
         return $this->redirectToRoute('app_register');
     }
+
+    /**
+     * @Route("/profil/mes_projets/list", name="front_profile_project")
+     */
+    public function profileProject(): Response
+    {
+       return $this->render('front/profil/show.html.twig');
+    }
 }

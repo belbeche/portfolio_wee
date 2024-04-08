@@ -14,7 +14,7 @@
         {{ form_widget(form.categories, {'attr': {'class': 'selectpicker'}}) }}
     </div>
 </div>
-<div class="form-group" id="contenu">
+<div class="form-group">
     {{ form_label(form.content, 'Problématique') }}
     {{ form_widget(form.content, {'attr': {'class': 'form-control', 'rows': 12}}) }}
     <small class="text-danger">{{ form_errors(form.content) }}</small>

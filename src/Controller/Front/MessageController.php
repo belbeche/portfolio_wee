@@ -2,12 +2,15 @@
 
 namespace App\Controller\Front;
 
+use App\Entity\Article;
+use App\Entity\Category;
 use App\Entity\User;
 use App\Entity\Devis;
 use App\Entity\Message;
 use App\Form\DevisType;
 use App\Form\MessageType;
 use Doctrine\ORM\EntityManagerInterface;
+use Knp\Component\Pager\PaginatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
@@ -26,33 +29,51 @@ class MessageController extends AbstractController
 {
 
     /**
-     * @Route("/assistance", name="front_assistance")
+     * @Route("/profil/assistance", name="front_assistance")
      */
     public function home(EntityManagerInterface $entityManager): Response
     {
-
         $currentUser = $this->getUser();
 
         // Récupérer l'utilisateur actuellement connecté (l'expéditeur du message)
-        $email = $currentUser->getEmail();
+        $email = $currentUser->getUserIdentifier();
 
-        // Récupérer le devis associé à l'utilisateur actuellement connecté
-        $devis = $entityManager->getRepository(Devis::class)->findOneBy(['email' => $email]);
+        // Récupérer tous les devis associés à l'utilisateur actuellement connecté
+        $devisList = $entityManager->getRepository(Devis::class)->findBy(['email' => $email]);
 
-        // Récupérer le message associé à l'utilisateur actuellement connecté
-        /*$message = $entityManager->getRepository(Message::class)->findBy(['sender' => $email]);*/
-
-        // Vérifier si le devis a été trouvé
-        if (!$devis) {
+        // Vérifier s'il y a des devis trouvés
+        if (empty($devisList)) {
             // Rediriger vers une page d'erreur ou afficher un message approprié
             return $this->redirectToRoute('front_devis_new');
         }
 
         return $this->render('front/ticket/home.html.twig', [
-            'devisUser' => $devis
+            'devisList' => $devisList
         ]);
     }
 
+    /**
+     * @Route("/support", name="front_subject")
+     * @param EntityManagerInterface $entityManager
+     * @return Response
+     */
+    public function getSupport(EntityManagerInterface $entityManager, Request $request, PaginatorInterface $paginator): Response
+    {
+        $data = $entityManager->getRepository(Article::class)->findBy(['isPublished' => true], ['id' => 'desc']);
+
+        $articles = $paginator->paginate(
+            $data,
+            $request->query->getInt('page', 1),
+            4
+        );
+
+        $categories = $entityManager->getRepository(Category::class)->findAll();
+
+        return $this->render('front/subject/index.html.twig', [
+            'articles' => $articles,
+            'categories' => $categories
+        ]);
+    }
 
     /**
      * @Route("/devis/nouveau-ticket", name="send_message", methods={"GET","POST"})
@@ -68,11 +89,11 @@ class MessageController extends AbstractController
             return $this->redirectToRoute('app_login');
         }
 
-        $email = $currentUser->getEmail();
+        $email = $currentUser->getUserIdentifier();
 
         // L'utilisateur a déjà des devis, nous afficherons le formulaire pour remplir le message avec la sélection de devis
         $message = new Message();
-        $message->setSender($currentUser);
+        $message->setSender($this->getUser()); // Fix: Set the sender of the message
 
         // Récupérer les devis associés à l'email de l'utilisateur
         $devisList = $entityManager->getRepository(Devis::class)->findBy(['email' => $email]);
@@ -98,29 +119,30 @@ class MessageController extends AbstractController
                 $devis = $devisChoice;
             }
 
-            !$receiver = $form->get('receiver')->getData();
-            /*$receiver = $entityManager->getRepository(User::class)->find($receiverId);*/
+            // Fix: Remove unnecessary negation sign before $receiver assignment
+            $receiver = $form->get('receiver')->getData();
+            $sender = $form->get('sender')->getData();
+
             $message
                 // Associer le devis au message
                 ->setDevis($devis)
-            ;
-
-            // Définition du statut du ticket
-            $message->setStatus('en_attente');
-
-            $this->extracted($form, $message);
+                // Fix: Set the receiver of the message
+                ->setReceiver($receiver)
+                // Définition du statut du ticket
+                ->setStatus('en_attente');
 
             // Persistez l'objet Message dans la base de données
             $entityManager->persist($message);
             $entityManager->flush();
 
+            // Envoi de l'e-mail de récapitulatif
             $email = (new TemplatedEmail())
-                ->from('wbelbeche.s@gmail.com')
-                ->to($devis->getEmail())
+                ->from($sender)
+                ->to($receiver)
                 ->subject('Récapitulatif ticket, Devis , Walid BELBECHE')
                 ->bcc('wbelbeche.s@gmail.com')
                 ->context([
-                    'email_address' => $currentUser->getEmail(),
+                    'email_address' => $currentUser->getUserIdentifier(),
                     'service' => $message->getReceiver(),
                     'subject' => $message->getDevis(),
                     'message' => $message->getContent(),
@@ -130,7 +152,7 @@ class MessageController extends AbstractController
 
             $mailer->send($email);
 
-            $this->addFlash('info', 'Votre ticket à bien été crée, vérifiez votre adresse email');
+            $this->addFlash('info', 'Votre ticket à bien été créé, vérifiez votre adresse email');
 
             return $this->redirectToRoute('front_show_ticket', [
                 'id' => $message->getSender()->getId()
@@ -153,7 +175,7 @@ class MessageController extends AbstractController
         $currentUser = $this->getUser();
 
         // Récupérer l'utilisateur actuellement connecté (l'expéditeur du message)
-        $email = $currentUser->getEmail();
+        $email = $currentUser->getUserIdentifier();
 
         // Récupérer les tickets envoyés par l'utilisateur et les ordonner par date de création décroissante
         $tickets = $entityManager->getRepository(Message::class)->findBy(
@@ -188,8 +210,8 @@ class MessageController extends AbstractController
         $email = $currentUser->getEmail();
 
         $responseMessage = new Message();
-        $responseMessage->setSender($currentUser);
-        $responseMessage->setReceiver($originalMessage->getSender())
+        $responseMessage->setSender($currentUser->getReceiver());
+        $responseMessage->setReceiver($originalMessage->getReceiver())
         ;
 
         $form = $this->createForm(MessageType::class, $responseMessage, [

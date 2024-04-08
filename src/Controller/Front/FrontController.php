@@ -194,39 +194,19 @@ class FrontController extends AbstractController
         ]);
     }
 
-
-    /**
-     * @Route("/blog", name="front_blog")
-     * @param EntityManagerInterface $entityManager
-     * @return Response
-     */
-    public function blog(EntityManagerInterface $entityManager, Request $request, PaginatorInterface $paginator)
-    {
-        $data = $entityManager->getRepository(Article::class)->findBy(['isPublished' => true], ['id' => 'desc']);
-
-        $articles = $paginator->paginate(
-            $data,
-            $request->query->getInt('page', 1),
-            4
-        );
-
-        $categories = $entityManager->getRepository(Category::class)->findAll();
-
-        return $this->render('front/article/blog.html.twig', [
-            'articles' => $articles,
-            'categories' => $categories
-        ]);
-    }
-
     /**
      * @Route("/api/resources", name="api_resources")
      * @return Response
      */
     public function getResources(CurlService $curlService): Response
     {
+        if(!$this->getUser()){
+            return $this->redirectToRoute('app_login');
+        }
+
         return new jsonResponse([
             'resources' => $curlService->getResources(
-                $this->getParameter('api_resource_url'),
+                $this->getParameter('api_resource_url').$this->getUser()->getUserIdentifier(),
                 $this->getParameter('api_resource_token')
             )
         ]);

@@ -86,10 +86,6 @@ class SecurityController extends AbstractController
         // Vérifier si un utilisateur existe avec cet ID
         $user = $entityManager->getRepository(User::class)->findOneBy(['id' => $id]);
 
-        if (!$user) {
-            return $this->redirectToRoute('app_register');
-        }
-
         // Créer et traiter le formulaire pour le mot de passe
         $form = $this->createForm(UserPasswordType::class, $user);
 
@@ -194,7 +190,7 @@ class SecurityController extends AbstractController
                 $resetLink = $this->generateUrl('reset_password', ['token' => $token], UrlGeneratorInterface::ABSOLUTE_URL);
 
                 $email = (new TemplatedEmail())
-                    ->from('wbelbeche.s@gmail.com')
+                    ->from('contact@scriptzenit.fr')
                     ->to($user->getEmail())
                     ->subject('Réinitialisation de votre mot de passe')
                     ->htmlTemplate('reset_password/email.html.twig')

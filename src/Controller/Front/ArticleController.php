@@ -20,7 +20,7 @@ class ArticleController extends AbstractController
 {
 
     /**
-     * @Route("/article/nouveau", name="front_articles_new")
+     * @Route("/profil/assistance/article/nouveau", name="front_articles_new")
      *
      * @param Request $request
      * @return Response
@@ -65,7 +65,6 @@ class ArticleController extends AbstractController
                     $img->setArticle($article);
                 }
 
-
                 $entityManager->persist($article);
 
                 $entityManager->flush();
@@ -76,7 +75,7 @@ class ArticleController extends AbstractController
             }
         }
 
-        return $this->render('front/article/new.html.twig', [
+        return $this->render('front/sbuject/new.html.twig', [
             'form' => $form->createView(),
             'article' => $article,
         ]);
@@ -121,7 +120,7 @@ class ArticleController extends AbstractController
             ['id' => 'DESC']
         );
 
-        return $this->render('front/article/show.html.twig', [
+        return $this->render('front/subject/show.html.twig', [
             'article' => $article,
             'form' => $form->createView(),
             'comments' => $comments

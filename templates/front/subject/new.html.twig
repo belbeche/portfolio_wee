@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block content %}
+{% block content_support %}
 
     <script src="https://cdn.ckeditor.com/ckeditor5/36.0.1/classic/ckeditor.js"></script>
 
@@ -20,9 +20,7 @@
         <div class="container">
 
             {% include 'front/includes/_article_form.html.twig' %}
-            {% if app.request.attributes.get('_route') == 'back_articles_new' %}
-                <hr>
-                <h2>Gestion des images</h2>
+            {% if app.request.attributes.get('_route') == 'front_articles_new' and article.images is not empty %}
                 {% for image in article.images %}
                     <div>
                         <img src="{{ asset('/uploads/subject'~image.name) }}" alt="{{ article.name }}" width="150">
@@ -35,6 +33,8 @@
                     </div>
                 {% endfor %}
             {% endif %}
+
+
         </div>
     </div>
 

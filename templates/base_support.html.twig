@@ -1,0 +1,78 @@
+<!DOCTYPE html >
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta content="" name="keywords">
+    <meta content="" name="description">
+    <title>
+        {% block title %}Support
+        {% endblock %}
+    </title>
+
+    <!-- Font Imports -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+    <!-- Font Icons -->
+    <link rel="stylesheet" href="{{ asset('src/css/font-icons.css') }}">
+
+    <!-- Niche Demos -->
+    <link rel="stylesheet" href="{{ asset('src/css/forum.css') }}">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{{ asset('src/css/custom.css') }}">
+</head>
+<body class="stretched search-overlay">
+
+{% block body %}
+    {% block nav_support %}
+        {% include 'front/includes/nav.html.twig' %}
+    {% endblock %}
+    {% block content_support %}{% endblock %}
+    {% block footer_support %}
+        {% include 'front/includes/footer.html.twig' %}
+    {% endblock %}
+{% endblock %}
+
+<!-- Go To Top
+    ============================================= -->
+<div id="gotoTop" class="uil uil-angle-up"></div>
+
+<!-- JavaScripts
+============================================= -->
+<script src="{{ asset('src/js/plugins.min.js') }}"></script>
+<script src="{{ asset('src/js/functions.bundle.js') }}"></script>
+
+<!-- TinyMCE Plugin -->
+<script src="{{ asset('src/js/tinymce.min.js') }}"></script>
+
+<script>
+    jQuery(document).ready( function(){
+        jQuery('input[type="file"]').change(function(e){
+            var fileName = e.target.files[0].name;
+            jQuery('.custom-file-label').html(fileName);
+        });
+
+        tinymce.init({
+            selector: '#post-message',
+            menubar: false,
+            promotion: false,
+            setup: function(editor) {
+                editor.on('change', function(e) {
+                    editor.save();
+                });
+            }
+        });
+
+        jQuery(function(){
+            if(window.location.hash) {
+                var hash = window.location.hash;
+                jQuery(hash).modal('toggle');
+            }
+        });
+    });
+</script>
+</body>
+</html>

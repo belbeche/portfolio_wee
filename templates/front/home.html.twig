@@ -1,7 +1,6 @@
 {% extends 'base.html.twig' %}
 
-
-{% block content %}
+{% block content_support %}
 
 	<div class="container">
 		{% for type, messages in app.flashes %}
@@ -24,7 +23,7 @@
 					</div>
 					<div>
 						<a href="{{ url('front_articles_new') }}" class="button button-large border border-width-2 bg-alt py-2 rounded-1 fw-medium text-transform-none ls-0 ms-0 ms-sm-1 h-op-09"><i class="bi-file-earmark-plus"></i>Créer un nouveau sujet</a>
-						<a href="{{ url('front_blog') }}" class="button button-large button-border rounded-1 fw-medium text-transform-none h-bg-alt ls-0 ms-0"><i class="bi-text-left"></i>Voir tous les sujets</a>
+						<a href="{{ url('front_subject') }}" class="button button-large button-border rounded-1 fw-medium text-transform-none h-bg-alt ls-0 ms-0"><i class="bi-text-left"></i>Voir tous les sujets</a>
 					</div>
 				</div>
 
