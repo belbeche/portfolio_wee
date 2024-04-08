@@ -18,11 +18,11 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class ArticleController extends AbstractController
 {
-
     /**
      * @Route("/profil/assistance/article/nouveau", name="front_articles_new")
      *
      * @param Request $request
+     * @param EntityManagerInterface $entityManager
      * @return Response
      * @IsGranted("ROLE_USER")
      */
@@ -39,7 +39,7 @@ class ArticleController extends AbstractController
 
             if ($form->isSubmitted() && $form->isValid()) {
 
-                $article->setUser($this->getUser());
+                $article->getUser()->setUsername($article->getUser()->getUserIdentifier());
 
                 $article->setCreatedAt(new \DateTime);
 
@@ -69,7 +69,7 @@ class ArticleController extends AbstractController
 
                 $entityManager->flush();
 
-                $this->addFlash('success', 'Demande en cours de traitement ajouté en brouillon, en attente de validation.');
+                $this->addFlash('success', 'Demande en cours de traitement, ajouter en brouillon, en attente de validation.');
 
                 return $this->redirectToRoute('front_articles_show', ['title' => $article->getTitle()]);
             }
@@ -104,6 +104,8 @@ class ArticleController extends AbstractController
 
                 $comment->setArticle($article);
                 $comment->setUser($this->getUser());
+                /* TODO: Répondre à un commentaire */
+                // Ajouter la récursion pour le sous-commentaire avec un button
                 /*dump($this->getUser());die();*/
                 $entityManager->persist($comment);
                 $entityManager->flush();
