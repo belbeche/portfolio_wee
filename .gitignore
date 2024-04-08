@@ -15,7 +15,6 @@ webpack.config.js
 /.idea/
 /public/build
 /public/image_project
-public/js/resource.js
 
 
 
