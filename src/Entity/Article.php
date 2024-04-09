@@ -90,7 +90,7 @@ class Article
     /**
      * @ORM\OneToMany(targetEntity=Image::class, mappedBy="article", orphanRemoval=true, cascade={"persist"})
      */
-    private $images;
+    private ArrayCollection $images;
 
     /**
      * @ORM\OneToMany(
@@ -101,6 +101,12 @@ class Article
      * )
      */
     private ?Collection $likes;
+
+    /**
+     * @ORM\Column(type="integer")
+     * @Assert\NotNull
+     */
+    private $article_id;
 
     public function __construct()
     {
@@ -174,29 +180,17 @@ class Article
         return $this->slug;
     }
 
-    /**
-     * @param mixed $slug
-     * @return Article
-     */
     public function setSlug($slug)
     {
         $this->slug = $slug;
         return $this;
     }
 
-
-    /**
-     * @return Collection<int, Comment>
-     */
     public function getCommentaires(): Collection
     {
         return $this->commentaires;
     }
 
-    /**
-     * @param ArrayCollection $commentaires
-     * @return Article
-     */
     public function setCommentaires(ArrayCollection $commentaires): Article
     {
         $this->commentaires = $commentaires;
@@ -353,4 +347,15 @@ class Article
         $this->likes->removeElement($like);
     }
 
+    public function getArticleId(): ?int
+    {
+        return $this->article_id;
+    }
+
+    public function setArticleId(int $articleId): self
+    {
+        $this->article_id = $articleId;
+
+        return $this;
+    }
 }

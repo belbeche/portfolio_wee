@@ -24,15 +24,9 @@ class Image
 
     /**
      * @ORM\ManyToOne(targetEntity=Project::class, inversedBy="images")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(name="`project_id`")
      */
     private $project;
-
-    /**
-     * @ORM\ManyToOne(targetEntity=Article::class, inversedBy="images")
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private $article;
 
     public function getProject(): ?Project
     {
