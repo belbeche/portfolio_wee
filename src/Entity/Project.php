@@ -49,11 +49,12 @@ class Project
      * @ORM\JoinColumn(name="project_id", referencedColumnName="id")
      */
     private $images;
+
     /**
-     * @ORM\ManyToMany(targetEntity=Category::class, inversedBy="projects", cascade={"persist"})
+     * @ORM\ManyToMany(targetEntity="App\Entity\Category", inversedBy="projects", cascade={"persist"})
      * @ORM\JoinTable(name="project_category")
      */
-    private ArrayCollection $categories;
+    private Collection $categories;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
@@ -65,15 +66,15 @@ class Project
      */
     public function __construct()
     {
-        $this->categories = new ArrayCollection();
         $this->images = new ArrayCollection();
         $this->created_at = new \DateTime('now', new \DateTimeZone('Europe/Paris'));
+        $this->categories = new ArrayCollection();
     }
 
 
     public function getId(): ?int
     {
-        return $this->id ? $this->id->toRfc4122() : null;
+        return $this->id;
     }
 
     public function getTitle(): ?string
@@ -164,12 +165,19 @@ class Project
         return $this;
     }
 
-    /**
-     * @return Collection|Category[]
-     */
     public function getCategories(): Collection
     {
         return $this->categories;
+    }
+
+    /**
+     * @param Collection $categories
+     * @return Project
+     */
+    public function setCategories(Collection $categories): Project
+    {
+        $this->categories = $categories;
+        return $this;
     }
 
     public function addCategory(Category $category): self

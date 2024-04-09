@@ -25,7 +25,7 @@ class Category
     private $name;
 
     /**
-     * @ORM\ManyToMany(targetEntity=Project::class, mappedBy="categories", cascade={"persist"})
+     * @ORM\ManyToMany(targetEntity="App\Entity\Project", mappedBy="categories", cascade={"persist"})
      * @ORM\JoinColumn(nullable=false)
      */
     private $projects;
