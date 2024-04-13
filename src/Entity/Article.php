@@ -90,7 +90,7 @@ class Article
     /**
      * @ORM\OneToMany(targetEntity=Image::class, mappedBy="article", orphanRemoval=true, cascade={"persist"})
      */
-    private ArrayCollection $images;
+    private Collection $images;
 
     /**
      * @ORM\OneToMany(
@@ -175,14 +175,14 @@ class Article
     /**
      * @return mixed
      */
-    public function getSlug()
+    public function getSlug(): mixed
     {
-        return $this->slug;
+        return $this->title;
     }
 
-    public function setSlug($slug)
+    public function setSlug($slug): static
     {
-        $this->slug = $slug;
+        $this->title = $title;
         return $this;
     }
 
@@ -253,7 +253,7 @@ class Article
         return $this;
     }
 
-    public function getImages()
+    public function getImages(): ArrayCollection|Collection
     {
         return $this->images;
     }

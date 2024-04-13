@@ -139,7 +139,7 @@
 				<li class="breadcrumb-item">
 					<a href="{{ url('front_home') }}">Accueil</a>
 				</li>
-				<li class="breadcrumb-item active" aria-current="page">{{ article.slug }}
+				<li class="breadcrumb-item active" aria-current="page">{{ article.title }}
 				</li>
 			</ol>
 		</nav>
@@ -158,7 +158,7 @@
 
 
 		{% for image in article.images %}
-			<img src="{{ asset('uploads/' ~image.name) }}" alt="{{ article.slug }}" class="img-fluid">
+			<img src="{{ asset('uploads/' ~image.name) }}" alt="{{ article.title }}" class="img-fluid">
 		{% endfor %}
 
 		<div class="mt-4">

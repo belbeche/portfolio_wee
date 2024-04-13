@@ -61,7 +61,7 @@
 							{% for article in articles %}
 								<ul class="topic list-unstyled row mx-0 justify-content-between align-items-center">
 										<li class="entry mb-0 col-sm-10">
-											<a href="{{ path('front_articles_show', {'slug': article.slug}) }}" class="link-dark">
+											<a href="{{ path('front_articles_show', {'title': article.title}) }}" class="link-dark">
 												<h3 class="card-title">{{ article.title }}</h3>
 											</a>
 											<div class="entry-meta mt-1">

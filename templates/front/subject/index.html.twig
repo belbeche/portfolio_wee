@@ -19,15 +19,15 @@
 							<div class="col-lg-3 col-md-3 col-sm-10">
 								<div class="single-blog blog-style-one">
 									<div class="blog-image">
-										<a href="{{ path('front_articles_show', {'slug': article.slug}) }}">
-											{% for image in article.images %}
+										<a href="{{ path('front_articles_show', {'title': article.title}) }}">
+											{#{% for image in article.images %}
 												<img class="card-img-top rounded-0" src="{{ asset('uploads/' ~ image.name) }}" alt="{{ article.title }}">
-											{% endfor %}
+											{% endfor %}#}
 										</a>
 									</div>
 									<div class="blog-content">
 										<h5 class="blog-title">
-											<a href="{{ path('front_articles_show', {'slug': article.slug}) }}">
+											<a href="{{ path('front_articles_show', {'title': article.title}) }}">
 												<h5 class="card-title">{{ article.title }}</h5>
 											</a>
 										</h5>

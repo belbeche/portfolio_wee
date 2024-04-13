@@ -1,4 +1,3 @@
-{#
 {% extends 'base_back.html.twig' %}
 
 {% block content %}
@@ -45,10 +44,10 @@
                         {% endif %}
                     </td>
                     <td>
-                        <a href="{{ url('back_articles_show', {slug: article.slug }) }}">Voir</a>
-                        <a href="{{ url('back_articles_edit', {id: article.id }) }}">Editer</a>
+                        <a href="{{ url('back_articles_show', {title: article.title }) }}">Voir</a>
+                        <a href="{{ url('back_articles_edit', {title: article.title }) }}">Editer</a>
                         <a href="{{ url('back_articles_disable', {id: article.id }) }}">Désactivé</a>
-                        <a href="{{ url('back_articles_remove', {id: article.id }) }}">Supprimé</a>
+                        <a href="{{ url('back_articles_remove', {title: article.title }) }}">Supprimé</a>
                     </td>
                 </tr>
             {% endfor %}
@@ -59,4 +58,4 @@
         </tbody>
     </table>
 
-{% endblock %}#}
+{% endblock %}

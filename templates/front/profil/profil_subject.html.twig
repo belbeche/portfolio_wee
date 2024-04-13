@@ -65,7 +65,7 @@
                 <div class="col-md-12">
                     <div class="col-xs-1">Titre : </div>
                     {% for article in app.user.articles %}
-                        <div class="col-xs-3"><a href="{{ article.slug }}">{{ article.slug }}</a> <div class="col-xs-3"><img src="{{ asset('/uploads/avatar/'~app.user.avatar) }}" width="35" height="35" class="rounded-circle me-3 border border-width-3 border-white" alt="{{ app.user.username }}" width="120" height="120">
+                        <div class="col-xs-3"><a href="{{ article.title }}">{{ article.title }}</a> <div class="col-xs-3"><img src="{{ asset('/uploads/avatar/'~app.user.avatar) }}" width="35" height="35" class="rounded-circle me-3 border border-width-3 border-white" alt="{{ app.user.username }}" width="120" height="120">
                             </div></div>
                     {% endfor %}
                 </div>

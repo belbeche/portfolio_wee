@@ -4,12 +4,12 @@
     <div class="container">
 
         <div class="card">
-            {% for image in article.images %}
+            {#{% for image in article.images %}
                 <img src="{{ asset('uploads/' ~ image.name) }}" alt="{{ article.title }}" class="img-fluid">
-            {% endfor %}
+            {% endfor %}#}
         </div>
 
-        <h1>{{ article.slug }}</h1><br>
+        <h1>{{ article.title }}</h1><br>
         <p>Par {{ article.user.username }}</p>
         <img src="{{ asset('uploads/avatar/' ~article.user.avatar) }}" alt="{{ article.user.username }}" class="rounded-0 img-thumbnail" width="50" height="50">
 
@@ -26,7 +26,7 @@
             Modifier le :  {{ article.updatedAt|format_datetime('full', 'short', locale='fr') }}
         </p>
 
-        <a href="{{ url('front_articles_show', {slug: article.slug}) }}">Voir l'article</a>
+        <a href="{{ url('front_articles_show', {title: article.title}) }}">Voir l'article</a>
     </div>
 
 {% endblock %}

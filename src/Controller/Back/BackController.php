@@ -15,7 +15,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class BackController extends AbstractController
 {
     /**
-     * @Route("/admin", name="back_home")
+     * @Route("/admin/support", name="back_home_support")
      * @return Response
      * @IsGranted("ROLE_ADMIN")
      */

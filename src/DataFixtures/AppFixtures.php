@@ -17,7 +17,7 @@ class AppFixtures extends Fixture
             $article->setTitle('Titre n° : '.$i);
             $article->setContent("test".$i);
             $article->isActive(true);
-            $article->setSlug('slug'.$i);
+            $article->settitle('title'.$i);
             $article->setUser($user->getUsername());
 
             $manager->persist($article);

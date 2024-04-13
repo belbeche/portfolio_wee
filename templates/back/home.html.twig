@@ -39,7 +39,7 @@
 								<tr>
 									<th scope="row">{{ i }}</th>
 									<td>
-										<a href="{{ url('back_articles_show', {slug: article.slug}) }}">{{ article.title }}</a>
+										<a href="{{ url('back_articles_show', {title: article.title}) }}">{{ article.title }}</a>
 									</td>
 									<td>
 										{% if article.isPublished %}
@@ -55,12 +55,12 @@
 																										#}
 									<td>{{ article.isPublished ? article.updatedAt|format_datetime('full', 'short', locale='fr') }}</td>
 									<td class="text-center">
-										<a href="{{ url('back_articles_edit', {'slug': article.slug}) }}" class="text-success">
+										<a href="{{ url('back_articles_edit', {'title': article.title}) }}" class="text-success">
 											<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewbox="0 0 24 24" stroke="currentColor" width="18">
 												<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
 											</svg>
 										</a>
-										<a href="{{ url('back_articles_remove', {'slug': article.slug}) }}" class="text-danger" onclick="alert('L\'article est en cours de supprésion !'">
+										<a href="{{ url('back_articles_remove', {'title': article.title}) }}" class="text-danger" onclick="alert('L\'article est en cours de supprésion !'">
 											<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewbox="0 0 24 24" stroke="currentColor" width="18">
 												<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"/>
 											</svg>

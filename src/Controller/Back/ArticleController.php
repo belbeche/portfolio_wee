@@ -105,7 +105,7 @@ class ArticleController extends AbstractController
 
                 $this->addFlash('success', 'Article ajouté avec succéss');
 
-                return $this->redirectToRoute('back_home');
+                return $this->redirectToRoute('back_home_support');
             }
         }
 
@@ -116,7 +116,7 @@ class ArticleController extends AbstractController
     }
 
     /**
-     * @Route("/publier/{slug}", name="back_articles_publish")
+     * @Route("/publier/{title}", name="back_articles_publish")
      */
     public function publish(Article $article)
     {
@@ -138,34 +138,38 @@ class ArticleController extends AbstractController
             // We redirect to the article display page if everything is OK
             return $this->redirectToRoute(
                 'back_articles_show',
-                ['slug' => $article->getSlug()]
+                ['title' => $article->getTitle()]
             );
         }
 
         return $this->redirectToRoute(
             'back_articles_edit',
-            ['slug' => $article->getSlug()]
+            ['title' => $article->getTitle()]
         );
     }
 
     /**
-     * @Route("/admin/articles/show/{slug}", name="back_articles_show")
+     * @Route("/admin/articles/show/{title}", name="back_articles_show")
      * @return Response
      * @IsGranted("ROLE_ADMIN")
      */
     public function show(
         Article $article,
-        EntityManagerInterface $entityManager
+        EntityManagerInterface $entityManager,
     ): Response {
         $article = $entityManager->getRepository(Article::class)->find($article);
 
+        if (!$article) {
+            throw $this->createNotFoundException('Article not found');
+        }
+
         return $this->render('back/article/show.html.twig', [
-            'article' => $article
+            'article' => $article,
         ]);
     }
 
     /**
-     * @Route("/admin/articles/edit/{slug}", name="back_articles_edit")
+     * @Route("/admin/articles/edit/{title}", name="back_articles_edit")
      * @param Request $request
      * @return Response
      * @IsGranted("ROLE_ADMIN")
@@ -174,6 +178,7 @@ class ArticleController extends AbstractController
         Article $article,
         Request $request
     ): Response {
+
         $form = $this->createForm(ArticleType::class, $article);
 
         if ($request->isMethod('POST')) {
@@ -202,9 +207,9 @@ class ArticleController extends AbstractController
                 }
 
                 /*if ($article->getPublishedAt() === null) {
-                    // on renseigne le slug de l'article
-                    $article->setSlug(
-                        strtolower($article->getSlug())
+                    // on renseigne le title de l'article
+                    $article->settitle(
+                        strtolower($article->gettitle())
                     );
                 }*/
 
@@ -212,7 +217,7 @@ class ArticleController extends AbstractController
                 $this->entityManager->persist($article);
                 $this->entityManager->flush();
 
-                return $this->redirectToRoute('back_home');
+                return $this->redirectToRoute('back_home_support');
             }
         }
 
@@ -237,16 +242,16 @@ class ArticleController extends AbstractController
         $this->entityManager->persist($article);
         $this->entityManager->flush();
         if ($article->isActive() == true) {
-            $this->addFlash('warning', "L'article " . $article->getSlug() . " a bien était désactiver :[");
+            $this->addFlash('warning', "L'article " . $article->getTitle() . " a bien était désactiver :[");
         } else {
-            $this->addFlash('success', "L'article " . $article->getSlug() . " a bien était réactiver :]");
+            $this->addFlash('success', "L'article " . $article->getTitle() . " a bien était réactiver :]");
         }
 
         return $this->redirectToRoute('back_articles_list');
     }
 
     /**
-     * @Route("/admin/article/remove/{slug}", name="back_articles_remove")
+     * @Route("/admin/article/remove/{title}", name="back_articles_remove")
      * @return Response
      * @IsGranted("ROLE_ADMIN")
      */
@@ -256,14 +261,14 @@ class ArticleController extends AbstractController
     ): Response {
 
         if ($article->getCreatedAt(true)) {
-            $this->addFlash('success', "L'article " . $article->getSlug() . " est supprimé avec success !");
+            $this->addFlash('success', "L'article " . $article->getTitle() . " est supprimé avec success !");
             $this->entityManager->remove($article);
             $this->entityManager->flush();
         } else {
-            $this->addFlash('success', "L'article " . $article->getSlug() . " est activé, disactivez-le puis réessayer, merci.");
+            $this->addFlash('success', "L'article " . $article->getTitle() . " est activé, disactivez-le puis réessayer, merci.");
         }
 
-        return $this->redirectToRoute('back_home');
+        return $this->redirectToRoute('back_home_support');
     }
 
     /**

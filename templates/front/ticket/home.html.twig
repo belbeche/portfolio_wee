@@ -15,16 +15,14 @@
 		<div class="row">
 			<div class="col-lg-3">
 				<h3>Mes devis</h3>
-				<a href="{{ url('front_support') }}" class="btn btn-secondary">Centre d'Assistance</a>
-				<a href="{{ url('front_profile_project') }}" class="btn btn-info">Mes projets</a>
+				<a href="{{ url('front_support') }}" class="btn btn-outline-success">Centre d'Assistance</a>
+				<a href="{{ url('front_profile_project') }}" class="btn btn-outline-info">Mes projets</a>
 				<!-- Account Sidebar-->
 				<div class="wizard">
 					<nav class="list-group list-group-flush">
 						<span class="list-group-item"><i class="fa fa-user text-muted"></i><i class="bi bi-person-circle"></i> {{ app.user.email }}</span>
-						<a class="list-group-item" href="{{ path('send_message') }}">
-							<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus" viewBox="0 0 16 16">
-								<path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"/>
-							</svg> Ouvrir un ticket 
+						<a class="list-group-item btn" href="{{ path('send_message') }}">
+							Ouvrir un ticket
 						</a>
 						<a class="list-group-item" href="{{ path('front_devis_new') }}">
 							<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-folder-plus" viewBox="0 0 16 16">
@@ -63,7 +61,7 @@
 										<div class="row">
 											<div class="col-md-6">
 												<form action="{{ path('front_devis_delete', {'id': devis.id}) }}" method="post" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce devis, ainsi que le dossier en cours ?');">
-													<button type="submit">
+													<button type="submit" class="btn btn-danger">
 														<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
 															<path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6Z"/>
 															<path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1ZM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118ZM2.5 3h11V2h-11v1Z"/>
@@ -72,8 +70,8 @@
 												</form>
 											</div>
 											<div class="col-md-6">
-												<a href="{{ path('front_download_devis', {'id': devis.id}) }}" class="btn btn-outline-secondary">
-													<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-download" viewBox="0 0 16 16">
+												<a href="{{ path('front_download_devis', {'id': devis.id}) }}" class="btn btn-outline-success">
+													<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="currentColor" class="bi bi-download" viewBox="0 0 16 16">
 														<path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/>
 														<path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z"/>
 													</svg>
