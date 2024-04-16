@@ -11,30 +11,30 @@
 
 			{{ form_start(form) }}
 			<div>
-				{{ form_label(form.content) }}
-				{{ form_widget(form.content) }}
+				{{ form_row(form.content) }}
+				{{ form_errors(form.content) }}
 			</div>
 			<div>
-				{{ form_label(form.priority) }}
-				{{ form_widget(form.priority) }}
+				{{ form_row(form.priority) }}
+				{{ form_errors(form.priority) }}
 			</div>
 			<div>
-				{{ form_label(form.status) }}
-				{{ form_widget(form.status) }}
+				{{ form_row(form.status) }}
+				{{ form_errors(form.status) }}
 			</div>
 			<div>
-				{{ form_label(form.receiver)}}
-				{{ form_widget(form.receiver)}}
+				{{ form_row(form.sender)}}
+				{{ form_errors(form.sender) }}
+			</div>
+			<div>
+				{{ form_row(form.devis) }}
+				{{ form_errors(form.devis) }}
 			</div>
 
 			<div>
-				{{ form_label(form.devis) }}
-				{{ form_widget(form.devis) }}
-			</div>
+				{{ form_row(form.attachment) }}
+				{{ form_errors(form.attachment) }}
 
-			<div>
-				{{ form_label(form.attachment) }}
-				{{ form_widget(form.attachment) }}
 			</div>
 
 			<button type="submit">Envoyer le message</button>

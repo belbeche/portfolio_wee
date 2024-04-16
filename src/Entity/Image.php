@@ -28,6 +28,11 @@ class Image
      */
     private $project;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=Article::class, inversedBy="images")
+     */
+    private $article;
+
     public function getProject(): ?Project
     {
         return $this->project;

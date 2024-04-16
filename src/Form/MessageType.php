@@ -5,7 +5,6 @@ namespace App\Form;
 use App\Entity\Devis;
 use App\Entity\Message;
 use App\Form\DataTransformer\EmailToUserTransformer;
-use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -13,32 +12,11 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
-use Symfony\Component\Security\Core\Security;
-use Doctrine\ORM\EntityManagerInterface;
 
 class MessageType extends AbstractType
 {
-    private $security;
-    private $entityManager;
-
-    public function __construct(Security $security,EntityManagerInterface $entityManager)
-    {
-        $this->security = $security;
-        $this->entityManager = $entityManager;
-    }
-
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        // Le formulaire reçoit l'utilisateur actuel via les options
-        $currentUser = $options['attr']['current_user'];
-
-        // Construire la requête pour récupérer les devis associés à l'utilisateur actuel
-        $devisQueryBuilder = function (EntityRepository $er) use ($currentUser) {
-            return $er->createQueryBuilder('d')
-                ->where('d.user = :user')
-                ->setParameter('user', $currentUser);
-        };
-
         $builder
             ->add('content', TextareaType::class, [
                 'label' => 'Contenu du message',
@@ -68,13 +46,8 @@ class MessageType extends AbstractType
             ])
             ->add('devis', EntityType::class, [
                 'class' => Devis::class,
-                'choice_label' => 'type_de_site_web',
+                'choice_label' => 'type_de_site_web', // Remplacez cela par le champ que vous souhaitez afficher dans la liste déroulante
                 'placeholder' => 'Choisissez un devis',
-                'query_builder' => function (EntityRepository $er) use ($currentUser) {
-                    return $er->createQueryBuilder('d')
-                        ->where('d.email = :email')
-                        ->setParameter('email', $currentUser);
-                },
                 'required' => true,
             ])
             ->add('sender', ChoiceType::class, [
@@ -93,12 +66,12 @@ class MessageType extends AbstractType
                     'placeholder' => 'Un ou plusieurs fichiers autorisés',
                 ],
             ])
-            ->add('receiver')
+            /*->add('receiver')*/
             ;
 
             // Ajoutez le transformer
-            $builder->get('receiver')
-                ->addModelTransformer(new EmailToUserTransformer($this->entityManager));
+            /*$builder->get('receiver')
+                ->addModelTransformer(new EmailToUserTransformer($this->entityManager));*/
     }
 
     public function configureOptions(OptionsResolver $resolver)

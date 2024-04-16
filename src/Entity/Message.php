@@ -2,9 +2,8 @@
 
 namespace App\Entity;
 
-use DateTimeImmutable;
-use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Monolog\DateTimeImmutable;
 use Symfony\Component\Uid\Uuid;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -45,7 +44,7 @@ class Message
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="receivedMessages")
      * @ORM\JoinColumn(nullable=false)
      */
-    private $receiver;
+    private ?string $receiver;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
@@ -55,7 +54,7 @@ class Message
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="sentMessages")
      */
-    private $sender;
+    private ?string $sender;
 
     /**
      * @ORM\ManyToOne(targetEntity=Devis::class, inversedBy="messages", cascade={"remove"})
@@ -110,10 +109,7 @@ class Message
         return $this;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getReceiver()
+    public function getReceiver(): ?string
     {
         return $this->receiver;
     }
@@ -122,18 +118,18 @@ class Message
      * @param mixed $receiver
      * @return Message
      */
-    public function setReceiver($receiver):self
+    public function setReceiver(?string $receiver):self
     {
         $this->receiver = $receiver;
         return $this;
     }
 
-    public function getSender(): ?User
+    public function getSender(): ?string
     {
         return $this->sender;
     }
 
-    public function setSender(?User $sender): self
+    public function setSender(?string $sender): self
     {
         $this->sender = $sender;
         return $this;

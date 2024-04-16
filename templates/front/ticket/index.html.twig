@@ -19,7 +19,7 @@
 		{% if tickets is empty %}
 			<div class="d-flex flex-column align-items-center">
 				<p class="text-center">Aucun ticket actif pour le moment.</p>
-				<a href="{{ url('send_message') }}" class="btn btn-outline-primary" style="margin-right: 10px;">Créer un nouveau ticket</a>
+				<a href="{{ url('send_message', {id: app.user.id}) }}" class="btn btn-outline-primary" style="margin-right: 10px;">Créer un nouveau ticket</a>
 				<br>
 				<a href="{{ url('front_assistance') }}">
 					<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-return-left" viewBox="0 0 16 16">

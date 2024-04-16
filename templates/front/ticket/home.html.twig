@@ -21,7 +21,7 @@
 				<div class="wizard">
 					<nav class="list-group list-group-flush">
 						<span class="list-group-item"><i class="fa fa-user text-muted"></i><i class="bi bi-person-circle"></i> {{ app.user.email }}</span>
-						<a class="list-group-item btn" href="{{ path('send_message') }}">
+						<a class="list-group-item btn" href="{{ path('send_message', {id: app.user.id}) }}">
 							Ouvrir un ticket
 						</a>
 						<a class="list-group-item" href="{{ path('front_devis_new') }}">
