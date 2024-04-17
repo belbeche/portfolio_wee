@@ -31,10 +31,10 @@ class Category
     private $projects;
 
     /**
-     * @ORM\ManyToMany(targetEntity=Article::class, mappedBy="categories", cascade={"persist"})
+     * @ORM\ManyToMany(targetEntity=Subject::class, mappedBy="categories", cascade={"persist"})
      * @ORM\JoinColumn(nullable=true)
      */
-    private $articles;
+    private $Subjects;
 
     public function __construct()
     {

@@ -2,9 +2,9 @@
 
 {% block content %}
 
-    <h1>Articles</h1>
+    <h1>Subjects</h1>
 
-    <a href="{{ url('back_articles_new') }}">Ajouter un nouvel article</a>
+    <a href="{{ url('back_Subjects_new') }}">Ajouter un nouvel Subject</a>
 
     {% for type, messages in app.flashes %}
         {% for message in messages %}
@@ -25,35 +25,35 @@
             </tr>
         </thead>
         <tbody>
-            {% for article in articles %}
+            {% for Subject in Subjects %}
                 <tr>
-                    <td>{{ article.id }}</td>
-                    <td>{{ article.title}}</td>
+                    <td>{{ Subject.id }}</td>
+                    <td>{{ Subject.title}}</td>
                     <td>
-                        {% for category in article.categories %}
+                        {% for category in Subject.categories %}
                             {{ category.name }} {% if loop.last != true %}/{% endif %}
                         {% endfor %}
                     </td>
-                    <td>{{ article.createdAt|date('d-m-Y') }}</td>
-                    <td>{{ article.user.username }}</td>
+                    <td>{{ Subject.createdAt|date('d-m-Y') }}</td>
+                    <td>{{ Subject.user.username }}</td>
                     <td>
-                        {% if article.active == true %}
+                        {% if Subject.active == true %}
                             Activé
                         {% else %}
                             Désactivé
                         {% endif %}
                     </td>
                     <td>
-                        <a href="{{ url('back_articles_show', {title: article.title }) }}">Voir</a>
-                        <a href="{{ url('back_articles_edit', {title: article.title }) }}">Editer</a>
-                        <a href="{{ url('back_articles_disable', {id: article.id }) }}">Désactivé</a>
-                        <a href="{{ url('back_articles_remove', {title: article.title }) }}">Supprimé</a>
+                        <a href="{{ url('back_Subjects_show', {title: Subject.title }) }}">Voir</a>
+                        <a href="{{ url('back_Subjects_edit', {title: Subject.title }) }}">Editer</a>
+                        <a href="{{ url('back_Subjects_disable', {id: Subject.id }) }}">Désactivé</a>
+                        <a href="{{ url('back_Subjects_remove', {title: Subject.title }) }}">Supprimé</a>
                     </td>
                 </tr>
             {% endfor %}
 
             <div class="navigation">
-                {{ knp_pagination_render(articles) }}
+                {{ knp_pagination_render(Subjects) }}
             </div>
         </tbody>
     </table>

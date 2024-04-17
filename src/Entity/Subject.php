@@ -17,9 +17,9 @@ use Symfony\Component\Uid\Uuid;
 
 
 /**
- * @ORM\Entity(repositoryClass="App\Repository\ArticleRepository")
+ * @ORM\Entity(repositoryClass="App\Repository\SubjectRepository")
  */
-class Article
+class Subject
 {
     /**
      * @ORM\Id
@@ -72,30 +72,30 @@ class Article
     private $updatedAt;
 
     /**
-     * @ORM\OneToMany(targetEntity=Comment::class, mappedBy="article", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity=Comment::class, mappedBy="Subject", orphanRemoval=true)
      */
     private $commentaires;
 
     /**
-     * @ORM\ManyToMany(targetEntity=Category::class, inversedBy="articles")
+     * @ORM\ManyToMany(targetEntity=Category::class, inversedBy="Subjects")
      */
     private $categories;
 
     /**
-     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="articles")
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="Subjects")
      * @ORM\JoinColumn(nullable=true)
      */
     private ?User $user;
 
     /**
-     * @ORM\OneToMany(targetEntity=Image::class, mappedBy="article", orphanRemoval=true, cascade={"persist"})
+     * @ORM\OneToMany(targetEntity=Image::class, mappedBy="Subject", orphanRemoval=true, cascade={"persist"})
      */
     private Collection $images;
 
     /**
      * @ORM\OneToMany(
      *     targetEntity="UserLike",
-     *     mappedBy="article",
+     *     mappedBy="Subject",
      *     orphanRemoval=true,
      *     cascade={"persist"}
      * )
@@ -105,7 +105,7 @@ class Article
     /**
      * @ORM\Column(type="integer")
      */
-    private $article_id;
+    private $Subject_id;
 
     public function __construct()
     {
@@ -190,7 +190,7 @@ class Article
         return $this->commentaires;
     }
 
-    public function setCommentaires(ArrayCollection $commentaires): Article
+    public function setCommentaires(ArrayCollection $commentaires): Subject
     {
         $this->commentaires = $commentaires;
         return $this;
@@ -200,7 +200,7 @@ class Article
     {
         if (!$this->commentaires->contains($commentaire)) {
             $this->commentaires[] = $commentaire;
-            $commentaire->setArticle($this);
+            $commentaire->setSubject($this);
         }
 
         return $this;
@@ -210,8 +210,8 @@ class Article
     {
         if ($this->commentaires->removeElement($commentaire)) {
             // set the owning side to null (unless already changed)
-            if ($commentaire->getArticle() === $this) {
-                $commentaire->setArticle(null);
+            if ($commentaire->getSubject() === $this) {
+                $commentaire->setSubject(null);
             }
         }
 
@@ -257,7 +257,7 @@ class Article
         return $this->images;
     }
 
-    public function setImages(ArrayCollection $images): Article
+    public function setImages(ArrayCollection $images): Subject
     {
         $this->images = $images;
         return $this;
@@ -320,7 +320,7 @@ class Article
 
     /**
      * @param Collection $likes
-     * @return Article
+     * @return Subject
      */
     public function setLikes($likes)
     {
@@ -346,14 +346,14 @@ class Article
         $this->likes->removeElement($like);
     }
 
-    public function getArticleId(): ?int
+    public function getSubjectId(): ?int
     {
-        return $this->article_id;
+        return $this->Subject_id;
     }
 
-    public function setArticleId(int $articleId): self
+    public function setSubjectId(int $SubjectId): self
     {
-        $this->article_id = $articleId;
+        $this->Subject_id = $SubjectId;
 
         return $this;
     }

@@ -26,10 +26,10 @@ class Comment
     private $content;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Article::class, inversedBy="commentaires")
+     * @ORM\ManyToOne(targetEntity=Subject::class, inversedBy="commentaires")
      * @ORM\JoinColumn(nullable=false)
      */
-    private $article;
+    private $Subject;
 
     /**
      * @ORM\Column(type="boolean", nullable=true)
@@ -71,14 +71,14 @@ class Comment
         return $this;
     }
 
-    public function getArticle(): ?Article
+    public function getSubject(): ?Subject
     {
-        return $this->article;
+        return $this->Subject;
     }
 
-    public function setArticle(?Article $article): self
+    public function setSubject(?Subject $Subject): self
     {
-        $this->article = $article;
+        $this->Subject = $Subject;
 
         return $this;
     }

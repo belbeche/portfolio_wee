@@ -1,5 +1,5 @@
 {
-  "particles": {
+  "pSubjects": {
     "number": {
       "value": 80,
       "density": {
@@ -97,10 +97,10 @@
         "distance": 200
       },
       "push": {
-        "particles_nb": 4
+        "pSubjects_nb": 4
       },
       "remove": {
-        "particles_nb": 2
+        "pSubjects_nb": 2
       }
     }
   },

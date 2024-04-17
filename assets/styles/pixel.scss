@@ -88,7 +88,7 @@ html {
     -webkit-tap-highlight-color: rgba(17, 17, 17, 0);
 }
 
-article, aside, figcaption, figure, footer, header, hgroup, main, nav, section {
+Subject, aside, figcaption, figure, footer, header, hgroup, main, nav, section {
     display: block;
 }
 
@@ -31846,30 +31846,30 @@ a:hover, .text-action:hover {
     cursor: pointer;
 }
 
-article h1, article h2, article h3, article h4, article h5, article h6 {
+Subject h1, Subject h2, Subject h3, Subject h4, Subject h5, Subject h6 {
     margin: 2.5rem 0 2rem 0;
 }
 
-article p, article blockquote {
+Subject p, Subject blockquote {
     font-size: 1.27rem;
     margin-bottom: 2rem;
 }
 
-article ul li, article ol li {
+Subject ul li, Subject ol li {
     font-size: 1.27rem;
     margin-bottom: 1.5rem;
 }
 
-article ul, article ol {
+Subject ul, Subject ol {
     margin-bottom: 2.5rem;
 }
 
-article a {
+Subject a {
     color: #1D58A5;
     text-decoration: underline;
 }
 
-article a:hover {
+Subject a:hover {
     color: #1D58A5;
     text-decoration: underline;
 }

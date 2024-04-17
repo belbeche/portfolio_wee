@@ -22,7 +22,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 class HomeController extends AbstractController
 {
     /**
-     * @Route("/old", name="front_home")
+     * @Route("/", name="front_home")
      * @Route("/realisations/{category}", name="front_project_by_category")
      */
     public function index(EntityManagerInterface $entityManager, string $category = null): Response
@@ -102,7 +102,8 @@ class HomeController extends AbstractController
      * @Route("/profil/", name="front_profile")
      * @throws AccessDeniedException
      */
-    public function frontProfile(): RedirectResponse {
+    public function frontProfile(): RedirectResponse
+    {
         // Vérifie si l'utilisateur a le rôle nécessaire
         if (!$this->isGranted('ROLE_USER')) {
             throw new AccessDeniedException("Access denied");

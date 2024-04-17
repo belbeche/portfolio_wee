@@ -58,7 +58,7 @@
     <div class="container">
         <h1>Réponses apportées de {{ app.user.username }} ({{ app.user.comments|length }})</h1>
         {% for comment in app.user.comments %}
-            <div class="col-xs-3"><a href="{{ url('front_articles_show', {title: article.title}) }}">{{ comment.content }}</a><div class="col-xs-3"><img src="{{ asset('uploads/avatar/'~app.user.avatar) }}" width="35" height="35" class="rounded-circle me-3 border border-width-3 border-white" alt="{{ app.user.username }}" width="120" height="120">
+            <div class="col-xs-3"><a href="{{ url('front_Subjects_show', {title: Subject.title}) }}">{{ comment.content }}</a><div class="col-xs-3"><img src="{{ asset('uploads/avatar/'~app.user.avatar) }}" width="35" height="35" class="rounded-circle me-3 border border-width-3 border-white" alt="{{ app.user.username }}" width="120" height="120">
                 </div></div>
         {% endfor %}
     </div>

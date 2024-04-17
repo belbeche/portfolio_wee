@@ -8,7 +8,7 @@
  * Corrects block display not defined in IE6/7/8/9 & FF3
  */
 
-article,
+Subject,
 aside,
 details,
 figcaption,
@@ -121,7 +121,7 @@ a:active {
 
 /*
  * Addresses font sizes and margins set differently in IE6/7
- * Addresses font sizes within 'section' and 'article' in FF4+, Chrome, S5
+ * Addresses font sizes within 'section' and 'Subject' in FF4+, Chrome, S5
  */
 
 h1 {

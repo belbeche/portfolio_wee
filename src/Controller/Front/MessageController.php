@@ -2,7 +2,7 @@
 
 namespace App\Controller\Front;
 
-use App\Entity\Article;
+use App\Entity\Subject;
 use App\Entity\Category;
 use App\Entity\User;
 use App\Entity\Devis;
@@ -221,12 +221,10 @@ class MessageController extends AbstractController
     }
 
     /**
-     * @Route("/supprimer/{id}/ticket", name="front_delete_ticket", methods={"POST"})
+     * @Route("/ticket/supprimer/{id}", name="front_delete_ticket", methods={"POST"})
      */
     public function remove(EntityManagerInterface $entityManager, Message $ticket, Request $request, Filesystem $filesystem): RedirectResponse
     {
-        if ($this->isCsrfTokenValid('delete', $request->request->get('_token'))) {
-
             // Récupérer le chemin du fichier associé au ticket
             $attachmentPath = $this->getParameter('uploads_directory');
 
@@ -237,7 +235,7 @@ class MessageController extends AbstractController
 
             $entityManager->remove($ticket);
             $entityManager->flush();
-        }
+
         return $this->redirectToRoute('front_show_ticket', [
             'id' => $ticket->getDevis()
         ]);

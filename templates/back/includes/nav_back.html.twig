@@ -14,7 +14,7 @@
                 </li>
             {% endif %}
             <li class="nav-item {{ app.request.get('_route') == 'back_home' ? 'active' : '' }}">
-                <a class="nav-link" href="{{ url('back_home') }}">Articles</a>
+                <a class="nav-link" href="{{ url('back_home') }}">Subjects</a>
             </li>
             <li class="nav-item {{ app.request.get('_route') == 'back_users_list' ? 'active' : '' }}">
                 <a class="nav-link" href="{{ url('back_users_list') }}">Utilisateurs</a>

@@ -2,7 +2,7 @@
 
 {% block title %}
 	-
-	{{ article.title }}
+	{{ Subject.title }}
 	-
 {% endblock %}
 
@@ -17,14 +17,14 @@
             <div class="page-title-row">
 
                 <div class="page-title-content">
-                    <h2 class="h2 text-white" style="font-weight: 800">{{ article.title }}</h2>
+                    <h2 class="h2 text-white" style="font-weight: 800">{{ Subject.title }}</h2>
                 </div>
 
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb mt-4">
                         <li class="breadcrumb-item"><a class="alt-color" href="{{ url('front_support') }}">Forum</a></li>
-                        <li class="breadcrumb-item"><a class="alt-color" href="#">{% for category in article.categories %}{{ category.name }} | {% endfor %}</a></li>
-                        <li class="breadcrumb-item text-black-50 active" aria-current="page">{{ article.title }}</li>
+                        <li class="breadcrumb-item"><a class="alt-color" href="#">{% for category in Subject.categories %}{{ category.name }} | {% endfor %}</a></li>
+                        <li class="breadcrumb-item text-black-50 active" aria-current="page">{{ Subject.title }}</li>
                     </ol>
                 </nav>
             </div>
@@ -40,20 +40,20 @@
                     <div class="row g-0 justify-content-between align-items-center border-top border-bottom py-3 mb-4">
                         <div class="col-9">
                             <div class="d-flex align-items-center">
-                                <img src="{{ asset('uploads/avatar/'~article.user.avatar) }}"
-                                     alt="{{ article.user.username }}"
+                                <img src="{{ asset('uploads/avatar/'~Subject.user.avatar) }}"
+                                     alt="{{ Subject.user.username }}"
                                      class="rounded-circle me-2"
                                      width="50"
                                      height="50"
                                 >
                                 <div>
                                     <h5 class="mb-0 h6 fw-semibold">
-                                        <a class="text-dark" href="#">{{ article.user.username }}</a>
+                                        <a class="text-dark" href="#">{{ Subject.user.username }}</a>
                                     </h5>
                                     <small class="text-muted mb-0 fw-normal">| le
-                                        {{ article.createdAt|format_datetime('full', 'short', locale='fr') }}</small>
+                                        {{ Subject.createdAt|format_datetime('full', 'short', locale='fr') }}</small>
                                     <small class="text-muted mb-0 fw-normal"> | modifié le
-                                        {{ article.updatedAt|format_datetime('full', 'short', locale='fr') }} </small>
+                                        {{ Subject.updatedAt|format_datetime('full', 'short', locale='fr') }} </small>
                                 </div>
                             </div>
                         </div>
@@ -75,7 +75,7 @@
                     <div class="clear"></div>
 
 
-                    <p>{{ article.content|raw }}.</p>
+                    <p>{{ Subject.content|raw }}.</p>
 
                     <div class="col-1 pb-3 px-0">
                         <hr>
@@ -135,26 +135,26 @@
 				<li class="breadcrumb-item">
 					<a href="{{ url('front_home') }}">Accueil</a>
 				</li>
-				<li class="breadcrumb-item active" aria-current="page">{{ article.title }}
+				<li class="breadcrumb-item active" aria-current="page">{{ Subject.title }}
 				</li>
 			</ol>
 		</nav>
 	</div>
 
-	<article class="container mt-4 text-center">
-		<h1>{{ article.title }}</h1>
+	<Subject class="container mt-4 text-center">
+		<h1>{{ Subject.title }}</h1>
 		<br>
 		<p class="text-secondary">Par
-			<img src="{{ asset('uploads/avatar/' ~article.user.avatar) }}" alt="{{ article.user.username }}" class="rounded-0 img-thumbnail" width="50" height="50">
-			{{ article.user.username }}
+			<img src="{{ asset('uploads/avatar/' ~Subject.user.avatar) }}" alt="{{ Subject.user.username }}" class="rounded-0 img-thumbnail" width="50" height="50">
+			{{ Subject.user.username }}
 			| le
-			{{ article.createdAt|format_datetime('full', 'short', locale='fr') }}
+			{{ Subject.createdAt|format_datetime('full', 'short', locale='fr') }}
 			|  modifié le
-			{{ article.updatedAt|format_datetime('full', 'short', locale='fr') }}</p>
+			{{ Subject.updatedAt|format_datetime('full', 'short', locale='fr') }}</p>
 
 
-		{% for image in article.images %}
-			<img src="{{ asset('uploads/' ~image.name) }}" alt="{{ article.title }}" class="img-fluid">
+		{% for image in Subject.images %}
+			<img src="{{ asset('uploads/' ~image.name) }}" alt="{{ Subject.title }}" class="img-fluid">
 		{% endfor %}
 
 		<div class="mt-4">
@@ -194,5 +194,5 @@
 				{{ form_end(form) }}
 			</div>
 		{% endif %}
-	</article>#}
+	</Subject>#}
 {% endblock %}

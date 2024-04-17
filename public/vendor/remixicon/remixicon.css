@@ -167,8 +167,8 @@
 .ri-artboard-2-line:before { content: "\ea7a"; }
 .ri-artboard-fill:before { content: "\ea7b"; }
 .ri-artboard-line:before { content: "\ea7c"; }
-.ri-article-fill:before { content: "\ea7d"; }
-.ri-article-line:before { content: "\ea7e"; }
+.ri-Subject-fill:before { content: "\ea7d"; }
+.ri-Subject-line:before { content: "\ea7e"; }
 .ri-aspect-ratio-fill:before { content: "\ea7f"; }
 .ri-aspect-ratio-line:before { content: "\ea80"; }
 .ri-asterisk:before { content: "\ea81"; }

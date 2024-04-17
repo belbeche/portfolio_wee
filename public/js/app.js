@@ -2,19 +2,19 @@
 /* How to use? : Check the GitHub README
 /* ----------------------------------------------- */
 
-/* To load a config file (particles.json) you need to host this demo (MAMP/WAMP/local)... */
+/* To load a config file (pSubjects.json) you need to host this demo (MAMP/WAMP/local)... */
 /*
-particlesJS.load('particles-js', 'particles.json', function() {
-  console.log('particles.js loaded - callback');
+pSubjectsJS.load('pSubjects-js', 'pSubjects.json', function() {
+  console.log('pSubjects.js loaded - callback');
 });
 */
 
 /* Otherwise just put the config content (json): */
 
-particlesJS('particles-js',
+pSubjectsJS('pSubjects-js',
   
   {
-    "particles": {
+    "pSubjects": {
       "number": {
         "value": 80,
         "density": {
@@ -112,10 +112,10 @@ particlesJS('particles-js',
           "distance": 200
         },
         "push": {
-          "particles_nb": 4
+          "pSubjects_nb": 4
         },
         "remove": {
-          "particles_nb": 2
+          "pSubjects_nb": 2
         }
       }
     },

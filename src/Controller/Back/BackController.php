@@ -2,7 +2,7 @@
 
 namespace App\Controller\Back;
 
-use App\Entity\Article;
+use App\Entity\Subject;
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
@@ -25,11 +25,11 @@ class BackController extends AbstractController
         PaginatorInterface $paginator
     ): Response
     {
-        $articles = $entityManager->getRepository(Article::class)->findBy([],['createdAt' => 'DESC']);
+        $Subjects = $entityManager->getRepository(Subject::class)->findBy([],['createdAt' => 'DESC']);
 
-        $data = $articles;
+        $data = $Subjects;
 
-        $articles = $paginator->paginate(
+        $Subjects = $paginator->paginate(
             $data,
             $request->query->getInt('page',1),
             12
@@ -38,7 +38,7 @@ class BackController extends AbstractController
 
 
         return $this->render('back/home.html.twig',[
-            'articles' => $articles
+            'Subjects' => $Subjects
         ]);
     }
 }

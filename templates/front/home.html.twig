@@ -22,7 +22,7 @@
 						{{ render(controller('App\\Controller\\Front\\FrontController::search')) }}
 					</div>
 					<div>
-						<a href="{{ url('front_articles_new') }}" class="button button-large border border-width-2 bg-alt py-2 rounded-1 fw-medium text-transform-none ls-0 ms-0 ms-sm-1 h-op-09"><i class="bi-file-earmark-plus"></i>Créer un nouveau sujet</a>
+						<a href="{{ url('front_Subjects_new') }}" class="button button-large border border-width-2 bg-alt py-2 rounded-1 fw-medium text-transform-none ls-0 ms-0 ms-sm-1 h-op-09"><i class="bi-file-earmark-plus"></i>Créer un nouveau sujet</a>
 						<a href="{{ url('front_subject') }}" class="button button-large button-border rounded-1 fw-medium text-transform-none h-bg-alt ls-0 ms-0"><i class="bi-text-left"></i>Voir tous les sujets</a>
 					</div>
 				</div>
@@ -36,7 +36,7 @@
 			<div class="container">
 				<div class="d-flex">
 					<h4 class="mb-0"><span class="fw-normal text-white"><i class="bi-people icon-fw"></i></span> <span class="text-white">Membres enregistrès</span>  <span class="color fw-semibold">{{ users|length}}</span>.</span></h4>
-					<h4 class="mb-0 ms-5"><span class="fw-normal text-white"><i class="bi-chat-dots icon-fw "></i> <span class="text-white">Sujets créer</span>  <span class="color fw-semibold">{{ articles|length}}</span>.</span></h4>
+					<h4 class="mb-0 ms-5"><span class="fw-normal text-white"><i class="bi-chat-dots icon-fw "></i> <span class="text-white">Sujets créer</span>  <span class="color fw-semibold">{{ Subjects|length}}</span>.</span></h4>
 				</div>
 			</div>
 		</div>
@@ -51,31 +51,31 @@
 				<div class="row justify-content-center text-center mb-5">
 					<div class="col-xl-6 col-lg-8">
 						<h3 class="display-4 fw-bolder mb-3">Dernières discussion</h3>
-						<a href="{{ url('front_articles_new') }}" class="button button-small button-border button-rounded  mx-0">Créer un nouveau sujet</a>
+						<a href="{{ url('front_Subjects_new') }}" class="button button-small button-border button-rounded  mx-0">Créer un nouveau sujet</a>
 					</div>
 				</div>
 
 				<div class="mw-md mx-auto">
 					<ul class="list-unstyled mb-4">
 						<li>
-							{% for article in articles %}
+							{% for Subject in Subjects %}
 								<ul class="topic list-unstyled row mx-0 justify-content-between align-items-center">
 										<li class="entry mb-0 col-sm-10">
-											<a href="{{ path('front_articles_show', {'title': article.title}) }}" class="link-dark">
-												<h3 class="card-title">{{ article.title }}</h3>
+											<a href="{{ path('front_Subjects_show', {'title': Subject.title}) }}" class="link-dark">
+												<h3 class="card-title">{{ Subject.title }}</h3>
 											</a>
 											<div class="entry-meta mt-1">
 												<ul>
-													<li><a href="#">{{ article.createdAt|format_datetime('medium', locale="fr") }}</a></li>
-													<li><a href="#">{{ article.commentaires|length }}</a></li>
+													<li><a href="#">{{ Subject.createdAt|format_datetime('medium', locale="fr") }}</a></li>
+													<li><a href="#">{{ Subject.commentaires|length }}</a></li>
 													{#<li><a href="#" class="badge bg-info text-white">In Progress</a></li>#}
 												</ul>
 											</div>
 										</li>
 										<li class="col-sm-2">
 											<div class="bbp-author">
-												<img src="{{ asset('uploads/avatar/' ~article.user.avatar) }}" alt="{{ article.user.username }}" class="rounded-circle me-2" width="50" height="50">
-													{{ article.user.username }}
+												<img src="{{ asset('uploads/avatar/' ~Subject.user.avatar) }}" alt="{{ Subject.user.username }}" class="rounded-circle me-2" width="50" height="50">
+													{{ Subject.user.username }}
 											</div>
 										</li>
 								</ul>
@@ -84,7 +84,7 @@
 					</ul>
 
 					<div class="navigation pagination justify-content-center my-4">
-						{{ knp_pagination_render(articles) }}
+						{{ knp_pagination_render(Subjects) }}
 					</div>
 				</div>
 
@@ -178,10 +178,10 @@
 		<div class="bg-alt py-lg-5">
 			<div class="container">
 				<h2 class="display-4" style="font-weight: 800">Soyez les bienvenues !</h2>
-				<p>Faites dès maintenant votre recherche ou crée un compte pour publier un article</p>
+				<p>Faites dès maintenant votre recherche ou crée un compte pour publier un Subject</p>
 				<div class="d-flex">
 					<h4 class="mb-0"><span class="counter counter-inherit fw-normal text-white"><i class="bi-people icon-fw"></i> <span class="color fw-semibold" data-from="100" data-to="12462" data-refresh-interval="150" data-speed="2000"></span> {{ users|length }} Membres inscrits </span> </h4>
-					<h4 class="mb-0 ms-5"><span class="counter counter-inherit fw-normal text-white"><i class="bi-chat-dots icon-fw"></i> <span class="color fw-semibold" data-from="100" data-to="340333" data-refresh-interval="100" data-speed="2000"></span> {{ articles|length }} Article crées </span></h4>
+					<h4 class="mb-0 ms-5"><span class="counter counter-inherit fw-normal text-white"><i class="bi-chat-dots icon-fw"></i> <span class="color fw-semibold" data-from="100" data-to="340333" data-refresh-interval="100" data-speed="2000"></span> {{ Subjects|length }} Subject crées </span></h4>
 				</div>
 			</div>
 		</div>

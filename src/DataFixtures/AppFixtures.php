@@ -2,7 +2,7 @@
 
 namespace App\DataFixtures;
 
-use App\Entity\Article;
+use App\Entity\Subject;
 use App\Entity\User;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
@@ -12,15 +12,15 @@ class AppFixtures extends Fixture
     public function load(ObjectManager $manager): void
     {
         for ($i = 0; $i < 30; $i++) {
-            $article = new Article();
+            $Subject = new Subject();
             $user = new User();
-            $article->setTitle('Titre n° : '.$i);
-            $article->setContent("test".$i);
-            $article->isActive(true);
-            $article->settitle('title'.$i);
-            $article->setUser($user->getUsername());
+            $Subject->setTitle('Titre n° : '.$i);
+            $Subject->setContent("test".$i);
+            $Subject->isActive(true);
+            $Subject->settitle('title'.$i);
+            $Subject->setUser($user->getUsername());
 
-            $manager->persist($article);
+            $manager->persist($Subject);
         }
         $manager->flush();
     }

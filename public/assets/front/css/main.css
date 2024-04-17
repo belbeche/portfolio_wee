@@ -3108,15 +3108,15 @@ ul.social-links li:last-child a {
   background-color: #fff;
 }
 
-.page-portfolio-loaded>article {
+.page-portfolio-loaded>Subject {
   height: 100%;
 }
 
-.page-portfolio-loaded>article>div {
+.page-portfolio-loaded>Subject>div {
   height: 100%;
 }
 
-.page-portfolio-loaded>article .entry-content {
+.page-portfolio-loaded>Subject .entry-content {
   padding-bottom: 0;
 }
 
@@ -3761,7 +3761,7 @@ blockquote.fw-quote-right {
   z-index: 1;
 }
 
-.list-view .site-content article {
+.list-view .site-content Subject {
   position: relative;
   padding-bottom: 40px;
   margin-bottom: 40px;
@@ -3769,11 +3769,11 @@ blockquote.fw-quote-right {
 }
 
 @media only screen and (min-width: 991px) {
-  .list-view .site-content article {
+  .list-view .site-content Subject {
     border-bottom: 0;
   }
 
-  .list-view .site-content article:after {
+  .list-view .site-content Subject:after {
     content: '';
     height: 1px;
     position: absolute;
@@ -3787,12 +3787,12 @@ blockquote.fw-quote-right {
     right: 0;
   }
 
-  .list-view .site-content article:last-child:after {
+  .list-view .site-content Subject:last-child:after {
     display: none;
   }
 }
 
-.list-view .site-content article:last-child {
+.list-view .site-content Subject:last-child {
   padding-bottom: 0;
   margin-bottom: 20px;
   border-bottom: 0;
@@ -3862,7 +3862,7 @@ a.post-thumbnail:hover {
   margin-right: 3px;
 }
 
-.bypostauthor>article .fn:before {
+.bypostauthor>Subject .fn:before {
   content: "\f005";
   margin: 0 4px 0 -2px;
   position: relative;
@@ -3945,7 +3945,7 @@ a.post-thumbnail:hover {
   color: #4A6583;
 }
 
-.comment-list article,
+.comment-list Subject,
 .comment-list .pingback,
 .comment-list .trackback {
   border-top: 1px solid rgba(0, 0, 0, .1);
@@ -3953,7 +3953,7 @@ a.post-thumbnail:hover {
   padding-top: 24px;
 }
 
-.comment-list>li:first-child>article,
+.comment-list>li:first-child>Subject,
 .comment-list>.pingback:first-child,
 .comment-list>.trackback:first-child {
   border-top: 0;

@@ -2,25 +2,22 @@
 
 namespace App\Controller\Back;
 
-use App\Entity\Article;
+use App\Entity\Subject;
 use App\Entity\Image;
-use App\Entity\User;
-use App\Form\Article\Type\ArticleType;
-use App\Repository\ArticleRepository;
-use Doctrine\ORM\EntityManager;
+use App\Form\Subject\Type\SubjectType;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 
 use Knp\Component\Pager\PaginatorInterface;
 
 
-class ArticleController extends AbstractController
+class SubjectControllerBack extends AbstractController
 {
 
     public function __construct(EntityManagerInterface $entityManager)
@@ -32,7 +29,7 @@ class ArticleController extends AbstractController
      * @param Request $request
      * @param PaginatorInterface $paginator
      * @return mixed
-     * @Route("/admin/articles", name="back_articles_list")
+     * @Route("/admin/Subjects", name="back_Subjects_list")
      * @IsGranted("ROLE_ADMIN")
      */
     public function list(
@@ -40,21 +37,21 @@ class ArticleController extends AbstractController
         PaginatorInterface $paginator
     ) {
 
-        $data = $this->entityManager->getRepository(Article::class)->findAll();
+        $data = $this->entityManager->getRepository(Subject::class)->findAll();
 
-        $articles = $paginator->paginate(
+        $Subjects = $paginator->paginate(
             $data,
             $request->query->getInt('page', 1),
             12
         );
 
-        return $this->render('back/article/list.html.twig', [
-            'articles' => $articles,
+        return $this->render('back/Subject/list.html.twig', [
+            'Subjects' => $Subjects,
         ]);
     }
 
     /**
-     * @Route("/admin/articles/new", name="back_articles_new")
+     * @Route("/admin/Subjects/new", name="back_Subjects_new")
      *
      * @param Request $request
      * @return Response
@@ -63,20 +60,20 @@ class ArticleController extends AbstractController
     public function new(
         Request $request
     ): Response {
-        $article = new Article();
+        $Subject = new Subject();
 
-        $form = $this->createForm(ArticleType::class, $article);
+        $form = $this->createForm(SubjectType::class, $Subject);
 
         if ($request->isMethod('POST')) {
             $form->handleRequest($request);
 
             if ($form->isSubmitted() && $form->isValid()) {
 
-                $article->setUser($this->getUser());
+                $Subject->setUser($this->getUser());
 
-                $article->setCreatedAt(new \DateTime);
+                $Subject->setCreatedAt(new \DateTime);
 
-                $article->setIsPublished(false);
+                $Subject->setIsPublished(false);
 
                 $images = $form->get('images')->getData();
 
@@ -91,100 +88,101 @@ class ArticleController extends AbstractController
                         $file
                     );
 
-                    // We add image in the database and to the article
+                    // We add image in the database and to the Subject
                     $img = new Image();
                     $img->setName($file);
-                    $article->addImage($img);
-                    $img->setArticle($article);
+                    $Subject->addImage($img);
+                    $img->setSubject($Subject);
                 }
 
 
-                $this->entityManager->persist($article);
+                $this->entityManager->persist($Subject);
 
                 $this->entityManager->flush();
 
-                $this->addFlash('success', 'Article ajouté avec succéss');
+                $this->addFlash('success', 'Subject ajouté avec succéss');
 
                 return $this->redirectToRoute('back_home_support');
             }
         }
 
-        return $this->render('back/article/new.html.twig', [
+        return $this->render('back/Subject/new.html.twig', [
             'form' => $form->createView(),
-            'article' => $article,
+            'Subject' => $Subject,
         ]);
     }
 
     /**
-     * @Route("/publier/{title}", name="back_articles_publish")
+     * @Route("/publier/{title}", name="back_Subjects_publish")
      */
-    public function publish(Article $article)
+    public function publish(Subject $Subject)
     {
         if (
-            $article->getImages() !== null && $article->getImages() !== ''
-            && $article->getContent() !== null && $article->getContent() !== ''
-            && $article->getCategories() !== null
-            && $article->getTitle() !== null && $article->getTitle() !== ''
+            $Subject->getImages() !== null && $Subject->getImages() !== ''
+            && $Subject->getContent() !== null && $Subject->getContent() !== ''
+            && $Subject->getCategories() !== null
+            && $Subject->getTitle() !== null && $Subject->getTitle() !== ''
         ) {
-            $article->setPublishedAt(new \DateTime);
+            $Subject->setPublishedAt(new \DateTime);
 
-            $article->setIsPublished(true);
+            $Subject->setIsPublished(true);
 
-            $this->addFlash('success', 'Article publié avec succéss');
+            $this->addFlash('success', 'Sujet publié avec succéss');
 
-            $this->entityManager->persist($article);
+            $this->entityManager->persist($Subject);
             $this->entityManager->flush();
 
-            // We redirect to the article display page if everything is OK
+            // We redirect to the Subject display page if everything is OK
             return $this->redirectToRoute(
-                'back_articles_show',
-                ['title' => $article->getTitle()]
+                'back_Subjects_show',
+                ['title' => $Subject->getTitle()]
             );
         }
 
         return $this->redirectToRoute(
-            'back_articles_edit',
-            ['title' => $article->getTitle()]
+            'back_Subjects_edit',
+            ['title' => $Subject->getTitle()]
         );
     }
 
     /**
-     * @Route("/admin/articles/show/{title}", name="back_articles_show")
+     * @Route("/admin/Subjects/show/{title}", name="back_Subjects_show")
      * @return Response
      * @IsGranted("ROLE_ADMIN")
+     * @throws NotFoundHttpException
      */
     public function show(
-        Article $article,
+        Subject                $Subject,
         EntityManagerInterface $entityManager,
     ): Response {
-        $article = $entityManager->getRepository(Article::class)->find($article);
+        $Subject = $entityManager->getRepository(Subject::class)->find($Subject);
 
-        if (!$article) {
-            throw $this->createNotFoundException('Article not found');
+        if (!$Subject) {
+            throw $this->createNotFoundException('Subject not found');
         }
 
-        return $this->render('back/article/show.html.twig', [
-            'article' => $article,
+        return $this->render('back/Subject/show.html.twig', [
+            'Subject' => $Subject,
         ]);
     }
 
     /**
-     * @Route("/admin/articles/edit/{title}", name="back_articles_edit")
+     * @Route("/admin/Subjects/edit/{title}", name="back_Subjects_edit")
      * @param Request $request
      * @return Response
      * @IsGranted("ROLE_ADMIN")
      */
     public function edit(
-        Article $article,
+        Subject $Subject,
         Request $request
     ): Response {
 
-        $form = $this->createForm(ArticleType::class, $article);
+        $form = $this->createForm(SubjectType::class, $Subject);
 
         if ($request->isMethod('POST')) {
             $form->handleRequest($request);
 
-            $article->setUpdatedAt(new \DateTime("NOW"));
+            $Subject->setUpdatedAt(new \DateTime("NOW"));
 
             if ($form->isSubmitted() && $form->isValid()) {
                 $images = $form->get('images')->getData();
@@ -202,34 +200,34 @@ class ArticleController extends AbstractController
                     // On crée l'image dans la base de données
                     $img = new Image();
                     $img->setName($fichier);
-                    $article->addImage($img);
-                    $img->setArticle($article);
+                    $Subject->addImage($img);
+                    $img->setSubject($Subject);
                 }
 
-                /*if ($article->getPublishedAt() === null) {
-                    // on renseigne le title de l'article
-                    $article->settitle(
-                        strtolower($article->gettitle())
+                /*if ($Subject->getPublishedAt() === null) {
+                    // on renseigne le title de l'Subject
+                    $Subject->settitle(
+                        strtolower($Subject->gettitle())
                     );
                 }*/
 
 
-                $this->entityManager->persist($article);
+                $this->entityManager->persist($Subject);
                 $this->entityManager->flush();
 
                 return $this->redirectToRoute('back_home_support');
             }
         }
 
-        return $this->render('back/article/edit.html.twig', [
+        return $this->render('back/Subject/edit.html.twig', [
             'form' => $form->createView(),
-            'article' => $article,
+            'Subject' => $Subject,
         ]);
     }
 
 
     /**
-     * @Route("/admin/articles/disable/{id}", name="back_articles_disable")
+     * @Route("/admin/Subjects/disable/{id}", name="back_Subjects_disable")
      * @param $id
      * @return mixed
      * @IsGranted("ROLE_ADMIN")
@@ -237,42 +235,42 @@ class ArticleController extends AbstractController
     public function disable(
         $id
     ): Response {
-        $article = $this->entityManager->getRepository(Article::class)->find($id);
-        $article->setActive(!$article->isActive());
-        $this->entityManager->persist($article);
+        $Subject = $this->entityManager->getRepository(Subject::class)->find($id);
+        $Subject->setActive(!$Subject->isActive());
+        $this->entityManager->persist($Subject);
         $this->entityManager->flush();
-        if ($article->isActive() == true) {
-            $this->addFlash('warning', "L'article " . $article->getTitle() . " a bien était désactiver :[");
+        if ($Subject->isActive() == true) {
+            $this->addFlash('warning', "L'Subject " . $Subject->getTitle() . " a bien était désactiver :[");
         } else {
-            $this->addFlash('success', "L'article " . $article->getTitle() . " a bien était réactiver :]");
+            $this->addFlash('success', "L'Subject " . $Subject->getTitle() . " a bien était réactiver :]");
         }
 
-        return $this->redirectToRoute('back_articles_list');
+        return $this->redirectToRoute('back_Subjects_list');
     }
 
     /**
-     * @Route("/admin/article/remove/{title}", name="back_articles_remove")
+     * @Route("/admin/Subject/remove/{title}", name="back_Subjects_remove")
      * @return Response
      * @IsGranted("ROLE_ADMIN")
      */
     public function remove(
-        Article $article,
+        Subject $Subject,
         Request $request
     ): Response {
 
-        if ($article->getCreatedAt(true)) {
-            $this->addFlash('success', "L'article " . $article->getTitle() . " est supprimé avec success !");
-            $this->entityManager->remove($article);
+        if ($Subject->getCreatedAt(true)) {
+            $this->addFlash('success', "L'Subject " . $Subject->getTitle() . " est supprimé avec success !");
+            $this->entityManager->remove($Subject);
             $this->entityManager->flush();
         } else {
-            $this->addFlash('success', "L'article " . $article->getTitle() . " est activé, disactivez-le puis réessayer, merci.");
+            $this->addFlash('success', "L'Subject " . $Subject->getTitle() . " est activé, disactivez-le puis réessayer, merci.");
         }
 
         return $this->redirectToRoute('back_home_support');
     }
 
     /**
-     * @Route("/back/articles/remove/image/{name}", name="back_articles_remove_image", methods={"DELETE"})
+     * @Route("/back/Subjects/remove/image/{name}", name="back_Subjects_remove_image", methods={"DELETE"})
      * @IsGranted("ROLE_ADMIN")
      */
     public function deleteImage(Image $image, Request $request)

@@ -27,10 +27,10 @@ class UserLike
     private $createdAt;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Article", inversedBy="likes")
-     * @ORM\JoinColumn(name="article_id", referencedColumnName="id", nullable=true)
+     * @ORM\ManyToOne(targetEntity="Subject", inversedBy="likes")
+     * @ORM\JoinColumn(name="Subject_id", referencedColumnName="id", nullable=true)
      */
-    private Article $article;
+    private Subject $Subject;
 
     /**
      * @ORM\ManyToOne(targetEntity="User", inversedBy="likes")
@@ -70,20 +70,20 @@ class UserLike
     }
 
     /**
-     * @return Article
+     * @return Subject
      */
-    public function getArticle(): Article
+    public function getSubject(): Subject
     {
-        return $this->article;
+        return $this->Subject;
     }
 
     /**
-     * @param Article $article
+     * @param Subject $Subject
      * @return UserLike
      */
-    public function setArticle(Article $article): UserLike
+    public function setSubject(Subject $Subject): UserLike
     {
-        $this->article = $article;
+        $this->Subject = $Subject;
         return $this;
     }
 

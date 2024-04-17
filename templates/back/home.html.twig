@@ -7,7 +7,7 @@
 {% block content %}
 	<div class="container mt-4">
 		<div class="row">
-			<h2 class="col">Articles</h2>
+			<h2 class="col">Subjects</h2>
 
 			{% for type, messages in app.flashes %}
 				{% for message in messages %}
@@ -17,7 +17,7 @@
 
 
 			<div class="col text-right">
-				<a href="{{ url('back_articles_new') }}" class="btn btn-primary">Ajouter un article</a>
+				<a href="{{ url('back_Subjects_new') }}" class="btn btn-primary">Ajouter un Subject</a>
 			</div>
 			<div class="col-12">
 				<div class="table-responsive w-100 d-block d-md-table">
@@ -35,32 +35,32 @@
 						<tbody>
 							{# We indicate that we are going to increment the values of the items #}
 							{% set i = 1 %}
-							{% for article in articles %}
+							{% for Subject in Subjects %}
 								<tr>
 									<th scope="row">{{ i }}</th>
 									<td>
-										<a href="{{ url('back_articles_show', {title: article.title}) }}">{{ article.title }}</a>
+										<a href="{{ url('back_Subjects_show', {title: Subject.title}) }}">{{ Subject.title }}</a>
 									</td>
 									<td>
-										{% if article.isPublished %}
+										{% if Subject.isPublished %}
 											<small class="badge badge-success">publier</small>
 										{% else %}
 											<small class="badge badge-warning">brouillon</small>
 										{% endif %}
 									</td>
-									{#<td>{{ article.isPublished ? article.createdAt|format_datetime('full', 'short', locale='fr') }}</td>#}
-									<td>{{ article.isPublished ? article.createdAt|format_datetime('full', 'short', locale='fr') }}</td>
+									{#<td>{{ Subject.isPublished ? Subject.createdAt|format_datetime('full', 'short', locale='fr') }}</td>#}
+									<td>{{ Subject.isPublished ? Subject.createdAt|format_datetime('full', 'short', locale='fr') }}</td>
 									{#
-																										<td>{{ article.isPublished|date("d/m/Y", "Europe/Paris") }} à {{ article.isPublished|date("H:m:s", "Europe/Paris") }}</td>
+																										<td>{{ Subject.isPublished|date("d/m/Y", "Europe/Paris") }} à {{ Subject.isPublished|date("H:m:s", "Europe/Paris") }}</td>
 																										#}
-									<td>{{ article.isPublished ? article.updatedAt|format_datetime('full', 'short', locale='fr') }}</td>
+									<td>{{ Subject.isPublished ? Subject.updatedAt|format_datetime('full', 'short', locale='fr') }}</td>
 									<td class="text-center">
-										<a href="{{ url('back_articles_edit', {'title': article.title}) }}" class="text-success">
+										<a href="{{ url('back_Subjects_edit', {'title': Subject.title}) }}" class="text-success">
 											<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewbox="0 0 24 24" stroke="currentColor" width="18">
 												<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
 											</svg>
 										</a>
-										<a href="{{ url('back_articles_remove', {'title': article.title}) }}" class="text-danger" onclick="alert('L\'article est en cours de supprésion !'">
+										<a href="{{ url('back_Subjects_remove', {'title': Subject.title}) }}" class="text-danger" onclick="alert('L\'Subject est en cours de supprésion !'">
 											<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewbox="0 0 24 24" stroke="currentColor" width="18">
 												<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"/>
 											</svg>
@@ -74,7 +74,7 @@
 				</div>
 
 				<div class="navigation">
-					{{ knp_pagination_render(articles) }}
+					{{ knp_pagination_render(Subjects) }}
 				</div>
 
 			</div>

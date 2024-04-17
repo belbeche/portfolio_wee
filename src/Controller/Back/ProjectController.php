@@ -4,7 +4,7 @@ namespace App\Controller\Back;
 
 use App\Entity\User;
 use App\Entity\Image;
-use App\Entity\Article;
+use App\Entity\Subject;
 use App\Entity\Project;
 use App\Form\ProjectType;
 use Symfony\Component\Uid\Ulid;
@@ -44,8 +44,8 @@ class ProjectController extends AbstractController
         // Récupérer l'utilisateur actuellement connecté
         $user = $this->getUser();
 
-        // Créer un nouvel article
-        $article = new Article();
+        // Créer un nouvel Subject
+        $Subject = new Subject();
 
         $project = new Project();
 
@@ -57,8 +57,8 @@ class ProjectController extends AbstractController
                 $project->setUpdatedAt(new \DateTime());
                 $project->setCreatedAt(new \DateTime());
 
-                // Ajouter l'article à la collection d'articles de l'utilisateur
-                $user->addArticle($article->setUser($user));
+                // Ajouter l'Subject à la collection d'Subjects de l'utilisateur
+                $user->addSubject($Subject->setUser($user));
 
                 $entityManager->persist($user);
 

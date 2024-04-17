@@ -105,9 +105,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $comments;
 
     /**
-     * @ORM\OneToMany(targetEntity=Article::class, mappedBy="user", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity=Subject::class, mappedBy="user", orphanRemoval=true)
      */
-    private ?Collection $articles;
+    private ?Collection $Subjects;
 
     public function __construct()
     {
@@ -116,19 +116,19 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->avatar = 'support0.svg';
         $this->roles = ['ROLE_USER'];
 
-        $this->articles = new ArrayCollection();
+        $this->Subjects = new ArrayCollection();
         $this->comments = new ArrayCollection();
         $this->likes = new ArrayCollection();
         $this->date = new DateTime();
     }
 
     /**
-     * Génère un UUID unique pour chaque article et l'ajoute à la collection
+     * Génère un UUID unique pour chaque Subject et l'ajoute à la collection
      */
-    // public function generateArticleIds(): void
+    // public function generateSubjectIds(): void
     // {
-    //     foreach ($this->articles as $article) {
-    //         // Génération de l'UUID et affectation à l'article
+    //     foreach ($this->Subjects as $Subject) {
+    //         // Génération de l'UUID et affectation à l'Subject
     //         $this->id
     //     }
     // }
@@ -481,29 +481,29 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @return ArrayCollection
      */
-    public function getArticles(): Collection
+    public function getSubjects(): Collection
     {
-        return $this->articles;
+        return $this->Subjects;
     }
 
     /**
-     * @param ArrayCollection $articles
+     * @param ArrayCollection $Subjects
      * @return User
      */
-    public function setArticles(ArrayCollection $articles): Collection
+    public function setSubjects(ArrayCollection $Subjects): Collection
     {
-        $this->articles = $articles;
+        $this->Subjects = $Subjects;
         return $this;
     }
 
-    public function addArticle(Article $article): self
+    public function addSubject(Subject $Subject): self
     {
-        $this->articles[] = $article;
+        $this->Subjects[] = $Subject;
     }
 
-    public function removeArticle(Article $article)
+    public function removeSubject(Subject $Subject)
     {
-        $this->articles->removeElement($article);
+        $this->Subjects->removeElement($Subject);
     }
     public function getDate(): ?\DateTimeInterface
     {

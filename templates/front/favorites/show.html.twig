@@ -8,38 +8,38 @@
 			<div class="row justify-content-center">
 
 
-				{% for article in favorites %}
+				{% for Subject in favorites %}
 
 					<div class="col-lg-3 col-md-3 col-sm-10">
 						<div class="single-blog blog-style-one">
 							<div class="blog-image">
-								<a href="{{ path('front_articles_show', {'title': article.title}) }}">
-									{% for image in article.images %}
-										<img class="card-img-top rounded-0" src="{{ asset('uploads/' ~ image.name) }}" alt="{{ article.title }}">
+								<a href="{{ path('front_Subjects_show', {'title': Subject.title}) }}">
+									{% for image in Subject.images %}
+										<img class="card-img-top rounded-0" src="{{ asset('uploads/' ~ image.name) }}" alt="{{ Subject.title }}">
 									{% endfor %}
 								</a>
 								<small>
-									{% for category in article.categories %}
+									{% for category in Subject.categories %}
 										<a href="{{ url('front_category', { name: category.name}) }}">{{ category.name }}</a>
 									{% endfor %}
 								</small>
 							</div>
 							<div class="blog-content">
 								<h5 class="blog-title">
-									<a href="{{ path('front_articles_show', {'title': article.title}) }}">
-										<h5 class="card-title">{{ article.title }}</h5>
+									<a href="{{ path('front_Subjects_show', {'title': Subject.title}) }}">
+										<h5 class="card-title">{{ Subject.title }}</h5>
 									</a>
 								</h5>
 								<br>
 								<span>
 									<i class="bi bi-calendar"></i>
-									{{ article.createdAt|format_datetime('medium', locale="fr") }}</span>
+									{{ Subject.createdAt|format_datetime('medium', locale="fr") }}</span>
 								<span>
 									<i class="bi bi-chat-dots"></i>
-									{{ article.commentaires|length }}</span>
+									{{ Subject.commentaires|length }}</span>
 								<span>
 									<i class="bi bi-heart-fill"></i>
-									{{ article.favoris|length }}</span>
+									{{ Subject.favoris|length }}</span>
 							</div>
 						</div>
 					</div>

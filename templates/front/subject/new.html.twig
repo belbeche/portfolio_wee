@@ -19,14 +19,14 @@
     <div class="overflow-hidden">
         <div class="container">
 
-            {% include 'front/includes/_article_form.html.twig' %}
-            {% if app.request.attributes.get('_route') == 'front_articles_new' and article.images is not empty %}
-                {% for image in article.images %}
+            {% include 'front/includes/_Subject_form.html.twig' %}
+            {% if app.request.attributes.get('_route') == 'front_Subjects_new' and Subject.images is not empty %}
+                {% for image in Subject.images %}
                     <div>
-                        <img src="{{ asset('/uploads/subject'~image.name) }}" alt="{{ article.name }}" width="150">
+                        <img src="{{ asset('/uploads/subject'~image.name) }}" alt="{{ Subject.name }}" width="150">
 
                         {# We add a link to delete an image (will be managed in Ajax in images.js) #}
-                        <a href="{{ path('back_articles_remove_image', {id: image.id})}}" data-delete data-token="{{ csrf_token('delete' ~ image.id )}}">
+                        <a href="{{ path('back_Subjects_remove_image', {id: image.id})}}" data-delete data-token="{{ csrf_token('delete' ~ image.id )}}">
                             <i class="bi bi-file-earmark-x"></i>
                             Supprimer
                         </a>

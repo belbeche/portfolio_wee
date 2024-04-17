@@ -3,13 +3,13 @@
 namespace App\Controller\Front;
 
 use App\Data\SearchData;
-use App\Entity\Article;
+use App\Entity\Subject;
 use App\Entity\Category;
 use App\Entity\User;
 use App\Entity\UserLike;
 use App\Form\Model\SearchModel;
 use App\Form\Search\SearchType;
-use App\Repository\ArticleRepository;
+use App\Repository\SubjectRepository;
 use App\Service\CurlService;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
@@ -32,14 +32,14 @@ class FrontController extends AbstractController
     /**
      * @Route("/support", name="front_support")
      */
-    public function home(EntityManagerInterface $entityManager, Request $request, PaginatorInterface $paginator, ArticleRepository $articleRepository)
+    public function home(EntityManagerInterface $entityManager, Request $request, PaginatorInterface $paginator, SubjectRepository $SubjectRepository)
     {
 
-        $data = $entityManager->getRepository(Article::class)->findBy(['isPublished' => true], ['id' => 'desc']);
+        $data = $entityManager->getRepository(Subject::class)->findBy(['isPublished' => true], ['id' => 'desc']);
 
         $users = $entityManager->getRepository(User::class)->findAll();
 
-        $articles = $paginator->paginate(
+        $Subjects = $paginator->paginate(
             $data,
             $request->query->getInt('page', 1),
             4
@@ -47,7 +47,7 @@ class FrontController extends AbstractController
 
         $categories = $entityManager->getRepository(Category::class)->findAll();
 
-        /*$articles = $articleRepository->findSearch($search,$paginator);*/
+        /*$Subjects = $SubjectRepository->findSearch($search,$paginator);*/
 
         /*if($request->isMethod('POST'))
         {
@@ -67,7 +67,7 @@ class FrontController extends AbstractController
         // dd(unserialize($_SESSION['_sf2_attributes']['_security_main']));
 
         return $this->render('front/subject/index.html.twig', [
-            'articles' => $articles,
+            'Subjects' => $Subjects,
             'categories' => $categories,
             'users' => $users
         ]);
@@ -94,16 +94,16 @@ class FrontController extends AbstractController
             $form->handleRequest($request);
 
             if ($form->isValid()) {
-                $data = $entityManager->getRepository(Article::class)->findBySearch($searchModel);
+                $data = $entityManager->getRepository(Subject::class)->findBySearch($searchModel);
 
-                $articles = $paginator->paginate(
+                $Subjects = $paginator->paginate(
                     $data,
                     $request->query->getInt('page', 1),
                     10
                 );
 
                 return $this->render('front/result.html.twig', [
-                    'articles' => $articles,
+                    'Subjects' => $Subjects,
                 ]);
             }
         }
@@ -121,11 +121,11 @@ class FrontController extends AbstractController
     {
         $category = $entityManager->getRepository(Category::class)->find($category);
 
-        $articles = $entityManager->getRepository(Article::class)->findByCategoryName($category->getName());
+        $Subjects = $entityManager->getRepository(Subject::class)->findByCategoryName($category->getName());
 
         return $this->render('front/category/home.html.twig', [
             'categorie' => $category,
-            'articles' => $articles,
+            'Subjects' => $Subjects,
         ]);
     }
 
@@ -135,17 +135,17 @@ class FrontController extends AbstractController
      */
     public function isLike(EntityManagerInterface $entityManager, int $id): Response
     {
-        // Je recupère l'article sur lequel je clique.
-        $article = $entityManager->getRepository(Article::class)->find($id);
-        // Je récurpère le userLike en fonction de l'article ci-dessus.
-        $userLike = $entityManager->getRepository(UserLike::class)->findOneBy(['article' => $article]);
+        // Je recupère l'Subject sur lequel je clique.
+        $Subject = $entityManager->getRepository(Subject::class)->find($id);
+        // Je récurpère le userLike en fonction de l'Subject ci-dessus.
+        $userLike = $entityManager->getRepository(UserLike::class)->findOneBy(['Subject' => $Subject]);
 
         $isLike = false;
 
         // On boucle sur l'existant
-        foreach ($article->getLikes() as $like) {
+        foreach ($Subject->getLikes() as $like) {
             // l'utilisateur connecté figure dans la liste des userLikes on fonction
-            // de l'article courant
+            // de l'Subject courant
             if ($like->getUser() == $this->getUser()) {
                 // on pass le flag à true
                 $isLike = true;
@@ -159,7 +159,7 @@ class FrontController extends AbstractController
             // Sinon on ajoute un like
             $userLike = new UserLike();
 
-            $userLike->setArticle($article);
+            $userLike->setSubject($Subject);
             $userLike->setUser($this->getUser());
             $entityManager->persist($userLike);
         }
@@ -180,10 +180,10 @@ class FrontController extends AbstractController
     public function favorite(EntityManagerInterface $entityManager, int $id)
     {
 
-        // Je recupère l'article sur lequel je clique.
-        $article = $entityManager->getRepository(Article::class)->find($id);
+        // Je recupère l'Subject sur lequel je clique.
+        $Subject = $entityManager->getRepository(Subject::class)->find($id);
 
-        $userLike = $entityManager->getRepository(UserLike::class)->findOneBy(['article' => $article]);
+        $userLike = $entityManager->getRepository(UserLike::class)->findOneBy(['Subject' => $Subject]);
 
         $userLike->getLike();
 
@@ -220,9 +220,9 @@ class FrontController extends AbstractController
     public function mySubject(EntityManagerInterface $entityManager, Request $request, PaginatorInterface $paginator)
     {
 
-        $data = $entityManager->getRepository(Article::class)->findBySubject();
+        $data = $entityManager->getRepository(Subject::class)->findBySubject();
 
-        $articles = $paginator->paginate(
+        $Subjects = $paginator->paginate(
             $data,
             $request->query->getInt('page', 1),
             4
@@ -231,7 +231,7 @@ class FrontController extends AbstractController
         $categories = $entityManager->getRepository(Category::class)->findAll();
 
         return $this->render('front/profil/profil_subject.html.twig', [
-            'articles' => $articles,
+            'Subjects' => $Subjects,
             'categories' => $categories
         ]);
     }
@@ -241,9 +241,9 @@ class FrontController extends AbstractController
      */
     public function myResponse(EntityManagerInterface $entityManager,$id): Response
     {
-        $article = $entityManager->getRepository(Article::class)->find($id);
+        $Subject = $entityManager->getRepository(Subject::class)->find($id);
         return $this->render('front/profil/user_response_subject.html.twig', [
-            'article' => $article,
+            'Subject' => $Subject,
         ]);
     }
 

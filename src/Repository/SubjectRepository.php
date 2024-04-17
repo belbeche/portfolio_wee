@@ -3,7 +3,7 @@
 namespace App\Repository;
 
 use App\Data\SearchData;
-use App\Entity\Article;
+use App\Entity\Subject;
 use App\Form\Model\SearchModel;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Query;
@@ -13,21 +13,21 @@ use Knp\Component\Pager\Pagination\PaginationInterface;
 use Knp\Component\Pager\PaginatorInterface;
 
 /**
- * @extends ServiceEntityRepository<Article>
+ * @extends ServiceEntityRepository<Subject>
  *
- * @method Article|null find($id, $lockMode = null, $lockVersion = null)
- * @method Article|null findOneBy(array $criteria, array $orderBy = null)
- * @method Article[]    findAll()
- * @method Article[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method Subject|null find($id, $lockMode = null, $lockVersion = null)
+ * @method Subject|null findOneBy(array $criteria, array $orderBy = null)
+ * @method Subject[]    findAll()
+ * @method Subject[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class ArticleRepository extends ServiceEntityRepository
+class SubjectRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, Article::class);
+        parent::__construct($registry, Subject::class);
     }
 
-    public function add(Article $entity, bool $flush = false): void
+    public function add(Subject $entity, bool $flush = false): void
     {
         $this->getEntityManager()->persist($entity);
 
@@ -36,7 +36,7 @@ class ArticleRepository extends ServiceEntityRepository
         }
     }
 
-    public function remove(Article $entity, bool $flush = false): void
+    public function remove(Subject $entity, bool $flush = false): void
     {
         $this->getEntityManager()->remove($entity);
 
@@ -97,7 +97,7 @@ class ArticleRepository extends ServiceEntityRepository
 
 
 //    /**
-//     * @return Article[] Returns an array of Article objects
+//     * @return Subject[] Returns an array of Subject objects
 //     */
 //    public function findByExampleField($value): array
 //    {
@@ -111,7 +111,7 @@ class ArticleRepository extends ServiceEntityRepository
 //        ;
 //    }
 
-//    public function findOneBySomeField($value): ?Article
+//    public function findOneBySomeField($value): ?Subject
 //    {
 //        return $this->createQueryBuilder('a')
 //            ->andWhere('a.exampleField = :val')

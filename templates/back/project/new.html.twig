@@ -14,7 +14,7 @@
 			src="{{ asset('/image_project/'~project.image.name) }}" alt="{{ project.image.name }}" class="img-fluid"/>
 
 			{# We add a link to delete an image (will be managed in Ajax in images.js) #}
-			<a href="{{ path('back_articles_remove_image', {id: image.id})}}" data-delete data-token="{{ csrf_token('delete' ~ image.id )}}">
+			<a href="{{ path('back_Subjects_remove_image', {id: image.id})}}" data-delete data-token="{{ csrf_token('delete' ~ image.id )}}">
 				<i class="bi bi-file-earmark-x"></i>
 				Supprimer
 			</a>

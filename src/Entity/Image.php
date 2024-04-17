@@ -29,9 +29,9 @@ class Image
     private $project;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Article::class, inversedBy="images")
+     * @ORM\ManyToOne(targetEntity=Subject::class, inversedBy="images")
      */
-    private $article;
+    private $Subject;
 
     public function getProject(): ?Project
     {
@@ -66,14 +66,14 @@ class Image
     {
         return $this->name ?? '';
     }
-    public function getArticle(): ?Article
+    public function getSubject(): ?Subject
     {
-        return $this->article;
+        return $this->Subject;
     }
 
-    public function setArticle(?Article $article): self
+    public function setSubject(?Subject $Subject): self
     {
-        $this->article = $article;
+        $this->Subject = $Subject;
 
         return $this;
     }

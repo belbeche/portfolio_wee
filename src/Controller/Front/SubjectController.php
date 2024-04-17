@@ -3,11 +3,11 @@
 
 namespace App\Controller\Front;
 
-use App\Entity\Article;
+use App\Entity\Subject;
 use App\Entity\Comment;
 use App\Entity\Image;
-use App\Form\Article\Type\ArticleType;
-use App\Form\Article\Type\CommentType;
+use App\Form\Subject\Type\SubjectType;
+use App\Form\Subject\Type\CommentType;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -16,10 +16,10 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 
-class ArticleController extends AbstractController
+class SubjectController extends AbstractController
 {
     /**
-     * @Route("/profil/assistance/article/nouveau", name="front_articles_new")
+     * @Route("/profil/assistance/Subject/nouveau", name="front_Subjects_new")
      *
      * @param Request $request
      * @param EntityManagerInterface $entityManager
@@ -30,21 +30,21 @@ class ArticleController extends AbstractController
         Request $request,
         EntityManagerInterface $entityManager
     ): Response {
-        $article = new Article();
+        $Subject = new Subject();
 
-        $form = $this->createForm(ArticleType::class, $article);
+        $form = $this->createForm(SubjectType::class, $Subject);
 
         if ($request->isMethod('POST')) {
             $form->handleRequest($request);
 
             if ($form->isSubmitted() && $form->isValid()) {
 
-                $article->setUser($this->getUser());
-                $article->setArticleId(rand(0,999999999));
+                $Subject->setUser($this->getUser());
+                $Subject->setSubjectId(rand(0,999999999));
 
-                $article->setCreatedAt(new \DateTime);
+                $Subject->setCreatedAt(new \DateTime);
 
-                $article->setIsPublished(false);
+                $Subject->setIsPublished(false);
 
                 $images = $form->get('images')->getData();
 
@@ -59,40 +59,40 @@ class ArticleController extends AbstractController
                         $file
                     );
 
-                    // We add image in the database and to the article
+                    // We add image in the database and to the Subject
                     $img = new Image();
                     $img->setName($file);
-                    $article->addImage($img);
-                    $img->setArticle($article);
+                    $Subject->addImage($img);
+                    $img->setSubject($Subject);
                 }
 
-                $entityManager->persist($article);
+                $entityManager->persist($Subject);
 
                 $entityManager->flush();
 
                 $this->addFlash('success', 'Demande en cours de traitement, ajouter en brouillon, en attente de validation.');
 
-                return $this->redirectToRoute('front_articles_show', ['title' => $article->getTitle()]);
+                return $this->redirectToRoute('front_Subjects_show', ['title' => $Subject->getTitle()]);
             }
         }
 
         return $this->render('front/subject/new.html.twig', [
             'form' => $form->createView(),
-            'article' => $article,
+            'Subject' => $Subject,
         ]);
     }
 
     /**
-     * @Route("/profil/assistance/articles/{title}", name="front_articles_show")
+     * @Route("/profil/assistance/Subjects/{title}", name="front_Subjects_show")
      * @return Response
      */
     public function show(
         EntityManagerInterface $entityManager,
         Request $request,
-        Article $article
+        Subject $Subject
     ): Response {
-        // to get the comment in the article, we assign it in the variable $article
-        $article = $entityManager->getRepository(Article::class)->find($article->getId());
+        // to get the comment in the Subject, we assign it in the variable $Subject
+        $Subject = $entityManager->getRepository(Subject::class)->find($Subject->getId());
 
         $comment = new Comment();
 
@@ -103,7 +103,7 @@ class ArticleController extends AbstractController
 
             if ($form->isSubmitted() && $form->isValid()) {
 
-                $comment->setArticle($article);
+                $comment->setSubject($Subject);
                 $comment->setUser($this->getUser());
                 /* TODO: Répondre à un commentaire */
                 // Ajouter la récursion pour le sous-commentaire avec un button
@@ -111,20 +111,20 @@ class ArticleController extends AbstractController
                 $entityManager->persist($comment);
                 $entityManager->flush();
 
-                /*return $this->redirectToRoute('front_articles_show', ['title' => $article->getTitle()]);*/
+                /*return $this->redirectToRoute('front_Subjects_show', ['title' => $Subject->getTitle()]);*/
             }
         }
 
         $comments = $entityManager->getRepository(Comment::class)->findBy(
             [
-                'article' => $article,
+                'Subject' => $Subject,
                 'active' => true,
             ],
             ['id' => 'DESC']
         );
 
         return $this->render('front/subject/show.html.twig', [
-            'article' => $article,
+            'Subject' => $Subject,
             'form' => $form->createView(),
             'comments' => $comments
         ]);

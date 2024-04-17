@@ -53,41 +53,41 @@
 			<section class="blog-area pb-5">
 				<div class="container">
 					<div class="row justify-content-center">
-						{% for article in articles %}
+						{% for Subject in Subjects %}
 							<div class="col-lg-3 col-md-3 col-sm-10">
 								<div class="single-blog blog-style-one">
 									<div class="blog-image">
-										<a href="{{ path('front_articles_show', {'title': article.title}) }}">
-											{% for image in article.images %}
-												<img class="card-img-top rounded-0" src="{{ asset('uploads/' ~ image.name) }}" alt="{{ article.title }}">
+										<a href="{{ path('front_Subjects_show', {'title': Subject.title}) }}">
+											{% for image in Subject.images %}
+												<img class="card-img-top rounded-0" src="{{ asset('uploads/' ~ image.name) }}" alt="{{ Subject.title }}">
 											{% endfor %}
 										</a>
 									</div>
 									<div class="blog-content">
 										<h5 class="blog-title">
-											<a href="{{ path('front_articles_show', {'title': article.title}) }}">
-												<h5 class="card-title">{{ article.title }}</h5>
+											<a href="{{ path('front_Subjects_show', {'title': Subject.title}) }}">
+												<h5 class="card-title">{{ Subject.title }}</h5>
 											</a>
 										</h5>
-										{% for categorie in article.categories %}
+										{% for categorie in Subject.categories %}
 											{{ categorie.name }}
 										{% endfor %}
 										<br>
 										<span>
 											<i class="bi bi-calendar"></i>
-											{{ article.createdAt|format_datetime('medium', locale="fr") }}</span>
+											{{ Subject.createdAt|format_datetime('medium', locale="fr") }}</span>
 										<span>
 											<i class="bi bi-chat-dots"></i>
-											{{ article.commentaires|length }}</span>
-										{#                                        <span><i class="bi bi-star-fill"></i> <span class="nb-likes"> {{ article.likes|length }}</span></span>#}
-										<span><img src="{{ asset('uploads/avatar/' ~article.user.avatar) }}" alt="{{ article.user.username }}" class="rounded-0 img-thumbnail" width="50" height="50">
-											{{ article.user.username }}</span>
+											{{ Subject.commentaires|length }}</span>
+										{#                                        <span><i class="bi bi-star-fill"></i> <span class="nb-likes"> {{ Subject.likes|length }}</span></span>#}
+										<span><img src="{{ asset('uploads/avatar/' ~Subject.user.avatar) }}" alt="{{ Subject.user.username }}" class="rounded-0 img-thumbnail" width="50" height="50">
+											{{ Subject.user.username }}</span>
 									</div>
 									{# <div class="favorite">
 									                                        {% if app.user %}
 									                                            {% set isLikes = false %}
 									
-									                                            {% for userLike in article.likes %}
+									                                            {% for userLike in Subject.likes %}
 									
 									                                                {% if userLike.user == app.user %}
 									                                                    {% set isLikes = true %}
@@ -96,11 +96,11 @@
 									                                            {% endfor %}
 									
 									                                            {% if isLikes %}
-									                                                <button data-nb-likes="{{ article.likes|length }}" type="button" data-url="{{ url('front_like', { id: article.id }) }}" class="remove-like"><i class="bi bi-hand-thumbs-up-fill"></i></button>
-									                                                <span class="nb-likes"> {{ article.likes|length }}</span>
+									                                                <button data-nb-likes="{{ Subject.likes|length }}" type="button" data-url="{{ url('front_like', { id: Subject.id }) }}" class="remove-like"><i class="bi bi-hand-thumbs-up-fill"></i></button>
+									                                                <span class="nb-likes"> {{ Subject.likes|length }}</span>
 									                                            {% else %}
-									                                                <button data-nb-likes="{{ article.likes|length }}" type="button" data-url="{{ url('front_like', { id: article.id }) }}" class="add-like"><i class="bi bi-hand-thumbs-up"></i></button>
-									                                                <span class="nb-likes"> {{ article.likes|length }}</span>
+									                                                <button data-nb-likes="{{ Subject.likes|length }}" type="button" data-url="{{ url('front_like', { id: Subject.id }) }}" class="add-like"><i class="bi bi-hand-thumbs-up"></i></button>
+									                                                <span class="nb-likes"> {{ Subject.likes|length }}</span>
 									                                            {% endif %}
 									                                        {% endif %}
 									
@@ -179,7 +179,7 @@
 		</section>#}
 	<!-- Home End -->
 
-		<div class="navigation pagination justify-content-center my-4"> {{ knp_pagination_render(articles) }}
+		<div class="navigation pagination justify-content-center my-4"> {{ knp_pagination_render(Subjects) }}
 	</div>
 
 {% endblock %}

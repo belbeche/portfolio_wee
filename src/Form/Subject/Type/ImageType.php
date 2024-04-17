@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Form\Article\Type;
+namespace App\Form\Subject\Type;
 
 use App\Entity\Image;
 use Doctrine\ORM\EntityRepository;

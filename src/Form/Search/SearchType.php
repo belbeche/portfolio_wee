@@ -4,7 +4,7 @@ namespace App\Form\Search;
 
 use App\Form\Model\SearchModel;
 use App\Entity\Category;
-use App\Entity\Article;
+use App\Entity\Subject;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
