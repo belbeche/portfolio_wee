@@ -104,11 +104,6 @@ class HomeController extends AbstractController
      */
     public function frontProfile(): RedirectResponse
     {
-        // Vérifie si l'utilisateur a le rôle nécessaire
-        if (!$this->isGranted('ROLE_USER')) {
-            throw new AccessDeniedException("Access denied");
-        }
-
         // Redirection vers la page d'inscription
         return $this->redirectToRoute('app_register');
     }

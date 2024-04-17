@@ -157,10 +157,6 @@ class SubjectControllerBack extends AbstractController
     ): Response {
         $Subject = $entityManager->getRepository(Subject::class)->find($Subject);
 
-        if (!$Subject) {
-            throw $this->createNotFoundException('Subject not found');
-        }
-
         return $this->render('back/Subject/show.html.twig', [
             'Subject' => $Subject,
         ]);

@@ -46,7 +46,7 @@ class SecurityController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $user->setPassword(null);
             $user->setEmail($form->getData('email'));
-            $user->addDevi($this->getUser());
+            /*$user->addDevi($this->getUser()->);*/
             // Envoi de l'email
             $email = (new TemplatedEmail())
                 ->from('contact@scriptzenit.fr')
@@ -79,12 +79,9 @@ class SecurityController extends AbstractController
     /**
      * @Route("/continuer/{email}", name="front_devis_set_password")
      */
-    public function setPassword(Request $request, EntityManagerInterface $entityManager, UserPasswordHasherInterface $passwordHasher,$email): Response
+    public function setPassword(Request $request, EntityManagerInterface $entityManager, UserPasswordEncoderInterface $passwordEncoder, $email): Response
     {
-        // Vérifier si un utilisateur existe avec cet ID
-        // $user = $entityManager->getRepository(User::class)->find($id);
-
-        // Vérifier si un utilisateur existe avec cet ID
+        // Rechercher l'utilisateur par e-mail
         $user = $entityManager->getRepository(User::class)->findOneBy(['email' => $email]);
 
         // Créer et traiter le formulaire pour le mot de passe
@@ -92,21 +89,15 @@ class SecurityController extends AbstractController
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            if($$this->getUser()){
-                // Encodage du mot de passe uniquement si le champ de mot de passe est rempli
-                $plainPassword = $form->get('password')->getData();
-
-                // Encodage du mot de passe uniquement si le champ de mot de passe est rempli
-                $plainPassword = $form->get('password')->getData();
-                if ($plainPassword !== '') {
-                    if (!empty($plainPassword)) {
-                        $hashedPassword = $passwordHasher->hashPassword($user, $plainPassword);
-                        $user->setPassword($hashedPassword);
-                    }
-                }
+            // Vérifier si un nouveau mot de passe a été saisi
+            $plainPassword = $form->get('password')->getData();
+            if (!empty($plainPassword)) {
+                // Hasher et définir le nouveau mot de passe
+                $hashedPassword = $passwordEncoder->encodePassword($user, $plainPassword);
+                $user->setPassword($hashedPassword);
             }
 
-            // Enregistrement de l'utilisateur
+            // Enregistrer l'utilisateur
             $entityManager->persist($user);
             $entityManager->flush();
 
