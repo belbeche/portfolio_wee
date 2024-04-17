@@ -40,6 +40,7 @@ class ArticleController extends AbstractController
             if ($form->isSubmitted() && $form->isValid()) {
 
                 $article->setUser($this->getUser());
+                $article->setArticleId(rand(0,999999999));
 
                 $article->setCreatedAt(new \DateTime);
 
@@ -82,7 +83,7 @@ class ArticleController extends AbstractController
     }
 
     /**
-     * @Route("/articles/{title}", name="front_articles_show")
+     * @Route("/profil/assistance/articles/{title}", name="front_articles_show")
      * @return Response
      */
     public function show(
@@ -110,7 +111,7 @@ class ArticleController extends AbstractController
                 $entityManager->persist($comment);
                 $entityManager->flush();
 
-                return $this->redirectToRoute('front_articles_show', ['title' => $article->getTitle()]);
+                /*return $this->redirectToRoute('front_articles_show', ['title' => $article->getTitle()]);*/
             }
         }
 

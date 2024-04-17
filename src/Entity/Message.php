@@ -6,6 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Monolog\DateTimeImmutable;
 use Symfony\Component\Uid\Uuid;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\Constraints\DateTime;
 
 /**
  * @ORM\Entity()
@@ -26,9 +27,9 @@ class Message
     private $content;
 
     /**
-     * @ORM\Column(type="datetime_immutable")
+     * @ORM\Column(type="datetime")
      */
-    private $createdAt;
+    private ?\DateTime $createdAt;
 
     /**
      * @ORM\Column(type="string", length=255)
@@ -44,7 +45,7 @@ class Message
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="receivedMessages")
      * @ORM\JoinColumn(nullable=false)
      */
-    private ?string $receiver;
+    private ?User $receiver;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
@@ -52,7 +53,7 @@ class Message
     private $attachment;
 
     /**
-     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="sentMessages")
+     * @ORM\Column(type="string", length=255)
      */
     private ?string $sender;
 
@@ -63,7 +64,7 @@ class Message
 
     public function __construct()
     {
-        $this->createdAt = new DateTimeImmutable('now', new \DateTimeZone('Europe/Paris'));
+        $this->createdAt = new \DateTime('now', new \DateTimeZone('Europe/Paris'));
     }
 
     public function getId(): ?Uuid
@@ -82,7 +83,7 @@ class Message
         return $this;
     }
 
-    public function getCreatedAt(): ?DateTimeImmutable
+    public function getCreatedAt(): ?\DateTime
     {
         return $this->createdAt;
     }
@@ -109,7 +110,7 @@ class Message
         return $this;
     }
 
-    public function getReceiver(): ?string
+    public function getReceiver(): ?User
     {
         return $this->receiver;
     }
@@ -118,18 +119,25 @@ class Message
      * @param mixed $receiver
      * @return Message
      */
-    public function setReceiver(?string $receiver):self
+    public function setReceiver(?User $receiver):self
     {
         $this->receiver = $receiver;
         return $this;
     }
 
+    /**
+     * @return string|null
+     */
     public function getSender(): ?string
     {
         return $this->sender;
     }
 
-    public function setSender(?string $sender): self
+    /**
+     * @param string|null $sender
+     * @return Message
+     */
+    public function setSender(?string $sender): Message
     {
         $this->sender = $sender;
         return $this;
@@ -164,7 +172,7 @@ class Message
         return $this;
     }
 
-    public function setCreatedAt(\DateTimeImmutable $createdAt): static
+    public function setCreatedAt(\DateTime $createdAt): self
     {
         $this->createdAt = $createdAt;
 

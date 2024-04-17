@@ -100,6 +100,7 @@ class HomeController extends AbstractController
 
     /**
      * @Route("/profil/", name="front_profile")
+     * @throws AccessDeniedException
      */
     public function frontProfile(): RedirectResponse {
         // Vérifie si l'utilisateur a le rôle nécessaire

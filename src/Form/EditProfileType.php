@@ -50,10 +50,10 @@ class EditProfileType extends AbstractType
                 ],
                 'required' => true,
             ])
-            ->add('roles', HiddenType::class, [
+            /*->add('roles', HiddenType::class, [
                     'data' => ['ROLE_USER'],
                 ]
-            )
+            )*/
             // Ajoute le champ d'image avec les options
             ->add('avatar', FileType::class, [
                 "row_attr" => [
@@ -98,7 +98,14 @@ class EditProfileType extends AbstractType
                 'required' => false
             ])
             /*->add('favoris')*/
-            /*->add('user_roles')*/;
+            /*->add('user_roles')*/
+            ->add('username', TextType::class, [
+                'label' => false,
+                'attr' => [
+                    'style' => 'display: none;',
+                ],
+            ])
+        ;
     }
 
     public function configureOptions(OptionsResolver $resolver): void

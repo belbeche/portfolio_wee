@@ -104,7 +104,6 @@ class Article
 
     /**
      * @ORM\Column(type="integer")
-     * @Assert\NotNull
      */
     private $article_id;
 

@@ -81,7 +81,8 @@ class UserType extends AbstractType
                 'mapped' => false,
                 'help' => 'Les conditions générales d\'utilisations ainsi que les mentions légales sont accessible en bas de page',
             ])
-        ;
+            ;
+
 
         // Data transformer
         $builder->get('roles')

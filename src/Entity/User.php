@@ -26,7 +26,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @ORM\GeneratedValue(strategy="CUSTOM")
      * @ORM\CustomIdGenerator(class="doctrine.uuid_generator")
      */
-    private ?Uuid $id = null; // Initialisation de la propriété $id à null
+    private $id;
 
     /**
      * @ORM\Column(type="string", length=180, unique=true)
@@ -80,14 +80,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private string $avatar;
 
     /**
-     * @ORM\OneToMany(targetEntity=Message::class, mappedBy="sender")
-     */
-    private $sentMessages;
-
-    /**
      * @ORM\OneToMany(targetEntity=Message::class, mappedBy="receiver")
      */
-    private  $receivedMessages;
+    private Collection $receivedMessages;
 
     /**
      * @ORM\OneToMany(targetEntity=Devis::class, mappedBy="user", orphanRemoval=true)
@@ -117,7 +112,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function __construct()
     {
         $this->devis = new ArrayCollection();
-        $this->sentMessages = new ArrayCollection();
         $this->receivedMessages = new ArrayCollection();
         $this->avatar = 'support0.svg';
         $this->roles = ['ROLE_USER'];
@@ -322,14 +316,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @return Collection<int, Message>
      */
-    public function getSentMessages(): Collection
-    {
-        return $this->sentMessages;
-    }
-
-    /**
-     * @return Collection<int, Message>
-     */
     public function getReceivedMessages(): Collection
     {
         return $this->receivedMessages;
@@ -364,28 +350,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             // set the owning side to null (unless already changed)
             if ($devis->getUser() === $this) {
                 $devis->setUser(null);
-            }
-        }
-
-        return $this;
-    }
-
-    public function addSentMessage(Message $sentMessage): static
-    {
-        if (!$this->sentMessages->contains($sentMessage)) {
-            $this->sentMessages->add($sentMessage);
-            $sentMessage->setSender($this);
-        }
-
-        return $this;
-    }
-
-    public function removeSentMessage(Message $sentMessage): static
-    {
-        if ($this->sentMessages->removeElement($sentMessage)) {
-            // set the owning side to null (unless already changed)
-            if ($sentMessage->getSender() === $this) {
-                $sentMessage->setSender(null);
             }
         }
 

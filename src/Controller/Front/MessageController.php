@@ -61,33 +61,25 @@ class MessageController extends AbstractController
     public function sendMessage(Request $request, EntityManagerInterface $entityManager, MailerInterface $mailer,$id): Response
     {
         // Récupérer l'utilisateur à partir de son ID
-        $user = $entityManager->getRepository(User::class)->findOneBy(['id' => $id]);
-
-        if (!$user) {
-            return $this->redirectToRoute('app_login');
-        }
+        $user = $entityManager->getRepository(User::class)->find($id);
 
         // L'utilisateur a déjà des devis, nous afficherons le formulaire pour remplir le ticket avec la sélection de devis
         $message = new Message();
 
         // Récupérer les devis associés à l'email de l'utilisateur
-        $devisList = $entityManager->getRepository(Devis::class)->findOneBy(['email' => $user->getEmail()]);
+        $devisList = $entityManager->getRepository(Devis::class)->findOneBy(['user' => $user]);
 
         $form = $this->createForm(MessageType::class, $message);
 
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-
-            // Vérifier si l'utilisateur a sélectionné un devis existant ou s'il veut en créer un nouveau
-            $devisChoice = $entityManager->getRepository(Devis::class)->find($user->getEmail());
-
-            if ($devisChoice === 'new') {
+            if ($devisList === 'new') {
                 // L'utilisateur veut créer un nouveau devis
                 return $this->redirectToRoute('front_devis_new'); // Rediriger vers la page de création de devis
             } else {
                 // L'utilisateur a choisi un devis existant
-                $devis = $devisChoice;
+                $devis = $devisList;
             }
 
             $message
@@ -96,9 +88,8 @@ class MessageController extends AbstractController
             ;
 
             // Définition du statut du ticket
-            $message->setSender($user->getEmail());
             $message->setStatus('en_attente');
-            /*$message->setReceiver($user->getEmail());*/
+            $message->setReceiver($user);
 
             $this->extracted($form, $message);
 
@@ -107,7 +98,7 @@ class MessageController extends AbstractController
             $entityManager->flush();
 
             $email = (new TemplatedEmail())
-                ->from('wbelbeche.s@gmail.com')
+                ->from($message->getSender())
                 ->to($devis->getEmail())
                 ->subject('Demande assistance , ScriptZenIT')
                 ->bcc('wbelbeche.s@gmail.com')
@@ -125,7 +116,7 @@ class MessageController extends AbstractController
             $this->addFlash('info', 'Votre ticket à bien été crée, vérifiez votre adresse email');
 
             return $this->redirectToRoute('front_show_ticket', [
-                'id' => $message->getSender()
+                'id' => $message->getId()
             ]);
         }
 
@@ -149,7 +140,7 @@ class MessageController extends AbstractController
 
         // Récupérer les tickets envoyés par l'utilisateur et les ordonner par date de création décroissante
         $tickets = $entityManager->getRepository(Message::class)->findBy(
-            ['sender' => $this->getUser()],
+            ['receiver' => $this->getUser()],
             ['createdAt' => 'DESC']  // Ceci ordonne les tickets par date de création décroissante
         );
 
@@ -230,7 +221,7 @@ class MessageController extends AbstractController
     }
 
     /**
-     * @Route("supprimer/{id}/ticket", name="front_delete_ticket", methods={"POST"})
+     * @Route("/supprimer/{id}/ticket", name="front_delete_ticket", methods={"POST"})
      */
     public function remove(EntityManagerInterface $entityManager, Message $ticket, Request $request, Filesystem $filesystem): RedirectResponse
     {

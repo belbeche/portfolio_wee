@@ -16,7 +16,7 @@
 			<div class="col-lg-3">
 				<h3>Mes devis</h3>
 				<a href="{{ url('front_support') }}" class="btn btn-outline-success">Centre d'Assistance</a>
-				<a href="{{ url('front_profile_project') }}" class="btn btn-outline-info">Mes projets</a>
+				<a href="{{ url('front_edit_profile', {id: app.user.id }) }}" class="btn btn-primary mt-2" style="border-radius: 10px;">Modifier mon profil</a>
 				<!-- Account Sidebar-->
 				<div class="wizard">
 					<nav class="list-group list-group-flush">

@@ -32,11 +32,6 @@ class ArticleType extends AbstractType
                     'placeholder' => 'Soyez poli(e), décrivez votre problématique de manière clair et comprehensible pour tous,tous les membres peuvent écrire et apporter leurs solution, ne pas oublier de cloture le sujet une fois résolu.',
                 ],
             ])
-            /*->add('categories', EntityType::class, [
-                'class' => Category::class,
-                'choice_label' => 'name',
-                'mapped' => false,
-            ])*/
             ->add('categories',
                 EntityType::class,
                 [
