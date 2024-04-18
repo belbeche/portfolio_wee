@@ -5,6 +5,6 @@ exception:
   path: /error
   controller: App\Controller\ExceptionController::showException
 
-#front_maintenance:
-    #path: /
-    #controller: App\Controller\Front\MaintenanceController::maintenance
+front_maintenance:
+    path: /
+    controller: App\Controller\Front\MaintenanceController::maintenance

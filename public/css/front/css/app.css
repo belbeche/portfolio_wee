@@ -289,3 +289,9 @@
     flex-wrap: wrap;
     justify-content: space-evenly;
 }
+
+/* Définition des spécialités de l'entreprise */
+
+#specs > div{
+    /* TODO: REDIMENSIONNER LES IMAGES A LA MEME HAUTEUR */
+}

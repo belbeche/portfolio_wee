@@ -22,7 +22,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 class HomeController extends AbstractController
 {
     /**
-     * @Route("/", name="front_home")
+     * @Route("/old", name="front_home")
      * @Route("/realisations/{category}", name="front_project_by_category")
      */
     public function index(EntityManagerInterface $entityManager, string $category = null): Response
