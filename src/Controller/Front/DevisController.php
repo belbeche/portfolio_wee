@@ -23,6 +23,7 @@ use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Mpdf\Mpdf;
 
 class DevisController extends AbstractController
 {
@@ -147,12 +148,11 @@ class DevisController extends AbstractController
     }
 
     /**
-     * @Route("/telecharger-devis/{id}", name="front_download_devis")
+     * @Route("/rgertelecharger-devis/{id}", name="front_download_devis")
      * @IsGranted("ROLE_USER")
      */
-        public function downloadDevis(Pdf $snappy, EntityManagerInterface $entityManager, $id): Response
+    public function downloadDevis(EntityManagerInterface $entityManager, $id): Response
     {
-
         $currentUser = $this->getUser();
 
         $devis = $entityManager->getRepository(Devis::class)->find($id);
@@ -163,17 +163,11 @@ class DevisController extends AbstractController
 
         $filename = 'devis_' . $currentUser->getId() . '.pdf';
 
-        $snappy->setTimeout(120);
-        $snappy->setOption('enable-local-file-access', true);
+        $mpdf = new Mpdf();
+        $mpdf->WriteHTML($html);
+        $mpdf->Output($filename, 'D');
 
-        return new Response(
-            $snappy->getOutputFromHtml($html),
-            200,
-            [
-                'Content-Type' => 'application/pdf',
-                'Content-Disposition' => 'inline; filename="' . $filename . '"'
-            ]
-        );
+        return new Response();
     }
 
     /**
