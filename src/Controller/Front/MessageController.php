@@ -171,9 +171,8 @@ class MessageController extends AbstractController
         $email = $currentUser->getEmail();
 
         $responseMessage = new Message();
-        $responseMessage->setSender($currentUser->getReceiver());
-        $responseMessage->setReceiver($originalMessage->getReceiver())
-        ;
+        $responseMessage->setSender($originalMessage->getSender());
+        $responseMessage->setReceiver($this->getUser());
 
         $form = $this->createForm(MessageType::class, $responseMessage, [
             'attr' => [
@@ -193,12 +192,12 @@ class MessageController extends AbstractController
             $entityManager->flush();
 
             $email = (new TemplatedEmail())
-                ->from('wbelbeche.s@gmail.com')
-                ->to($originalMessage->getSender()->getEmail())
-                ->subject('Réponse à votre demande, Devis , Walid BELBECHE')
+                ->from($originalMessage->getSender())
+                ->to($currentUser->getUserIdentifier())
+                ->subject('Réponse à votre demande, Devis , ScriptZenIT')
                 ->bcc('wbelbeche.s@gmail.com')
                 ->context([
-                    'email_address' => $currentUser->getEmail(),
+                    'email_address' => $currentUser->getUserIdentifier(),
                     'priority' => $responseMessage->getPriority(),
                     'message' => $responseMessage->getContent(),
                     'status' => $responseMessage->getStatus(),

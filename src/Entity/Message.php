@@ -62,6 +62,9 @@ class Message
      */
     private $devis;
 
+    /**
+     * @throws \Exception
+     */
     public function __construct()
     {
         $this->createdAt = new \DateTime('now', new \DateTimeZone('Europe/Paris'));

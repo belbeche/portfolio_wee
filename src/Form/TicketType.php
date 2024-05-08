@@ -29,7 +29,7 @@ class TicketType extends AbstractType
                     'Faible' => 'faible',
                     'Moyenne' => 'moyenne',
                     'Haute' => 'haute',
-                'Urgente' => 'urgente'
+                    'Urgente' => 'urgente'
                 ],
             ])
         ;
