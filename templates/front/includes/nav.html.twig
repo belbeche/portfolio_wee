@@ -42,7 +42,7 @@
 					{% endif %}
 					{% if app.user %}
 						<li class="menu-item {{ app.request.get('_route') == 'front_profile' ? 'active' : '' }}">
-							<a class="btn btn-info" href="{{ url('front_profile') }}">Profil</a>
+							<a class="btn btn-info" href="{{ url('front_assistance') }}">Profil</a>
 						</li>
 						<li class="menu-item {{ app.request.get('_route') == 'front_profile_project' ? 'active' : '' }}">
 							<a class="btn btn-outline-secondary" href="{{ url('front_profile_project') }}">Mes projets</a>
