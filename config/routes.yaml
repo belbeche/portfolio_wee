@@ -6,5 +6,5 @@ exception:
   controller: App\Controller\ExceptionController::showException
 
 front_maintenance:
-    path: /
+    path: /maintenance
     controller: App\Controller\Front\MaintenanceController::maintenance
