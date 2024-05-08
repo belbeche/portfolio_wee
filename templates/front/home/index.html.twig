@@ -1,60 +1,55 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Accueil
+{% block title %}
+	Bienvenue chez ScriptzenIT !
 {% endblock %}
 
 {% block content %}
-
-		<div class="container">
-			{% for type, messages in app.flashes %}
-				{% for message in messages %}
-					<div class="alert alert-{{ type }}">{{ message }}</div>
-				{% endfor %}
+	<div class="container">
+		{% for type, messages in app.flashes %}
+			{% for message in messages %}
+				<div class="alert alert-{{ type }}">{{ message }}</div>
 			{% endfor %}
-		</div>
+		{% endfor %}
+	</div>
 
-		{# hero home page #}
-		<section id="slider" class="slider-element bg-home-image pt-5" style="color: var(--cnvs-bg-overlay-bg) !important;height: 100vh;">
-			<div class="container">
-				<div class="row align-items-md-end">
-					<div class="col-lg-5 align-self-center flex-column">
-						<div class="col-12 col-md-12 col-lg-12 rounded pt-5 block_information_home border-circle">
-							<h1 class="display-2 text-center text-white"><strong>Agence web dans la Nièvre</strong></h1>
-							<p class="mb-4 text-justify text-white px-5">
-								Grâce à notre expertise en développement Web, on vous accompagne dans
-								la création d'un site professionnel et attractif. Cependant, une conception
-								exceptionnelle ne se limite pas à la première étape.
-							</p>
-						</div>
-					</div>
-					<div class="col-lg-7 dotted-bg man_mobile" style="position: absolute;bottom: 0;right: 0;">
-						<img src="{{ asset('img/man.png') }}" alt="Client" class="d-flex align-self-end mt-5 z-1 mx-auto w-75">
+	{# Section d'en-tête #}
+	<section id="slider" class="slider-element bg-home-image pt-5" style="color: var(--cnvs-bg-overlay-bg) !important;height: 100vh;">
+		<div class="container">
+			<div class="row align-items-md-end">
+				<div class="col-lg-5 align-self-center flex-column">
+					<div class="col-12 col-md-12 col-lg-12 rounded pt-5 block_information_home border-circle">
+						<h1 class="display-2 text-center text-white"><strong>Agence Web dans la Nièvre</strong></h1>
+						<p class="mb-4 text-justify text-white px-5">
+							Avec notre expertise en développement Web, nous vous accompagnons dans la création d'un site professionnel et attractif. Mais chez ScriptzenIT, nous savons que l'excellence va au-delà de la première étape.
+						</p>
 					</div>
 				</div>
+				<div class="col-lg-7 dotted-bg man_mobile" style="position: absolute;bottom: 0;right: 0;">
+					<img src="{{ asset('img/man.png') }}" alt="Client" class="d-flex align-self-end mt-5 z-1 mx-auto w-75">
+				</div>
 			</div>
-		</section>
-
-		<div class="container">
-			<p class="lead mb-4 text-muted text-center text-justify">On conçoit la solution optimale de développement web pour chaque
-							situation spécifique, qu'il s'agisse de développer une plateforme complète ou de mettre en place des outils précis
-							pour vos besoins uniques.
-			</p>
 		</div>
-		{# End of Hero section #}
+	</section>
+	{# Fin de la section d'en-tête #}
 
-	<!-- À propos 2 - Composant cérébral Bootstrap -->
+	<div class="container">
+		<p class="lead mb-4 text-muted text-center text-justify">Nous concevons la solution de développement web optimale pour chaque situation spécifique, que ce soit pour développer une plateforme complète ou mettre en place des outils précis répondant à vos besoins uniques.</p>
+	</div>
+
+	<!-- Pourquoi nous choisir -->
 	<section class="py-3 py-md-5">
 		<div class="container">
 			<div class="row gy-3 gy-md-4 gy-lg-0 align-items-lg-center">
 				<div class="col-12 col-lg-6">
-					<img class="img-fluid rounded" loading="lazy" src="{{ asset('img/support3.svg') }}" alt="À propos 2">
+					<img class="img-fluid rounded" loading="lazy" src="{{ asset('img/before.png') }}" alt="Pourquoi nous choisir">
 				</div>
 				<div class="col-12 col-lg-6">
 					<div class="row justify-content-xl-center">
 						<div class="col-12 col-xl-10">
-							<h2 class="mb-3">Pourquoi nous choisir ?</h2>
-							<p class="lead text-justify">Fondée en 2023, ScriptzenIT fait son entrée dans le domaine numérique en redéfinissant les frontières de l'innovation et de l'excellence. Portée par une vision avant-gardiste, notre entreprise s'engage à remodeler le monde numérique. </p>
-							<p class="lead text-justify">Notre approche est centrée sur nos clients, et nous collaborons avec des entreprises de toutes tailles et de tous secteurs pour concevoir des stratégies sur mesure qui répondent précisément à leurs besoins et objectifs spécifiques.</p>
+							<h2 class="mb-3">Faites confiance à ScriptzenIT !</h2>
+							<p class="lead text-justify">Fondée en 2023, ScriptzenIT fait son entrée dans le domaine numérique en redéfinissant les frontières de l'innovation et de l'excellence. Portée par une vision avant-gardiste, notre entreprise s'engage à remodeler le monde numérique.</p>
+							<p class="lead text-justify">Chez ScriptzenIT, nous plaçons nos clients au cœur de notre approche. Nous collaborons avec des entreprises de toutes tailles et de tous secteurs pour concevoir des stratégies sur mesure répondant précisément à leurs besoins et objectifs spécifiques.</p>
 							<div class="d-flex align-items-center mb-3">
 								<div class="me-3 text-primary">
 									<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="currentColor" class="bi bi-check-circle-fill" viewBox="0 0 16 16">
@@ -62,7 +57,7 @@
 									</svg>
 								</div>
 								<div>
-									<p class="fs-5 m-0">Notre procédure d'évolution est super intelligente.</p>
+									<p class="fs-5 m-0">Notre approche est centrée sur vous, nos chers clients.</p>
 								</div>
 							</div>
 							<div class="d-flex align-items-center mb-3">
@@ -72,7 +67,7 @@
 									</svg>
 								</div>
 								<div>
-									<p class="fs-5 m-0">Nous offrons des services au-delà des attentes.</p>
+									<p class="fs-5 m-0">Nous nous engageons à dépasser vos attentes à chaque étape de notre collaboration.</p>
 								</div>
 							</div>
 							<a href="{{ url('app_login') }}" class="btn bsb-btn-xl btn-outline-primary rounded-pill">Connectez-vous maintenant</a>
@@ -82,396 +77,390 @@
 			</div>
 		</div>
 	</section>
+	<!-- Fin de Pourquoi nous choisir -->
 
+	<!-- Processus -->
+	<h1 class="display-4 fw-bold text-center">Notre Processus</h1>
 
-	<h1 class="display-4 fw-bold text-center">Processus</h1>
+	{# Services de l'Agence #}
+	<section>
+		<div class="container">
+			<ul class="process">
+				<li class="process__item">
+                    <span class="process__number">
+                        <i class="fas fa-lightbulb"></i>
+                    </span>
+					<span class="process__title">Analyse & Stratégie</span>
+					<span class="process__subtitle text-justify">Nous analysons vos problèmes et développons une stratégie sur mesure pour répondre à vos besoins spécifiques.</span>
+				</li>
+				<li class="process__item">
+                    <span class="process__number">
+                        <i class="fas fa-pen-nib"></i>
+                    </span>
+					<span class="process__title">Conception & Design</span>
+					<span class="process__subtitle text-justify">Nous créons des designs uniques et attrayants qui reflètent votre marque et captivent votre public cible.</span>
+				</li>
+				<li class="process__item">
+                    <span class="process__number">
+                        <i class="fas fa-laptop-code"></i>
+                    </span>
+					<span class="process__title">Développement & Intégration</span>
+					<span class="process__subtitle text-justify">Notre équipe de développeurs talentueux transforme les designs en sites Web interactifs et fonctionnels.</span>
+				</li>
+				<li class="process__item">
+                    <span class="process__number">
+                        <i class="fas fa-rocket"></i>
+                    </span>
+					<span class="process__title">Lancement & Support</span>
+					<span class="process__subtitle text-justify">Nous assurons un lancement en douceur et offrons un support continu pour garantir la performance et la sécurité de votre site Web.</span>
+				</li>
+			</ul>
+		</div>
+	</section>
+	<!-- Fin du Processus -->
 
-		{# Services de l'Agence #}
-		<section>
-			<div class="container">
-				<ul class="process">
-					<li class="process__item">
-						<span class="process__number">
-							<i class="fas fa-lightbulb"></i>
-						</span>
-						<span class="process__title">Analyse &amp; Stratégie</span>
-						<span class="process__subtitle text-justify">Nous analysons vos problèmes et développons des stratégies</span>
-					</li>
-					<li class="process__item">
-						<span class="process__number">
-							<i class="fas fa-file-alt"></i>
-						</span>
-						<span class="process__title">Offre</span>
-						<span class="process__subtitle text-justify">Nous fournissons des offres détaillées en fonction de nos analyses</span>
-					</li>
-					<li class="process__item">
-						<span class="process__number">
-							<i class="fas fa-cogs"></i>
-						</span>
-						<span class="process__title">Développement</span>
-						<span class="process__subtitle text-justify">Nous développons et transformons les stratégies en réalité</span>
-					</li>
-					<li class="process__item">
-						<span class="process__number">
-							<i class="fas fa-check-circle"></i>
-						</span>
-						<span class="process__title">Finalisation</span>
-						<span class="process__subtitle text-justify">Nous effectuons les ajustements finaux et préparons les livraisons</span>
-					</li>
-				</ul>
-			</div>
-		</section>
-		{# ./ Services de l'Agence #}
-
-		<section class="section services-section" id="services">
-			<div class="container">
-				<div class="row">
-					<div class="col-lg-6">
-						<div class="section-title">
-							<h2>Nos Services</h2>
-							<p class="text-justify">Nous sommes des experts en conception et développement web, offrant des solutions sur mesure pour les professionnels et les artisans.</p>
-							<p class="text-justify">ScriptzenIT est prête à laisser une empreinte indélébile dans le domaine numérique en proposant des solutions inégalées et en réimaginant l'avenir de la technologie.</p>
-						</div>
-					</div>
-				</div>
-				<div class="row">
-					<!-- Boîte de fonctionnalités -->
-					<div class="col-sm-6 col-lg-4">
-						<div class="feature-box-1">
-							<div class="icon">
-								<i class="fa fa-desktop"></i>
-							</div>
-							<div class="feature-content">
-								<h5>Design Unique</h5>
-								<p class="text-justify">Nous créons des designs uniques qui reflètent la personnalité de votre entreprise, vous démarquant de la concurrence.</p>
-							</div>
-						</div>
-					</div>
-					<!-- / -->
-					<!-- Boîte de fonctionnalités -->
-					<div class="col-sm-6 col-lg-4">
-						<div class="feature-box-1">
-							<div class="icon">
-								<i class="fa fa-user"></i>
-							</div>
-							<div class="feature-content">
-								<h5>Disposition Différente</h5>
-								<p class="text-justify">Nous proposons des mises en page personnalisées pour répondre à vos besoins spécifiques, garantissant une expérience utilisateur optimale.</p>
-							</div>
-						</div>
-					</div>
-					<!-- / -->
-					<!-- Boîte de fonctionnalités -->
-					<div class="col-sm-6 col-lg-4">
-						<div class="feature-box-1">
-							<div class="icon">
-								<i class="fa fa-comment"></i>
-							</div>
-							<div class="feature-content">
-								<h5>Simplicité</h5>
-								<p class="text-justify">Nous simplifions votre présence en ligne, offrant des solutions intuitives qui facilitent l'interaction avec vos clients.</p>
-							</div>
-						</div>
-					</div>
-					<!-- / -->
-					<!-- Boîte de fonctionnalités -->
-					<div class="col-sm-6 col-lg-4">
-						<div class="feature-box-1">
-							<div class="icon">
-								<i class="fa fa-image"></i>
-							</div>
-							<div class="feature-content">
-								<h5>Réactivité</h5>
-								<p class="text-justify">Nos sites sont entièrement réactifs, assurant une expérience cohérente sur tous les appareils, ce qui est essentiel pour atteindre votre public cible.</p>
-							</div>
-						</div>
-					</div>
-					<!-- / -->
-					<!-- Boîte de fonctionnalités -->
-					<div class="col-sm-6 col-lg-4">
-						<div class="feature-box-1">
-							<div class="icon">
-								<i class="fa fa-th"></i>
-							</div>
-							<div class="feature-content">
-								<h5>Test pour la Perfection</h5>
-								<p class="text-justify">Nous effectuons des tests rigoureux pour garantir la perfection, assurant un fonctionnement sans faille de votre site et une expérience utilisateur optimale.</p>
-							</div>
-						</div>
-					</div>
-					<!-- / -->
-					<!-- Boîte de fonctionnalités -->
-					<div class="col-sm-6 col-lg-4">
-						<div class="feature-box-1">
-							<div class="icon">
-								<i class="fa fa-cog"></i>
-							</div>
-							<div class="feature-content">
-								<h5>Options Avancées</h5>
-								<p class="text-justify">Nous offrons des options avancées pour répondre à vos besoins spécifiques, vous permettant de tirer le meilleur parti de votre présence en ligne.</p>
-							</div>
-						</div>
-					</div>
-					<!-- / -->
-				</div>
-			</div>
-		</section>
-
-		{# Section Project  #}
-
-		<section>
-			<div class="container-fluid">
-				<div class="row align-items-center bg-black justify-content-center px-5 text-white 100-vh">
-					<div class="col-md-4 mt-3">
-						<h1>BESOIN D'ÉCLAIRAGE ?</h1>
-						<p class="text-white text-justify">Transformez les défis techniques en opportunités. Lorsque vous êtes confronté à des problèmes techniques, vous faites face à des occasions de grandir et d'apprendre.</p>
-						<a href="{{ url('front_project') }}" class="btn btn-warning px-5 mt-5">Nos réalisations</a>
-					</div>
-					<div class="col-md-8 pt-5 pb-5">
-						<img src="{{ asset('img/home_section.webp') }}" alt="agence web dans la Nièvre (58)" height="100%">
-					</div>
-				</div>
-			</div>
-		</section>
-
-		<br>
-
-		{# Technologie et outils #}
+	<!-- Réalisations -->
+	<section class="pb-5">
 		<div class="container">
 			<div class="row">
-				<div class="col-xs-12 col-sm-12">
-					<div class="block-title">
-						<h2>Outils et technologies</h2>
-					</div>
+				<div class="col-12 text-center">
+					<h2 class="font-weight-bold">Nos Réalisations</h2>
+					<p class="lead text-muted">Découvrez quelques-unes de nos réalisations les plus récentes.</p>
 				</div>
 			</div>
-			<div class="row" id="specs">
-				<div class="col-xs-12 col-sm-3 vh-30">
-					<div class="lm-info-block gray-default">
-						<img src="./img/clients/spec-1.png" alt="PHP">
-						<h4>PHP</h4>
-					</div>
-				</div>
+			<div class="row justify-content-center">
+				<div id="content" class="container page-content site-content single-post" role="main">
+					<div class="row">
+						<div class="col-xs-12 col-sm-12">
+							<!-- Portfolio Content -->
+							<div id="portfolio_content_q" class="portfolio-content">
+								<ul class="portfolio-filters">
+									<li>
+										<a class="filter btn btn-sm btn-link" data-group="toutes_categories">Toutes les catégories</a>
+									</li>
+									<li>
+										<a class="filter btn btn-sm btn-link" data-group="détaillé">Projets Détaillés</a>
+									</li>
+									<li>
+										<a class="filter btn btn-sm btn-link" data-group="lien-direct">Liens fonctionnels</a>
+									</li>
+									<li>
+										<a class="filter btn btn-sm btn-link" data-group="prototype">Prototype</a>
+									</li>
+								</ul>
 
-				<div class="col-xs-12 col-sm-3 vh-30">
-					<div class="lm-info-block gray-default">
-						<img src="./img/clients/spec-2.png" alt="HTML 5 / CSS 3">
-						<h4>HTML 5 / CSS 3</h4>
-					</div>
-				</div>
+								<!-- Portfolio Grid -->
+								<div class="portfolio-grid four-columns shuffle">
+									{% for project in projects %}
+										{% set dataGroups = ['toutes_categories'] %}
 
-				<div class=" col-xs-12 col-sm-3 vh-30">
-					<div class="lm-info-block gray-default">
-						<img src="./img/clients/spec-3.png" alt="Git">
-						<h4>Git + SSH</h4>
-					</div>
-				</div>
+										{% if 'détaillé' in project.category %}
+											{% set dataGroups = dataGroups|merge(['détaillé']) %}
+										{% endif %}
+										{% if 'lien-direct' in project.category %}
+											{% set dataGroups = dataGroups|merge(['lien-direct']) %}
+										{% endif %}
+										{% if 'prototype' in project.category %}
+											{% set dataGroups = dataGroups|merge(['prototype']) %}
+										{% endif %}
 
-				<div class=" col-xs-12 col-sm-3 vh-30">
-					<div class="lm-info-block gray-default">
-						<img src="./img/clients/spec-4.png" alt="Symfony">
-						<h4>Symfony</h4>
-					</div>
-				</div>
-				<div class="col-xs-12 col-sm-3 vh-30">
-					<div class="lm-info-block gray-default">
-						<img src="./img/clients/spec-5.svg" alt="React">
-						<h4>React / VueJs</h4>
-					</div>
-				</div>
-				<div class="col-xs-12 col-sm-3 vh-30">
-					<div class="lm-info-block gray-default">
-						<img src="./img/clients/spec-7.png" alt="Sass">
-						<h4>SaaS</h4>
-					</div>
-				</div>
-				<div class="col-xs-12 col-sm-3 vh-30">
-					<div class="lm-info-block gray-default">
-						<img src="./img/clients/spec-8.svg" alt="Json web token(JWT)" class="text-center">
-						<h4>Json web token</h4>
-					</div>
-				</div>
-				<div class="col-xs-12 col-sm-3 vh-30">
-					<div class="lm-info-block gray-default">
-						<img src="./img/clients/spec-9.png" alt="Axios / Ajax" class="text-center">
-						<h4>Axios/Ajax</h4>
+										<figure class="item standard" data-groups='["{{ dataGroups|join('", "') }}"]'>
+											<div class="portfolio-item-img">
+												{% for image in project.images %}
+													<img src="{{ asset('image_project/'~image.name) }}" alt="{{ image.name }}"/>
+												{% endfor %}
+												<a href="{{ url('front_project_show', {id: project.id}) }}"></a>
+											</div>
+
+											<i class="far fa-file-alt"></i>
+											{# <h4 class="name">{{ project.title }}</h4> #}
+											<span class="category">{{ project.category|join(', ')|title }}</span>
+										</figure>
+									{% endfor %}
+								</div>
+							</div>
+						</div>
 					</div>
 				</div>
 			</div>
 		</div>
-		{# ./ Technologie et outils #}
+	</section>
+	<!-- Fin des Réalisations -->
 
-		<!-- Pricing -->
-		<div class="container">
-			<div class="row">
-				<div class=" col-xs-12 col-sm-12 ">
-					<div class="block-title">
-						<h2>Un large choix vous est proposé</h2>
-						<p>Que vous soyez un particulier ou un professionnel !</p>
-					</div>
+	{# Section Project  #}
+
+	<section>
+		<div class="container-fluid">
+			<div class="row align-items-center bg-black justify-content-center px-5 text-white 100-vh">
+				<div class="col-md-4 mt-3">
+					<h1>BESOIN D'ÉCLAIRAGE ?</h1>
+					<p class="text-white text-justify">Transformez les défis techniques en opportunités. Lorsque vous êtes confronté à des problèmes techniques, vous faites face à des occasions de grandir et d'apprendre, discutons-en !</p>
+					<a href="https://calendly.com/walid_belbeche/expertise-offerte" class="btn btn-warning px-5 mt-5">Réserver un appel de découverte</a>
 				</div>
+				<div class="col-md-8 pt-5 pb-5">
+					<img src="{{ asset('img/home_section.webp') }}" alt="agence web dans la Nièvre (58)" height="100%">
+				</div>
+			</div>
+		</div>
+	</section>
 
+	<br>
+
+	{# Technologie et outils #}
+	<div class="container">
+		<div class="row">
+			<div class="col-xs-12 col-sm-12">
+				<div class="block-title">
+					<h2>Outils et technologies</h2>
+				</div>
+			</div>
+		</div>
+		<div class="row" id="specs">
+			<div class="col-xs-12 col-sm-3 vh-30">
+				<div class="lm-info-block gray-default">
+					<img src="./img/clients/spec-1.png" alt="PHP">
+					<h4>PHP</h4>
+				</div>
 			</div>
 
-			<div class="row">
-				<div class="col-xs-12 col-sm-12 ">
-					<div class="fw-pricing clearfix row">
+			<div class="col-xs-12 col-sm-3 vh-30">
+				<div class="lm-info-block gray-default">
+					<img src="./img/clients/spec-2.png" alt="HTML 5 / CSS 3">
+					<h4>HTML 5 / CSS 3</h4>
+				</div>
+			</div>
 
-						<div class="fw-package-wrap col-md-6 ">
-							<div class="fw-package">
-								<div class="fw-heading-row">
-									<span class="text-uppercase">Développement entreprise</span>
-								</div>
+			<div class=" col-xs-12 col-sm-3 vh-30">
+				<div class="lm-info-block gray-default">
+					<img src="./img/clients/spec-3.png" alt="Git">
+					<h4>Git + SSH</h4>
+				</div>
+			</div>
 
-								<div class="fw-pricing-row">
-									<span>Un prix compétitif avec des fonctionnalités de bases</span>
-								</div>
+			<div class=" col-xs-12 col-sm-3 vh-30">
+				<div class="lm-info-block gray-default">
+					<img src="./img/clients/spec-4.png" alt="Symfony">
+					<h4>Symfony</h4>
+				</div>
+			</div>
+			<div class="col-xs-12 col-sm-3 vh-30">
+				<div class="lm-info-block gray-default">
+					<img src="./img/clients/spec-5.svg" alt="React">
+					<h4>React / VueJs</h4>
+				</div>
+			</div>
+			<div class="col-xs-12 col-sm-3 vh-30">
+				<div class="lm-info-block gray-default">
+					<img src="./img/clients/spec-7.png" alt="Sass">
+					<h4>SaaS</h4>
+				</div>
+			</div>
+			<div class="col-xs-12 col-sm-3 vh-30">
+				<div class="lm-info-block gray-default">
+					<img src="./img/clients/spec-8.svg" alt="Json web token(JWT)" class="text-center">
+					<h4>Json web token</h4>
+				</div>
+			</div>
+			<div class="col-xs-12 col-sm-3 vh-30">
+				<div class="lm-info-block gray-default">
+					<img src="./img/clients/spec-9.png" alt="Axios / Ajax" class="text-center">
+					<h4>Axios/Ajax</h4>
+				</div>
+			</div>
+		</div>
+	</div>
+	{# ./ Technologie et outils #}
 
-								<div class="fw-button-row">
-									<a href="{{ url('front_devis_new', {'type': 'site_vitrine'}) }}" target="_self" class="btn btn-primary">Personnaliser</a>
+	<!-- Pricing -->
+	<div class="container">
+		<div class="row">
+			<div class=" col-xs-12 col-sm-12 ">
+				<div class="block-title">
+					<h2>Un large choix vous est proposé</h2>
+					<p>Pour professional, Artisans, jeune entreprise</p>
+				</div>
+			</div>
 
-								</div>
+		</div>
 
-								<div class="fw-default-row text-justify">Vous êtes une marque souhaitant donner un coup de neuf à son site
-																	web ou une entreprise souhaitant redynamiser sa présence sur le web ? Optez pour une
-																	création d'application / site web sur mesure, dynamique et novateur. A votre image.
-								</div>
+		<div class="row">
+			<div class="col-xs-12 col-sm-12 ">
+				<div class="fw-pricing clearfix row">
+
+					<div class="fw-package-wrap col-md-4 ">
+						<div class="fw-package">
+							<div class="fw-heading-row">
+								<span class="text-uppercase">Expertise Offerte</span>
+							</div>
+
+							<div class="fw-pricing-row">
+								<span>Un échange convivial avec des réponses</span>
+							</div>
+
+							<div class="fw-button-row">
+								<a href="https://calendly.com/walid_belbeche/expertise-offerte" target="_self" class="btn btn-primary">Réserver</a>
+
+							</div>
+
+							<div class="fw-default-row text-justify">Vous souhaitez être accompagné dans le développement de votre solution numérique ? Discutons ensemble de vos besoins</div>
+						</div>
+					</div>
+
+					<div class="fw-package-wrap col-md-4 ">
+						<div class="fw-package">
+							<div class="fw-heading-row">
+								<span class="text-uppercase">Développement entreprise</span>
+							</div>
+
+							<div class="fw-pricing-row">
+								<span>Un prix compétitif avec des fonctionnalités de bases</span>
+							</div>
+
+							<div class="fw-button-row">
+								<a href="{{ url('front_devis_new', {'type': 'site_vitrine'}) }}" target="_self" class="btn btn-primary">Personnaliser</a>
+
+							</div>
+
+							<div class="fw-default-row text-justify">Vous êtes une marque souhaitant donner un coup de neuf à son site
+								web ou une entreprise souhaitant redynamiser sa présence sur le web ? Optez pour une
+								création d'application / site web sur mesure, dynamique et novateur. A votre image.
 							</div>
 						</div>
+					</div>
 
-						<div class="fw-package-wrap col-md-6">
-							<div class="fw-package pt-5">
-								<div class="fw-heading-row">
-									<span>DÉVELOPPEMENT SUR MESURE</span>
-								</div>
+					<div class="fw-package-wrap col-md-4">
+						<div class="fw-package pt-5">
+							<div class="fw-heading-row">
+								<span>DÉVELOPPEMENT SUR MESURE</span>
+							</div>
 
-								<div class="fw-pricing-row">
-									<span>Pour un besoin spécifique</span>
-								</div>
+							<div class="fw-pricing-row">
+								<span>Pour un besoin spécifique</span>
+							</div>
 
-								<div class="fw-button-row">
-									<a href="{{ url('front_devis_new', {'type': 'cross_plateforme'}) }}" target="_self" class="btn btn-primary">Personnaliser</a>
+							<div class="fw-button-row">
+								<a href="{{ url('front_devis_new', {'type': 'cross_plateforme'}) }}" target="_self" class="btn btn-primary">Personnaliser</a>
 
-								</div>
+							</div>
 
-								<div class="fw-default-row text-justify">Vous souhaitez aller un peu plus loin en ajoutant des fonctionnalités bien précises pour votre nouveau site internet ? Discutons ensemble de votre développement web sur mesure !
-								</div>
+							<div class="fw-default-row text-justify">Vous souhaitez aller un peu plus loin en ajoutant des fonctionnalités bien précises pour votre nouveau site internet ? Discutons ensemble de votre développement web sur mesure !
 							</div>
 						</div>
 					</div>
 				</div>
-				<!-- /Pricing -->
 			</div>
+			<!-- /Pricing -->
+		</div>
 
-			<div class="row">
-				<div class="col-xs-12 col-sm-12">
-					<div class="p-20"></div>
+		<div class="row">
+			<div class="col-xs-12 col-sm-12">
+				<div class="p-20"></div>
 
-					<!-- Testimonials -->
-					<div class="block-title">
-						<h2>Ils en parlent mieux que nous</h2>
-					</div>
+				<!-- Testimonials -->
+				<div class="block-title">
+					<h2>Ils en parlent mieux que nous</h2>
+				</div>
 
-					<div id="testimonials_1" class="testimonials owl-carousel" data-mobile-items="1" data-tablet-items="2" data-items="2">
-						<!-- Testimonial 1 -->
-						<div class="testimonial-item">
-							<!-- Testimonial Content -->
-							<div class="testimonial-content">
-								<!-- Picture -->
-								<div class="testimonial-picture">
-									<img src="{{ asset('img/support/support2.svg') }}" alt="Alain Tixier"/>
-								</div>
-								<!-- /Picture -->
-
-								<!-- Testimonial Text -->
-								<div class="testimonial-text">
-									<p>La Nièvre c’est loin, mais heureusement il y a internet pour bosser !</p>
-								</div>
-								<!-- /Testimonial Text -->
-
-								<!-- Testimonial author information -->
-								<div class="testimonial-author-info">
-									<h5 class="testimonial-author">Alain Tixier</h5>
-									<p class="testimonial-firm">CEO SPIN OFF</p>
-								</div>
-								<!-- /Testimonial author information -->
-
-								<div class="testimonial-icon">
-									<i class="fa fa-quote-left"></i>
-								</div>
-
-								<div class="testimonial-icon-big">
-									<i class="fa fa-quote-right"></i>
-								</div>
+				<div id="testimonials_1" class="testimonials owl-carousel" data-mobile-items="1" data-tablet-items="2" data-items="2">
+					<!-- Testimonial 1 -->
+					<div class="testimonial-item">
+						<!-- Testimonial Content -->
+						<div class="testimonial-content">
+							<!-- Picture -->
+							<div class="testimonial-picture">
+								<img src="{{ asset('img/sunday.png') }}" alt="Alain Tixier"/>
 							</div>
-							<!-- /Testimonial Content -->
-						</div>
-						<!-- End of Testimonial 1 -->
+							<!-- /Picture -->
 
-						<!-- Testimonial 2 -->
-						<div class="testimonial-item">
-							<!-- Testimonial Content -->
-							<div class="testimonial-content">
-								<!-- Picture -->
-								<div class="testimonial-picture">
-									<img src="{{ asset('img/support/support2.svg') }}" alt="Pascal Stier"/>
-								</div>
-								<!-- /Picture -->
-
-								<!-- Testimonial Text -->
-								<div class="testimonial-text">
-									<p>très bonne prestation .je recommande. demandez lui ce qui vous intéresse il va vous le réaliser.</p>
-								</div>
-								<!-- /Testimonial Text -->
-
-								<!-- Testimonial author information -->
-								<div class="testimonial-author-info">
-									<h5 class="testimonial-author">Pascal Stier</h5>
-									<p class="testimonial-firm">Dirigeant Entreprise STIER</p>
-								</div>
-								<!-- /Testimonial author information -->
-
-								<div class="testimonial-icon">
-									<i class="fa fa-quote-left"></i>
-								</div>
-
-								<div class="testimonial-icon-big">
-									<i class="fa fa-quote-right"></i>
-								</div>
+							<!-- Testimonial Text -->
+							<div class="testimonial-text">
+								<p>La Nièvre c’est loin, mais heureusement il y a internet pour bosser !</p>
 							</div>
-							<!-- /Testimonial Content -->
+							<!-- /Testimonial Text -->
+
+							<!-- Testimonial author information -->
+							<div class="testimonial-author-info">
+								<h5 class="testimonial-author">Alain Tixier</h5>
+								<p class="testimonial-firm">CEO SPIN OFF</p>
+							</div>
+							<!-- /Testimonial author information -->
+
+							<div class="testimonial-icon">
+								<i class="fa fa-quote-left"></i>
+							</div>
+
+							<div class="testimonial-icon-big">
+								<i class="fa fa-quote-right"></i>
+							</div>
 						</div>
-						<!-- End of Testimonial 2 -->
+						<!-- /Testimonial Content -->
 					</div>
-					<!-- /Testimonials -->
+					<!-- End of Testimonial 1 -->
 
-					<div class="p-40"></div>
+					<!-- Testimonial 2 -->
+					<div class="testimonial-item">
+						<!-- Testimonial Content -->
+						<div class="testimonial-content">
+							<!-- Picture -->
+							<div class="testimonial-picture">
+								<img src="{{ asset('img/plomber.png') }}" alt="Pascal Stier"/>
+							</div>
+							<!-- /Picture -->
 
-					<div class="text-white bg-tertiary text-center pt-5 pb-5" id="agence">
-						<h1 class="display-5 fw-bold lh-1 mb-3 text-center">Soyez Zen, On s'occupe de tout !</h1>
-						<p class="fw-bold mb-3 text-center lead text-white px-5 text-justify">Transitionnez de la planification au site grâce à ScriptZenIT, le créateur de sites Web destiné aux professionnels et aux artisans.</p>
-						<div class="ask">
-							<a href="{{ url('front_devis_new') }}" class="btn btn-black mr-3 animate-up-2 inline-block text-white">Démarrer ma demande
-								<span class="ml-2">
+							<!-- Testimonial Text -->
+							<div class="testimonial-text">
+								<p>très bonne prestation .je recommande. demandez lui ce qui vous intéresse il va vous le réaliser.</p>
+							</div>
+							<!-- /Testimonial Text -->
+
+							<!-- Testimonial author information -->
+							<div class="testimonial-author-info">
+								<h5 class="testimonial-author">Pascal Stier</h5>
+								<p class="testimonial-firm">Dirigeant Entreprise STIER</p>
+							</div>
+							<!-- /Testimonial author information -->
+
+							<div class="testimonial-icon">
+								<i class="fa fa-quote-left"></i>
+							</div>
+
+							<div class="testimonial-icon-big">
+								<i class="fa fa-quote-right"></i>
+							</div>
+						</div>
+						<!-- /Testimonial Content -->
+					</div>
+					<!-- End of Testimonial 2 -->
+				</div>
+				<!-- /Testimonials -->
+
+				<div class="p-40"></div>
+
+				<div class="text-white bg-tertiary text-center pt-5 pb-5" id="agence">
+					<h1 class="display-5 fw-bold lh-1 mb-3 text-center">Soyez Zen, On s'occupe de tout !</h1>
+					<p class="fw-bold mb-3 text-center lead text-white px-5 text-justify">Transitionnez de la planification au site grâce à ScriptZenIT, le créateur de sites Web destiné aux professionnels et aux artisans.</p>
+					<div class="ask">
+						<a href="{{ url('front_devis_new') }}" class="btn btn-black mr-3 animate-up-2 inline-block text-white">Démarrer ma demande
+							<span class="ml-2">
 									<span class="fas fa-arrow-right"></span>
 								</span>
-							</a>
-						</div>
+						</a>
 					</div>
-				</div>
-			</div>
-
-			<div class="thank-you">
-				<h2>Merci d'avoir visité notre site !</h2>
-				<p>Nous apprécions votre visite. Si vous avez des questions, des commentaires ou avez besoin de plus d'informations, n'hésitez pas à nous contacter.</p>
-				<a href="{{ url('front_contact') }}" class="btn btn-primary">Nous contacter</a>
-				<!-- Avis Google -->
-				<div class="text-center">
-					<a class="nav-link" href="https://g.page/r/CSj9BKNjCGCBEAI/review">
-						<img src="{{ asset('img/rating.png')}}" class="mx-auto bg-transparant" alt="évaluez-nous" width="10%" height="10%">Évaluez-nous
-					</a>
 				</div>
 			</div>
 		</div>
 
-	{% endblock %}
+		<div class="thank-you">
+			<h2>Merci d'avoir visité notre site !</h2>
+			<p>Nous apprécions votre visite. Si vous avez des questions, des commentaires ou avez besoin de plus d'informations, n'hésitez pas à nous contacter.</p>
+			<a href="{{ url('front_contact') }}" class="btn btn-primary">Nous contacter</a>
+			<!-- Avis Google -->
+			<div class="text-center">
+				<a class="nav-link" href="https://g.page/r/CSj9BKNjCGCBEAI/review">
+					<img src="{{ asset('img/rating.png')}}" class="mx-auto bg-transparant" alt="évaluez-nous" width="10%" height="10%">Évaluez-nous
+				</a>
+			</div>
+		</div>
+	</div>
+
+{% endblock %}

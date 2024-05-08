@@ -64,15 +64,13 @@ class DevisController extends AbstractController
     }
 
     /**
-     * @Route("/admin/devis/{id}/delete", name="back_devis_delete", methods={"POST"})
+     * @Route("/admin/devis/{id}/delete", name="back_devis_delete")
      * @IsGranted("ROLE_ADMIN")
      */
     public function delete(Request $request, EntityManagerInterface $entityManager, Devis $devis): Response
     {
-        if ($request->isMethod('POST')) {
-            $entityManager->remove($devis);
-            $entityManager->flush();
-        }
+        $entityManager->remove($devis);
+        $entityManager->flush();
 
         return $this->redirectToRoute('back_devis_index');
     }

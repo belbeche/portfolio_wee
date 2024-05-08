@@ -44,9 +44,6 @@ class ProjectController extends AbstractController
         // Récupérer l'utilisateur actuellement connecté
         $user = $this->getUser();
 
-        // Créer un nouvel Subject
-        $Subject = new Subject();
-
         $project = new Project();
 
         $form = $this->createForm(ProjectType::class, $project);
@@ -56,9 +53,6 @@ class ProjectController extends AbstractController
             if ($form->isSubmitted() && $form->isValid()) {
                 $project->setUpdatedAt(new \DateTime());
                 $project->setCreatedAt(new \DateTime());
-
-                // Ajouter l'Subject à la collection d'Subjects de l'utilisateur
-                $user->addSubject($Subject->setUser($user));
 
                 $entityManager->persist($user);
 

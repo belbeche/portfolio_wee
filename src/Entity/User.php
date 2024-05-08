@@ -109,6 +109,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private ?Collection $Subjects;
 
+    /**
+     * @throws \Exception
+     */
     public function __construct()
     {
         $this->devis = new ArrayCollection();
@@ -119,7 +122,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->Subjects = new ArrayCollection();
         $this->comments = new ArrayCollection();
         $this->likes = new ArrayCollection();
-        $this->date = new DateTime();
+        $this->date = new \DateTime('now', new \DateTimeZone('Europe/Paris'));
+
     }
 
     /**
@@ -488,7 +492,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     /**
      * @param ArrayCollection $Subjects
-     * @return User
+     * @return Collection
      */
     public function setSubjects(ArrayCollection $Subjects): Collection
     {
@@ -496,7 +500,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function addSubject(Subject $Subject): self
+    public function addSubject(Subject $Subject): User
     {
         $this->Subjects[] = $Subject;
     }

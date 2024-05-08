@@ -38,10 +38,13 @@
 			</tr>
 		</table>
 
-		<a href="{{ path('back_devis_edit', {'id': devis.id}) }}">Modifier</a>
-		<form action="{{ path('back_devis_delete', {'id': devis.id}) }}" method="post" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce devis ?');">
-			<button type="submit">Supprimer</button>
-		</form>
+		<div class="d-flex justify-content-between">
+			<a href="{{ path('back_devis_edit', {'id': devis.id}) }}" class="btn btn-info">Modifier</a>
+			<form action="{{ path('back_devis_delete', {'id': devis.id}) }}" method="post" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce devis ?');">
+				<button type="submit">Supprimer</button>
+			</form>
+			<a href="{{ url('back_devis_index') }}" class="btn btn-success">Retour</a>
+		</div>
 	</div>
 
 {% endblock %}

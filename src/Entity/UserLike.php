@@ -38,9 +38,12 @@ class UserLike
      */
     private User $user;
 
+    /**
+     * @throws \Exception
+     */
     public function __construct()
     {
-        $this->createdAt = new \DateTime();
+        $this->createdAt = new \DateTime('now', new \DateTimeZone('Europe/Paris'));
     }
 
     /**

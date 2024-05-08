@@ -60,6 +60,9 @@ class Ticket
      */
     private $receiver;
 
+    /**
+     * @throws \Exception
+     */
     public function __construct(){
         $this->createdAt = new \DateTimeImmutable('now', new \DateTimeZone('Europe/Paris'));
         $this->updatedAt = new \DateTimeImmutable('now', new \DateTimeZone('Europe/Paris'));
