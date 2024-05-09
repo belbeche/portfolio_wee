@@ -99,16 +99,6 @@ class HomeController extends AbstractController
     }
 
     /**
-     * @Route("/profil/", name="front_profile")
-     * @throws AccessDeniedException
-     */
-    public function frontProfile(): RedirectResponse
-    {
-        // Redirection vers la page d'inscription
-        return $this->redirectToRoute('app_register');
-    }
-
-    /**
      * @Route("/profil/mes_projets/list", name="front_profile_project")
      */
     public function profileProject(): Response
