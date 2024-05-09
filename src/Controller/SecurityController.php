@@ -58,7 +58,7 @@ class SecurityController extends AbstractController
             $entityManager->flush();
 
             return $this->redirectToRoute('front_devis_set_password', [
-                'email' => $user->getUserIdentifier(),
+                'id' => $user->getId(),
             ]);
         }
 
@@ -68,12 +68,12 @@ class SecurityController extends AbstractController
     }
 
     /**
-     * @Route("/continuer/{email}", name="front_devis_set_password")
+     * @Route("/continuer/{id}", name="front_devis_set_password")
      */
-    public function setPassword(Request $request, EntityManagerInterface $entityManager, UserPasswordEncoderInterface $passwordEncoder, $email): Response
+    public function setPassword(Request $request, EntityManagerInterface $entityManager, UserPasswordEncoderInterface $passwordEncoder, $id): Response
     {
         // Rechercher l'utilisateur par e-mail
-        $user = $entityManager->getRepository(User::class)->findOneBy(['email' => $email]);
+        $user = $entityManager->getRepository(User::class)->findOneBy(['id' => $id]);
 
         // Créer et traiter le formulaire pour le mot de passe
         $form = $this->createForm(UserPasswordType::class, $user);

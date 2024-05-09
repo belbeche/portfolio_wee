@@ -91,15 +91,15 @@ class DevisController extends AbstractController
     }
 
     /**
-     * @Route("/continuer/{email}", name="front_devis_set_password")
+     * @Route("/continuer/{id}", name="front_devis_set_password")
      */
-    public function setPassword(Request $request, EntityManagerInterface $entityManager, UserPasswordHasherInterface $passwordHasher,$email): Response
+    public function setPassword(Request $request, EntityManagerInterface $entityManager, UserPasswordHasherInterface $passwordHasher,$id): Response
     {
         // Vérifier si un utilisateur existe avec cet ID
         // $user = $entityManager->getRepository(User::class)->find($id);
 
         // Vérifier si un utilisateur existe avec cet ID
-        $user = $entityManager->getRepository(User::class)->findOneBy(['email' => $email]);
+        $user = $entityManager->getRepository(User::class)->findOneBy(['id' => $id]);
 
         // Créer et traiter le formulaire pour le mot de passe
         $form = $this->createForm(UserPasswordType::class, $user);
