@@ -91,6 +91,13 @@ class HomeController extends AbstractController
     }
 
     /**
+     * @Route("/cguv", name="front_cguv")
+     */
+    public function cguv(): Response{
+        return $this->render('front/administrative/cguv.html.twig');
+    }
+
+    /**
      * @Route("/conditions-utilisations", name="front_conditions")
      */
     public function conditionUtilisation(): Response
