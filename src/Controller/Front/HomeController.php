@@ -106,6 +106,14 @@ class HomeController extends AbstractController
     }
 
     /**
+     * @Route("/politique-confidentialite", name="front_pdc")
+     */
+    public function politiquedeConfidentialite(): Response
+    {
+        return $this->render('front/administrative/pdc.html.twig');
+    }
+
+    /**
      * @Route("/profil/mes_projets/list", name="front_profile_project")
      */
     public function profileProject(): Response
