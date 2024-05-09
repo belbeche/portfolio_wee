@@ -137,7 +137,7 @@
 					})
 				})
 			</script>
-			<script>
+			{#<script>
 				document.getElementById('accept-cookies').addEventListener('click', function() {
 					document.getElementById('cookie-consent').style.display = 'none';
 					// Définir le cookie pour indiquer que l'utilisateur a accepté
@@ -164,7 +164,7 @@
 				} else {
 					document.getElementById('cookie-consent').style.display = 'block';
 				}
-			</script>
+			</script>#}
 			<script>
 				(() => {
 					const footer = document.querySelector('footer')

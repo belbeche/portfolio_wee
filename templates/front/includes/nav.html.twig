@@ -33,8 +33,8 @@
 							<a class="nav-link" href="{{ url('front_devis_new') }}">Faire une demande</a>
 					</li>
 					{% if not app.user %}
-						<li class="menu-item {{ app.request.get('_route') == 'front_contact' ? 'active' : '' }}">
-							<a class="btn btn-outline-secondary" href="{{ url('front_contact') }}">Contact</a>
+						<li class="menu-item {{ app.request.get('_route') == 'app_register' ? 'active' : '' }}">
+							<a class="btn btn-success" href="{{ url('app_register') }}">S'inscrire</a>
 						</li>
 						<li class="menu-item {{ app.request.get('_route') == 'app_login' ? 'active' : '' }}">
 							<a class="btn btn-info" href="{{ url('app_login') }}">Connexion</a>
