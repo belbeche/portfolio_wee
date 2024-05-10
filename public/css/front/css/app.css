@@ -5,7 +5,8 @@
     max-width: 100%;
     vertical-align: bottom;
     position: absolute;
-    bottom: 4px;
+    top: 0;
+    bottom: 0;
 }
 
 .logo-text {
@@ -253,7 +254,6 @@
     .man_mobile{
         margin-top: 10px;
     }
-    
 }
 
 
