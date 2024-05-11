@@ -13,8 +13,27 @@
 		{% endfor %}
 	</div>
 
+	<main>
+		<div class="px-4 pt-5 my-5 text-center border-bottom bg-home-image" style="height: 100vh;">
+			<h1 class="display-4 fw-bold text-body-emphasis text-white">Agence Web dans la Nièvre</h1>
+			<div class="col-lg-6 mx-auto">
+				<p class="text-white rounded">En optant pour nos services sur notre plateforme, vous bénéficierez d'un ensemble d'outils de gestion de serveur pour superviser efficacement vos applications en temps réel. Vous aurez également la possibilité de télécharger votre demande dans un format PDF pour une consultation pratique. Chez ScriptzenIT, notre expertise en développement web ne se limite pas à la conception d'un site professionnel et séduisant. Nous nous engageons à vous accompagner au-delà de cette première phase, afin de garantir l'excellence de votre projet. Découvrez nos réalisations pour vous inspirer davantage vers la concrétisation de vos ambitions.</p>
+				<div class="d-grid gap-2 d-sm-flex justify-content-sm-center mb-5">
+					<a href="{{ url('front_project') }}" class="btn btn-darken btn-primary">
+						Voir nos réalisations<i class="bx bx-right-arrow-alt"></i>
+					</a>
+				</div>
+			</div>
+			<div class="overflow-hidden" style="max-height: 30vh;">
+				<div class="container px-5">
+					<img src="{{ asset('img/devis.png') }}" class="img-fluid border rounded-3 shadow-lg mb-4" alt="Example image" loading="lazy">
+				</div>
+			</div>
+		</div>
+	</main>
+
 	{# Section d'en-tête #}
-	<section id="slider" class="slider-element bg-home-image" style="color: var(--cnvs-bg-overlay-bg) !important;height: 100vh;">
+	{#<section id="slider" class="slider-element bg-home-image" style="color: var(--bs-card-img-overlay-padding) !important;height: 100vh;">
 		<div class="container">
 			<div class="row align-items-md-end">
 				<div class="col-lg-5 align-self-center flex-column">
@@ -30,12 +49,8 @@
 				</div>
 			</div>
 		</div>
-	</section>
+	</section>#}
 	{# Fin de la section d'en-tête #}
-
-	<div class="container">
-		<p class="lead mb-4 text-muted text-center text-justify">Nous concevons la solution de développement web optimale pour chaque situation spécifique, que ce soit pour développer une plateforme complète ou mettre en place des outils précis répondant à vos besoins uniques.</p>
-	</div>
 
 	<!-- Pourquoi nous choisir -->
 	<section class="py-3 py-md-5">
@@ -195,7 +210,7 @@
 				<div class="col-md-4 mt-3">
 					<h1>BESOIN D'ÉCLAIRAGE ?</h1>
 					<p class="text-white text-justify">Transformez les défis techniques en opportunités. Lorsque vous êtes confronté à des problèmes techniques, vous faites face à des occasions de grandir et d'apprendre, discutons-en !</p>
-					<a href="https://calendly.com/walid_belbeche/expertise-offerte" class="btn btn-warning px-5 mt-5">Réserver un appel de découverte</a>
+					<a href="https://calendly.com/walid_belbeche/expertise-offerte" class="text-warning">Réserver un appel de découverte</a>
 				</div>
 				<div class="col-md-8 pt-5 pb-5">
 					<img src="{{ asset('img/home_section.webp') }}" alt="agence web dans la Nièvre (58)" height="100%">

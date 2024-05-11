@@ -1,3 +1,5 @@
+
+
 .logo img {
     -ms-interpolation-mode: bicubic;
     border: 0;
@@ -205,10 +207,6 @@
 }
 
 @media screen and (min-width: 768px){
-    .main{
-        margin-left: 40%; 
-    }
-
     .sidenav{
         width: 40%;
         position: fixed;
@@ -243,7 +241,7 @@
 }
 
 .bg-home-image{
-    background-image: url('../../../img/home.jpg');
+    background-image: url('../../../img/bg2.jpg');
     background-repeat: no-repeat;
     background-size: cover;
     height: 100%;
