@@ -145,7 +145,10 @@
                 <hr>
                 <h3>Vos préférences</h3>
                 Type de site web: {{ devis.typeDeSiteWeb }}<br />
-                Attentes design: {{ devis.attentesDesignWeb }}<br />
+                Attentes design:
+                {% for attente in devis.attentesDesignWeb %}
+                    {{ attente.label }}
+                {% endfor %}<br />
                 Nom: <strong>{{ app.user.nom }}</strong><br />
                 Prénom: {{ app.user.prenom }}<br />
                 Email: {{ devis.email }}

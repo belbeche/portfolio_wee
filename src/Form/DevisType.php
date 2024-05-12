@@ -2,8 +2,11 @@
 
 namespace App\Form;
 
+use App\Entity\AttenteDesignWeb;
 use App\Entity\Devis;
 use Doctrine\DBAL\Types\TextType;
+use Doctrine\ORM\EntityRepository;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\AbstractType;
@@ -47,26 +50,25 @@ class DevisType extends AbstractType
                 'multiple' => false,
                 'data' => $options['default_type_de_site_web'], // Utilisez l'option passée depuis le contrôleur
             ])
-            ->add('attentes_design_web', ChoiceType::class, [
-                'label' => false,
-                'choices' => [
-                    'Design standard' => 'design_standard',
-                    'Avec vos propres maquettes' => 'own_wireframe',
-                    'Design avancé' => 'advanced',
-                    'Design orienté vers le mobile' => 'mobile_focused',
-                    'Design animé ou interactif' => 'animated_interactive',
-                    'Thème sombre' => 'dark_theme',
-                    'Thème clair' => 'light_theme',
-                    'Design axé sur l’accessibilité' => 'accessibility_focused',
-                    'Design minimaliste' => 'minimalist',
-                    'Branding complet inclus' => 'full_branding',
-                    'Personnalisation avancée' => 'high_customization',
-                ],
-                'multiple' => false,
-                'attr' => [
-                    'class' => 'selectpicker',
+            ->add(
+                'attentes_design_web',
+                EntityType::class,
+                [
+                    'class'         => AttenteDesignWeb::class,
+                    'query_builder' => function (EntityRepository $er) {
+                        return $er->createQueryBuilder('adw')
+                            ->orderBy('adw.label', 'DESC');
+                    },
+                    'multiple'      => true,
+                    'choice_label'   => 'label',
+                    'expanded' => true,
+                    'required'    => false,
+                    'attr' => [
+                        'class' => 'selectpicker',
+                        'placeholder' => 'Choix des attentes'
+                    ]
                 ]
-            ])
+            )
             ->add('description_projet', TextareaType::class, [
                 'label' => false,
                 'attr' => [

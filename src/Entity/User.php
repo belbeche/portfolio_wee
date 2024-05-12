@@ -70,6 +70,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $resetToken;
 
     /**
+     * @ORM\OneToMany(targetEntity=Ticket::class, mappedBy="sender")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $sentMessages;
+
+    /**
      * @ORM\Column(type="datetime", nullable=true)
      */
     private ?\DateTimeInterface $resetTokenExpireAt;
@@ -116,6 +122,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         $this->devis = new ArrayCollection();
         $this->receivedMessages = new ArrayCollection();
+        $this->sentMessages = new ArrayCollection();
         $this->avatar = 'support0.svg';
         $this->roles = ['ROLE_USER'];
 
@@ -518,6 +525,24 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         $this->date = $date;
 
+        return $this;
+    }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getSentMessages(): ArrayCollection
+    {
+        return $this->sentMessages;
+    }
+
+    /**
+     * @param ArrayCollection $sentMessages
+     * @return User
+     */
+    public function setSentMessages(ArrayCollection $sentMessages): User
+    {
+        $this->sentMessages = $sentMessages;
         return $this;
     }
 }

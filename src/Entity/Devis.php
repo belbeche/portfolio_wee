@@ -30,11 +30,6 @@ class Devis
     private $type_de_site_web;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
-    private $attentes_design_web;
-
-    /**
      * @ORM\Column(type="text", nullable=true)
      */
     private $description_projet;
@@ -76,11 +71,18 @@ class Devis
      */
     private $user;
 
+    /**
+     * @ORM\ManyToMany(targetEntity="App\Entity\AttenteDesignWeb", inversedBy="devis", cascade={"persist"})
+     * @ORM\JoinTable(name="devis_attente_design_web")
+     */
+    private Collection $attentesDesignWeb;
+
     public function __construct()
     {
         $this->created_at = new DateTimeImmutable('now', new \DateTimeZone('Europe/Paris'));
         $this->messages = new ArrayCollection();
         $this->tickets = new ArrayCollection();
+        $this->attentesDesignWeb = new ArrayCollection();
     }
 
     public function getId(): ?Uuid
@@ -96,18 +98,6 @@ class Devis
     public function setTypeDeSiteWeb(string $type_de_site_web): self
     {
         $this->type_de_site_web = $type_de_site_web;
-
-        return $this;
-    }
-
-    public function getAttentesDesignWeb(): ?string
-    {
-        return $this->attentes_design_web;
-    }
-
-    public function setAttentesDesignWeb(string $attentes_design_web): self
-    {
-        $this->attentes_design_web = $attentes_design_web;
 
         return $this;
     }
@@ -259,6 +249,24 @@ class Devis
     public function setUser($user)
     {
         $this->user = $user;
+        return $this;
+    }
+
+    /**
+     * @return Collection
+     */
+    public function getAttentesDesignWeb(): Collection
+    {
+        return $this->attentesDesignWeb;
+    }
+
+    /**
+     * @param Collection $attentesDesignWeb
+     * @return Devis
+     */
+    public function setAttentesDesignWeb(Collection $attentesDesignWeb): Devis
+    {
+        $this->attentesDesignWeb = $attentesDesignWeb;
         return $this;
     }
 }

@@ -142,7 +142,9 @@
 																Vous souhaitez réaliser {{ typeWeb }}
 
 																Votre attente concernant le design :
-																{{ designWebsite }}
+																{% for attente in designWebsite %}
+																	{{ attente.label }}
+																{% endfor %}
 																<br>
 															</p>
 														</td>
