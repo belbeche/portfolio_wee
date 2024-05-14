@@ -29,7 +29,14 @@
 						<td>{{ devis.id }}</td>
 						<td>{{ devis.email }}</td>
 						<td>{{ devis.typeDeSiteWeb }}</td>
-						<td>{{ devis.attentesDesignWeb }}</td>
+						<td>
+							{% for attentes in devis.attentesDesignWeb %}
+							{{ attentes.label }}
+							{% endfor %}
+						</td>
+
+
+
 						<td>{{ devis.descriptionProjet }}</td>
 						<td>{{ devis.createdAt|date('Y-m-d H:i:s') }}</td>
 						<td>{{ devis.statut }}</td>
