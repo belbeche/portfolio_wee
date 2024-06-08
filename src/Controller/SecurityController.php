@@ -7,7 +7,10 @@ use App\Form\EditProfileType;
 use App\Form\UserPasswordType;
 use App\Form\UserType;
 use Doctrine\ORM\EntityManagerInterface;
+use KnpU\OAuth2ClientBundle\Client\ClientRegistry;
+use KnpU\OAuth2ClientBundle\Client\Provider\GithubClient;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\HttpFoundation\Response;
@@ -112,6 +115,20 @@ class SecurityController extends AbstractController
         $lastUsername = $authenticationUtils->getLastUsername();
 
         return $this->render('security/login.html.twig', ['last_username' => $lastUsername, 'error' => $error]);
+    }
+
+    /**
+     * @Route("/connect/github", name="github_connect")
+     * @param ClientRegistry $clientRegistry
+     * @return void
+     */
+    public function connect(ClientRegistry $clientRegistry): RedirectResponse
+    {
+        /**
+         * @var GithubClient $client
+         */
+        $client = $clientRegistry->getClient('github');
+        return $client->redirect(['read:user', 'user:email']);
     }
 
     /**

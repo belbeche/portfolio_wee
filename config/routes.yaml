@@ -8,3 +8,7 @@ exception:
 front_maintenance:
     path: /maintenance
     controller: App\Controller\Front\MaintenanceController::maintenance
+
+oauth_check:
+  path: /oauth/check
+  controller: Symfony\Bundle\FrameworkBundle\Controller\TemplateController
