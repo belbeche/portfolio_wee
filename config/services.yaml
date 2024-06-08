@@ -20,6 +20,11 @@ services:
     App\Security\Voter\DevisVoter:
         tags:
             - { name: 'security.voter' }
+    App\Security\GithubAuthenticator:
+        arguments:
+            $em: '@doctrine.orm.entity_manager'
+        tags:
+            - { name: 'monolog.logger', channel: 'security' }
     _defaults:
         autowire: true # Automatically injects dependencies in your services.
         autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.

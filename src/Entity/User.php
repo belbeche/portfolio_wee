@@ -106,6 +106,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private DateTime $date;
 
     /**
+     * @ORM\Column(type="string", nullable="true")
+     * @var string
+     */
+    private string $githubId;
+
+    /**
      * @ORM\OneToMany (targetEntity=Comment::class, mappedBy="user", orphanRemoval=true)
      */
     private $comments;
@@ -525,6 +531,24 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         $this->date = $date;
 
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getGithubId(): string
+    {
+        return $this->githubId;
+    }
+
+    /**
+     * @param string $githubId
+     * @return User
+     */
+    public function setGithubId(string $githubId): User
+    {
+        $this->githubId = $githubId;
         return $this;
     }
 
