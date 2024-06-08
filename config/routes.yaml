@@ -10,5 +10,7 @@ front_maintenance:
     controller: App\Controller\Front\MaintenanceController::maintenance
 
 oauth_check:
-  path: /oauth/check/{service}
+  path: /oauth/check/github
   controller: Symfony\Bundle\FrameworkBundle\Controller\TemplateController
+  defaults:
+    template: 'security/oauth_check.html.twig'

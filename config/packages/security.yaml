@@ -2,7 +2,6 @@ security:
     enable_authenticator_manager: true
     password_hashers:
         Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: 'auto'
-
     providers:
         app_user_provider:
             entity:
@@ -15,14 +14,12 @@ security:
             security: false
 
         main:
-            #anonymous: true
+            lazy: true
             provider: app_user_provider
-            guard:
-                authenticators:
-                    - App\Security\GithubAuthenticator
+            custom_authenticators:
+                - App\Security\GithubAuthenticator
             logout:
-                path: /logout
-                target: /
+                path: app_logout
 
     access_control:
         - { path: ^/admin, roles: ROLE_ADMIN }
@@ -30,4 +27,4 @@ security:
         - { path: ^/assistance, roles: ROLE_USER }
         - { path: ^/profil/, roles: ROLE_USER }
         - { path: ^/connect/github, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/connect/github/check, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/oauth/check/github, roles: IS_AUTHENTICATED_ANONYMOUSLY }

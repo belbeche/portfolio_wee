@@ -2,7 +2,6 @@
 
 namespace App\Security;
 
-use Doctrine\ORM\EntityManagerInterface;
 use KnpU\OAuth2ClientBundle\Client\ClientRegistry;
 use KnpU\OAuth2ClientBundle\Security\Authenticator\OAuth2Authenticator;
 use Symfony\Component\HttpFoundation\Request;
@@ -18,13 +17,11 @@ class GithubAuthenticator extends OAuth2Authenticator
 {
     private $clientRegistry;
     private $router;
-    private EntityManagerInterface $em;
 
-    public function __construct(ClientRegistry $clientRegistry, RouterInterface $router, EntityManagerInterface $em)
+    public function __construct(ClientRegistry $clientRegistry, RouterInterface $router)
     {
         $this->clientRegistry = $clientRegistry;
         $this->router = $router;
-        $this->em = $em;
     }
 
     public function supports(Request $request): ?bool
@@ -44,9 +41,8 @@ class GithubAuthenticator extends OAuth2Authenticator
 
         $email = $githubUser->getEmail();
 
-        // ... fetch the user from the database or create it if necessary
-
-        return $user;
+        // Fetch the user from the database or create it if necessary
+        return $userProvider->loadUserByUsername($email);
     }
 
     private function getGithubClient()
@@ -57,11 +53,13 @@ class GithubAuthenticator extends OAuth2Authenticator
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception): ?Response
     {
         // Handle failure
+        return new Response('Authentication Failed', Response::HTTP_FORBIDDEN);
     }
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $providerKey): ?Response
     {
         // Handle success
+        return new RedirectResponse($this->router->generate('app_login'));
     }
 
     /**
