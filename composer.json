@@ -19,7 +19,7 @@
         "knpuniversity/oauth2-client-bundle": "*",
         "lcobucci/jwt": "^4.0",
         "league/oauth2-facebook": "*",
-        "league/oauth2-github": "^3.1",
+        "league/oauth2-github": "*",
         "lexik/jwt-authentication-bundle": "^2.18",
         "luchianenco/oauth2-amazon": "*",
         "mpdf/mpdf": "^8.2",
