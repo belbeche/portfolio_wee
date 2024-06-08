@@ -2,6 +2,8 @@
 
 namespace App\Security;
 
+use Doctrine\ORM\EntityManagerInterface;
+use KnpU\OAuth2ClientBundle\Client\ClientRegistry;
 use KnpU\OAuth2ClientBundle\Security\Authenticator\OAuth2Authenticator;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -16,11 +18,13 @@ class GithubAuthenticator extends OAuth2Authenticator
 {
     private $clientRegistry;
     private $router;
+    private EntityManagerInterface $em;
 
-    public function __construct(ClientRegistry $clientRegistry, RouterInterface $router)
+    public function __construct(ClientRegistry $clientRegistry, RouterInterface $router, EntityManagerInterface $em)
     {
         $this->clientRegistry = $clientRegistry;
         $this->router = $router;
+        $this->em = $em;
     }
 
     public function supports(Request $request): ?bool
