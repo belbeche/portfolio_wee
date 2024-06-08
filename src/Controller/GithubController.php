@@ -9,10 +9,12 @@ use Symfony\Component\Routing\Annotation\Route;
 class GithubController extends AbstractController
 {
     /**
-     * @Route("/connect/github/check", name="connect_github_check")
+     * @Route("/connect/github", name="github_connect")
      */
-    public function connectCheckAction()
+    public function connect(ClientRegistry $clientRegistry): RedirectResponse
     {
-        // This is handled by the authenticator
+        /** @var GithubClient $client */
+        $client = $clientRegistry->getClient('github');
+        return $client->redirect(['read:user', 'user:email']);
     }
 }
