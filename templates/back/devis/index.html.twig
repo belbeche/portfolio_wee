@@ -32,7 +32,11 @@
                         {% if devis.attentesDesignWeb is not empty %}
                             <ul>
                                 {% for attente in devis.attentesDesignWeb %}
-                                    <li>{{ attente }}</li>
+                                    <li>
+									{% for list in attente %}
+										{{ list.label }}
+									{% endfor %}
+									</li>
                                 {% endfor %}
                             </ul>
                         {% else %}
