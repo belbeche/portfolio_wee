@@ -4,6 +4,7 @@ namespace App\Entity;
 
 
 use DateTimeImmutable;
+use Doctrine\DBAL\Types\Types;
 use Symfony\Component\Uid\Uuid;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\DevisRepository;
@@ -267,6 +268,44 @@ class Devis
     public function setAttentesDesignWeb(Collection $attentesDesignWeb): Devis
     {
         $this->attentesDesignWeb = $attentesDesignWeb;
+        return $this;
+    }
+
+    public function addTicket(Ticket $ticket): static
+    {
+        if (!$this->tickets->contains($ticket)) {
+            $this->tickets->add($ticket);
+            $ticket->setDevis($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTicket(Ticket $ticket): static
+    {
+        if ($this->tickets->removeElement($ticket)) {
+            // set the owning side to null (unless already changed)
+            if ($ticket->getDevis() === $this) {
+                $ticket->setDevis(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function addAttentesDesignWeb(AttenteDesignWeb $attentesDesignWeb): static
+    {
+        if (!$this->attentesDesignWeb->contains($attentesDesignWeb)) {
+            $this->attentesDesignWeb->add($attentesDesignWeb);
+        }
+
+        return $this;
+    }
+
+    public function removeAttentesDesignWeb(AttenteDesignWeb $attentesDesignWeb): static
+    {
+        $this->attentesDesignWeb->removeElement($attentesDesignWeb);
+
         return $this;
     }
 }
