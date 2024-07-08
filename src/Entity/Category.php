@@ -39,6 +39,7 @@ class Category
     public function __construct()
     {
         $this->projects = new ArrayCollection();
+        $this->Subjects = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -80,6 +81,33 @@ class Category
     {
         if ($this->projects->removeElement($project)) {
             $project->removeCategory($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Subject>
+     */
+    public function getSubjects(): Collection
+    {
+        return $this->Subjects;
+    }
+
+    public function addSubject(Subject $subject): static
+    {
+        if (!$this->Subjects->contains($subject)) {
+            $this->Subjects->add($subject);
+            $subject->addCategory($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSubject(Subject $subject): static
+    {
+        if ($this->Subjects->removeElement($subject)) {
+            $subject->removeCategory($this);
         }
 
         return $this;

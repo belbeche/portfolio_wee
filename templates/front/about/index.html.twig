@@ -12,9 +12,53 @@
 			<a href="{{ url('front_contact')}}" target="_self" class="btn btn-primary btn-lg px-4 rounded-pill">Nous contacter</a>
 		</div>
 	</div>
+	<div class="container d-flex justify-content-center">
+		<div class="row">
+			{% for member in members %}
+				<div class="col-md-4 mb-4">
+					<div class="card">
+						{#
+						<img src="{{ asset('img/moi2.jpg')}}" class="card-img-top rounded-circle" alt="PDG - Walid BELBECHE" width="200" height="200">
+						#}
+						<div class="card-body">
+							<h5 class="card-title">{{ member.firstname }} {{ member.lastname }}</h5>
+							<h6 class="card-subtitle mb-2 text-body-secondary">{{ member.function }}</h6>
+							<p class="card-text">{{ member.description }}</p>
+							{#<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal_walid">
+							En savoir plus
+						</button>
+						<a href="{{ asset('img/belbeche_walid.pdf') }}" class="card-link">Curriculum vitae</a>#}
+							<p href="mailto: {{ member.email }}">Contact : {{ member.email }}</p>
+						</div>
+					</div>
+				</div>
+			{% endfor %}
+		</div>
+	</div>
+{#<div class="row">#}
 
+	{#<div class="px-15">
+		<div class="row">
+			<div class="col-md-4 mb-4">
+				<div class="card">
+					<img src="{{ asset('img/moi2.jpg')}}" class="card-img-top rounded-circle" alt="PDG - Walid BELBECHE" width="200" height="200">
+					<div class="card-body">
+						<h5 class="card-title">Walid BELBECHE</h5>
+						<h6 class="card-subtitle mb-2 text-body-secondary">Dirigeant - Développeur</h6>
+						<p class="card-text">Indépandant en développement web et gestion d'entreprise.</p>
+						<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal_walid">
+							En savoir plus
+						</button>
+						<a href="{{ asset('img/belbeche_walid.pdf') }}" class="card-link">Curriculum vitae</a>
+						<p href="mailto: wbelbeche@scriptzenit.fr">Contact : wbelbeche@scriptzenit.fr</p>
+					</div>
+				</div>
+			</div>
+			<!-- /endpdg -->
+		</div>
+	</div>#}
 	
-	<div class="container px-15">
+	{#<div class="container px-15">
 		<div class="row">
 		<!-- PDG -->
 		<div class="col-md-4 mb-4">
@@ -62,7 +106,7 @@
 			})
 		</script>
 
-		{#<!-- Commercial -->
+		#}{#<!-- Commercial -->
 			<div class="col-md-4 mb-4">
 				<div class="card">
 					<img src="{{ asset('img/youss_ousmane.jpg')}}" class="card-img-top rounded-circle" alt="Commercial - Youssouf Ousmane" width="200" height="200">
@@ -107,9 +151,9 @@
 				$('#myModal').on('shown.bs.modal', function () {
 					$('#myInput').trigger('focus')
 				})
-			</script>#}
+			</script>#}{#
 			<!-- Admin sytème -->
-			{#<div class="col-md-4 mb-4">
+			#}{#<div class="col-md-4 mb-4">
 				<div class="card">
 					<img src="{{ asset('img/youss.png')}}" class="card-img-top rounded-circle" alt="admin système - Youss_">
 					<div class="card-body">
@@ -152,7 +196,7 @@
 					$('#myInput').trigger('focus')
 				})
 			</script>
-		</div>#}
+		</div>#}{#
 	</div>
 
 	<div class="jumbotron jumbotron-fluid bg-primary">
@@ -177,7 +221,7 @@
     </div>
   </div>
 
-  <div class="b-example-divider"></div>
+  <div class="b-example-divider"></div>#}
 
 
 {% endblock %}
