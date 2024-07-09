@@ -23,7 +23,7 @@
 							<a class="nav-link" href="{{ url('front_home') }}">Accueil</a>
 						</li>
 
-						<li class="menu-item {{ app.request.get('_route') == 'front_about' ? 'active' : '' }}">
+						<li class="menu-item {{ app.request.get('_route') == 'front_member_index' ? 'active' : '' }}">
 							<a class="nav-link" href="{{ url('front_member_index') }}">A propos</a>
 						</li>
 					{% endif %}
