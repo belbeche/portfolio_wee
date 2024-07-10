@@ -15,7 +15,7 @@
 
 
 	<!-- Hero 4 - Bootstrap Brain Component -->
-	<section class="bg-primary">
+	<section class="bg-intro vh-100">
 		<div class="container-fluid overflow-hidden">
 			<div class="row">
 				<div class="col-12 col-md-12 order-1 order-md-0 align-self-md-end">
@@ -80,7 +80,7 @@
 	{# Fin de la section d'en-tête #}
 
 	<!-- Pourquoi nous choisir -->
-	<section class="py-3 py-md-5">
+	<section class="py-3 py-md-5 bg-second">
 		<div class="container">
 			<div class="row gy-3 gy-md-4 gy-lg-0 align-items-lg-center">
 				<div class="col-12 col-lg-6">
@@ -89,9 +89,9 @@
 				<div class="col-12 col-lg-6">
 					<div class="row justify-content-xl-center">
 						<div class="col-12 col-xl-10">
-							<h2 class="mb-3">Faites confiance à ScriptzenIT !</h2>
-							<p class="lead text-justify">Fondée en 2023, ScriptzenIT fait son entrée dans le domaine numérique en redéfinissant les frontières de l'innovation et de l'excellence. Portée par une vision avant-gardiste, notre entreprise s'engage à remodeler le monde numérique.</p>
-							<p class="lead text-justify">Chez ScriptzenIT, nous plaçons nos clients au cœur de notre approche. Nous collaborons avec des entreprises de toutes tailles et de tous secteurs pour concevoir des stratégies sur mesure répondant précisément à leurs besoins et objectifs spécifiques.</p>
+							<h2 class="mb-3 text-white">Faites confiance à ScriptzenIT !</h2>
+							<p class="lead text-justify text-white">Fondée en 2023, ScriptzenIT fait son entrée dans le domaine numérique en redéfinissant les frontières de l'innovation et de l'excellence. Portée par une vision avant-gardiste, notre entreprise s'engage à remodeler le monde numérique.</p>
+							<p class="lead text-justify text-white">Chez ScriptzenIT, nous plaçons nos clients au cœur de notre approche. Nous collaborons avec des entreprises de toutes tailles et de tous secteurs pour concevoir des stratégies sur mesure répondant précisément à leurs besoins et objectifs spécifiques.</p>
 							<div class="d-flex align-items-center mb-3">
 								<div class="me-3 text-primary">
 									<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="currentColor" class="bi bi-check-circle-fill" viewBox="0 0 16 16">
@@ -99,7 +99,7 @@
 									</svg>
 								</div>
 								<div>
-									<p class="fs-5 m-0">Notre approche est centrée sur vous, nos chers clients.</p>
+									<p class="fs-5 m-0 text-white">Notre approche est centrée sur vous, nos chers clients.</p>
 								</div>
 							</div>
 							<div class="d-flex align-items-center mb-3">
@@ -109,10 +109,10 @@
 									</svg>
 								</div>
 								<div>
-									<p class="fs-5 m-0">Nous nous engageons à dépasser vos attentes à chaque étape de notre collaboration.</p>
+									<p class="fs-5 m- text-white">Nous nous engageons à dépasser vos attentes à chaque étape de notre collaboration.</p>
 								</div>
 							</div>
-							<a href="{{ url('app_login') }}" class="btn bsb-btn-xl btn-outline-primary rounded-pill">Connectez-vous maintenant</a>
+							<a href="{{ url('app_login') }}" class="btn bsb-btn-xl btn-info rounded-pill">Connectez-vous maintenant</a>
 						</div>
 					</div>
 				</div>
@@ -120,7 +120,7 @@
 		</div>
 	</section>
 	<!-- Fin de Pourquoi nous choisir -->
-
+	<div class="divider"></div>
 	<!-- Processus -->
 	<h1 class="display-4 fw-bold text-center">Notre Processus</h1>
 
@@ -160,7 +160,7 @@
 		</div>
 	</section>
 	<!-- Fin du Processus -->
-
+	<div class="divider"></div>
 	<!-- Réalisations -->
 	<section class="pb-5">
 		<div class="container">
@@ -228,7 +228,7 @@
 		</div>
 	</section>
 	<!-- Fin des Réalisations -->
-
+	<div class="divider"></div>
 	{# Section Project  #}
 
 	<section>
@@ -246,10 +246,11 @@
 		</div>
 	</section>
 
-	<br>
+	<div class="divider"></div>
 
 	{# Technologie et outils #}
-	<div class="container">
+	<div class="container vh-50">
+		<br><br>
 		<div class="row">
 			<div class="col-xs-12 col-sm-12">
 				<div class="block-title">
@@ -258,52 +259,52 @@
 			</div>
 		</div>
 		<div class="row" id="specs">
-			<div class="col-xs-12 col-sm-3 vh-30">
+			<div class="col-xs-12 col-sm-3 vh-20">
 				<div class="lm-info-block gray-default">
 					<img src="./img/clients/spec-1.png" alt="PHP">
 					<h4>PHP</h4>
 				</div>
 			</div>
 
-			<div class="col-xs-12 col-sm-3 vh-30">
+			<div class="col-xs-12 col-sm-3 vh-20">
 				<div class="lm-info-block gray-default">
 					<img src="./img/clients/spec-2.png" alt="HTML 5 / CSS 3">
 					<h4>HTML 5 / CSS 3</h4>
 				</div>
 			</div>
 
-			<div class=" col-xs-12 col-sm-3 vh-30">
+			<div class=" col-xs-12 col-sm-3 vh-20">
 				<div class="lm-info-block gray-default">
 					<img src="./img/clients/spec-3.png" alt="Git">
 					<h4>Git + SSH</h4>
 				</div>
 			</div>
 
-			<div class=" col-xs-12 col-sm-3 vh-30">
+			<div class=" col-xs-12 col-sm-3 vh-20">
 				<div class="lm-info-block gray-default">
 					<img src="./img/clients/spec-4.png" alt="Symfony">
 					<h4>Symfony</h4>
 				</div>
 			</div>
-			<div class="col-xs-12 col-sm-3 vh-30">
+			<div class="col-xs-12 col-sm-3 vh-20">
 				<div class="lm-info-block gray-default">
 					<img src="./img/clients/spec-5.svg" alt="React">
 					<h4>React / VueJs</h4>
 				</div>
 			</div>
-			<div class="col-xs-12 col-sm-3 vh-30">
+			<div class="col-xs-12 col-sm-3 vh-20">
 				<div class="lm-info-block gray-default">
 					<img src="./img/clients/spec-7.png" alt="Sass">
 					<h4>SaaS</h4>
 				</div>
 			</div>
-			<div class="col-xs-12 col-sm-3 vh-30">
+			<div class="col-xs-12 col-sm-3 vh-20">
 				<div class="lm-info-block gray-default">
 					<img src="./img/clients/spec-8.svg" alt="Json web token(JWT)" class="text-center">
 					<h4>Json web token</h4>
 				</div>
 			</div>
-			<div class="col-xs-12 col-sm-3 vh-30">
+			<div class="col-xs-12 col-sm-3 vh-20">
 				<div class="lm-info-block gray-default">
 					<img src="./img/clients/spec-9.png" alt="Axios / Ajax" class="text-center">
 					<h4>Axios/Ajax</h4>
@@ -312,7 +313,7 @@
 		</div>
 	</div>
 	{# ./ Technologie et outils #}
-
+	<div class="divider"></div>
 	<!-- Pricing -->
 	<div class="container">
 		<div class="row">
@@ -393,7 +394,7 @@
 			</div>
 			<!-- /Pricing -->
 		</div>
-
+		<div class="divider"></div>
 		<div class="row">
 			<div class="col-xs-12 col-sm-12">
 				<div class="p-20"></div>
@@ -491,7 +492,7 @@
 				</div>
 			</div>
 		</div>
-
+		<div class="divider"></div>
 		<div class="thank-you">
 			<h2>Merci d'avoir visité notre site !</h2>
 			<p>Nous apprécions votre visite. Si vous avez des questions, des commentaires ou avez besoin de plus d'informations, n'hésitez pas à nous contacter.</p>

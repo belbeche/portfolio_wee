@@ -18,15 +18,13 @@
 			</div>
 			<div class="menu" id="menu">
 				<ul class="menu-inner">
-					{% if not app.user %}
-						<li class="menu-item {{ app.request.get('_route') == 'front_home' ? 'active' : '' }}">
-							<a class="nav-link" href="{{ url('front_home') }}">Accueil</a>
-						</li>
+					<li class="menu-item {{ app.request.get('_route') == 'front_home' ? 'active' : '' }} d-lg-none">
+						<a class="nav-link" href="{{ url('front_home') }}">Accueil</a>
+					</li>
 
-						<li class="menu-item {{ app.request.get('_route') == 'front_member_index' ? 'active' : '' }}">
-							<a class="nav-link" href="{{ url('front_member_index') }}">A propos</a>
-						</li>
-					{% endif %}
+					<li class="menu-item {{ app.request.get('_route') == 'front_member_index' ? 'active' : '' }} d-lg-none">
+						<a class="nav-link" href="{{ url('front_member_index') }}">A propos</a>
+					</li>
 					<li class="menu-item {{ app.request.get('_route') == 'front_project' ? 'active' : '' }}">
 						<a class="nav-link" href="{{ url('front_project') }}">Nos réalisations</a>
 					</li>

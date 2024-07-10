@@ -1,4 +1,12 @@
+.bg-intro{
+    background-image: url("../../../img/bg.jpg");
+    background-size: cover;
+}
 
+.bg-second{
+    background-image: url("../../../img/bg_old.png");
+    background-size: cover;
+}
 
 .logo img {
     -ms-interpolation-mode: bicubic;
