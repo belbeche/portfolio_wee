@@ -149,7 +149,7 @@ class SecurityController extends AbstractController
 
             $this->addFlash('success', 'Profil mis à jour avec succès.');
 
-            return $this->redirectToRoute('front_profile');
+            return $this->redirectToRoute('front_profile_project');
         }
 
         return $this->render('front/profil/edit.html.twig', [
