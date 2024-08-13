@@ -11,8 +11,8 @@
                 Message Original
             </div>
             <div class="card-body">
-                <p><strong>De :</strong>  {{ originalMessage.getReceiver() }}</p>
-                <p><strong>à :</strong> {{ originalMessage.getSender() }} </p>
+                <p><strong>De :</strong>  {{ originalMessage.getSender() }}</p>
+                <p><strong>à :</strong> {{ originalMessage.getReceiver() }} </p>
                 <p><strong>Priorité :</strong> {{ originalMessage.getPriority() }}</p>
                 <p><strong>Contenu :</strong> {{ originalMessage.getContent() }}</p>
             </div>
@@ -42,6 +42,11 @@
                 <div>
                     {{ form_label(form.sender) }}
                     {{ form_widget(form.sender) }}
+                </div>
+
+                <div>
+                    {{ form_label(form.receiver) }}
+                    {{ form_widget(form.receiver) }}
                 </div>
 
                 <div>

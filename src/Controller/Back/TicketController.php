@@ -36,82 +36,56 @@ class TicketController extends AbstractController
             'tickets' => $tickets
         ]);
     }
+
     /**
      * @Route("/back/repondre-ticket/{id}", name="back_respond_to_ticket", methods={"GET","POST"})
      * @throws TransportExceptionInterface
      * @IsGranted("ROLE_ADMIN")
      */
-    public function respondToTicket(Request $request, EntityManagerInterface $entityManager, MailerInterface $mailer,$id): Response
+    public function respondToTicket(Request $request, EntityManagerInterface $entityManager, MailerInterface $mailer, $id): Response
     {
-        // Récupérer l'utilisateur actuellement connecté (l'expéditeur du message)
         $currentUser = $this->getUser();
 
-        // Assurez-vous que l'utilisateur est connecté avant de continuer
         if (!$currentUser) {
-            // Gérer l'absence d'utilisateur connecté (rediriger vers la page de connexion)
             return $this->redirectToRoute('app_login');
         }
 
         $currentMessage = $entityManager->getRepository(Message::class)->find($id);
         if (!$currentMessage) {
-            die('Message not found!');
+            throw $this->createNotFoundException('Message not found!');
         }
 
-        $user = $entityManager->getRepository(User::class)->findBy(['email' => $currentMessage->getSender()]);
+        // Corrige l'assignation du champ sender en utilisant l'entité User
+        $user = $entityManager->getRepository(User::class)->findOneBy(['email' => $currentMessage->getSender()->getEmail()]);
 
         $ticket = new Ticket();
-
         $form = $this->createForm(TicketType::class, $ticket);
 
-        /*$form->get('sender')->setData($currentMessage->getSender()->getEmail());*/
-        /*$form->get('sender')->setData($currentMessage->getSender());*/
+        $form->get('sender')->setData($currentUser);
 
         $form->handleRequest($request);
 
-        if ($request->isMethod('POST') && $form->isSubmitted()) {
-
-            /*$senderId = $form->get('sender')->getData();
-
-            $sender = $entityManager->getRepository(User::class)->find($senderId);*/
-
+        if ($request->isMethod('POST') && $form->isSubmitted() && $form->isValid()) {
             $message = new Message();
 
             $message
                 ->setDevis($currentMessage->getDevis())
-                ->setSender($currentMessage->getSender())
-                ->setReceiver($currentMessage->getReceiver())
+                ->setSender($currentUser)
+                ->setReceiver($currentMessage->getSender())
                 ->setContent($ticket->getContent())
                 ->setPriority($ticket->getPriority())
-                ->setStatus('en_cours')
-            ;
+                ->setStatus('en_cours');
 
             $ticket
                 ->setDevis($currentMessage->getDevis())
                 ->setReceiver($currentMessage->getReceiver())
-                ->setSender($message->getSender()) // Si le ticket est envoyé par l'utilisateur actuellement connecté.
+                ->setSender($currentUser)
                 ->setStatus('en_cours')
                 ->setPriority($ticket->getPriority());
-            ;
 
-            /*dump($message);dd($ticket);*/
             $entityManager->persist($message);
             $entityManager->persist($ticket);
             $entityManager->flush();
-
-            /*$email = (new TemplatedEmail())
-                ->from('wbelbeche.s@gmail.com')
-                ->to($originalMessage->getSender()->getEmail())
-                ->subject('Réponse à votre demande, Devis , Walid BELBECHE')
-                ->bcc('wbelbeche.s@gmail.com')
-                ->context([
-                    'email_address' => $currentUser->getEmail(),
-                    'priority' => $responseMessage->getPriority(),
-                    'message' => $responseMessage->getContent(),
-                    'status' => $responseMessage->getStatus(),
-                ])
-                ->htmlTemplate('front/ticket/response_email.html.twig');
-
-            $mailer->send($email);*/
 
             $this->addFlash('info', 'Votre réponse a bien été envoyée.');
 
@@ -119,21 +93,20 @@ class TicketController extends AbstractController
                 'id' => $currentMessage->getId()
             ]);
         }
+
         return $this->render('back/ticket/new.html.twig', [
             'form' => $form->createView(),
             'originalMessage' => $currentMessage,
         ]);
     }
+
     /**
      * @Route("/back/voir-ticket/{id}", name="back_show_ticket", methods={"GET"})
      * @IsGranted("ROLE_ADMIN")
      */
-    public function show(Message $originalMessage,EntityManagerInterface $entityManager,Request $request)
+    public function show(Message $originalMessage, EntityManagerInterface $entityManager, Request $request): Response
     {
-
-        $user = $entityManager->getRepository(User::class)->findOneBy(['email' => $originalMessage->getSender()->getEmail()]);
-
-        // Récupérer les tickets envoyés par l'utilisateur et les ordonner par date de création décroissante
+        $user = $entityManager->getRepository(User::class)->find($originalMessage->getSender());
 
         $tickets = $entityManager->getRepository(Message::class)->findBy(
             ['sender' => $user],
@@ -141,7 +114,8 @@ class TicketController extends AbstractController
         );
 
         return $this->render('back/ticket/show.html.twig', [
-            'tickets' => $tickets
+            'tickets' => $tickets,
+            'originalMessage' => $originalMessage,
         ]);
     }
 
@@ -152,11 +126,8 @@ class TicketController extends AbstractController
     public function remove(EntityManagerInterface $entityManager, Message $message, Request $request, Filesystem $filesystem): RedirectResponse
     {
         if ($this->isCsrfTokenValid('delete' . $message->getId(), $request->request->get('_token'))) {
-
-            // Récupérer le chemin du fichier associé au ticket
             $attachmentPath = $this->getParameter('uploads_directory') . '/' . $message->getAttachment();
 
-            // Supprimer le fichier si il existe
             if ($filesystem->exists($attachmentPath)) {
                 $filesystem->remove($attachmentPath);
             }
@@ -164,8 +135,9 @@ class TicketController extends AbstractController
             $entityManager->remove($message);
             $entityManager->flush();
         }
+
         return $this->redirectToRoute('back_show_ticket', [
-            'id' => $message->getDevis()
+            'id' => $message->getDevis()->getId()
         ]);
     }
 }

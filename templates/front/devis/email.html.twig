@@ -132,8 +132,10 @@
 																<br>
 
 																Vous souhaitez réaliser :
-																{{ subject }}
-																<br>
+																{% for object in subject %}
+																	{{ object.content }}
+																<hr>
+																{% endfor %}
 
 																Votre demande est :
 																{{ message }}
@@ -239,7 +241,7 @@
 																</div>
 																<div style="font-family: arial, helvetica, sans-serif;">&nbsp;</div>
 																<div style="font-family: arial, helvetica, sans-serif;">
-																	<span style="font-size: 12px; color: #999999; line-height: 14.4px;">Je reviens vers vous dans 48h/72h maximum, vérifiez votre adresse email, passé ce délai, veuillez rédiger un ticket.<a href="{{ url('front_assistance')}}">Clickez ici</a>
+																	<span style="font-size: 12px; color: #999999; line-height: 14.4px;">Nous revenons vers vous dans 48h/72h maximum, vérifiez votre adresse email, passé ce délai, veuillez rédiger un ticket.<a href="{{ url('front_assistance')}}">Clickez ici</a>
 																	</span>
 																</div>
 															</div>

@@ -43,25 +43,25 @@ class Message
     private $status;
 
     /**
-     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="receivedMessages")
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private ?User $receiver;
-
-    /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $attachment;
 
     /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private ?string $sender;
-
-    /**
      * @ORM\ManyToOne(targetEntity=Devis::class, inversedBy="messages", cascade={"remove"})
      */
     private $devis;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=User::class)
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private ?User $sender;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private string $receiver;
 
     /**
      * @throws \Exception
@@ -114,39 +114,6 @@ class Message
         return $this;
     }
 
-    public function getReceiver(): ?User
-    {
-        return $this->receiver;
-    }
-
-    /**
-     * @param mixed $receiver
-     * @return Message
-     */
-    public function setReceiver(?User $receiver):self
-    {
-        $this->receiver = $receiver;
-        return $this;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getSender(): ?string
-    {
-        return $this->sender;
-    }
-
-    /**
-     * @param string|null $sender
-     * @return Message
-     */
-    public function setSender(?string $sender): Message
-    {
-        $this->sender = $sender;
-        return $this;
-    }
-
     /**
      * @return mixed
      */
@@ -179,6 +146,30 @@ class Message
     public function setCreatedAt(\DateTime $createdAt): self
     {
         $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    public function getSender(): ?User
+    {
+        return $this->sender;
+    }
+
+    public function setSender(?User $sender): self
+    {
+        $this->sender = $sender;
+
+        return $this;
+    }
+
+    public function getReceiver(): String
+    {
+        return $this->receiver;
+    }
+
+    public function setReceiver(string $receiver): self
+    {
+        $this->receiver = $receiver;
 
         return $this;
     }

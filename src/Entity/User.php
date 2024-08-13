@@ -117,6 +117,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?Collection $Subjects;
 
     /**
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="devis")
+     * @ORM\JoinColumn(nullable=true)
+     */
+    private $user;
+
+    /**
      * @throws \Exception
      */
     public function __construct()
@@ -126,6 +132,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->sentMessages = new ArrayCollection();
         $this->avatar = 'support0.svg';
         $this->roles = ['ROLE_USER'];
+        $this->user = null;
 
         $this->Subjects = new ArrayCollection();
         $this->comments = new ArrayCollection();
@@ -570,6 +577,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
                 $sentMessage->setSender(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): self
+    {
+        $this->user = $user;
 
         return $this;
     }

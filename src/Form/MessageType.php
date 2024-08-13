@@ -4,19 +4,23 @@ namespace App\Form;
 
 use App\Entity\Devis;
 use App\Entity\Message;
-use App\Form\DataTransformer\EmailToUserTransformer;
-use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use App\Form\DataTransformer\EmailToUserTransformer;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 
 class MessageType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $currentUser = $options['current_user']; // On suppose que l'utilisateur connecté est passé via les options
+        
         $builder
             ->add('content', TextareaType::class, [
                 'label' => 'Contenu du message',
@@ -46,11 +50,17 @@ class MessageType extends AbstractType
             ])
             ->add('devis', EntityType::class, [
                 'class' => Devis::class,
-                'choice_label' => 'type_de_site_web', // Remplacez cela par le champ que vous souhaitez afficher dans la liste déroulante
+                'choice_label' => 'type_de_site_web',
                 'placeholder' => 'Choisissez un devis',
                 'required' => true,
+                'query_builder' => function (EntityRepository $er) use ($currentUser) {
+                    return $er->createQueryBuilder('d')
+                              ->where('d.email = :email')
+                              ->setParameter('email', $currentUser)
+                              ->orderBy('d.created_at', 'DESC'); // Trier par date de création pour voir les plus récents en premier
+                },
             ])
-            ->add('sender', ChoiceType::class, [
+            ->add('receiver', ChoiceType::class, [
                 'choices' => [
                     'Avancement projet' => 'contact@scriptzenit.fr',
                     'Problème lié à la demande' => 'support@scriptzenit.fr'
@@ -58,6 +68,9 @@ class MessageType extends AbstractType
                 'placeholder' => 'Choisissez un destinataire',
                 'required' => true,
                 'label' => 'Service à contacter',
+            ])
+            ->add('sender', HiddenType::class, [
+                'label' => false,
             ])
             ->add('attachment', FileType::class, [
                 'label' => 'Joindre un fichier (optionnel)',
@@ -70,8 +83,8 @@ class MessageType extends AbstractType
             ;
 
             // Ajoutez le transformer
-            /*$builder->get('receiver')
-                ->addModelTransformer(new EmailToUserTransformer($this->entityManager));*/
+            // $builder->get('receiver')
+            //         ->addModelTransformer(new EmailToUserTransformer($this->entityManager));
     }
 
     public function configureOptions(OptionsResolver $resolver)
@@ -79,5 +92,8 @@ class MessageType extends AbstractType
         $resolver->setDefaults([
             'data_class' => Message::class,
         ]);
+        $resolver->setRequired('current_user'); // Indique que 'current_user' est requis
+
     }
+    
 }

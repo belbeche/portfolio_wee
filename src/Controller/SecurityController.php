@@ -3,9 +3,10 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Entity\Devis;
+use App\Form\UserType;
 use App\Form\EditProfileType;
 use App\Form\UserPasswordType;
-use App\Form\UserType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\HttpFoundation\Request;
@@ -14,49 +15,33 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class SecurityController extends AbstractController
 {
 
-    /**
+     /**
      * @Route("/inscription", name="app_register")
      */
-    public function renderRegister(Request $request, MailerInterface $mailer, EntityManagerInterface $entityManager, UserPasswordEncoderInterface $passwordEncoder): Response
+    public function renderRegister(Request $request, EntityManagerInterface $entityManager): Response
     {
-        if ($this->getUser()) {
-            return $this->redirectToRoute('front_assistance');
-        }
-
         $user = new User();
         $form = $this->createForm(UserType::class, $user);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $user->setPassword(null);
-            $user->setEmail($form->getData('email'));
-            /*$user->addDevi($this->getUser()->);*/
-            // Envoi de l'email
-            $email = (new TemplatedEmail())
-                ->from('contact@scriptzenit.fr')
-                ->to($user->getEmail())
-                ->subject('Récapitulatif inscription ScriptZenIT')
-                ->bcc('wbelbeche.s@gmail.com')
-                ->context([
-                    'RegistredNumber' => $user->getId(),
-                    'email_address' => $user->getEmail(),
-                    'nom' => $user->getNom(),
-                    'prenom' => $user->getPrenom(),
-                    'civility' => $user->getCivility(),
-                ])
-                ->htmlTemplate('security/email.html.twig');
-            $mailer->send($email);
 
+            // Définition de l'email
+            $user->setEmail($form->get('email')->getData());
+            $user->setRoles(['ROLE_USER']);
+
+            // Persistance de l'utilisateur en base de données
             $entityManager->persist($user);
-            $entityManager->flush();
+            $entityManager->flush(); // Ici, le user_id est généré automatiquement
 
+            // Redirection après l'inscription
             return $this->redirectToRoute('front_devis_set_password', [
                 'id' => $user->getId(),
             ]);
@@ -86,11 +71,13 @@ class SecurityController extends AbstractController
                 // Hasher et définir le nouveau mot de passe
                 $hashedPassword = $passwordEncoder->encodePassword($user, $plainPassword);
                 $user->setPassword($hashedPassword);
+                $user->setUser($user);
             }
 
             // Enregistrer l'utilisateur
             $entityManager->persist($user);
             $entityManager->flush();
+
 
             // Redirection vers la page de connexion
             return $this->redirectToRoute('app_login');
