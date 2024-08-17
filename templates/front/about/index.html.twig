@@ -1,227 +1,31 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}A propos
-{% endblock %}
+{% block title %}À propos{% endblock %}
 
 {% block content %}
-
-	<div class="container-fluid text-center jumbotron">
-		<h1>L'équipe</h1>
-		<div class="page-subtitle">
-			<h4>Découvrez notre équipe, notre expertise, et ce qu'on peut vous apporter</h4>
-			<a href="{{ url('front_contact')}}" target="_self" class="btn btn-primary btn-lg px-4 rounded-pill">Nous contacter</a>
-		</div>
-	</div>
-	<div class="container d-flex justify-content-center">
-		<div class="row">
-			{% for member in members %}
-				<div class="col-md-4 mb-4">
-					<div class="card">
-						{#
-						<img src="{{ asset('img/moi2.jpg')}}" class="card-img-top rounded-circle" alt="PDG - Walid BELBECHE" width="200" height="200">
-						#}
-						<div class="card-body">
-							<h5 class="card-title">{{ member.firstname }} {{ member.lastname }}</h5>
-							<h6 class="card-subtitle mb-2 text-body-secondary">{{ member.function }}</h6>
-							<p class="card-text">{{ member.description }}</p>
-							{#<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal_walid">
-							En savoir plus
-						</button>
-						<a href="{{ asset('img/belbeche_walid.pdf') }}" class="card-link">Curriculum vitae</a>#}
-							<p href="mailto: {{ member.email }}">Contact : {{ member.email }}</p>
-						</div>
-					</div>
-				</div>
-			{% endfor %}
-		</div>
-	</div>
-{#<div class="row">#}
-
-	{#<div class="px-15">
-		<div class="row">
-			<div class="col-md-4 mb-4">
-				<div class="card">
-					<img src="{{ asset('img/moi2.jpg')}}" class="card-img-top rounded-circle" alt="PDG - Walid BELBECHE" width="200" height="200">
-					<div class="card-body">
-						<h5 class="card-title">Walid BELBECHE</h5>
-						<h6 class="card-subtitle mb-2 text-body-secondary">Dirigeant - Développeur</h6>
-						<p class="card-text">Indépandant en développement web et gestion d'entreprise.</p>
-						<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal_walid">
-							En savoir plus
-						</button>
-						<a href="{{ asset('img/belbeche_walid.pdf') }}" class="card-link">Curriculum vitae</a>
-						<p href="mailto: wbelbeche@scriptzenit.fr">Contact : wbelbeche@scriptzenit.fr</p>
-					</div>
-				</div>
-			</div>
-			<!-- /endpdg -->
-		</div>
-	</div>#}
-	
-	{#<div class="container px-15">
-		<div class="row">
-		<!-- PDG -->
-		<div class="col-md-4 mb-4">
-			<div class="card">
-				<img src="{{ asset('img/moi2.jpg')}}" class="card-img-top rounded-circle" alt="PDG - Walid BELBECHE" width="200" height="200">
-				<div class="card-body">
-					<h5 class="card-title">Walid BELBECHE</h5>
-					<h6 class="card-subtitle mb-2 text-body-secondary">Dirigeant - Développeur</h6>
-					<p class="card-text">Indépandant en développement web et gestion d'entreprise.</p>
-					<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal_walid">
-						En savoir plus
-					</button>
-					<a href="{{ asset('img/belbeche_walid.pdf') }}" class="card-link">Curriculum vitae</a>
-					<p href="mailto: wbelbeche@scriptzenit.fr">Contact : wbelbeche@scriptzenit.fr</p>
-				</div>
-			</div>
-		</div>
-		<!-- /endpdg -->
-		<!-- Modal -->
-		<div class="modal fade" id="modal_walid" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-			<div class="modal-dialog">
-				<div class="modal-content">
-				<div class="modal-header">
-					<h5 class="modal-title" id="exampleModalLabel">Walid BELBECHE</h5>
-					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-					<span aria-hidden="true">&times;</span>
-					</button>
-				</div>
-				<div class="modal-body">
-					<p>Chemin d'un développeur</p>
-					<p>Walid BELBECHE</p>
-					<p>De cours en examens, j'ai cherché ma voie. Puis, les premières lignes de code m'ont captivé, allumant en moi une passion pour le web.</p>
-					<p>J'ai forgé mon expertise avec dévouement, créant des designs intuitifs et sécurisés, où chaque projet est une histoire en devenir.</p>
-					<p>Je suis là pour transformer vos rêves en réalité en sécurisant chaque site et en offrant des outils de gestion flexibles, optimisant ainsi votre présence en ligne.</p>
-				</div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
-				</div>
-				</div>
-			</div>
-		</div>
-		<script>
-			$('#myModal').on('shown.bs.modal', function () {
-				$('#myInput').trigger('focus')
-			})
-		</script>
-
-		#}{#<!-- Commercial -->
-			<div class="col-md-4 mb-4">
-				<div class="card">
-					<img src="{{ asset('img/youss_ousmane.jpg')}}" class="card-img-top rounded-circle" alt="Commercial - Youssouf Ousmane" width="200" height="200">
-					<div class="card-body">
-						<h5 class="card-title">Youssouf Ousmane</h5>
-						<h6 class="card-subtitle mb-2 text-body-secondary">Gestionnaire des ressources humaines <small>Stagiaire</small></h6>
-						<p class="card-text">Expert en commercialisation de produits et services informatiques et télécom.</p>
-						<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal_youssouf">
-							En savoir plus
-						</button>
-						<a href="{{ asset('img/youss.pdf') }}" class="card-link">Curriculum vitae</a>
-						<p href="mailto: y.ousmane@scriptzenit.fr">Contact : y.ousmane@scriptzenit.fr</p>
-					</div>
-				</div>
-			</div>
-			<!-- ./end-commercial -->
-			<!-- Modal -->
-			<div class="modal fade" id="modal_youssouf" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-				<div class="modal-dialog">
-					<div class="modal-content">
-						<div class="modal-header">
-							<h5 class="modal-title" id="exampleModalLabel">Youssouf Ousmane</h5>
-							<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-								<span aria-hidden="true">&times;</span>
-							</button>
-						</div>
-						<div class="modal-body">
-							<p>Le parcours d'un champion de la vente dans les télécoms innovants</p>
-							<p>Youssouf Ousmane</p>
-							<p>Explorez le chemin fascinant d'un expert en télécoms innovants.</p>
-							<p>Découvrez comment transformer les défis en opportunités, et les clients potentiels en partenaires fidèles.</p>
-							<p>Préparez-vous à une aventure où la passion pour la technologie rencontre l'art de la persuasion.</p>
-							<p>Je suis là pour transformer vos rêves en réalité et clarifier les services en tant que responsable commercial.</p>
-						</div>
-						<div class="modal-footer">
-							<button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
-						</div>
-					</div>
-				</div>
-			</div>
-			<script>
-				$('#myModal').on('shown.bs.modal', function () {
-					$('#myInput').trigger('focus')
-				})
-			</script>#}{#
-			<!-- Admin sytème -->
-			#}{#<div class="col-md-4 mb-4">
-				<div class="card">
-					<img src="{{ asset('img/youss.png')}}" class="card-img-top rounded-circle" alt="admin système - Youss_">
-					<div class="card-body">
-						<h5 class="card-title">Youss_</h5>
-						<h6 class="card-subtitle mb-2 text-body-secondary">Administrateur Système</h6>
-						<p class="card-text">Expert en gestion et sécurisation des systèmes informatiques.</p>
-						<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal_youss">
-							En savoir plus
-						</button>
-						<p href="mailto: youss@youss.dev">Contact : youss@youss.dev</p>
-					</div>
-				</div>
-			</div>
-			<!-- ./ endAdmin Sytème -->
-			<!-- Modal -->
-			<div class="modal fade" id="modal_youss" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-				<div class="modal-dialog">
-					<div class="modal-content">
-					<div class="modal-header">
-						<h5 class="modal-title" id="exampleModalLabel">Youss_</h5>
-						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-						<span aria-hidden="true">&times;</span>
-						</button>>
-					</div>
-					<div class="modal-body">
-						<p>Chemin d'un administrateur système</p>
-						<p>Youss_</p>
-						<p>De formations en défis techniques, j'ai tracé mon chemin. Les premières lignes de code m'ont intrigué, éveillant une passion pour les systèmes informatiques.</p>
-						<p>J'ai acquis mon expertise avec persévérance, construisant des infrastructures fiables et sécurisées où chaque projet est une saga en évolution.</p>
-						<p>Je suis là pour concrétiser vos objectifs en assurant la sécurité et la flexibilité de vos systèmes, vous permettant ainsi de prospérer dans le monde numérique.</p>
-					</div>
-					<div class="modal-footer">
-						<button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
-					</div>
-					</div>
-				</div>
-			</div>
-			<script>
-				$('#myModal').on('shown.bs.modal', function () {
-					$('#myInput').trigger('focus')
-				})
-			</script>
-		</div>#}{#
-	</div>
-
-	<div class="jumbotron jumbotron-fluid bg-primary">
-		<div class="container">
-			<h1 class="display-4 text-white">Des solutions innovantes pour votre entreprise.</h1>
-			<p class="lead text-white">Que vous soyez gérant ou particulier avec un projet en tête, faites appel à nos service pour une présence en ligne digital.</p>
-		</div>
-	</div>
-
-	 <div class="container my-5">
-    <div class="row p-4 pb-0 pe-lg-0 pt-lg-5 align-items-center rounded-3 border shadow-lg">
-      <div class="col-lg-7 p-3 p-lg-5 pt-lg-3">
-        <h1 class="display-4 fw-bold lh-1">Découvrez notre assistance 100% en ligne</h1>
-        <p class="lead">Dans le monde numérique d'aujourd'hui, une assistance 100% en ligne est devenue une nécessité incontournable.</p>
-        <div class="d-grid gap-2 d-md-flex justify-content-md-start mb-4 mb-lg-3">
-          <a href="https://support.scriptzenit.fr" class="btn btn-outline-secondary btn-lg px-4">Découvrir le support</a>
-        </div>
-      </div>
-      <div class="col-lg-4 offset-lg-1 p-0 overflow-hidden shadow-lg">
-          <img class="rounded-lg-3" src="{{ asset('img/support2.svg') }}" alt="" width="720">
-      </div>
+<div class="container-fluid text-center jumbotron">
+    <h1>L'équipe</h1>
+    <div class="page-subtitle">
+        <h4>Découvrez notre équipe, notre expertise, et ce que nous pouvons vous apporter</h4>
+        <a href="{{ path('front_contact') }}" target="_self" class="btn btn-primary btn-lg px-4 rounded-pill">Nous contacter</a>
     </div>
-  </div>
+</div>
 
-  <div class="b-example-divider"></div>#}
-
-
+<div class="container d-flex justify-content-center">
+    <div class="row">
+        {% for member in members %}
+            <div class="col-md-4">
+                <div class="card">
+                    <img src="{{ asset('uploads/avatar/'~ member.avatar) }}" class="card-img-top rounded-circle me-3 border border-width-3 border-white" alt="{{ member.lastname }} {{ member.firstname }}" width="120" height="120">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ member.firstname }} {{ member.lastname }}</h5>
+                        <h6 class="card-subtitle mb-2 text-body-secondary">{{ member.function }}</h6>
+                        <p class="card-text">{{ member.description }}</p>
+                        <a href="mailto:{{ member.email }}" class="card-link">Contact : {{ member.email }}</a>
+                    </div> <!-- .card-body -->
+                </div> <!-- .card -->
+            </div> <!-- .col-md-4 -->
+        {% endfor %}
+    </div> <!-- .row -->
+</div> <!-- .container -->
 {% endblock %}
