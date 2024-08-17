@@ -1,43 +1,41 @@
 {% extends 'base_back.html.twig' %}
 
-{% block title %}Membres
-{% endblock %}
+{% block title %}Membres{% endblock %}
 
 {% block content %}
-	<div class="container-fluid">
-		<h1>Liste des memberes</h1>
+    <div class="container-fluid">
+        <h1>Liste des membres</h1>
 
-		<a href="{{ path('back_member_new') }}">Ajouter un nouveau member</a>
-		<div class="table-responsive">
-			<table>
-				<thead>
-				<tr>
-					<th>#</th>
-					<th>Prenom</th>
-					<th>Nom</th>
-					<th>Fonction</th>
-					<th>Email</th>
-					<th>Actions</th>
-				</tr>
-				</thead>
-				<tbody>
-				{% for member in members %}
-					<tr>
-						<td>{{ member.id }}</td>
-						<td>{{ member.firstname }}</td>
-						<td>{{ member.lastname }}</td>
-						<td>{{ member.email }}</td>
-						<td>{{ member.function }}</td>
-						<td>
-							<a href="{{ url('back_member_show', {id: member.id}) }}">Afficher</a>
-							<a href="{{ url('back_member_edit', {id: member.id}) }}">Modifier</a>
-							<a href="{{ url('back_member_delete', {id: member.id}) }}">Supprimer</a>
-						</td>
-					</tr>
-				{% endfor %}
-				</tbody>
-			</table>
-		</div>
-	</div>
-
+        <a href="{{ path('back_member_new') }}">Ajouter un nouveau membre</a>
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Prénom</th>
+                        <th>Nom</th>
+                        <th>Fonction</th>
+                        <th>Email</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for member in members %}
+                        <tr>
+                            <td>{{ member.id }}</td>
+                            <td>{{ member.firstname }}</td>
+                            <td>{{ member.lastname }}</td>
+                            <td>{{ member.function }}</td>
+                            <td>{{ member.email }}</td>
+                            <td>
+                                {# <a href="{{ path('back_member_show', {id: member.id}) }}">Afficher</a> #}
+                                <a href="{{ path('back_member_edit', {id: member.id}) }}">Modifier</a>
+                                <a href="{{ path('back_member_delete', {id: member.id}) }}">Supprimer</a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
 {% endblock %}

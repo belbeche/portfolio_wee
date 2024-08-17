@@ -13,7 +13,6 @@ use Symfony\Component\String\Slugger\SluggerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
-use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class MemberController extends AbstractController
 {
@@ -25,8 +24,23 @@ class MemberController extends AbstractController
     {
         $members = $memberRepository->findAll();
 
+        // Organiser les membres par catégorie
+        $groupedMembers = [];
+
+        foreach ($members as $member) {
+            $category = $member->getCategory();
+
+            // Créer une nouvelle catégorie si elle n'existe pas encore
+            if (!isset($groupedMembers[$category])) {
+                $groupedMembers[$category] = [];
+            }
+
+            // Ajouter le membre à la catégorie correspondante
+            $groupedMembers[$category][] = $member;
+        }
 
         return $this->render('back/member/index.html.twig', [
+            'groupedMembers' => $groupedMembers,
             'members' => $members,
         ]);
     }
@@ -47,22 +61,18 @@ class MemberController extends AbstractController
 
             if ($avatarFile) {
                 $originalFilename = pathinfo($avatarFile->getClientOriginalName(), PATHINFO_FILENAME);
-                // Nécessaire pour inclure le nom du fichier dans l'URL de manière sécurisée
                 $safeFilename = $slugger->slug($originalFilename);
                 $newFilename = $safeFilename.'-'.uniqid().'.'.$avatarFile->guessExtension();
 
-                // Déplacez le fichier dans le répertoire où les avatars sont stockés
                 try {
                     $avatarFile->move(
                         $this->getParameter('uploads_directory'),
                         $newFilename
                     );
                 } catch (FileException $e) {
-                    // Gérer l'exception en cas de problème lors du déplacement du fichier
                     throw new \Exception('Une erreur est survenue lors du téléchargement de l\'avatar.');
                 }
 
-                // Mettre à jour la propriété 'avatar' pour stocker le nom du fichier
                 $member->setAvatar($newFilename);
             }
 
@@ -74,17 +84,6 @@ class MemberController extends AbstractController
 
         return $this->render('back/member/new.html.twig', [
             'form' => $form->createView(),
-        ]);
-    }
-
-    /**
-     * @Route("/back/member/{id}", name="back_member_show", methods={"GET"})
-     * @IsGranted("ROLE_ADMIN")
-     */
-    public function show(Member $member): Response
-    {
-        return $this->render('back/member/show.html.twig', [
-            'member' => $member,
         ]);
     }
 
@@ -102,7 +101,6 @@ class MemberController extends AbstractController
             $avatarFile = $form->get('avatar')->getData();
 
             if ($avatarFile) {
-                // Si un nouvel avatar est uploadé, on génère un nom unique et on le déplace
                 $originalFilename = pathinfo($avatarFile->getClientOriginalName(), PATHINFO_FILENAME);
                 $safeFilename = $slugger->slug($originalFilename);
                 $newFilename = $safeFilename.'-'.uniqid().'.'.$avatarFile->guessExtension();
@@ -113,7 +111,6 @@ class MemberController extends AbstractController
                         $newFilename
                     );
                 } catch (FileException $e) {
-                    // Gérer l'exception en cas de problème lors du déplacement du fichier
                     throw new \Exception('Une erreur est survenue lors du téléchargement de l\'avatar.');
                 }
 
@@ -125,7 +122,6 @@ class MemberController extends AbstractController
                     }
                 }
 
-                // Mettre à jour la propriété 'avatar' avec le nouveau nom de fichier
                 $member->setAvatar($newFilename);
             }
 
@@ -140,31 +136,25 @@ class MemberController extends AbstractController
         ]);
     }
 
-
     /**
-     * @Route("/back/member/{id}/delete", name="back_member_delete")
+     * @Route("/back/member/{id}/delete", name="back_member_delete", methods={"POST"})
      * @IsGranted("ROLE_ADMIN")
      */
-    public function delete(EntityManagerInterface $entityManager, $id): Response
+    public function delete(Request $request, EntityManagerInterface $entityManager, Member $member): Response
     {
-        $member = $entityManager->getRepository(Member::class)->find($id);
-
-        if (!$member) {
-            throw $this->createNotFoundException('Le membre avec l\'ID '.$id.' n\'existe pas.');
-        }
-
-        // Supprimer l'avatar associé s'il existe
-        if ($member->getAvatar()) {
-            $avatarPath = $this->getParameter('uploads_directory').'/'.$member->getAvatar();
-            if (file_exists($avatarPath)) {
-                unlink($avatarPath);
+        if ($this->isCsrfTokenValid('delete'.$member->getId(), $request->request->get('_token'))) {
+            // Supprimer l'avatar associé s'il existe
+            if ($member->getAvatar()) {
+                $avatarPath = $this->getParameter('uploads_directory').'/'.$member->getAvatar();
+                if (file_exists($avatarPath)) {
+                    unlink($avatarPath);
+                }
             }
-        }
 
-        $entityManager->remove($member);
-        $entityManager->flush();
+            $entityManager->remove($member);
+            $entityManager->flush();
+        }
 
         return $this->redirectToRoute('back_member_index');
     }
-
 }

@@ -33,12 +33,18 @@ class MemberFormType extends AbstractType
             ->add('function', TextType::class, [
                 'label' => 'Fonction du membre'
             ])
-            // image field not linked to the database, mapped false
+            ->add('category', ChoiceType::class, [
+                'choices' => [
+                    'Salarie' => 'salarie',
+                    'Ancien Stagiaire' => 'ancien_stagiaire',
+                    'Contributeur/Partenaire' => 'contributeur_partenaire',
+                ],
+                'label' => 'Catégorie',
+            ])
             ->add('avatar', FileType::class, [
-                'label' => 'Parcourir',
-                'multiple' => false,
+                'label' => 'Avatar (Image file)',
+                'required' => false,
                 'mapped' => false,
-                'required' => false
             ]);
     }
 

@@ -57,8 +57,12 @@ class Member
      * @var string|null
      * @ORM\Column(type="string", length=255, nullable=false)
      */
-
     private ?string $function;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $category;
 
     public function getId(): ?int
     {
@@ -206,6 +210,18 @@ class Member
     public function setFunction(?string $function): Member
     {
         $this->function = $function;
+        return $this;
+    }
+
+    public function getCategory(): ?string
+    {
+        return $this->category;
+    }
+
+    public function setCategory(string $category): self
+    {
+        $this->category = $category;
+
         return $this;
     }
 }

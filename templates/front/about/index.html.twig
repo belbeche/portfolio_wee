@@ -11,21 +11,40 @@
     </div>
 </div>
 
-<div class="container d-flex justify-content-center">
-    <div class="row">
-        {% for member in members %}
-            <div class="col-md-4">
-                <div class="card">
-                    <img src="{{ asset('uploads/avatar/'~ member.avatar) }}" class="card-img-top rounded-circle me-3 border border-width-3 border-white" alt="{{ member.lastname }} {{ member.firstname }}" width="120" height="120">
-                    <div class="card-body">
-                        <h5 class="card-title">{{ member.firstname }} {{ member.lastname }}</h5>
-                        <h6 class="card-subtitle mb-2 text-body-secondary">{{ member.function }}</h6>
-                        <p class="card-text">{{ member.description }}</p>
-                        <a href="mailto:{{ member.email }}" class="card-link">Contact : {{ member.email }}</a>
-                    </div> <!-- .card-body -->
-                </div> <!-- .card -->
-            </div> <!-- .col-md-4 -->
-        {% endfor %}
-    </div> <!-- .row -->
-</div> <!-- .container -->
+<div class="container">
+    {% for category, members in groupedMembers %}
+        <div class="row mb-5">
+            <h2 class="text-center my-4">
+                {% if category == 'salarié' %}
+                    Salariés de ScriptZenIT
+                {% elseif category == 'ancien_stagiaire' %}
+                    Anciens Stagiaires
+                {% elseif category == 'contributeur_partenaire' %}
+                    Contributeurs/Partenaires
+                {% else %}
+                    {{ category|capitalize }}
+                {% endif %}
+            </h2>
+            <div class="row">
+                {% for member in members %}
+                    <div class="col-md-4 mb-4">
+                        <div class="card">
+                            {% if member.avatar %}
+                                <img src="{{ asset('uploads/avatar/' ~ member.avatar) }}" class="card-img-top rounded-circle" alt="{{ member.lastname }} {{ member.firstname }}" width="120" height="120">
+                            {% else %}
+                                <img src="{{ asset('uploads/avatar/default.png') }}" class="card-img-top rounded-circle" alt="{{ member.lastname }} {{ member.firstname }}" width="120" height="120">
+                            {% endif %}
+                            <div class="card-body">
+                                <h5 class="card-title">{{ member.firstname }} {{ member.lastname }}</h5>
+                                <h6 class="card-subtitle mb-2 text-muted">{{ member.function }}</h6>
+                                <p class="card-text">{{ member.description }}</p>
+                                <a href="mailto:{{ member.email }}" class="btn btn-primary">Contacter</a>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    {% endfor %}
+</div>
 {% endblock %}
