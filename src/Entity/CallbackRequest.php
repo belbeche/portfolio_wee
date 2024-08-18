@@ -38,7 +38,15 @@ class CallbackRequest
      */
     private $email;
 
-    // Getters et Setters
+    /**
+     * @ORM\Column(type="string", length=20, options={"default": "pending"})
+     */
+    private $status = 'pending'; // Statut: pending, validated, canceled, or relaunched
+
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $relaunchDate;
 
     public function getId(): ?int
     {
@@ -78,6 +86,28 @@ class CallbackRequest
     {
         $this->email = $email;
 
+        return $this;
+    }
+
+    public function getStatus(): ?string
+    {
+        return $this->status;
+    }
+
+    public function setStatus(string $status): self
+    {
+        $this->status = $status;
+        return $this;
+    }
+
+    public function getRelaunchDate(): ?\DateTimeInterface
+    {
+        return $this->relaunchDate;
+    }
+
+    public function setRelaunchDate(?\DateTimeInterface $relaunchDate): self
+    {
+        $this->relaunchDate = $relaunchDate;
         return $this;
     }
 }

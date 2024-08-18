@@ -1,0 +1,40 @@
+{% extends 'base_back.html.twig' %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1 class="mb-4">Liste des demandes de rappel</h1>
+    <table class="table table-striped table-hover">
+        <thead class="thead-dark">
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Nom/Prénom</th>
+                <th scope="col">Téléphone</th>
+                <th scope="col">Email</th>
+                <th scope="col">Statut</th>
+                <th scope="col">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for request in callbackRequests %}
+            <tr>
+                <th scope="row">{{ loop.index }}</th>
+                <td>{{ request.name }}</td>
+                <td>{{ request.phone }}</td>
+                <td>{{ request.email }}</td>
+                <td>{{ request.status }}</td>
+                <td>
+                    <a href="tel:{{ fixedPhoneNumber }}" class="btn btn-success btn-sm">Appeler</a>
+                    <a href="{{ path('back_callback_request_validate', {id: request.id}) }}" class="btn btn-info btn-sm">Valider</a>
+                    <a href="{{ path('back_callback_request_cancel', {id: request.id}) }}" class="btn btn-danger btn-sm">Annuler</a>
+                    <a href="{{ path('back_callback_request_relaunch', {id: request.id}) }}" class="btn btn-warning btn-sm">Relancer</a>
+                </td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="6" class="text-center">Aucune demande de rappel disponible.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

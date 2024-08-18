@@ -19,6 +19,9 @@
 				<li class="menu-item">
 					<a href="{{ url('back_devis_index') }}">Voir devis</a>
 				</li>
+				<li class="nav-item {{ app.request.get('_route') == 'back_callback_requests' ? 'active' : '' }}">
+					<a class="nav-link" href="{{ url('back_callback_requests') }}">Rappel</a>
+				</li>
 
 				<li class="menu-item">
 					<a href="{{ url('back_project_index') }}">Voir projets</a>
