@@ -18,18 +18,32 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class BackController extends AbstractController
 {
-    private $fixedPhoneNumber = '+33762972691';  // Définir directement ici
-
     /**
      * @Route("/admin/callback-requests", name="back_callback_requests")
      */
-    public function listCallbackRequests(EntityManagerInterface $entityManager): Response
+    public function listCallbackRequests(EntityManagerInterface $entityManager, Request $request): Response
     {
-        $callbackRequests = $entityManager->getRepository(CallbackRequest::class)->findAll();
+        // Récupérer les paramètres de tri
+        $sortField = $request->query->get('sort', 'id'); // par défaut, tri par ID
+        $sortOrder = $request->query->get('order', 'asc'); // par défaut, ordre croissant
 
-        return $this->render('back/callback/callback_request.html.twig', [
+        // Valider le champ de tri et l'ordre
+        $validSortFields = ['id', 'name', 'phone', 'email', 'status'];
+        if (!in_array($sortField, $validSortFields)) {
+            $sortField = 'id';
+        }
+        if (!in_array(strtolower($sortOrder), ['asc', 'desc'])) {
+            $sortOrder = 'asc';
+        }
+
+        // Récupérer les demandes de rappel avec tri
+        $callbackRequests = $entityManager->getRepository(CallbackRequest::class)
+            ->findBy([], [$sortField => $sortOrder]);
+
+        return $this->render('back/callback/callback_requests.html.twig', [
             'callbackRequests' => $callbackRequests,
-            'fixedPhoneNumber' => $this->fixedPhoneNumber,
+            'sortField' => $sortField,
+            'sortOrder' => $sortOrder,
         ]);
     }
 
@@ -83,6 +97,20 @@ class BackController extends AbstractController
         return $this->render('back/callback/relaunch_request.html.twig', [
             'request' => $request,
         ]);
+    }
+
+    /**
+     * @Route("/admin/callback-requests/remove/{id}", name="back_callback_request_remove", methods={"POST"})
+     * @IsGranted("ROLE_ADMIN")
+     */
+    public function removeRequest(CallbackRequest $request, EntityManagerInterface $entityManager): RedirectResponse
+    {
+        $entityManager->remove($request);
+        $entityManager->flush();
+
+        $this->addFlash('danger', 'Le prospect a été supprimé avec succès.');
+
+        return $this->redirectToRoute('back_callback_requests');
     }
     
     /**
