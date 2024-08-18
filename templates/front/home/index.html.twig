@@ -126,51 +126,72 @@
     <div class="divider"></div>
 
     <!-- Réalisations -->
-    <section class="pb-5">
-        <div class="container">
-            <div class="row">
-                <div class="col-12 text-center">
-                    <h2 class="font-weight-bold">Nos Réalisations</h2>
-                    <p class="lead text-muted">Découvrez quelques-unes de nos réalisations les plus récentes.</p>
-                </div>
-            </div>
-            <div class="row justify-content-center">
-                <div id="portfolio_content_q" class="portfolio-content">
-                    <ul class="portfolio-filters list-inline text-center">
-                        <li class="list-inline-item">
-                            <a class="filter btn btn-sm btn-link" data-group="toutes_categories">Toutes les catégories</a>
-                        </li>
-                        <li class="list-inline-item">
-                            <a class="filter btn btn-sm btn-link" data-group="détaillé">Projets Détaillés</a>
-                        </li>
-                        <li class="list-inline-item">
-                            <a class="filter btn btn-sm btn-link" data-group="lien-direct">Liens fonctionnels</a>
-                        </li>
-                        <li class="list-inline-item">
-                            <a class="filter btn btn-sm btn-link" data-group="prototype">Prototype</a>
-                        </li>
-                    </ul>
+	<section class="pb-5">
+		<div class="container">
+			<div class="row">
+				<div class="col-12 text-center">
+					<h2 class="font-weight-bold">Nos Réalisations</h2>
+					<p class="lead text-muted">Découvrez quelques-unes de nos réalisations les plus récentes.</p>
+				</div>
+			</div>
+			<div class="row justify-content-center">
+				<div id="content" class="container page-content site-content single-post" role="main">
+					<div class="row">
+						<div class="col-xs-12 col-sm-12">
+							<!-- Portfolio Content -->
+							<div id="portfolio_content_q" class="portfolio-content">
+								<ul class="portfolio-filters">
+									<li>
+										<a class="filter btn btn-sm btn-link" data-group="toutes_categories">Toutes les catégories</a>
+									</li>
+									<li>
+										<a class="filter btn btn-sm btn-link" data-group="détaillé">Projets Détaillés</a>
+									</li>
+									<li>
+										<a class="filter btn btn-sm btn-link" data-group="lien-direct">Liens fonctionnels</a>
+									</li>
+									<li>
+										<a class="filter btn btn-sm btn-link" data-group="prototype">Prototype</a>
+									</li>
+								</ul>
 
-                    <!-- Portfolio Grid -->
-                    <div class="portfolio-grid row g-4">
-                        {% for project in projects %}
-                            <figure class="col-md-3">
-                                <div class="portfolio-item-img">
-                                    {% for image in project.images %}
-                                        <img src="{{ asset('image_project/'~image.name) }}" alt="{{ image.name }}" class="img-fluid rounded shadow-sm">
-                                    {% endfor %}
-                                    <a href="{{ url('front_project_show', {id: project.id}) }}" class="stretched-link"></a>
-                                </div>
-                                <figcaption class="mt-2">
-                                    <span class="category text-muted">{{ project.category|join(', ')|title }}</span>
-                                </figcaption>
-                            </figure>
-                        {% endfor %}
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+								<!-- Portfolio Grid -->
+								<div class="portfolio-grid four-columns shuffle">
+									{% for project in projects %}
+										{% set dataGroups = ['toutes_categories'] %}
+
+										{% if 'détaillé' in project.category %}
+											{% set dataGroups = dataGroups|merge(['détaillé']) %}
+										{% endif %}
+										{% if 'lien-direct' in project.category %}
+											{% set dataGroups = dataGroups|merge(['lien-direct']) %}
+										{% endif %}
+										{% if 'prototype' in project.category %}
+											{% set dataGroups = dataGroups|merge(['prototype']) %}
+										{% endif %}
+
+										<figure class="item standard" data-groups='["{{ dataGroups|join('", "') }}"]'>
+											<div class="portfolio-item-img">
+												{% for image in project.images %}
+													<img src="{{ asset('image_project/'~image.name) }}" alt="{{ image.name }}"/>
+												{% endfor %}
+												<a href="{{ url('front_project_show', {id: project.id}) }}"></a>
+											</div>
+
+											<i class="far fa-file-alt"></i>
+											{# <h4 class="name">{{ project.title }}</h4> #}
+											<span class="category">{{ project.category|join(', ')|title }}</span>
+										</figure>
+									{% endfor %}
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+	<!-- Fin des Réalisations -->
 
     <div class="divider"></div>
 
