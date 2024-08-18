@@ -1,0 +1,66 @@
+@import url('https://fonts.googleapis.com/css2?family=Moderustic:wght@300..800&family=New+Amsterdam&display=swap');
+
+body {
+    font-family: "Moderustic", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 300;
+    font-style: normal;
+      
+}
+
+.text-light {
+    color: #f8f9fa !important;
+}
+
+.shadow-lg {
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+/* Formulaire */
+.form-floating {
+    position: relative;
+}
+
+.form-floating label {
+    font-size: 1rem;
+    color: #555;
+    transition: color 0.3s ease-in-out;
+}
+
+.form-floating input,
+.form-floating textarea {
+    border: 1px solid #ced4da;
+    padding: 1.5rem 0.75rem;
+    font-size: 1rem;
+    transition: border-color 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+}
+
+.form-floating input:focus,
+.form-floating textarea:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+/* Responsiveness */
+@media (max-width: 992px) {
+    .container {
+        padding-left: 1.5rem;
+        padding-right: 1.5rem;
+    }
+
+    .display-3 {
+        font-size: 2.5rem;
+    }
+
+    .form-floating {
+        margin-bottom: 1.5rem;
+    }
+
+    .btn {
+        font-size: 1.25rem;
+    }
+}
+
+.bg-form{
+    background-color: #f8f9fa;
+}

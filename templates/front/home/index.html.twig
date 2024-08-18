@@ -13,22 +13,48 @@
         {% endfor %}
     </div>
 
-    <!-- Hero Section -->
-    <section class="bg-primary">
-        <div class="container-fluid overflow-hidden">
-            <div class="row">
-                <div class="col-12 col-md-12 align-self-md-end">
-                    <div class="row justify-content-center">
-                        <div class="col-12 col-sm-10">
-                            <h2 class="display-2 fw-bolder text-white">Agence Web ScriptzenIT</h2>
-                                <p class="fs-5 text-white">En choisissant ScriptzenIT, vous bénéficiez d'une expertise complète dans le développement web et la gestion numérique. Notre plateforme vous offre une suite d'outils pour gérer vos serveurs, surveiller vos applications en temps réel, et optimiser vos performances en continu. Téléchargez vos demandes en PDF pour une consultation pratique.</p>
-								<img src="{{ asset('img/bannerx.jpg')}}" alt="Agence web a distance" class"rounded">
-						</div>
+    {# Hero Section #}
+
+    <div class="container col-xl-10 col-xxl-8 px-4 py-5 bg-primary text-light">
+        <div class="row g-lg-5 py-5">
+            <div class="col-lg-7 d-flex flex-column justify-content-center">
+                <h1 class="display-3 fw-bold ml-3">Agence Web ScriptzenIT</h1>
+                <p class="col-lg-10 fs-4 text-light">
+                    En choisissant ScriptzenIT, vous bénéficiez d'une expertise complète dans le développement web et la gestion numérique. 
+                    Notre plateforme vous offre une suite d'outils pour gérer vos serveurs, surveiller vos applications en temps réel, 
+                    et optimiser vos performances en continu. Téléchargez vos demandes en PDF pour une consultation pratique.
+                </p>
+            </div>
+            <div class="col-md-10 mx-auto col-lg-5 rounded shadow-lg position-relative">
+                {% for label, messages in app.flashes %}
+                    <div class="alert alert-{{ label }}">
+                        {% for message in messages %}
+                            <p>{{ message }}</p>
+                        {% endfor %}
                     </div>
-                </div>
+                {% endfor %}
+
+                {{ form_start(form, {'attr': {'class': 'p-4 p-md-5 border rounded-3 bg-form'}}) }}
+                    <div class="form-floating mb-4">
+                        {{ form_widget(form.name, {'attr': {'class': 'form-control shadow-sm'}}) }}
+                        {{ form_label(form.name, null, {'attr': {'class': 'text-dark'}}) }}
+                    </div>
+                    <div class="form-floating mb-4">
+                        {{ form_widget(form.phone, {'attr': {'class': 'form-control shadow-sm'}}) }}
+                        {{ form_label(form.phone, null, {'attr': {'class': 'text-dark'}}) }}
+                    </div>
+                    <div class="form-floating mb-4">
+                        {{ form_widget(form.email, {'attr': {'class': 'form-control shadow-sm'}}) }}
+                        {{ form_label(form.email, null, {'attr': {'class': 'text-dark'}}) }}
+                    </div>
+                {{ form_end(form) }}
+                <small class="text-muted mt-3 d-block text-center" style="font-size: 20px;">En cliquant sur "Me faire rappeler", vous acceptez nos conditions d'utilisation.</small>
             </div>
         </div>
-    </section>
+    </div>
+
+
+    {# ./ Hero Section#}
 
     <!-- Pourquoi nous choisir -->
     <section class="py-5 bg-secondary">
@@ -154,8 +180,8 @@
             <div class="row align-items-center bg-black text-white px-5 py-5">
                 <div class="col-md-4">
                     <h1>BESOIN D'ÉCLAIRAGE ?</h1>
-                    <p class="text-justify">Transformez les défis techniques en opportunités. Lorsque vous êtes confronté à des problèmes techniques, vous faites face à des occasions de grandir et d'apprendre, discutons-en !</p>
-                    <a href="https://calendly.com/walid_belbeche/expertise-offerte" class="text-warning">Réserver un appel de découverte</a>
+                    <p class="text-justify" style="font-size: 30px;color: white;">Transformez les défis techniques en opportunités. Lorsque vous êtes confronté à des problèmes techniques, vous faites face à des occasions de grandir et d'apprendre, discutons-en !</p>
+                    <a href="https://calendly.com/walid_belbeche/expertise-offerte" class="text-warning display-6">Réserver un appel de découverte</a>
                 </div>
                 <div class="col-md-8">
                     <img src="{{ asset('img/home_section.webp') }}" alt="agence web dans la Nièvre (58)" class="img-fluid">
