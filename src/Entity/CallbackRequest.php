@@ -48,6 +48,11 @@ class CallbackRequest
      */
     private $relaunchDate;
 
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $message;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -108,6 +113,16 @@ class CallbackRequest
     public function setRelaunchDate(?\DateTimeInterface $relaunchDate): self
     {
         $this->relaunchDate = $relaunchDate;
+        return $this;
+    }
+
+    public function getMessage(): ?string
+    {
+        return $this->message;
+    }
+    public function setMessage(string $message): self
+    {
+        $this->message = $message;
         return $this;
     }
 }
