@@ -29,7 +29,7 @@ body {
 
 .form-floating input,
 .form-floating textarea {
-    border: 1px solid #ced4da;
+    border: 1px solid #18ce00;
     padding: 1.5rem 0.75rem;
     font-size: 1rem;
     transition: border-color 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
@@ -63,4 +63,20 @@ body {
 
 .bg-form{
     background-color: #f8f9fa;
+}
+
+.is-invalid {
+    border-color: #dc3545;
+    background-color: #f8d7da;
+}
+
+.is-valid {
+    border-color: #28a745;
+    background-color: #d4edda;
+}
+
+.alert-success {
+    margin-top: 20px;
+    font-size: 18px;
+    text-align: center;
 }

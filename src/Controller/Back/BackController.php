@@ -7,12 +7,14 @@ use App\Entity\Subject;
 use App\Entity\CallbackRequest;
 use Symfony\Component\Mime\Email;
 use Doctrine\ORM\EntityManagerInterface;
+use App\Form\CallbackRequestRelaunchType;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
@@ -20,6 +22,7 @@ class BackController extends AbstractController
 {
     /**
      * @Route("/admin/callback-requests", name="back_callback_requests")
+     * @IsGranted("ROLE_ADMIN")
      */
     public function listCallbackRequests(EntityManagerInterface $entityManager, Request $request): Response
     {
@@ -49,6 +52,7 @@ class BackController extends AbstractController
 
      /**
      * @Route("/admin/callback-requests/validate/{id}", name="back_callback_request_validate")
+     * @IsGranted("ROLE_ADMIN")
      */
     public function validateRequest(CallbackRequest $request, EntityManagerInterface $entityManager): RedirectResponse
     {
@@ -61,6 +65,7 @@ class BackController extends AbstractController
 
     /**
      * @Route("/admin/callback-requests/cancel/{id}", name="back_callback_request_cancel")
+     * @IsGranted("ROLE_ADMIN")
      */
     public function cancelRequest(CallbackRequest $request, EntityManagerInterface $entityManager): RedirectResponse
     {
@@ -73,28 +78,42 @@ class BackController extends AbstractController
 
     /**
      * @Route("/admin/callback-requests/relaunch/{id}", name="back_callback_request_relaunch")
+    * @IsGranted("ROLE_ADMIN")
      */
     public function relaunchRequest(CallbackRequest $request, Request $httpRequest, EntityManagerInterface $entityManager, MailerInterface $mailer): Response
     {
-        if ($httpRequest->isMethod('POST')) {
+        $form = $this->createForm(CallbackRequestRelaunchType::class, $request);
+
+        $form->handleRequest($httpRequest);
+
+        if ($form->isSubmitted() && $form->isValid()) {
             $request->setStatus('relaunched');
             $request->setRelaunchDate(new \DateTime());
             $entityManager->flush();
 
-            // Envoi de l'email de relance
+            // Gérer les fichiers joints
+            $attachments = $form->get('attachments')->getData();
             $email = (new Email())
                 ->from('contact@scriptzenit.fr')
                 ->to($request->getEmail())
+                ->bcc('wbelbeche.s@gmail.com')
                 ->subject('Relance: ScriptzenIT - Demande de rappel')
-                ->text('Bonjour, nous avons essayé de vous joindre sans sucèss, suite à votre demande de rappel. Merci de nous contacter pour plus de détails au 07 62 97 26 91.');
+                ->text($form->get('message')->getData());
+
+            foreach ($attachments as $file) {
+                if ($file instanceof UploadedFile) {
+                    $email->attachFromPath($file->getPathname(), $file->getClientOriginalName());
+                }
+            }
 
             $mailer->send($email);
 
-            $this->addFlash('info', 'Le prospect a été relancé et un email a été envoyé.');
+            $this->addFlash('info', 'Le prospect a été relancé et un email avec fichiers joints a été envoyé.');
             return $this->redirectToRoute('back_callback_requests');
         }
 
         return $this->render('back/callback/relaunch_request.html.twig', [
+            'form' => $form->createView(),
             'request' => $request,
         ]);
     }

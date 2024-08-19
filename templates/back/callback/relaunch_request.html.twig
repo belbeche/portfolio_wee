@@ -1,19 +1,23 @@
-{% extends 'base_back.html.twig' %}
+{% extends 'base.html.twig' %}
 
 {% block content %}
 <div class="container mt-5">
     <h1 class="mb-4">Relancer le prospect : {{ request.name }}</h1>
 
-    <form method="post" action="{{ path('back_callback_request_relaunch', {id: request.id}) }}">
+    {{ form_start(form, {'attr': {'enctype': 'multipart/form-data'}}) }}
         <div class="form-group">
-            <label for="email">Envoyer un email à :</label>
-            <input type="email" id="email" name="email" class="form-control" value="{{ request.email }}" readonly>
+            {{ form_label(form.email) }}
+            {{ form_widget(form.email, {'attr': {'class': 'form-control'}}) }}
         </div>
         <div class="form-group">
-            <label for="message">Message de relance :</label>
-            <textarea id="message" name="message" class="form-control" rows="5">Bonjour, nous vous relançons suite à votre demande de rappel. Merci de nous contacter pour plus de détails.</textarea>
+            {{ form_label(form.message) }}
+            {{ form_widget(form.message, {'attr': {'class': 'form-control'}}) }}
+        </div>
+        <div class="form-group">
+            {{ form_label(form.attachments) }}
+            {{ form_widget(form.attachments, {'attr': {'class': 'form-control-file'}}) }}
         </div>
         <button type="submit" class="btn btn-warning mt-3">Envoyer la relance</button>
-    </form>
+    {{ form_end(form) }}
 </div>
 {% endblock %}

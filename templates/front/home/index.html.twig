@@ -15,43 +15,90 @@
 
     {# Hero Section #}
 
-    <div class="container col-xl-10 col-xxl-8 px-4 py-5 bg-primary text-light">
+    <div class="container col-xl-10 col-xxl-8 px-4 py-5 bg-primary px-5">
         <div class="row g-lg-5 py-5">
             <div class="col-lg-7 d-flex flex-column justify-content-center">
-                <h1 class="display-3 fw-bold ml-3">Agence Web ScriptzenIT</h1>
+                <h1 class="display-3 fw-bold ml-3 text-white">Agence Web ScriptzenIT</h1>
                 <p class="col-lg-10 fs-4 text-light">
-                    En choisissant ScriptzenIT, vous bénéficiez d'une expertise complète dans le développement web et la gestion numérique. 
-                    Notre plateforme vous offre une suite d'outils pour gérer vos serveurs, surveiller vos applications en temps réel, 
-                    et optimiser vos performances en continu. Téléchargez vos demandes en PDF pour une consultation pratique.
+                    Rejoignez les entreprises visionnaires qui transforment leur présence numérique avec ScriptzenIT. En choisissant notre expertise en développement web et gestion numérique, vous accédez à une suite d'outils avancés pour surveiller vos applications en temps réel, optimiser vos performances, et garantir une disponibilité continue.
                 </p>
             </div>
             <div class="col-md-10 mx-auto col-lg-5 rounded shadow-lg position-relative">
-                {% for label, messages in app.flashes %}
-                    <div class="alert alert-{{ label }}">
-                        {% for message in messages %}
-                            <p>{{ message }}</p>
-                        {% endfor %}
-                    </div>
-                {% endfor %}
+                <div id="successMessage" class="alert alert-success" style="display: none;">
+                    Votre demande a été envoyée avec succès !
+                </div>
 
-                {{ form_start(form, {'attr': {'class': 'p-4 p-md-5 border rounded-3 bg-form'}}) }}
-                    <div class="form-floating mb-4">
-                        {{ form_widget(form.name, {'attr': {'class': 'form-control shadow-sm'}}) }}
-                        {{ form_label(form.name, null, {'attr': {'class': 'text-dark'}}) }}
-                    </div>
-                    <div class="form-floating mb-4">
-                        {{ form_widget(form.phone, {'attr': {'class': 'form-control shadow-sm'}}) }}
-                        {{ form_label(form.phone, null, {'attr': {'class': 'text-dark'}}) }}
-                    </div>
-                    <div class="form-floating mb-4">
-                        {{ form_widget(form.email, {'attr': {'class': 'form-control shadow-sm'}}) }}
-                        {{ form_label(form.email, null, {'attr': {'class': 'text-dark'}}) }}
-                    </div>
-                {{ form_end(form) }}
-                <small class="text-muted mt-3 d-block text-center" style="font-size: 20px;">En cliquant sur "Me faire rappeler", vous acceptez nos conditions d'utilisation.</small>
+                <div id="callbackForm">
+                    {{ form_start(form, {'attr': {'class': 'p-4 p-md-5 border rounded-3 bg-form'}, 'method': 'POST'}) }}
+
+                        <div class="form-floating mb-4">
+                            {{ form_widget(form.name, {'attr': {'class': 'form-control shadow-sm', 'id': 'name'}}) }}
+                            {{ form_label(form.name, null, {'attr': {'class': 'text-dark'}}) }}
+                        </div>
+                        <div class="form-floating mb-4">
+                            {{ form_widget(form.phone, {'attr': {'class': 'form-control shadow-sm', 'id': 'phone'}}) }}
+                            {{ form_label(form.phone, null, {'attr': {'class': 'text-dark'}}) }}
+                        </div>
+                        <div class="form-floating mb-4">
+                            {{ form_widget(form.email, {'attr': {'class': 'form-control shadow-sm', 'id': 'email'}}) }}
+                            {{ form_label(form.email, null, {'attr': {'class': 'text-dark'}}) }}
+                        </div>
+                        <button type="submit" id="submitButton" class="btn btn-primary btn-lg w-100 shadow-sm">
+                            Me faire rappeler
+                        </button>
+                    {{ form_end(form) }}
+                </div>
+                
+                <small class="text-muted mt-3 d-block text-center" style="font-size: 20px;">
+                    En cliquant sur "Me faire rappeler", vous acceptez nos conditions d'utilisation.
+                </small>
             </div>
         </div>
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const form = document.querySelector('#callbackForm form');
+            const submitButton = document.getElementById('submitButton');
+            const successMessage = document.getElementById('successMessage');
+            const inputs = form.querySelectorAll('input');
+
+            function validateInput(input) {
+                if (input.value.trim() === '') {
+                    input.classList.remove('is-valid');
+                    input.classList.add('is-invalid');
+                } else {
+                    input.classList.remove('is-invalid');
+                    input.classList.add('is-valid');
+                }
+            }
+
+            inputs.forEach(input => {
+                input.addEventListener('input', () => validateInput(input));
+            });
+
+            form.addEventListener('submit', function (e) {
+
+                let allValid = true;
+                inputs.forEach(input => {
+                    validateInput(input);
+                    if (input.classList.contains('is-invalid')) {
+                        allValid = false;
+                    }
+                });
+
+                if (allValid) {
+                    // Simuler l'envoi du formulaire
+                    form.style.display = 'none';
+                    successMessage.style.display = 'block';
+
+                    // En production, réactiver la soumission :
+                    // form.submit();
+                }
+            });
+        });
+    </script>
+
 
 
     {# ./ Hero Section#}
@@ -201,7 +248,7 @@
             <div class="row align-items-center bg-black text-white px-5 py-5">
                 <div class="col-md-4">
                     <h1>BESOIN D'ÉCLAIRAGE ?</h1>
-                    <p class="text-justify" style="font-size: 30px;color: white;">Transformez les défis techniques en opportunités. Lorsque vous êtes confronté à des problèmes techniques, vous faites face à des occasions de grandir et d'apprendre, discutons-en !</p>
+                    <p class="text-justify" style="font-size: 20px;color: white;">Transformez les défis techniques en opportunités. Lorsque vous êtes confronté à des problèmes techniques, vous faites face à des occasions de grandir et d'apprendre, discutons-en !</p>
                     <a href="https://calendly.com/walid_belbeche/expertise-offerte" class="text-warning display-6">Réserver un appel de découverte</a>
                 </div>
                 <div class="col-md-8">
