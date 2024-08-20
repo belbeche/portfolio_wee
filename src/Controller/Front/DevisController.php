@@ -31,29 +31,26 @@ class DevisController extends AbstractController
      */
     public function new(Request $request, EntityManagerInterface $entityManager, MailerInterface $mailer, Security $security): Response
     {
-
         $devis = new Devis();
 
-        // Créer le formulaire de devis en utilisant l'e-mail récupéré ou laisser l'e-mail vide
+        // Créer le formulaire de devis
         $form = $this->createForm(DevisType::class, $devis);
-
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            // Utilisation du Voter ici
+            // Accès restreint aux utilisateurs autorisés
             $this->denyAccessUnlessGranted('CREATE', $devis);
 
-            $devis->setStatut('en_attente'); // Mettez à jour le statut si nécessaire
-            $devis->setPrix('0'); // prix à 0 au moment de la création
+            // Définir le statut et le prix initial du devis
+            $devis->setStatut('en_attente');
+            $devis->setPrix('0');
 
-            if($this->getUser()){
-                // Récupérer l'utilisateur actuellement authentifié s'il existe
+            if ($this->getUser()) {
+                // Associer le devis à l'utilisateur connecté
                 $user = $security->getUser();
                 $devis->setEmailFromUser($user);
 
-                // Vérifier si l'utilisateur est authentifié et s'il a un e-mail
                 if ($user instanceof UserInterface && $user->getUserIdentifier()) {
-                    // Utilisateur déjà inscrit, utiliser son e-mail
                     $devis->setEmail($user->getUserIdentifier());
                     $devis->setUser($user);
                 }
@@ -62,12 +59,24 @@ class DevisController extends AbstractController
             $entityManager->persist($devis);
             $entityManager->flush();
 
-            // Envoi de l'e-mail avec le récapitulatif du devis
+            // Générer le PDF du devis
+            $html = $this->renderView('front/devis/show.html.twig', [
+                'devis' => $devis
+            ]);
+
+            $filename = 'devis_' . $devis->getId() . '.pdf';
+
+            $mpdf = new Mpdf();
+            $mpdf->WriteHTML($html);
+            $pdfContent = $mpdf->Output('', 'S'); // Générer le PDF en tant que chaîne
+
+            // Envoi de l'e-mail avec le récapitulatif du devis et le PDF en pièce jointe
             $email = (new TemplatedEmail())
                 ->from(new Address('contact@scriptzenit.fr', 'L\'équipe Scriptzenit'))
                 ->to($devis->getEmail())
                 ->bcc('wbelbeche.s@gmail.com')
-                ->subject('Récapitulatif de demande de devis')
+                ->subject('Récapitulatif de votre demande de devis')
+                ->htmlTemplate('front/devis/email.html.twig')
                 ->context([
                     'registredNumber' => $devis->getId(),
                     'emailAddress' => $devis->getEmail(),
@@ -76,10 +85,12 @@ class DevisController extends AbstractController
                     'typeWeb' => $devis->getTypeDeSiteWeb(),
                     'message' => $devis->getDescriptionProjet()
                 ])
-                ->htmlTemplate('front/devis/email.html.twig');
+                ->attach($pdfContent, $filename, 'application/pdf');
+
+            // Envoyer l'email
             $mailer->send($email);
 
-
+            // Message de confirmation à l'utilisateur
             $this->addFlash('success', 'Votre demande a bien été prise en compte, vérifiez votre adresse e-mail.');
 
             return $this->redirectToRoute('front_assistance');
@@ -89,6 +100,7 @@ class DevisController extends AbstractController
             'formDevis' => $form->createView(),
         ]);
     }
+
 
     /**
      * @Route("/continuer/{id}", name="front_devis_set_password")

@@ -58,6 +58,11 @@ class Devis
     private $statut;
 
     /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $response;
+
+    /**
      * @ORM\OneToMany(targetEntity=Message::class, mappedBy="devis", orphanRemoval=true, cascade={"remove"})
      */
     private $messages;
@@ -133,19 +138,12 @@ class Devis
         return $this;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getPrix()
+    public function getPrix(): ?int
     {
         return $this->prix;
     }
 
-    /**
-     * @param mixed $prix
-     * @return Devis
-     */
-    public function setPrix($prix)
+    public function setPrix(?int $prix): self
     {
         $this->prix = $prix;
         return $this;
@@ -172,6 +170,17 @@ class Devis
     {
         $this->statut = $statut;
 
+        return $this;
+    }
+
+    public function getResponse(): ?string
+    {
+        return $this->response;
+    }
+
+    public function setResponse(?string $response): self
+    {
+        $this->response = $response;
         return $this;
     }
 

@@ -3124,16 +3124,16 @@
         },
         {
             "name": "knplabs/knp-snappy-bundle",
-            "version": "v1.10.0",
+            "version": "v1.10.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/KnpLabs/KnpSnappyBundle.git",
-                "reference": "0080ff4ad9526c08792823cf7566060ffba07ef6"
+                "reference": "39ffad9e7294e3c9d87ee5de7da7e4495b055126"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/KnpLabs/KnpSnappyBundle/zipball/0080ff4ad9526c08792823cf7566060ffba07ef6",
-                "reference": "0080ff4ad9526c08792823cf7566060ffba07ef6",
+                "url": "https://api.github.com/repos/KnpLabs/KnpSnappyBundle/zipball/39ffad9e7294e3c9d87ee5de7da7e4495b055126",
+                "reference": "39ffad9e7294e3c9d87ee5de7da7e4495b055126",
                 "shasum": ""
             },
             "require": {
@@ -3176,9 +3176,9 @@
             ],
             "support": {
                 "issues": "https://github.com/KnpLabs/KnpSnappyBundle/issues",
-                "source": "https://github.com/KnpLabs/KnpSnappyBundle/tree/v1.10.0"
+                "source": "https://github.com/KnpLabs/KnpSnappyBundle/tree/v1.10.2"
             },
-            "time": "2023-12-18T09:56:06+00:00"
+            "time": "2024-06-10T12:38:45+00:00"
         },
         {
             "name": "lcobucci/clock",
