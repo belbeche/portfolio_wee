@@ -78,13 +78,13 @@ class DevisController extends AbstractController
 
         return $this->redirectToRoute('back_devis_index');
     }
-   /**
+
+    /**
      * @Route("/admin/devis/{id}/reply", name="back_devis_reply")
      * @IsGranted("ROLE_ADMIN")
      */
     public function reply(Request $request, MailerInterface $mailer, Devis $devis, EntityManagerInterface $entityManager): Response
     {
-        $user = $this->getUser();
         $form = $this->createForm(ReplyDevisFormType::class, $devis);
         $form->handleRequest($request);
 
@@ -114,7 +114,7 @@ class DevisController extends AbstractController
             ->subject('Réponse à votre demande de devis #' . $devis->getId())
             ->htmlTemplate('back/devis/email_reply.html.twig')
             ->context([
-                'client' => $user,
+                'client' => $devis->getUser(),
                 'response' => $devis->getResponse(),
                 'prix' => $devis->getPrix(),
                 'devis' => $devis
