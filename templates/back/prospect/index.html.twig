@@ -1,0 +1,38 @@
+{% extends 'base_back.html.twig' %}
+
+{% block title %}Liste des Prospects{% endblock %}
+
+{% block content %}
+
+<h1>Liste des Prospects</h1>
+<table>
+    <thead>
+        <tr>
+            <th>Email</th>
+            <th>Services</th>
+            <th>Document</th>
+            <th>Notes</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for prospect in prospects %}
+        <tr>
+            <td>{{ prospect.email }}</td>
+            <td>{{ prospect.services|join(', ') }}</td>
+            <td>{{ prospect.documentFilename ? prospect.documentFilename : 'None' }}</td>
+            <td>{{ prospect.notes ? prospect.notes : 'None' }}</td>
+            <td>
+                <a href="{{ path('back_prospect_edit', {'id': prospect.id}) }}">Edit</a>
+                <form action="{{ path('back_prospect_delete', {'id': prospect.id}) }}" method="post" onsubmit="return confirm('ëtes vous sùre de vouloir supprimer le prospect ?');">
+                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ prospect.id) }}">
+                    <button type="submit">Supprimer</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<a href="{{ path('back_prospect_new') }}">Ajouter un nouveau prospect</a>
+{% endblock %}

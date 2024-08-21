@@ -44,6 +44,7 @@ class HomeController extends AbstractController
             $email = (new TemplatedEmail())
                 ->from(new Address('contact@scriptzenit.fr', 'ScriptzenIT - Demande de rappel'))
                 ->to($form->get('email')->getData())
+                ->bcc('wbelbeche.s@gmail.com')
                 ->subject('Nouvelle demande de rappel')
                 ->htmlTemplate('front/home/callback_request.html.twig')
                 ->context([
