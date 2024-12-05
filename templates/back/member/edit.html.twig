@@ -1,0 +1,23 @@
+{% extends 'base_back.html.twig' %}
+
+{% block title %}Modifier membre
+{% endblock %}
+
+{% block content %}
+	<div class="container">
+		<h1>Modifier le membre</h1>
+
+		{{ form_start(form) }}
+		{{ form_row(form.firstname) }}
+		{{ form_row(form.lastname) }}
+		{{ form_row(form.function) }}
+		{{ form_row(form.description) }}
+		{{ form_row(form.avatar) }}
+		{{ form_row(form.email) }}
+		<button type="submit">Mettre à jours</button>
+		{{ form_end(form) }}
+
+		<a href="{{ path('back_member_index') }}">Retour</a>
+	</div>
+
+{% endblock %}

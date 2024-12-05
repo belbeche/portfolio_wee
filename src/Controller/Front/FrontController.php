@@ -22,7 +22,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use function Amp\Promise\all;
 
 use App\Form\EditProfileType;
-use App\Form\User\Type\UserFormType;
+use App\Form\User\Type\MemberFormType;
 use phpDocumentor\Reflection\Types\Mixed_;
 
 

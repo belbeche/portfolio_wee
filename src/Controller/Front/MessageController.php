@@ -168,7 +168,7 @@ class MessageController extends AbstractController
             return $this->redirectToRoute('app_login');
         }
 
-        $email = $currentUser->getEmail();
+        $email = $currentUser->getUserIdentifier();
 
         $responseMessage = new Message();
         $responseMessage->setSender($originalMessage->getSender());

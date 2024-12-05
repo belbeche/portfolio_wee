@@ -68,7 +68,7 @@
 								<button type="submit" class="btn-primary">Supprimer le message</button>
 							</form>
 							{% if ticket.attachment %}
-								<a href="{{ asset('uploads/' ~ ticket.attachment) }}" target="_blank" class="btn btn-info">Voir le fichier joint</a>
+								<a href="{{ asset('uploads/support/' ~ ticket.attachment) }}" target="_blank" class="btn btn-info">Voir le fichier joint</a>
 							{% endif %}
 						</div>
 					</div>

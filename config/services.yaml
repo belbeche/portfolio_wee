@@ -5,7 +5,7 @@
 # https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
 parameters:
     images_directory: "%kernel.project_dir%/public/image_project"
-    uploads_directory: "%kernel.project_dir%/public/uploads/avatar"
+    uploads_directory: "%kernel.project_dir%/public/uploads/support"
     api_resource_token: "%env(API_RESOURCE_TOKEN)%"
     api_resource_url: "%env(API_RESOURCE_URL)%"
 services:
@@ -20,6 +20,11 @@ services:
     App\Security\Voter\DevisVoter:
         tags:
             - { name: 'security.voter' }
+    App\Security\GithubAuthenticator:
+        arguments:
+            $em: '@doctrine.orm.entity_manager'
+        tags:
+            - { name: 'monolog.logger', channel: 'security' }
     _defaults:
         autowire: true # Automatically injects dependencies in your services.
         autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.

@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use DateTime;
 use DateTimeImmutable;
+use Doctrine\DBAL\Types\Types;
 use Symfony\Component\Uid\Uuid;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\UserRepository;
@@ -104,6 +105,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @ORM\Column(type="datetime", nullable=true)
      */
     private DateTime $date;
+
+    /**
+     * @ORM\Column(type="string", nullable="true")
+     * @var string
+     */
+    private string $githubId;
 
     /**
      * @ORM\OneToMany (targetEntity=Comment::class, mappedBy="user", orphanRemoval=true)
@@ -529,6 +536,24 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
+     * @return string
+     */
+    public function getGithubId(): string
+    {
+        return $this->githubId;
+    }
+
+    /**
+     * @param string $githubId
+     * @return User
+     */
+    public function setGithubId(string $githubId): User
+    {
+        $this->githubId = $githubId;
+        return $this;
+    }
+
+    /**
      * @return ArrayCollection
      */
     public function getSentMessages(): ArrayCollection
@@ -543,6 +568,33 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setSentMessages(ArrayCollection $sentMessages): User
     {
         $this->sentMessages = $sentMessages;
+        return $this;
+    }
+
+    public function isIsVerified(): ?bool
+    {
+        return $this->isVerified;
+    }
+
+    public function addSentMessage(Ticket $sentMessage): static
+    {
+        if (!$this->sentMessages->contains($sentMessage)) {
+            $this->sentMessages->add($sentMessage);
+            $sentMessage->setSender($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSentMessage(Ticket $sentMessage): static
+    {
+        if ($this->sentMessages->removeElement($sentMessage)) {
+            // set the owning side to null (unless already changed)
+            if ($sentMessage->getSender() === $this) {
+                $sentMessage->setSender(null);
+            }
+        }
+
         return $this;
     }
 }

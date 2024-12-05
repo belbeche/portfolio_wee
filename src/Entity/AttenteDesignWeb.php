@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\AttenteDesignWebRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -27,6 +29,11 @@ class AttenteDesignWeb
      * @ORM\JoinColumn(nullable=true)
      */
     private $devis;
+
+    public function __construct()
+    {
+        $this->devis = new ArrayCollection();
+    }
 
     /**
      * @return mixed
@@ -69,6 +76,25 @@ class AttenteDesignWeb
     public function setDevis($devis)
     {
         $this->devis = $devis;
+        return $this;
+    }
+
+    public function addDevi(Devis $devi): static
+    {
+        if (!$this->devis->contains($devi)) {
+            $this->devis->add($devi);
+            $devi->addAttentesDesignWeb($this);
+        }
+
+        return $this;
+    }
+
+    public function removeDevi(Devis $devi): static
+    {
+        if ($this->devis->removeElement($devi)) {
+            $devi->removeAttentesDesignWeb($this);
+        }
+
         return $this;
     }
 }
