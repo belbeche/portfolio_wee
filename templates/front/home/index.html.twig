@@ -15,13 +15,17 @@
 
     {# Hero Section #}
 
-    <div class="container col-xl-10 col-xxl-8 px-4 py-5 bg-primary px-5">
+    <section class="container-fluid col-xl-12 col-xxl-12 px-4 py-5 bg-primary px-3">
         <div class="row g-lg-5 py-5">
             <div class="col-lg-7 d-flex flex-column justify-content-center">
                 <h1 class="display-3 fw-bold ml-3 text-white">Agence Web ScriptzenIT</h1>
                 <p class="col-lg-10 fs-4 text-light">
                     Rejoignez les entreprises visionnaires qui transforment leur présence numérique avec ScriptzenIT. En choisissant notre expertise en développement web et gestion numérique, vous accédez à une suite d'outils avancés pour surveiller vos applications en temps réel, optimiser vos performances, et garantir une disponibilité continue.
                 </p>
+                <div class="d-flex">
+                    <a href="{{ url('front_contact') }}" class="btn-primary text-black">Contacter l'agence</a>
+                    <a href="{{ url('front_devis_new')}}" class="btn-secondary text-black">Je veux me faire accompagner</a>
+                </div>
             </div>
             <div class="col-md-10 mx-auto col-lg-5 rounded shadow-lg position-relative">
                 <div id="successMessage" class="alert alert-success" style="display: none;">
@@ -49,12 +53,12 @@
                     {{ form_end(form) }}
                 </div>
                 
-                <small class="text-muted mt-3 d-block text-center" style="font-size: 20px;">
+                <small class="mt-3 d-block text-center" style="font-size: 20px;">
                     En cliquant sur "Me faire rappeler", vous acceptez nos conditions d'utilisation.
                 </small>
             </div>
         </div>
-    </div>
+    </section>
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {

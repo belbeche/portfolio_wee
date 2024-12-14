@@ -16,6 +16,7 @@
 		<link rel="icon" type="image/png" sizes="16x16" href="{{ asset('medias/favicon/favicon-16x16.png') }}">
 		<link rel="manifest" href="{{ asset('medias/favicon/site.webmanifest') }}">
 		<link rel="icon" href="{{ asset('medias/favicon/favicon.ico') }}">
+		<link rel="stylesheet" href="{{ asset('assets/front/css/styles.css')}}">
 
 		<!-- Global CSS -->
 		{#<link rel="stylesheet" href="{{ asset('css/front/css/bootstrap.min.css') }}">#}
@@ -23,7 +24,7 @@
 		{{ encore_entry_link_tags('app') }}
 	{% endblock %}
 	</head>
-		<body class="page"> <div class="lm-animated-bg"></div>
+		<body class="page sb-nav-fixed"> <div class="lm-animated-bg"></div>
 
 		<!-- Loading animation -->
 		{#<div class="preloader">
@@ -48,28 +49,12 @@
 					{% endblock %}
 				</div>
 				
-
 				<div class="container">
 					{% block content %}{% endblock %}
 				</div>
-
+				
 				<!-- Footer -->
 				<footer class="site-footer clearfix">
-					<div class="footer-social">
-						<ul class="footer-social-links">
-							<li>
-								<a href="https://github.com/belbeche" target="_blank">Github</a>
-							</li>
-
-							<li>
-								<a href="https://www.linkedin.com/in/walid-belbeche/" target="_blank">LinkedIn</a>
-							</li>
-
-							<li>
-								<a href="{{ url('front_project')}}" target="_blank">Mes réalisations</a>
-							</li>
-						</ul>
-					</div>
 
 					<div class="footer-copyrights">
 						<p>
@@ -83,19 +68,20 @@
 
 		<!-- Front script -->
 		{% block javascripts %}
-			<script src="{{ asset('js/jquery-3.5.1.min.js') }}"></script>
-			<script src="{{ asset('js/bootstrap.js') }}"></script>
+			<script src="{{ asset('assets/js/jquery-3.5.1.min.js') }}"></script>
+			<script src="{{ asset('assets/js/bootstrap.js') }}"></script>
 			{{ encore_entry_script_tags('app') }}
 			{{ encore_entry_script_tags('imagesloaded') }}
 			{#<script src='https://www.google.com/recaptcha/api.js'></script>#}
-			<script src="{{ asset('js/modernizr.custom.js') }}"></script>
-			<script src="{{ asset('js/jquery.shuffle.min.js') }}"></script>
-			<script src="{{ asset('js/masonry.pkgd.min.js') }}"></script>
+			<script src="{{ asset('assets/js/modernizr.custom.js') }}"></script>
+			<script src="{{ asset('assets/js/jquery.shuffle.min.js') }}"></script>
+			<script src="{{ asset('assets/masonry.pkgd.min.js') }}"></script>
 			{{ encore_entry_script_tags('owl.carousel') }}
-			<script src="{{ asset('js/jquery.magnific-popup.min.js') }}"></script>
+			<script src="{{ asset('assets/js/jquery.magnific-popup.min.js') }}"></script>
 			{{ encore_entry_script_tags('validator') }}
 			{{ encore_entry_script_tags('main') }}
-			<script src="{{ asset('js/delete_image.js')}}"></script>
+			<script src="{{ asset('assets/js/delete_image.js')}}"></script>
+			<script src="{{ asset('assets/js/scripts.js')}}"></script>
 		{% endblock %}
 	</body>
 </html>

@@ -1,61 +1,61 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}
-	{{ project.title }}
+    {{ project.title }}
 {% endblock %}
 
 {% block content %}
-
-
-	<div id="ajax-page" class="ajax-page-content container">
-		<div class="ajax-page-wrapper">
-			<div class="ajax-page-nav">
+    <div id="ajax-page" class="ajax-page-content container">
+        <div class="ajax-page-wrapper">
+            <div class="ajax-page-nav">
 				<div class="nav-item">
-					<a href="{{ url('front_project_show', {id: project.id - 1})}}">
+					<a href="{{ url('front_project_show', {id: project.id - 1}) }}" aria-label="Projet précédent" class="nav-link">
 						<i class="lnr lnr-chevron-left"></i>
+						<span class="sr-only">Précédent</span>
 					</a>
-					<a href="{{ url('front_project_show', {id: project.id + 1})}}">
+					<a href="{{ url('front_project_show', {id: project.id + 1}) }}" aria-label="Projet suivant" class="nav-link">
 						<i class="lnr lnr-chevron-right"></i>
+						<span class="sr-only">Suivant</span>
 					</a>
 				</div>
 				<div class="nav-item ajax-page-close-button">
-					<a id="close-button" href="{{ url('front_project')}}">
+					<a id="close-button" href="{{ url('front_project') }}" aria-label="Fermer le projet" class="btn-close">
 						<i class="lnr lnr-cross"></i>
 					</a>
 				</div>
 			</div>
 
-			<div class="ajax-page-title">
-				<div class="container">
-					<nav aria-label="breadcrumb">
-						<ol class="breadcrumb">
-							<li class="breadcrumb-item">
-								<a href="{{ url('front_home') }}">Accueil</a>
-							</li>
-							<li class="breadcrumb-item">
-								<a href="{{ url('front_project') }}">Mes réalisations</a>
-							</li>
-							<li class="breadcrumb-item active" aria-current="page">{{ project.title }}
-							</li>
-						</ol>
-					</nav>
-				</div>
-			</div>
 
-			<div class="row">
-				<div class="col-sm-8 col-md-8 portfolio-block">
+            <div class="ajax-page-title">
+                <div class="container">
+                    <nav aria-label="Breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item">
+                                <a href="{{ url('front_home') }}">Accueil</a>
+                            </li>
+                            <li class="breadcrumb-item">
+                                <a href="{{ url('front_project') }}">Mes réalisations</a>
+                            </li>
+                            <li class="breadcrumb-item active" aria-current="page">{{ project.title }}</li>
+                        </ol>
+                    </nav>
+                </div>
+            </div>
+
+            <div class="row">
+				<div class="col-sm-12 col-md-8 portfolio-block">
 					<div class="owl-carousel portfolio-page-carousel">
 						{% for image in project.images %}
 							<div class="item">
-								<a href="{{ asset('image_project/'~image.name) }}" class="lightbox"><img src="{{ asset('image_project/'~image.name) }}" alt="{{ image.name }}"/></a>
+								<a href="{{ asset('image_project/'~image.name) }}" class="lightbox" data-fancybox="gallery">
+									<img src="{{ asset('image_project/'~image.name) }}" alt="{{ image.name }}" class="img-fluid" loading="lazy" />
+								</a>
 							</div>
 						{% endfor %}
 					</div>
 				</div>
 
-				<div
-					class="col-sm-4 col-md-4 portfolio-block">
-					<!-- Project Description -->
+				<div class="col-sm-12 col-md-4 portfolio-block">
 					<div class="project-description">
 						<div class="block-title">
 							<h3>Description du projet</h3>
@@ -63,45 +63,37 @@
 						<ul class="project-general-info">
 							<li>
 								<p>
-									<i class="fa fa-user"></i>
-									Walid BELBECHE</p>
-							</li>
-							<li>
-								<p>
-									<i class="fa fa-globe"></i>
-									<a href="{{ project.link }}" target="_blank">{{ project.title}}</a>
+									<i class="fa fa-user"></i> Walid BELBECHE
 								</p>
 							</li>
 							<li>
 								<p>
-									<i class="fa fa-calendar"></i>
-									{{ project.createdAt|format_datetime(locale='fr') }}</p>
+									<i class="fa fa-globe"></i>
+									<a href="{{ project.link }}" target="_blank" rel="noopener noreferrer">{{ project.title }}</a>
+								</p>
+							</li>
+							<li>
+								<p>
+									<i class="fa fa-calendar"></i> {{ project.createdAt|format_datetime(locale='fr') }}
+								</p>
 							</li>
 						</ul>
+						<p class="text-justify">{{ project.description }}</p>
 
-						<p class="text-justify">{{ project.description }}.</p>
-						<!-- /Project Description -->
-
-						<!-- Categories -->
 						<div class="tags-block">
 							<div class="block-title">
-								<h3>Categories</h3>
+								<h3>Catégories</h3>
 							</div>
 							<ul class="tags">
 								{% for category in project.categories %}
-									<li>
-										<a>{{ category.name }}
-										</a>
-									</li>
+									<li><a href="{{ url('front_category_show', {id: category.id}) }}">{{ category.name }}</a></li>
 								{% endfor %}
 							</ul>
 						</div>
-						<!-- /Categories -->
 					</div>
-					<!-- Project Description -->
 				</div>
 			</div>
-		</div>
-	</div>
 
+        </div>
+    </div>
 {% endblock %}
