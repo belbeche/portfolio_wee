@@ -3,23 +3,25 @@
 
 namespace App\Controller\Front;
 
-use App\Entity\Subject;
-use App\Entity\Comment;
 use App\Entity\Image;
-use App\Form\Subject\Type\SubjectType;
+use App\Entity\Reply;
+use App\Entity\Comment;
+use App\Entity\Subject;
+use App\Form\ReplyType;
 use App\Form\Subject\Type\CommentType;
+use App\Form\Subject\Type\SubjectType;
 use Doctrine\ORM\EntityManagerInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 
 class SubjectController extends AbstractController
 {
     /**
-     * @Route("/profil/assistance/Subject/nouveau", name="front_Subjects_new")
+     * @Route("/profil/assistance/subject/nouveau", name="front_subjects_new")
      *
      * @param Request $request
      * @param EntityManagerInterface $entityManager
@@ -30,21 +32,20 @@ class SubjectController extends AbstractController
         Request $request,
         EntityManagerInterface $entityManager
     ): Response {
-        $Subject = new Subject();
+        $subject = new Subject();
 
-        $form = $this->createForm(SubjectType::class, $Subject);
+        $form = $this->createForm(SubjectType::class, $subject);
 
         if ($request->isMethod('POST')) {
             $form->handleRequest($request);
 
             if ($form->isSubmitted() && $form->isValid()) {
 
-                $Subject->setUser($this->getUser());
-                $Subject->setSubjectId(rand(0,999999999));
+                $subject->setUser($this->getUser());
 
-                $Subject->setCreatedAt(new \DateTime);
+                $subject->setCreatedAt(new \DateTime);
 
-                $Subject->setIsPublished(false);
+                $subject->setIsPublished(false);
 
                 $images = $form->get('images')->getData();
 
@@ -62,71 +63,148 @@ class SubjectController extends AbstractController
                     // We add image in the database and to the Subject
                     $img = new Image();
                     $img->setName($file);
-                    $Subject->addImage($img);
-                    $img->setSubject($Subject);
+                    $subject->addImage($img);
+                    $img->setSubject($subject);
                 }
 
-                $entityManager->persist($Subject);
+                $entityManager->persist($subject);
 
                 $entityManager->flush();
 
                 $this->addFlash('success', 'Demande en cours de traitement, ajouter en brouillon, en attente de validation.');
 
-                return $this->redirectToRoute('front_Subjects_show', ['title' => $Subject->getTitle()]);
+                return $this->redirectToRoute('front_subjects_show', [
+                    'title' => $subject->getTitle(),
+                    'commentId' => $subject->getId(),
+                ]);
             }
         }
 
         return $this->render('front/subject/new.html.twig', [
             'form' => $form->createView(),
-            'Subject' => $Subject,
+            'subject' => $subject,
         ]);
     }
 
     /**
-     * @Route("/profil/assistance/Subjects/{title}", name="front_Subjects_show")
-     * @return Response
-     */
-    public function show(
-        EntityManagerInterface $entityManager,
-        Request $request,
-        Subject $Subject
-    ): Response {
-        // to get the comment in the Subject, we assign it in the variable $Subject
-        $Subject = $entityManager->getRepository(Subject::class)->find($Subject->getId());
+    * @Route("/subject/{subjectTitle}", name="front_subjects_show")
+    */
+    public function showSubject(string $subjectTitle, Request $request, EntityManagerInterface $entityManager): Response
+    {
+        // Récupérer le sujet
+        $subject = $entityManager
+            ->getRepository(Subject::class)
+            ->findOneBy(['title' => $subjectTitle]);
 
-        $comment = new Comment();
-
-        $form = $this->createForm(CommentType::class, $comment);
-
-        if ($request->isMethod('POST')) {
-            $form->handleRequest($request);
-
-            if ($form->isSubmitted() && $form->isValid()) {
-
-                $comment->setSubject($Subject);
-                $comment->setUser($this->getUser());
-                /* TODO: Répondre à un commentaire */
-                // Ajouter la récursion pour le sous-commentaire avec un button
-                /*dump($this->getUser());die();*/
-                $entityManager->persist($comment);
-                $entityManager->flush();
-
-                /*return $this->redirectToRoute('front_Subjects_show', ['title' => $Subject->getTitle()]);*/
-            }
+        if (!$subject) {
+            throw $this->createNotFoundException('Le sujet est introuvable.');
         }
 
-        $comments = $entityManager->getRepository(Comment::class)->findBy(
-            [
-                'Subject' => $Subject,
-                'active' => true,
-            ],
-            ['id' => 'DESC']
-        );
+        // Créer le formulaire pour ajouter un commentaire
+        $comment = new Comment();
+        $form = $this->createForm(CommentType::class, $comment);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $comment->setSubject($subject);
+            $comment->setUser($this->getUser());
+            $comment->setCreatedAt(new \DateTime());
+
+            $entityManager->persist($comment);
+            $entityManager->flush();
+
+            $this->addFlash('success', 'Commentaire ajouté avec succès.');
+
+            // Recharger les commentaires après avoir ajouté un nouveau commentaire
+            $comments = $entityManager
+                ->getRepository(Comment::class)
+                ->findBy(['subject' => $subject]);
+
+            // Créer les formulaires de réponse pour chaque commentaire
+            $replyForms = [];
+            foreach ($comments as $comment) {
+                $replyForms[$comment->getId()] = $this->createForm(ReplyType::class);
+            }
+
+            // Convertir les formulaires de réponse en FormView
+            $replyFormsView = [];
+            foreach ($replyForms as $id => $replyForm) {
+                $replyFormsView[$id] = $replyForm->createView();
+            }
+
+            return $this->render('front/subject/show.html.twig', [
+                'subject' => $subject,
+                'comments' => $comments,
+                'form' => $form->createView(),
+                'replyForms' => $replyFormsView,
+            ]);
+        }
+
+        // Charger les commentaires existants
+        $comments = $entityManager
+            ->getRepository(Comment::class)
+            ->findBy(['subject' => $subject]);
+
+        // Créer les formulaires de réponse pour chaque commentaire
+        $replyForms = [];
+        foreach ($comments as $comment) {
+            $replyForms[$comment->getId()] = $this->createForm(ReplyType::class);
+        }
+
+        // Convertir les formulaires de réponse en FormView
+        $replyFormsView = [];
+        foreach ($replyForms as $id => $replyForm) {
+            $replyFormsView[$id] = $replyForm->createView();
+        }
 
         return $this->render('front/subject/show.html.twig', [
-            'Subject' => $Subject,
+            'subject' => $subject,
+            'comments' => $comments,
             'form' => $form->createView(),
-            'comments' => $comments
+            'replyForms' => $replyFormsView,
         ]);
+    }
+
+    /**
+    * @Route("/profil/assistance/subject/{subjectTitle}/comment/{commentId}/reply", name="front_subjects_reply", methods={"POST"})
+    */
+    public function replyToComment(
+        Request $request,
+        string $subjectTitle,
+        int $commentId,
+        EntityManagerInterface $entityManager
+    ): Response {
+        // Récupérer le sujet
+        $subject = $entityManager->getRepository(Subject::class)->findOneBy(['title' => $subjectTitle]);
+
+        // Récupérer le commentaire
+        $comment = $entityManager->getRepository(Comment::class)->find($commentId);
+
+        if (!$subject || !$comment) {
+            throw $this->createNotFoundException('Le sujet ou le commentaire est introuvable.');
+        }
+
+        // Récupérer le contenu de la réponse
+        $content = $request->request->get('content');
+
+        if (empty($content)) {
+            $this->addFlash('error', 'Le contenu de la réponse ne peut pas être vide.');
+            return $this->redirectToRoute('front_subjects_show', ['subjectTitle' => $subjectTitle]);
+        }
+
+        // Créer la réponse
+        $reply = new Reply();
+        $reply->setContent($content);
+        $reply->setUser($this->getUser());
+        $reply->setCreatedAt(new \DateTime());
+        $reply->setParentComment($comment);
+
+        // Sauvegarder la réponse
+        $entityManager->persist($reply);
+        $entityManager->flush();
+
+        // Rediriger avec un message de succès
+        $this->addFlash('success', 'Votre réponse a été ajoutée.');
+        return $this->redirectToRoute('front_subjects_show', ['subjectTitle' => $subjectTitle]);
     }
 }

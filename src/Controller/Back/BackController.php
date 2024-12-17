@@ -143,11 +143,11 @@ class BackController extends AbstractController
         PaginatorInterface $paginator
     ): Response
     {
-        $Subjects = $entityManager->getRepository(Subject::class)->findBy([],['createdAt' => 'DESC']);
+        $subjects = $entityManager->getRepository(Subject::class)->findBy([],['createdAt' => 'DESC']);
 
-        $data = $Subjects;
+        $data = $subjects;
 
-        $Subjects = $paginator->paginate(
+        $subjects = $paginator->paginate(
             $data,
             $request->query->getInt('page',1),
             12
@@ -156,7 +156,7 @@ class BackController extends AbstractController
 
 
         return $this->render('back/home.html.twig',[
-            'Subjects' => $Subjects
+            'subjects' => $subjects
         ]);
     }
 }

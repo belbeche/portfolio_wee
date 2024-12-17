@@ -58,10 +58,11 @@ class Message
      */
     private ?User $sender;
 
-    /**
-     * @ORM\Column(type="string", length=255)
+     /**
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="receivedMessages")
+     * @ORM\JoinColumn(nullable=false)
      */
-    private string $receiver;
+    private ?User $receiver = null;
 
     /**
      * @throws \Exception
@@ -162,12 +163,24 @@ class Message
         return $this;
     }
 
-    public function getReceiver(): String
+    /**
+     * Get the value of receiver
+     *
+     * @return ?User
+     */
+    public function getReceiver(): ?User
     {
         return $this->receiver;
     }
 
-    public function setReceiver(string $receiver): self
+    /**
+     * Set the value of receiver
+     *
+     * @param ?User $receiver
+     *
+     * @return self
+     */
+    public function setReceiver(?User $receiver): self
     {
         $this->receiver = $receiver;
 

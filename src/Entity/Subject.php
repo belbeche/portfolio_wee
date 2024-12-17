@@ -72,7 +72,7 @@ class Subject
     private $updatedAt;
 
     /**
-     * @ORM\OneToMany(targetEntity=Comment::class, mappedBy="Subject", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity=Comment::class, mappedBy="subject", orphanRemoval=true)
      */
     private $commentaires;
 
@@ -92,6 +92,14 @@ class Subject
      */
     private Collection $images;
 
+    #[ORM\ManyToOne(targetEntity: self::class, inversedBy: "replies")]
+    #[ORM\JoinColumn(onDelete: "CASCADE")]
+    private $parent;
+
+    #[ORM\OneToMany(mappedBy: "parent", targetEntity: self::class, cascade: ["remove"])]
+    private $replies;
+
+
     /**
      * @ORM\OneToMany(
      *     targetEntity="UserLike",
@@ -101,11 +109,6 @@ class Subject
      * )
      */
     private ?Collection $likes;
-
-    /**
-     * @ORM\Column(type="integer")
-     */
-    private $Subject_id;
 
     public function __construct()
     {
@@ -168,20 +171,6 @@ class Subject
     {
         $this->active = $active;
 
-        return $this;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getSlug(): mixed
-    {
-        return $this->title;
-    }
-
-    public function setSlug($slug): static
-    {
-        $this->title = $title;
         return $this;
     }
 
@@ -346,14 +335,56 @@ class Subject
         $this->likes->removeElement($like);
     }
 
-    public function getSubjectId(): ?int
+    /**
+     * Get the value of slug
+     */
+    public function getSlug()
     {
-        return $this->Subject_id;
+        return $this->slug;
     }
 
-    public function setSubjectId(int $SubjectId): self
+    /**
+     * Set the value of slug
+     */
+    public function setSlug($slug): self
     {
-        $this->Subject_id = $SubjectId;
+        $this->slug = $slug;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of replies
+     */
+    public function getReplies()
+    {
+        return $this->replies;
+    }
+
+    /**
+     * Set the value of replies
+     */
+    public function setReplies($replies): self
+    {
+        $this->replies = $replies;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of parent
+     */
+    public function getParent()
+    {
+        return $this->parent;
+    }
+
+    /**
+     * Set the value of parent
+     */
+    public function setParent($parent): self
+    {
+        $this->parent = $parent;
 
         return $this;
     }

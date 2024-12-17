@@ -7,7 +7,7 @@
 
 		<div class="container text-center">
 			<hr>
-			<a href="{{ url('front_Subjects_new') }}" class="btn btn-secondary">Écrire au support</a>
+			<a href="{{ url('front_subjects_new') }}" class="btn btn-secondary">Écrire au support</a>
 		</div>
 	</div>
 
@@ -20,34 +20,34 @@
 			<section class="blog-area pb-5">
 				<div class="container">
 					<div class="row justify-content-center">
-						{% for Subject in Subjects %}
+						{% for subject in subjects %}
 							<div class="col-lg-3 col-md-3 col-sm-10">
 								<div class="single-blog blog-style-one">
 									<div class="blog-image">
-										<a href="{{ path('front_Subjects_show', {'title': Subject.title}) }}">
-											{#{% for image in Subject.images %}
-												<img class="card-img-top rounded-0" src="{{ asset('uploads/' ~ image.name) }}" alt="{{ Subject.title }}">
+										<a href="{{ path('front_subjects_show', {'title': subject.title}) }}">
+											{#{% for image in subject.images %}
+												<img class="card-img-top rounded-0" src="{{ asset('uploads/' ~ image.name) }}" alt="{{ subject.title }}">
 											{% endfor %}#}
 										</a>
 									</div>
 									<div class="blog-content">
 										<h5 class="blog-title">
-											<a href="{{ path('front_Subjects_show', {'title': Subject.title}) }}">
-												<h5 class="card-title">{{ Subject.title }}</h5>
+											<a href="{{ path('front_subjects_show', {'title': subject.title}) }}">
+												<h5 class="card-title">{{ subject.title }}</h5>
 											</a>
 										</h5>
-										{% for categorie in Subject.categories %}
+										{% for categorie in subject.categories %}
 											{{ categorie.name }}
 										{% endfor %}
 										<br>
 										<span>
 											<i class="bi bi-calendar"></i>
-											{{ Subject.createdAt|format_datetime('medium', locale="fr") }}</span>
+											{{ subject.createdAt|format_datetime('medium', locale="fr") }}</span>
 										<span>
 											<i class="bi bi-chat-dots"></i>
-											{{ Subject.commentaires|length }}</span>
-										<span><img src="{{ asset('uploads/avatar/' ~Subject.user.avatar) }}" alt="{{ Subject.user.username }}" class="rounded-0 img-thumbnail" width="50" height="50">
-											{{ Subject.user.username }}</span>
+											{{ subject.commentaires|length }}</span>
+										<span><img src="{{ asset('uploads/avatar/' ~subject.user.avatar) }}" alt="{{ subject.user.username }}" class="rounded-0 img-thumbnail" width="50" height="50">
+											{{ subject.user.username }}</span>
 									</div>
 								</div>
 							</div>
@@ -60,7 +60,7 @@
 	</div>
 
 	<div class="navigation pagination justify-content-center my-4">
-		{{ knp_pagination_render(Subjects) }}
+		{{ knp_pagination_render(subjects) }}
 	</div>
 
 {% endblock %}
