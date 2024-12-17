@@ -20,7 +20,7 @@
         <div class="container">
 
             {% include 'front/includes/_Subject_form.html.twig' %}
-            {% if app.request.attributes.get('_route') == 'front_Subjects_new' and Subject.images is not empty %}
+            {% if app.request.attributes.get('_route') == 'front_subjects_new' and Subject.images is not empty %}
                 {% for image in Subject.images %}
                     <div>
                         <img src="{{ asset('/uploads/subject'~image.name) }}" alt="{{ Subject.name }}" width="150">
