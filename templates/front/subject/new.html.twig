@@ -20,13 +20,13 @@
         <div class="container">
 
             {% include 'front/includes/_Subject_form.html.twig' %}
-            {% if app.request.attributes.get('_route') == 'front_subjects_new' and Subject.images is not empty %}
-                {% for image in Subject.images %}
+            {% if app.request.attributes.get('_route') == 'front_subjects_new' and subject.images is not empty %}
+                {% for image in subject.images %}
                     <div>
-                        <img src="{{ asset('/uploads/subject'~image.name) }}" alt="{{ Subject.name }}" width="150">
+                        <img src="{{ asset('/uploads/subject'~image.name) }}" alt="{{ subject.name }}" width="150">
 
                         {# We add a link to delete an image (will be managed in Ajax in images.js) #}
-                        <a href="{{ path('back_Subjects_remove_image', {id: image.id})}}" data-delete data-token="{{ csrf_token('delete' ~ image.id )}}">
+                        <a href="{{ path('back_subjects_remove_image', {id: image.id})}}" data-delete data-token="{{ csrf_token('delete' ~ image.id )}}">
                             <i class="bi bi-file-earmark-x"></i>
                             Supprimer
                         </a>

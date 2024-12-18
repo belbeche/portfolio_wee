@@ -73,9 +73,10 @@ class SubjectController extends AbstractController
 
                 $this->addFlash('success', 'Demande en cours de traitement, ajouter en brouillon, en attente de validation.');
 
-                return $this->redirectToRoute('front_subjects_show', [
+                return $this->redirectToRoute('front_subject_show', [
                     'title' => $subject->getTitle(),
                     'commentId' => $subject->getId(),
+                    'subjectTitle' => $subject->getTitle(),
                 ]);
             }
         }
@@ -87,7 +88,7 @@ class SubjectController extends AbstractController
     }
 
     /**
-    * @Route("/subject/{subjectTitle}", name="front_subjects_show")
+    * @Route("/subject/{subjectTitle}", name="front_subject_show")
     */
     public function showSubject(string $subjectTitle, Request $request, EntityManagerInterface $entityManager): Response
     {
@@ -115,29 +116,8 @@ class SubjectController extends AbstractController
 
             $this->addFlash('success', 'Commentaire ajouté avec succès.');
 
-            // Recharger les commentaires après avoir ajouté un nouveau commentaire
-            $comments = $entityManager
-                ->getRepository(Comment::class)
-                ->findBy(['subject' => $subject]);
-
-            // Créer les formulaires de réponse pour chaque commentaire
-            $replyForms = [];
-            foreach ($comments as $comment) {
-                $replyForms[$comment->getId()] = $this->createForm(ReplyType::class);
-            }
-
-            // Convertir les formulaires de réponse en FormView
-            $replyFormsView = [];
-            foreach ($replyForms as $id => $replyForm) {
-                $replyFormsView[$id] = $replyForm->createView();
-            }
-
-            return $this->render('front/subject/show.html.twig', [
-                'subject' => $subject,
-                'comments' => $comments,
-                'form' => $form->createView(),
-                'replyForms' => $replyFormsView,
-            ]);
+            // Redirection pour éviter une double soumission du formulaire
+            return $this->redirectToRoute('front_subject_show', ['subjectTitle' => $subjectTitle]);
         }
 
         // Charger les commentaires existants
@@ -146,17 +126,13 @@ class SubjectController extends AbstractController
             ->findBy(['subject' => $subject]);
 
         // Créer les formulaires de réponse pour chaque commentaire
-        $replyForms = [];
-        foreach ($comments as $comment) {
-            $replyForms[$comment->getId()] = $this->createForm(ReplyType::class);
-        }
-
-        // Convertir les formulaires de réponse en FormView
         $replyFormsView = [];
-        foreach ($replyForms as $id => $replyForm) {
-            $replyFormsView[$id] = $replyForm->createView();
+        foreach ($comments as $comment) {
+            $replyForm = $this->createForm(ReplyType::class);
+            $replyFormsView[$comment->getId()] = $replyForm->createView();
         }
 
+        // Rendre la vue avec les données nécessaires
         return $this->render('front/subject/show.html.twig', [
             'subject' => $subject,
             'comments' => $comments,
@@ -165,8 +141,9 @@ class SubjectController extends AbstractController
         ]);
     }
 
+
     /**
-    * @Route("/profil/assistance/subject/{subjectTitle}/comment/{commentId}/reply", name="front_subjects_reply", methods={"POST"})
+    * @Route("/profil/assistance/subject/{subjectTitle}/comment/{commentId}/reply", name="front_subject_reply", methods={"POST"})
     */
     public function replyToComment(
         Request $request,
@@ -189,7 +166,7 @@ class SubjectController extends AbstractController
 
         if (empty($content)) {
             $this->addFlash('error', 'Le contenu de la réponse ne peut pas être vide.');
-            return $this->redirectToRoute('front_subjects_show', ['subjectTitle' => $subjectTitle]);
+            return $this->redirectToRoute('front_subject_show', ['subjectTitle' => $subjectTitle]);
         }
 
         // Créer la réponse
@@ -205,6 +182,10 @@ class SubjectController extends AbstractController
 
         // Rediriger avec un message de succès
         $this->addFlash('success', 'Votre réponse a été ajoutée.');
-        return $this->redirectToRoute('front_subjects_show', ['subjectTitle' => $subjectTitle]);
+        return $this->redirectToRoute('front_subject_show', [
+            'subjectTitle' => $subjectTitle,
+            'commentId' => $commentId,
+            'subject' => $subject,
+        ]);
     }
 }
