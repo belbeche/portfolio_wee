@@ -60,7 +60,6 @@
                             <button class="btn btn-link reply-link" data-comment-id="{{ comment.id }}">Répondre</button>
 
                             <!-- Formulaire de réponse caché par défaut -->
-                            {{ dump(subject)}}
                             <div class="reply-form" id="reply-form-{{ comment.id }}" style="display: none; position: relative; padding: 10px; border: 1px solid #ccc; border-radius: 5px; background: #f9f9f9; margin-top: 10px;">
                                 <form action="{{ path('front_subject_reply', {'subjectTitle': subject.title, 'commentId': comment.id}) }}" method="post">
                                     <textarea name="content" class="form-control" placeholder="Votre réponse..." required></textarea>

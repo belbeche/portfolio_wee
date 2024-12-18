@@ -20,6 +20,20 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class SubjectController extends AbstractController
 {
+
+    /**
+     * @Route("/subjects", name="front_subject_list")
+     */
+    public function listSubjects(EntityManagerInterface $entityManager): Response
+    {
+        // Récupérer tous les sujets depuis la base de données
+        $subjects = $entityManager->getRepository(Subject::class)->findAll();
+
+        return $this->render('front/subject/list.html.twig', [
+            'subjects' => $subjects,
+        ]);
+    }
+
     /**
      * @Route("/profil/assistance/subject/nouveau", name="front_subjects_new")
      *
@@ -77,6 +91,7 @@ class SubjectController extends AbstractController
                     'title' => $subject->getTitle(),
                     'commentId' => $subject->getId(),
                     'subjectTitle' => $subject->getTitle(),
+                    'subjectId' => $subject->getId(),
                 ]);
             }
         }
@@ -88,14 +103,14 @@ class SubjectController extends AbstractController
     }
 
     /**
-    * @Route("/subject/{subjectTitle}", name="front_subject_show")
+    * @Route("/subject/{subjectId}", name="front_subject_show")
     */
-    public function showSubject(string $subjectTitle, Request $request, EntityManagerInterface $entityManager): Response
+    public function showSubject(string $subjectId, Request $request, EntityManagerInterface $entityManager): Response
     {
-        // Récupérer le sujet
+        // Récupérer le sujet par son ID
         $subject = $entityManager
             ->getRepository(Subject::class)
-            ->findOneBy(['title' => $subjectTitle]);
+            ->find($subjectId);
 
         if (!$subject) {
             throw $this->createNotFoundException('Le sujet est introuvable.');
@@ -117,7 +132,7 @@ class SubjectController extends AbstractController
             $this->addFlash('success', 'Commentaire ajouté avec succès.');
 
             // Redirection pour éviter une double soumission du formulaire
-            return $this->redirectToRoute('front_subject_show', ['subjectTitle' => $subjectTitle]);
+            return $this->redirectToRoute('front_subject_show', ['subjectId' => $subjectId]);
         }
 
         // Charger les commentaires existants
@@ -142,6 +157,8 @@ class SubjectController extends AbstractController
     }
 
 
+
+
     /**
     * @Route("/profil/assistance/subject/{subjectTitle}/comment/{commentId}/reply", name="front_subject_reply", methods={"POST"})
     */
@@ -152,7 +169,7 @@ class SubjectController extends AbstractController
         EntityManagerInterface $entityManager
     ): Response {
         // Récupérer le sujet
-        $subject = $entityManager->getRepository(Subject::class)->findOneBy(['title' => $subjectTitle]);
+        $subject = $entityManager->getRepository(Subject::class)->find($subjectTitle);
 
         // Récupérer le commentaire
         $comment = $entityManager->getRepository(Comment::class)->find($commentId);
@@ -184,8 +201,8 @@ class SubjectController extends AbstractController
         $this->addFlash('success', 'Votre réponse a été ajoutée.');
         return $this->redirectToRoute('front_subject_show', [
             'subjectTitle' => $subjectTitle,
-            'commentId' => $commentId,
             'subject' => $subject,
         ]);
     }
+
 }
