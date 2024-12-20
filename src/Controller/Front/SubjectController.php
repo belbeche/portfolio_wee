@@ -109,116 +109,80 @@ class SubjectController extends AbstractController
     /**
     * @Route("/subject/{subjectId}", name="front_subject_show")
     */
-    public function showSubject(string $subjectId, Request $request, EntityManagerInterface $entityManager): Response
-    {
-        // Récupérer le sujet par son ID
+    public function showSubject(
+        string $subjectId,
+        Request $request,
+        EntityManagerInterface $entityManager
+    ): Response {
+        // Récupération du sujet
         $subject = $entityManager->getRepository(Subject::class)->find($subjectId);
         if (!$subject) {
             throw $this->createNotFoundException('Le sujet est introuvable.');
         }
 
-        // Créer le formulaire pour ajouter un commentaire
-        $comment = new Comment();
-        $form = $this->createForm(CommentType::class, $comment);
-        $form->handleRequest($request);
+        // Récupération de l'utilisateur connecté
+        $user = $this->getUser();
 
-        // Gérer la soumission du formulaire de commentaire
-        if ($form->isSubmitted() && $form->isValid()) {
+        // Création du formulaire de commentaire principal
+        $comment = new Comment();
+        $formComment = $this->createForm(CommentType::class, $comment);
+        $formComment->handleRequest($request);
+
+        if ($formComment->isSubmitted() && $formComment->isValid()) {
+            if (!$user) {
+                $this->addFlash('error', 'Vous devez être connecté pour ajouter un commentaire.');
+                return $this->redirectToRoute('app_login');
+            }
+
             $comment->setSubject($subject);
-            $comment->setUser($this->getUser());
-            $comment->setCreatedAt(new \DateTime());
+            $comment->setUser($user);
             $entityManager->persist($comment);
             $entityManager->flush();
 
             $this->addFlash('success', 'Commentaire ajouté avec succès.');
-
-            // Redirection pour éviter une double soumission du formulaire
-            return $this->redirectToRoute('front_subject_show', ['subjectId' => $subjectId]);
+            return $this->redirectToRoute('front_subject_show', ['subjectId' => $subjectId], 303);
         }
 
-        // Charger les commentaires existants, ainsi que leurs réponses
+        // Récupération des commentaires racines
         $comments = $entityManager->getRepository(Comment::class)->findBy(
-            ['subject' => $subject],
+            ['subject' => $subject, 'parent' => null],
             ['createdAt' => 'DESC']
-        );              
+        );
 
-        // Créer les formulaires de réponse pour chaque commentaire
-        $replyFormsView = [];
+        // Gestion des réponses aux commentaires
+        $replyForms = [];
         foreach ($comments as $comment) {
-            $replyForm = $this->createForm(ReplyType::class);
-            $replyFormsView[$comment->getId()] = $replyForm->createView();
+            $reply = new Comment();
+            $reply->setParent($comment); // Lier la réponse au commentaire parent
 
-            // Gérer la soumission des formulaires de réponse
-            $replyForm->handleRequest($request);
-            if ($replyForm->isSubmitted() && $replyForm->isValid()) {
-                $reply = $replyForm->getData();
-                $reply->setUser($this->getUser());
-                $reply->setCreatedAt(new \DateTime());
-                $reply->setParentComment($comment);  // Lier la réponse au commentaire parent
+            $formReply = $this->createForm(CommentType::class, $reply);
+            $formReply->handleRequest($request);
 
+            // Vérification que le formulaire de réponse a été soumis
+            if ($formReply->isSubmitted() && $formReply->isValid() && $request->request->has('reply_' . $comment->getId())) {
+                if (!$user) {
+                    $this->addFlash('error', 'Vous devez être connecté pour répondre à un commentaire.');
+                    return $this->redirectToRoute('app_login');
+                }
+
+                $reply->setSubject($subject);
+                $reply->setUser($user);
                 $entityManager->persist($reply);
                 $entityManager->flush();
 
                 $this->addFlash('success', 'Réponse ajoutée avec succès.');
-
-                // Redirection après la soumission de la réponse pour éviter la double soumission
-                return $this->redirectToRoute('front_subject_show', ['subjectId' => $subjectId]);
+                return $this->redirectToRoute('front_subject_show', ['subjectId' => $subjectId], 303);
             }
+
+            // Sauvegarde des formulaires de réponse pour chaque commentaire
+            $replyForms[$comment->getId()] = $formReply->createView();
         }
 
         return $this->render('front/subject/show.html.twig', [
             'subject' => $subject,
             'comments' => $comments,
-            'form' => $form->createView(),
-            'replyFormsView' => $replyFormsView,
-        ]);
-    }
-
-
-
-    /**
-    * @Route("/profil/assistance/subject/{subjectTitle}/comment/{commentId}/reply", name="front_subject_reply", methods={"POST"})
-    */
-    public function replyToComment(
-        Request $request,
-        string $subjectTitle,
-        int $commentId,
-        EntityManagerInterface $entityManager
-    ): Response {
-        // Récupérer le sujet
-        $subject = $entityManager->getRepository(Subject::class)->find($subjectTitle);
-
-        // Récupérer le commentaire
-        $comment = $entityManager->getRepository(Comment::class)->find($commentId);
-
-        if (!$subject || !$comment) {
-            throw $this->createNotFoundException('Le sujet ou le commentaire est introuvable.');
-        }
-
-        // Récupérer le contenu de la réponse
-        $content = $request->request->get('content');
-
-        if (empty($content)) {
-            $this->addFlash('error', 'Le contenu de la réponse ne peut pas être vide.');
-            return $this->redirectToRoute('front_subject_show', ['subjectTitle' => $subjectTitle]);
-        }
-
-        // Créer la réponse
-        $reply = new Reply();
-        $reply->setContent($content);
-        $reply->setUser($this->getUser());
-        $reply->setCreatedAt(new \DateTime());
-        $reply->setParentComment($comment);
-
-        // Sauvegarder la réponse
-        $entityManager->persist($reply);
-        $entityManager->flush();
-
-        // Rediriger avec un message de succès
-        $this->addFlash('success', 'Votre réponse a été ajoutée.');
-        return $this->redirectToRoute('front_subject_show', [
-            'subjectTitle' => $subjectTitle,
-            'subject' => $subject,
+            'formComment' => $formComment->createView(),
+            'replyForms' => $replyForms,
         ]);
     }
 

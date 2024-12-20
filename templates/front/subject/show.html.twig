@@ -1,6 +1,6 @@
 {% extends "base.html.twig" %}
 
-{% block title %} {{ subject.title }} {% endblock %}
+{% block title %}{{ subject.title }}{% endblock %}
 
 {% block content %}
 <section id="content">
@@ -19,7 +19,7 @@
                                 <h5 class="mb-0 h6 fw-semibold">
                                     <a class="text-dark" href="#">{{ subject.user.username }}</a>
                                 </h5>
-                                <small class="text-muted">Posté le {{ subject.createdAt|format_datetime('full', 'short', locale='fr') }}</small>
+                                <small class="text-muted">Posté le {{ subject.createdAt|date('d/m/Y H:i') }}</small>
                             </div>
                         </div>
                     </div>
@@ -27,88 +27,75 @@
                 <p>{{ subject.content|raw }}</p>
             </div>
 
-            {# Formulaire de commentaire #}
+            <!-- Formulaire de commentaire -->
             <div class="comment-form">
-                {{ form_start(form) }}
-                {{ form_widget(form.content) }}
+                {{ form_start(formComment) }}
+                <div class="mb-3">
+                    {{ form_label(formComment.content, 'Votre commentaire :', {'label_attr': {'class': 'form-label'}}) }}
+                    {{ form_widget(formComment.content, {'attr': {'class': 'form-control'}}) }}
+                </div>
                 <button type="submit" class="btn btn-primary">Ajouter un commentaire</button>
-                {{ form_end(form) }}
+                {{ form_end(formComment) }}
             </div>
 
             <!-- Section des commentaires -->
-            <div class="topic-post reply mt-5 p-4 border-top border-width-5 border-color">
+            <div class="topic-post reply mt-5 p-4 border-top">
                 <h3 class="h2 fw-bolder mb-4">Réponses au sujet</h3>
-                <!-- Définition de la macro pour afficher les commentaires -->
-                {% macro render_comments(comments, replyFormsView) %}
-                    {% for comment in comments %}
-                        <div class="comment mb-4 border p-3 rounded">
-                            <p><strong>{{ comment.user.username }}</strong> : {{ comment.content }}</p>
-                            <small class="text-muted">Posté le {{ comment.createdAt|date('d/m/Y à H:i') }}</small>
+                {% for comment in comments %}
+                    <div class="comment">
+                        <p>{{ comment.content }}</p>
+                        <p><small>Posté par {{ comment.user.username }} le {{ comment.createdAt|date('d/m/Y H:i') }}</small></p>
 
-                            {# Formulaire de réponse #}
-                            {% if app.user %}
-                                <div class="reply-form mt-3">
-                                    <button class="btn btn-outline-primary reply-button" data-comment-id="{{ comment.id }}">Répondre</button>
-                                    <div class="reply-container" id="reply-form-{{ comment.id }}">
-                                        {{ form_start(replyFormsView[comment.id]) }}
-                                        {{ form_widget(replyFormsView[comment.id].content) }}
-                                        <button type="submit" class="btn btn-secondary">Envoyer</button>
-                                        <button type="button" class="btn btn-danger close-reply-form" data-comment-id="{{ comment.id }}">Fermer</button>
-                                        {{ form_end(replyFormsView[comment.id]) }}
-                                    </div>
+                        <!-- Formulaire de réponse -->
+                        {% if app.user %}
+                            <button type="button" class="btn btn-outline-secondary reply-button" data-comment-id="{{ comment.id }}">
+                                Répondre
+                            </button>
+
+                            <div id="reply-form-{{ comment.id }}" class="reply-form" style="display:none;">
+                                {{ form_start(replyForms[comment.id]) }}
+                                <div class="mb-3">
+                                    {{ form_label(replyForms[comment.id].content, 'Votre réponse :', {'label_attr': {'class': 'form-label'}}) }}
+                                    {{ form_widget(replyForms[comment.id].content, {'attr': {'class': 'form-control'}}) }}
                                 </div>
-                            {% endif %}
+                                <button type="submit" class="btn btn-primary">Répondre</button>
+                                {{ form_end(replyForms[comment.id]) }}
+                            </div>
+                        {% endif %}
 
-                            {# Affichage des réponses directement sous chaque commentaire #}
-                            <div class="replies ms-4 mt-3">
+                        <!-- Affichage des réponses imbriquées -->
+                        {% if comment.replies|length > 0 %}
+                            <div class="replies pl-4 mt-3 border-start">
                                 {% for reply in comment.replies %}
-                                    <div class="reply border p-3 mb-3 rounded">
-                                        <p><strong>{{ reply.user.username }}</strong> : {{ reply.content }}</p>
-                                        <small class="text-muted">Posté le {{ reply.createdAt|date('d/m/Y à H:i') }}</small>
-                                    </div>
-                                {% else %}
-                                    <p>Aucune réponse pour ce commentaire.</p>
+                                    {% include 'front/subject/_comment.html.twig' with {'comment': reply, 'replyForms': replyForms} %}
                                 {% endfor %}
                             </div>
-                        </div>
-                    {% endfor %}
-                {% endmacro %}
-                <div id="comments-section">
-                    {{ _self.render_comments(comments, replyFormsView) }}
-                </div>
+                        {% endif %}
+                    </div>
+                {% else %}
+                    <p>Aucun commentaire pour le moment.</p>
+                {% endfor %}
             </div>
         </div>
     </div>
 </section>
 
+<!-- Scripts JS -->
 {% block javascripts %}
     {{ parent() }}
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Afficher/masquer le formulaire de réponse sans Bootstrap
+            // Gérer l'affichage des formulaires de réponse
             document.querySelectorAll('.reply-button').forEach(function(button) {
                 button.addEventListener('click', function() {
-                    var commentId = button.getAttribute('data-comment-id');
-                    var replyForm = document.getElementById('reply-form-' + commentId);
-                    if (replyForm) {  // Vérifiez si l'élément existe
-                        // Si le formulaire est caché, on l'affiche, sinon on le cache
-                        replyForm.style.display = 'block';
-                    }
-                });
-            });
-
-            // Fermer le formulaire de réponse
-            document.querySelectorAll('.close-reply-form').forEach(function(button) {
-                button.addEventListener('click', function() {
-                    var commentId = button.getAttribute('data-comment-id');
-                    var replyForm = document.getElementById('reply-form-' + commentId);
+                    const commentId = button.getAttribute('data-comment-id');
+                    const replyForm = document.getElementById(`reply-form-${commentId}`);
                     if (replyForm) {
-                        replyForm.style.display = 'none'; // Masquer le formulaire
+                        replyForm.style.display = 'block';
                     }
                 });
             });
         });
     </script>
 {% endblock %}
-
 {% endblock %}

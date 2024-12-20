@@ -3,10 +3,9 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Doctrine\ORM\Mapping\OneToMany;
-use App\Repository\CommentRepository;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use App\Repository\CommentRepository;
 
 /**
  * @ORM\Entity(repositoryClass=CommentRepository::class)
@@ -36,7 +35,7 @@ class Comment
     private $active;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Subject::class, inversedBy="commentaires")
+     * @ORM\ManyToOne(targetEntity=Subject::class, inversedBy="comments")
      * @ORM\JoinColumn(nullable=false)
      */
     private $subject;
@@ -48,21 +47,15 @@ class Comment
     private $user;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Comment::class, inversedBy="replies")
-     * @ORM\JoinColumn(onDelete="CASCADE", nullable=true)
-     */
-    private ?Comment $parentComment = null;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Comment", inversedBy="replies")
-     * @ORM\JoinColumn(name="parent_id", referencedColumnName="id", nullable=true)
+     * @ORM\ManyToOne(targetEntity=self::class, inversedBy="replies")
+     * @ORM\JoinColumn(onDelete="CASCADE") 
      */
     private $parent;
 
-     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Reply", mappedBy="parentComment", cascade={"persist", "remove"})
+    /**
+     * @ORM\OneToMany(mappedBy="parent", targetEntity=self::class, cascade={"persist", "remove"})
      */
-    private Collection $replies;
+    private $replies;
 
     public function __construct()
     {
@@ -71,7 +64,7 @@ class Comment
         $this->replies = new ArrayCollection();
     }
 
-    // Getters and Setters
+    // Getters and setters
 
     public function getId(): ?int
     {
@@ -86,7 +79,6 @@ class Comment
     public function setContent(string $content): self
     {
         $this->content = $content;
-
         return $this;
     }
 
@@ -98,7 +90,6 @@ class Comment
     public function setCreatedAt(\DateTimeInterface $createdAt): self
     {
         $this->createdAt = $createdAt;
-
         return $this;
     }
 
@@ -110,7 +101,6 @@ class Comment
     public function setActive(bool $active): self
     {
         $this->active = $active;
-
         return $this;
     }
 
@@ -122,7 +112,6 @@ class Comment
     public function setSubject(?Subject $subject): self
     {
         $this->subject = $subject;
-
         return $this;
     }
 
@@ -134,24 +123,6 @@ class Comment
     public function setUser(?User $user): self
     {
         $this->user = $user;
-
-        return $this;
-    }
-
-    public function __toString(): string
-    {
-        return $this->content;
-    }
-
-    public function getParentComment(): ?Comment
-    {
-        return $this->parentComment;
-    }
-
-    public function setParentComment(?Comment $parentComment): self
-    {
-        $this->parentComment = $parentComment;
-
         return $this;
     }
 
@@ -163,41 +134,30 @@ class Comment
     public function setParent(?self $parent): self
     {
         $this->parent = $parent;
-
         return $this;
     }
-    
+
     public function getReplies(): Collection
     {
-        return $this->replies; 
+        return $this->replies;
     }
 
-    public function setReplies(Collection $replies): self
-    {
-        $this->replies = $replies;
-
-        return $this;
-    }
-
-    public function addReply(Reply $reply): self
+    public function addReply(self $reply): self
     {
         if (!$this->replies->contains($reply)) {
             $this->replies[] = $reply;
-            $reply->setComment($this);  // Lier la réponse au commentaire
+            $reply->setParent($this);
         }
-
         return $this;
     }
 
-    public function removeReply(Reply $reply): self
+    public function removeReply(self $reply): self
     {
         if ($this->replies->removeElement($reply)) {
-            // Définir la propriété comment à null si la réponse est supprimée
-            if ($reply->getComment() === $this) {
-                $reply->setComment(null);
+            if ($reply->getParent() === $this) {
+                $reply->setParent(null);
             }
         }
-
         return $this;
     }
 }

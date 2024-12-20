@@ -1,0 +1,37 @@
+<div class="comment mb-4 p-3 border rounded">
+    <!-- Commentaire -->
+    <div class="d-flex align-items-center mb-2">
+        <img src="{{ asset('uploads/avatar/' ~ comment.user.avatar) }}" 
+             alt="{{ comment.user.username }}" 
+             class="rounded-circle me-2" 
+             width="40" height="40">
+        <div>
+            <strong>{{ comment.user.username }}</strong>
+            <small class="text-muted">Posté le {{ comment.createdAt|date('d/m/Y H:i') }}</small>
+        </div>
+    </div>
+    <p>{{ comment.content }}</p>
+
+    <!-- Bouton pour afficher le formulaire de réponse -->
+    {% if app.user %}
+        <button class="btn btn-sm btn-outline-primary reply-button" 
+                data-comment-id="{{ comment.id }}">Répondre</button>
+        <div id="reply-form-{{ comment.id }}" class="reply-form mt-3" style="display: none;">
+            {{ form_start(replyForms[comment.id]) }}
+            <div class="mb-2">
+                {{ form_widget(replyForms[comment.id].content, {'attr': {'class': 'form-control', 'placeholder': 'Votre réponse...' }}) }}
+            </div>
+            <button type="submit" class="btn btn-sm btn-primary">Envoyer</button>
+            {{ form_end(replyForms[comment.id]) }}
+        </div>
+    {% endif %}
+
+    <!-- Affichage des réponses -->
+    {% if comment.replies|length > 0 %}
+        <div class="replies pl-4 mt-3 border-start">
+            {% for reply in comment.replies %}
+                {% include 'front/subject/_comment.html.twig' with {'comment': reply, 'replyForms': replyForms} %}
+            {% endfor %}
+        </div>
+    {% endif %}
+</div>
