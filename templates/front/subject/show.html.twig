@@ -6,7 +6,7 @@
 <section id="content">
     <div class="content-wrap">
         <div class="container mw-md">
-            <!-- Subject Details -->
+            <!-- Détails du sujet -->
             <div class="topic-post">
                 <div class="row g-0 justify-content-between align-items-center border-top border-bottom py-3 mb-4">
                     <div class="col-9">
@@ -27,80 +27,88 @@
                 <p>{{ subject.content|raw }}</p>
             </div>
 
-            <!-- Comment Form -->
-            {% if app.user %}
-            <div class="comment-form mt-4">
-                <h3 class="h2 fw-bolder mb-4">Laisser un Commentaire</h3>
+            {# Formulaire de commentaire #}
+            <div class="comment-form">
                 {{ form_start(form) }}
-                    {{ form_widget(form.content) }}
-                    <button type="submit" class="btn btn-secondary mt-2">Envoyer</button>
+                {{ form_widget(form.content) }}
+                <button type="submit" class="btn btn-primary">Ajouter un commentaire</button>
                 {{ form_end(form) }}
             </div>
-            {% endif %}
 
-            <!-- Comment Section -->
+            <!-- Section des commentaires -->
             <div class="topic-post reply mt-5 p-4 border-top border-width-5 border-color">
-                <h3 class="h2 fw-bolder mb-4">Commentaires</h3>
-
-                {% macro render_comments(comments) %}
+                <h3 class="h2 fw-bolder mb-4">Réponses au sujet</h3>
+                <!-- Définition de la macro pour afficher les commentaires -->
+                {% macro render_comments(comments, replyFormsView) %}
                     {% for comment in comments %}
-                        <div class="comment mb-4">
-                            <div class="d-flex align-items-center mb-2">
-                                <strong>{{ comment.user.username }}</strong>
-                                <small class="text-muted ms-2">{{ comment.createdAt|format_datetime('short', 'short', locale='fr') }}</small>
-                            </div>
-                            <p>{{ comment.content|raw }}</p>
+                        <div class="comment mb-4 border p-3 rounded">
+                            <p><strong>{{ comment.user.username }}</strong> : {{ comment.content }}</p>
+                            <small class="text-muted">Posté le {{ comment.createdAt|date('d/m/Y à H:i') }}</small>
 
-                            <!-- Réponses imbriquées -->
-                            <div class="replies mt-3 ps-3 border-start">
-                                {{ _self.render_comments(comment.replies) }}
-                            </div>
+                            {# Formulaire de réponse #}
+                            {% if app.user %}
+                                <div class="reply-form mt-3">
+                                    <button class="btn btn-outline-primary reply-button" data-comment-id="{{ comment.id }}">Répondre</button>
+                                    <div class="reply-container" id="reply-form-{{ comment.id }}">
+                                        {{ form_start(replyFormsView[comment.id]) }}
+                                        {{ form_widget(replyFormsView[comment.id].content) }}
+                                        <button type="submit" class="btn btn-secondary">Envoyer</button>
+                                        <button type="button" class="btn btn-danger close-reply-form" data-comment-id="{{ comment.id }}">Fermer</button>
+                                        {{ form_end(replyFormsView[comment.id]) }}
+                                    </div>
+                                </div>
+                            {% endif %}
 
-                            <!-- Bouton Répondre -->
-                            <button class="btn btn-link reply-link" data-comment-id="{{ comment.id }}">Répondre</button>
-
-                            <!-- Formulaire de réponse caché par défaut -->
-                            <div class="reply-form" id="reply-form-{{ comment.id }}" style="display: none; position: relative; padding: 10px; border: 1px solid #ccc; border-radius: 5px; background: #f9f9f9; margin-top: 10px;">
-                                <form action="{{ path('front_subject_reply', {'subjectTitle': subject.title, 'commentId': comment.id}) }}" method="post">
-                                    <textarea name="content" class="form-control" placeholder="Votre réponse..." required></textarea>
-                                    <button type="submit" class="btn btn-secondary mt-2">Envoyer</button>
-                                    <!-- Croix pour fermer -->
-                                    <button class="close-reply-form" 
-                                        style="position: absolute; top: 5px; right: 5px; background: none; border: none; font-size: 18px; cursor: pointer;">&times;
-                                    </button>
-                                </form>
+                            {# Affichage des réponses directement sous chaque commentaire #}
+                            <div class="replies ms-4 mt-3">
+                                {% for reply in comment.replies %}
+                                    <div class="reply border p-3 mb-3 rounded">
+                                        <p><strong>{{ reply.user.username }}</strong> : {{ reply.content }}</p>
+                                        <small class="text-muted">Posté le {{ reply.createdAt|date('d/m/Y à H:i') }}</small>
+                                    </div>
+                                {% else %}
+                                    <p>Aucune réponse pour ce commentaire.</p>
+                                {% endfor %}
                             </div>
                         </div>
                     {% endfor %}
                 {% endmacro %}
-
-                {{ _self.render_comments(comments) }}
+                <div id="comments-section">
+                    {{ _self.render_comments(comments, replyFormsView) }}
+                </div>
             </div>
         </div>
     </div>
 </section>
 
 {% block javascripts %}
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // Toggle reply form visibility
-        document.querySelectorAll('.reply-link').forEach(function(button) {
-            button.addEventListener('click', function() {
-                var commentId = this.getAttribute('data-comment-id');
-                var replyForm = document.getElementById('reply-form-' + commentId);
-                replyForm.style.display = 'block';
+    {{ parent() }}
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Afficher/masquer le formulaire de réponse sans Bootstrap
+            document.querySelectorAll('.reply-button').forEach(function(button) {
+                button.addEventListener('click', function() {
+                    var commentId = button.getAttribute('data-comment-id');
+                    var replyForm = document.getElementById('reply-form-' + commentId);
+                    if (replyForm) {  // Vérifiez si l'élément existe
+                        // Si le formulaire est caché, on l'affiche, sinon on le cache
+                        replyForm.style.display = 'block';
+                    }
+                });
             });
-        });
 
-        // Close reply form
-        document.querySelectorAll('.close-reply-form').forEach(function(button) {
-            button.addEventListener('click', function(event) {
-                event.preventDefault();
-                var replyForm = this.closest('.reply-form');
-                replyForm.style.display = 'none';
+            // Fermer le formulaire de réponse
+            document.querySelectorAll('.close-reply-form').forEach(function(button) {
+                button.addEventListener('click', function() {
+                    var commentId = button.getAttribute('data-comment-id');
+                    var replyForm = document.getElementById('reply-form-' + commentId);
+                    if (replyForm) {
+                        replyForm.style.display = 'none'; // Masquer le formulaire
+                    }
+                });
             });
         });
-    });
-</script>
+    </script>
 {% endblock %}
+
 {% endblock %}

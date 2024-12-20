@@ -207,10 +207,11 @@ class Subject
         return $this;
     }
 
-    public function getCategories()
+    public function getCategories(): Collection
     {
         return $this->categories;
     }
+
 
     public function setCategories(ArrayCollection $categories)
     {

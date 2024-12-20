@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Repository;
+namespace App\Entity;
 
 use App\Entity\SuiviDemande;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;

@@ -90,14 +90,14 @@
 		<!-- Front script -->
 		{% block javascripts %}
 
-			<script src="{{ asset('js/jquery-3.5.1.min.js') }}"></script>
+    		<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 			<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
 			<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-Fy6S3B9q64WdZWQUiU+q4/2Lc9npb8tCaSX9FK7E8HnRr0Jz8D6OP9dO5Vg3Q9ct" crossorigin="anonymous"></script>
 			{{ encore_entry_script_tags('imagesloaded') }}
 			<script src="{{ asset('js/modernizr.custom.js') }}"></script>
 			{# <script src="{{ asset('js/jquery.shuffle.min.js') }}"></script> #}
 			<script src="{{ asset('js/masonry.pkgd.min.js') }}"></script>
-			{{ encore_entry_script_tags('owl.carousel') }}
+    		<script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
 			<script src="{{ asset('js/jquery.magnific-popup.min.js') }}"></script>
 			{{ encore_entry_script_tags('validator') }}
 			{{ encore_entry_script_tags('main') }}
@@ -173,40 +173,29 @@
 					document.getElementById('cookie-consent').style.display = 'block';
 				}
 			</script>#}
+			{#
 			<script>
-				(() => {
-					const footer = document.querySelector('footer')
-					footer.classList.add('site-footer-fixed')
-
-					let displayFixed = () => {
-						footer.classList.remove('site-footer-fixed')
-					}
-
-					document.addEventListener('scroll', displayFixed)
-				})()
-			</script>
-			<script>
-				$('.home_carousel').owlCarousel({
-					loop:false,
-					margin:10,
-					responsiveClass:true,
-					responsive:{
-						0:{
-							items:1,
-							nav:true
-						},
-						600:{
-							items:3,
-							nav:false
-						},
-						1000:{
-							items:5,
-							nav:true,
-							loop:false
-						}
-					}
-				})
-			</script>
+			// 	$('.home_carousel').owlCarousel({
+			// 		loop:false,
+			// 		margin:10,
+			// 		responsiveClass:true,
+			// 		responsive:{
+			// 			0:{
+			// 				items:1,
+			// 				nav:true
+			// 			},
+			// 			600:{
+			// 				items:3,
+			// 				nav:false
+			// 			},
+			// 			1000:{
+			// 				items:5,
+			// 				nav:true,
+			// 				loop:false
+			// 			}
+			// 		}
+			// 	})
+			</script>#}
 
 			<script defer src="https://stats.youss.dev/script.js" data-website-id="2f81360d-92bc-460b-bcd6-81ba64683e42"></script>
 		{% endblock %}

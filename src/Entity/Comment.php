@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\OneToMany;
 use App\Repository\CommentRepository;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -47,9 +48,21 @@ class Comment
     private $user;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Reply", mappedBy="parentComment")
+     * @ORM\ManyToOne(targetEntity=Comment::class, inversedBy="replies")
+     * @ORM\JoinColumn(onDelete="CASCADE", nullable=true)
      */
-    private $replies;
+    private ?Comment $parentComment = null;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Comment", inversedBy="replies")
+     * @ORM\JoinColumn(name="parent_id", referencedColumnName="id", nullable=true)
+     */
+    private $parent;
+
+     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Reply", mappedBy="parentComment", cascade={"persist", "remove"})
+     */
+    private Collection $replies;
 
     public function __construct()
     {
@@ -58,7 +71,7 @@ class Comment
         $this->replies = new ArrayCollection();
     }
 
-    // Getters and setters
+    // Getters and Setters
 
     public function getId(): ?int
     {
@@ -113,36 +126,6 @@ class Comment
         return $this;
     }
 
-    /**
-     * @return Collection<int, Reply>
-     */
-    public function getReplies(): Collection
-    {
-        return $this->replies;
-    }
-
-    public function addReply(Reply $reply): self
-    {
-        if (!$this->replies->contains($reply)) {
-            $this->replies[] = $reply;
-            $reply->setParentComment($this);
-        }
-
-        return $this;
-    }
-
-    public function removeReply(Reply $reply): self
-    {
-        if ($this->replies->removeElement($reply)) {
-            // set the owning side to null (unless already changed)
-            if ($reply->getParentComment() === $this) {
-                $reply->setParentComment(null);
-            }
-        }
-
-        return $this;
-    }
-
     public function getUser(): ?User
     {
         return $this->user;
@@ -155,11 +138,66 @@ class Comment
         return $this;
     }
 
-    /**
-     * Méthode magique __toString() pour convertir l'objet en chaîne.
-     */
     public function __toString(): string
     {
-        return $this->content;  // Retourne le contenu du commentaire comme chaîne
+        return $this->content;
+    }
+
+    public function getParentComment(): ?Comment
+    {
+        return $this->parentComment;
+    }
+
+    public function setParentComment(?Comment $parentComment): self
+    {
+        $this->parentComment = $parentComment;
+
+        return $this;
+    }
+
+    public function getParent(): ?self
+    {
+        return $this->parent;
+    }
+
+    public function setParent(?self $parent): self
+    {
+        $this->parent = $parent;
+
+        return $this;
+    }
+    
+    public function getReplies(): Collection
+    {
+        return $this->replies; 
+    }
+
+    public function setReplies(Collection $replies): self
+    {
+        $this->replies = $replies;
+
+        return $this;
+    }
+
+    public function addReply(Reply $reply): self
+    {
+        if (!$this->replies->contains($reply)) {
+            $this->replies[] = $reply;
+            $reply->setComment($this);  // Lier la réponse au commentaire
+        }
+
+        return $this;
+    }
+
+    public function removeReply(Reply $reply): self
+    {
+        if ($this->replies->removeElement($reply)) {
+            // Définir la propriété comment à null si la réponse est supprimée
+            if ($reply->getComment() === $this) {
+                $reply->setComment(null);
+            }
+        }
+
+        return $this;
     }
 }

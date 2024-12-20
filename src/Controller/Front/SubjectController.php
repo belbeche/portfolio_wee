@@ -1,7 +1,9 @@
 <?php
 // app/Controller/Front;
 
+
 namespace App\Controller\Front;
+
 
 use App\Entity\Image;
 use App\Entity\Reply;
@@ -11,9 +13,11 @@ use App\Form\ReplyType;
 use App\Form\Subject\Type\CommentType;
 use App\Form\Subject\Type\SubjectType;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\Common\Collections\Collection;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Doctrine\Common\Collections\ArrayCollection;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
@@ -108,10 +112,7 @@ class SubjectController extends AbstractController
     public function showSubject(string $subjectId, Request $request, EntityManagerInterface $entityManager): Response
     {
         // Récupérer le sujet par son ID
-        $subject = $entityManager
-            ->getRepository(Subject::class)
-            ->find($subjectId);
-
+        $subject = $entityManager->getRepository(Subject::class)->find($subjectId);
         if (!$subject) {
             throw $this->createNotFoundException('Le sujet est introuvable.');
         }
@@ -121,11 +122,11 @@ class SubjectController extends AbstractController
         $form = $this->createForm(CommentType::class, $comment);
         $form->handleRequest($request);
 
+        // Gérer la soumission du formulaire de commentaire
         if ($form->isSubmitted() && $form->isValid()) {
             $comment->setSubject($subject);
             $comment->setUser($this->getUser());
             $comment->setCreatedAt(new \DateTime());
-
             $entityManager->persist($comment);
             $entityManager->flush();
 
@@ -135,27 +136,43 @@ class SubjectController extends AbstractController
             return $this->redirectToRoute('front_subject_show', ['subjectId' => $subjectId]);
         }
 
-        // Charger les commentaires existants
-        $comments = $entityManager
-            ->getRepository(Comment::class)
-            ->findBy(['subject' => $subject]);
+        // Charger les commentaires existants, ainsi que leurs réponses
+        $comments = $entityManager->getRepository(Comment::class)->findBy(
+            ['subject' => $subject],
+            ['createdAt' => 'DESC']
+        );              
 
         // Créer les formulaires de réponse pour chaque commentaire
         $replyFormsView = [];
         foreach ($comments as $comment) {
             $replyForm = $this->createForm(ReplyType::class);
             $replyFormsView[$comment->getId()] = $replyForm->createView();
+
+            // Gérer la soumission des formulaires de réponse
+            $replyForm->handleRequest($request);
+            if ($replyForm->isSubmitted() && $replyForm->isValid()) {
+                $reply = $replyForm->getData();
+                $reply->setUser($this->getUser());
+                $reply->setCreatedAt(new \DateTime());
+                $reply->setParentComment($comment);  // Lier la réponse au commentaire parent
+
+                $entityManager->persist($reply);
+                $entityManager->flush();
+
+                $this->addFlash('success', 'Réponse ajoutée avec succès.');
+
+                // Redirection après la soumission de la réponse pour éviter la double soumission
+                return $this->redirectToRoute('front_subject_show', ['subjectId' => $subjectId]);
+            }
         }
 
-        // Rendre la vue avec les données nécessaires
         return $this->render('front/subject/show.html.twig', [
             'subject' => $subject,
             'comments' => $comments,
             'form' => $form->createView(),
-            'replyForms' => $replyFormsView,
+            'replyFormsView' => $replyFormsView,
         ]);
     }
-
 
 
 

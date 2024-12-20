@@ -3,15 +3,18 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\ReplyRepository;
+use Doctrine\ORM\Mapping\ManyToOne;
+use Doctrine\ORM\Mapping\JoinColumn;
 
 /**
- * @ORM\Entity(repositoryClass="App\Repository\ReplyRepository")
+ * @ORM\Entity(repositoryClass=ReplyRepository::class)
  */
 class Reply
 {
     /**
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
+     * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      */
     private $id;
@@ -22,7 +25,7 @@ class Reply
     private $content;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\User")
+     * @ORM\ManyToOne(targetEntity=User::class)
      * @ORM\JoinColumn(nullable=false)
      */
     private $user;
@@ -37,6 +40,19 @@ class Reply
      * @ORM\JoinColumn(nullable=false)
      */
     private $parentComment;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Comment", inversedBy="replies")
+     * @ORM\JoinColumn(nullable=true)
+     */
+    private $comment;
+
+    public function __construct()
+    {
+        $this->createdAt = new \DateTime();
+    }
+
+    // Getters et Setters
 
     public function getId(): ?int
     {
@@ -84,9 +100,21 @@ class Reply
         return $this->parentComment;
     }
 
-    public function setParentComment(?Comment $parentComment): self
+    public function setParentComment(?Comment $comment): self
     {
-        $this->parentComment = $parentComment;
+        $this->parentComment = $comment;
+
+        return $this;
+    }
+
+    public function getComment(): ?Comment
+    {
+        return $this->comment;
+    }
+
+    public function setComment(?Comment $comment): self
+    {
+        $this->comment = $comment;
 
         return $this;
     }

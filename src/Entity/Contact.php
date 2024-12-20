@@ -7,7 +7,7 @@ use Symfony\Component\Uid\Uuid;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * @ORM\Entity(repositoryClass="App\Repository\ContactRepository", repositoryClass=ContactRepository::class)
+ * @ORM\Entity(repositoryClass=ContactRepository::class)
  */
 class Contact
 {
