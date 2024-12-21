@@ -141,7 +141,7 @@ class ProspectController extends AbstractController
                 ->from('contact@scriptzenit.fr')
                 ->to($prospect->getEmail())
                 ->subject('Prospect supprimé - ScriptZenIT.fr')
-                ->text('Le prospect avec l\'email: ' . $prospect->getEmail() . 'a bien était supprimé. Merci pour votre temps.');
+                ->text('Le prospect avec l\'email : ' . $prospect->getEmail() . ' a bien était supprimé. Merci pour votre temps.');
 
             $mailer->send($email);
 
