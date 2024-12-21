@@ -3,10 +3,11 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\CallBackRequestRepository;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * @ORM\Entity(repositoryClass=CallbackRequestRepository::class)
+ * @ORM\Entity(repositoryClass="App\Repository\CallBackRequestRepository")
  */
 class CallbackRequest
 {
