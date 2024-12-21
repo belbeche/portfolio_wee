@@ -10,6 +10,7 @@ use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\All;
 use Symfony\Component\Validator\Constraints\File;
 
 class ProspectType extends AbstractType
@@ -44,20 +45,22 @@ class ProspectType extends AbstractType
                 'attr' => ['class' => 'form-check']
             ])
             ->add('document', FileType::class, [
-                'label' => 'Upload Document (PDF only)',
-                'mapped' => false,
-                'required' => false,
-                'constraints' => [
-                    new File([
-                        'maxSize' => '2048k',
-                        'mimeTypes' => [
-                            'application/pdf',
-                            'application/x-pdf',
-                        ],
-                        'mimeTypesMessage' => 'Please upload a valid PDF file.'
-                    ])
+                'label' => 'Documents (PDF, images, etc.)',
+                'multiple' => true,  // Permet l'upload de plusieurs fichiers
+                'mapped' => false,   // Ne lie pas directement à l'entité
+                'constraints' => [                
+                    new All(
+                        new File([
+                            'maxSize' => '5000k',
+                            'mimeTypes' => [
+                                'application/pdf',
+                                'image/jpeg',
+                                'image/png'
+                            ],
+                            'mimeTypesMessage' => 'Merci d\'upload un fichier pdf, jpeg ou png',
+                        ])
+                    )
                 ],
-                'attr' => ['class' => 'form-control']
             ])
             ->add('notes', null, [
                 'label' => 'Notes',

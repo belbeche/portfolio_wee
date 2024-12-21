@@ -19,14 +19,16 @@ class Comment
      */
     private $id;
 
+    // Le contenu du commentaire
     /**
-     * @ORM\Column(type="text")
-     */
+    * @ORM\Column(type="text")
+    */
     private $content;
 
+    // Date de création du commentaire
     /**
-     * @ORM\Column(type="datetime")
-     */
+    * @ORM\Column(type="datetime")
+    */
     private $createdAt;
 
     /**
@@ -35,25 +37,29 @@ class Comment
     private $active;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Subject::class, inversedBy="comments")
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private $subject;
-
-    /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="comments")
      * @ORM\JoinColumn(nullable=false)
      */
     private $user;
 
+    // Le sujet auquel appartient le commentaire
     /**
-     * @ORM\ManyToOne(targetEntity=self::class, inversedBy="replies")
-     * @ORM\JoinColumn(onDelete="CASCADE") 
-     */
+    * @ORM\ManyToOne(targetEntity="App\Entity\Subject", inversedBy="comments")
+    * @ORM\JoinColumn(name="subject_id", referencedColumnName="id")
+    */
+    private $subject;
+    
+    // Le parent du commentaire (pour les réponses)
+    /**
+    * @ORM\ManyToOne(targetEntity="App\Entity\Comment", inversedBy="replies")
+    * @ORM\JoinColumn(name="parent_id", referencedColumnName="id", nullable=true)
+    */
     private $parent;
 
+
+    // Réponses liées à ce commentaire
     /**
-     * @ORM\OneToMany(mappedBy="parent", targetEntity=self::class, cascade={"persist", "remove"})
+     * @ORM\OneToMany(targetEntity="App\Entity\Comment", mappedBy="parent")
      */
     private $replies;
 
@@ -63,8 +69,6 @@ class Comment
         $this->active = true;
         $this->replies = new ArrayCollection();
     }
-
-    // Getters and setters
 
     public function getId(): ?int
     {
@@ -148,16 +152,20 @@ class Comment
             $this->replies[] = $reply;
             $reply->setParent($this);
         }
+
         return $this;
     }
 
     public function removeReply(self $reply): self
     {
-        if ($this->replies->removeElement($reply)) {
+        if ($this->replies->contains($reply)) {
+            $this->replies->removeElement($reply);
+            // set the owning side to null (unless already changed)
             if ($reply->getParent() === $this) {
                 $reply->setParent(null);
             }
         }
+
         return $this;
     }
 }

@@ -20,7 +20,7 @@
         <tr>
             <td>{{ prospect.email }}</td>
             <td>{{ prospect.services|join(', ') }}</td>
-            <td>{{ prospect.documentFilename ? prospect.documentFilename : 'None' }}</td>
+            <td>{{ prospect.documentFilenames ? prospect.documentFilenames : 'None' }}</td>
             <td>{{ prospect.notes ? prospect.notes : 'None' }}</td>
             <td>
                 <a href="{{ path('back_prospect_edit', {'id': prospect.id}) }}">Edit</a>

@@ -3,6 +3,36 @@
 {% block title %}{{ subject.title }}{% endblock %}
 
 {% block content %}
+<style>
+.comment {
+    margin-bottom: 1.5rem;
+    padding: 1rem;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+.replies {
+    margin-left: 2rem; /* Décalage visuel pour les réponses */
+    border-left: 2px solid #ddd;
+    padding-left: 1rem;
+    margin-top: 1rem;
+}
+
+.reply-form {
+    margin-top: 1rem;
+    display: none; /* Par défaut, caché */
+}
+
+.reply {
+    margin-top: 1rem;
+    padding: 0.8rem;
+    background-color: #fff;
+    border: 1px solid #e6e6e6;
+    border-radius: 5px;
+}
+</style>
+
 <section id="content">
     <div class="content-wrap">
         <div class="container mw-md">
@@ -27,7 +57,7 @@
                 <p>{{ subject.content|raw }}</p>
             </div>
 
-            <!-- Formulaire de commentaire -->
+            <!-- Formulaire de commentaire principal -->
             <div class="comment-form">
                 {{ form_start(formComment) }}
                 <div class="mb-3">
@@ -43,31 +73,82 @@
                 <h3 class="h2 fw-bolder mb-4">Réponses au sujet</h3>
                 {% for comment in comments %}
                     <div class="comment">
-                        <p>{{ comment.content }}</p>
-                        <p><small>Posté par {{ comment.user.username }} le {{ comment.createdAt|date('d/m/Y H:i') }}</small></p>
+                        <div>
+                            <strong>{{ comment.user.username }}</strong> - 
+                            <small>{{ comment.createdAt|date('d/m/Y H:i') }}</small>
+                            <p>{{ comment.content }}</p>
+                        </div>
 
                         <!-- Formulaire de réponse -->
                         {% if app.user %}
-                            <button type="button" class="btn btn-outline-secondary reply-button" data-comment-id="{{ comment.id }}">
+                            <button type="button" class="reply-button" data-comment-id="{{ comment.id }}">
                                 Répondre
                             </button>
 
-                            <div id="reply-form-{{ comment.id }}" class="reply-form" style="display:none;">
+                            <div id="reply-form-{{ comment.id }}" class="reply-form">
                                 {{ form_start(replyForms[comment.id]) }}
                                 <div class="mb-3">
-                                    {{ form_label(replyForms[comment.id].content, 'Votre réponse :', {'label_attr': {'class': 'form-label'}}) }}
-                                    {{ form_widget(replyForms[comment.id].content, {'attr': {'class': 'form-control'}}) }}
+                                    {{ form_widget(replyForms[comment.id].content, {'attr': {'class': 'form-control', 'placeholder': 'Votre réponse'}}) }}
                                 </div>
-                                <button type="submit" class="btn btn-primary">Répondre</button>
+                                <button type="submit" class="btn btn-primary btn-sm">Envoyer</button>
                                 {{ form_end(replyForms[comment.id]) }}
                             </div>
                         {% endif %}
 
-                        <!-- Affichage des réponses imbriquées -->
+                        <!-- Réponses imbriquées -->
                         {% if comment.replies|length > 0 %}
-                            <div class="replies pl-4 mt-3 border-start">
+                            <div class="replies">
                                 {% for reply in comment.replies %}
-                                    {% include 'front/subject/_comment.html.twig' with {'comment': reply, 'replyForms': replyForms} %}
+                                    <div class="reply">
+                                        <strong>{{ reply.user.username }}</strong> - 
+                                        <small>{{ reply.createdAt|date('d/m/Y H:i') }}</small>
+                                        <p>{{ reply.content }}</p>
+
+                                        <!-- Formulaire de réponse pour la réponse -->
+                                        {% if app.user %}
+                                            <button type="button" class="reply-button" data-comment-id="{{ reply.id }}">
+                                                Répondre
+                                            </button>
+
+                                            <div id="reply-form-{{ reply.id }}" class="reply-form">
+                                                {{ form_start(replyForms[reply.id]) }}
+                                                <div class="mb-3">
+                                                    {{ form_widget(replyForms[reply.id].content, {'attr': {'class': 'form-control', 'placeholder': 'Votre réponse'}}) }}
+                                                </div>
+                                                <button type="submit" class="btn btn-primary btn-sm">Envoyer</button>
+                                                {{ form_end(replyForms[reply.id]) }}
+                                            </div>
+                                        {% endif %}
+                                    </div>
+
+                                    <!-- Réponses imbriquées supplémentaires -->
+                                    {% if reply.replies|length > 0 %}
+                                        <div class="replies">
+                                            {% for subReply in reply.replies %}
+                                                <div class="reply">
+                                                    <strong>{{ subReply.user.username }}</strong> - 
+                                                    <small>{{ subReply.createdAt|date('d/m/Y H:i') }}</small>
+                                                    <p>{{ subReply.content }}</p>
+                                                    
+                                                    <!-- Formulaire de réponse pour les sous-réponses -->
+                                                    {% if app.user %}
+                                                        <button type="button" class="reply-button" data-comment-id="{{ subReply.id }}">
+                                                            Répondre
+                                                        </button>
+
+                                                        <div id="reply-form-{{ subReply.id }}" class="reply-form">
+                                                            {{ form_start(replyForms[subReply.id]) }}
+                                                            <div class="mb-3">
+                                                                {{ form_widget(replyForms[subReply.id].content, {'attr': {'class': 'form-control', 'placeholder': 'Votre réponse'}}) }}
+                                                            </div>
+                                                            <button type="submit" class="btn btn-primary btn-sm">Envoyer</button>
+                                                            {{ form_end(replyForms[subReply.id]) }}
+                                                        </div>
+                                                    {% endif %}
+                                                </div>
+                                            {% endfor %}
+                                        </div>
+                                    {% endif %}
                                 {% endfor %}
                             </div>
                         {% endif %}
@@ -80,12 +161,10 @@
     </div>
 </section>
 
-<!-- Scripts JS -->
 {% block javascripts %}
     {{ parent() }}
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Gérer l'affichage des formulaires de réponse
             document.querySelectorAll('.reply-button').forEach(function(button) {
                 button.addEventListener('click', function() {
                     const commentId = button.getAttribute('data-comment-id');
@@ -98,4 +177,5 @@
         });
     </script>
 {% endblock %}
+
 {% endblock %}

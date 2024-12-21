@@ -3,8 +3,9 @@
 namespace App\Repository;
 
 use App\Entity\Comment;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use App\Entity\Subject;
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
 /**
  * @extends ServiceEntityRepository<Comment>
@@ -38,6 +39,22 @@ class CommentRepository extends ServiceEntityRepository
             $this->getEntityManager()->flush();
         }
     }
+
+    public function findCommentsWithReplies(Subject $subject)
+    {
+        return $this->createQueryBuilder('c')
+            ->leftJoin('c.parent', 'parent')  // Jointure pour récupérer le commentaire parent
+            ->addSelect('parent')  // Ajouter l'entité parent à la sélection
+            ->where('c.subject = :subject')  // Filtrer par subject
+            ->andWhere('c.parent IS NULL')  // Filtrer pour obtenir uniquement les commentaires de niveau 1
+            ->setParameter('subject', $subject)  // Définir le paramètre pour le sujet
+            ->orderBy('c.createdAt', 'DESC')  // Trier par la date de création
+            ->getQuery()
+            ->getResult();
+    }
+
+
+
 
 //    /**
 //     * @return Comment[] Returns an array of Comment objects

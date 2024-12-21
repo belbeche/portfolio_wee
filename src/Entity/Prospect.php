@@ -2,9 +2,9 @@
 
 namespace App\Entity;
 
+use Symfony\Component\Uid\Uuid;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Component\Uid\Uuid;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\ProspectRepository")
@@ -31,16 +31,14 @@ class Prospect
     private $services = [];
 
     /**
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\Column(type="text", nullable=true) 
      */
-    private $documentFilename;
+    private $documentFilenames; 
 
     /**
      * @ORM\Column(type="text", nullable=true)
      */
     private $notes;
-
-    // Getters and setters
 
     public function getId(): ?Uuid
     {
@@ -69,14 +67,14 @@ class Prospect
         return $this;
     }
 
-    public function getDocumentFilename(): ?string
+    public function getDocumentFilenames(): ?string
     {
-        return $this->documentFilename;
+        return $this->documentFilenames;
     }
 
-    public function setDocumentFilename(?string $documentFilename): self
+    public function setDocumentFilenames(?string $filenames): self
     {
-        $this->documentFilename = $documentFilename;
+        $this->documentFilenames = $filenames; 
         return $this;
     }
 

@@ -6,18 +6,16 @@ namespace App\Controller\Front;
 
 
 use App\Entity\Image;
-use App\Entity\Reply;
 use App\Entity\Comment;
 use App\Entity\Subject;
-use App\Form\ReplyType;
 use App\Form\Subject\Type\CommentType;
 use App\Form\Subject\Type\SubjectType;
+use App\Repository\CommentRepository;
+use App\Service\CommentService;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\Common\Collections\Collection;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Doctrine\Common\Collections\ArrayCollection;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
@@ -112,7 +110,8 @@ class SubjectController extends AbstractController
     public function showSubject(
         string $subjectId,
         Request $request,
-        EntityManagerInterface $entityManager
+        EntityManagerInterface $entityManager,
+        CommentRepository $commentRepository
     ): Response {
         // Récupération du sujet
         $subject = $entityManager->getRepository(Subject::class)->find($subjectId);
@@ -143,11 +142,11 @@ class SubjectController extends AbstractController
             return $this->redirectToRoute('front_subject_show', ['subjectId' => $subjectId], 303);
         }
 
-        // Récupération des commentaires racines
-        $comments = $entityManager->getRepository(Comment::class)->findBy(
-            ['subject' => $subject, 'parent' => null],
-            ['createdAt' => 'DESC']
-        );
+        // Récupération des commentaires racines et de leurs réponses
+        // $comments = $commentRepository->findCommentsWithReplies($subject);
+        // dd($comments);  // Debug pour voir les résultats
+
+        $comments = $commentRepository->findBy(['subject' => $subject, 'parent' => null], ['createdAt' => 'DESC']);
 
         // Gestion des réponses aux commentaires
         $replyForms = [];
@@ -155,11 +154,15 @@ class SubjectController extends AbstractController
             $reply = new Comment();
             $reply->setParent($comment); // Lier la réponse au commentaire parent
 
-            $formReply = $this->createForm(CommentType::class, $reply);
+            $formReply = $this->createForm(CommentType::class, $reply, [
+                'action' => $this->generateUrl('front_subject_show', ['subjectId' => $subjectId]) . '#reply-' . $comment->getId(),
+                'method' => 'POST',
+            ]);
+
             $formReply->handleRequest($request);
 
             // Vérification que le formulaire de réponse a été soumis
-            if ($formReply->isSubmitted() && $formReply->isValid() && $request->request->has('reply_' . $comment->getId())) {
+            if ($formReply->isSubmitted() && $formReply->isValid()) {
                 if (!$user) {
                     $this->addFlash('error', 'Vous devez être connecté pour répondre à un commentaire.');
                     return $this->redirectToRoute('app_login');
@@ -180,10 +183,9 @@ class SubjectController extends AbstractController
 
         return $this->render('front/subject/show.html.twig', [
             'subject' => $subject,
-            'comments' => $comments,
+            'comments' => $comments, 
             'formComment' => $formComment->createView(),
             'replyForms' => $replyForms,
         ]);
     }
-
 }

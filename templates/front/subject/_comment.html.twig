@@ -1,36 +1,51 @@
-<div class="comment mb-4 p-3 border rounded">
-    <!-- Commentaire -->
-    <div class="d-flex align-items-center mb-2">
-        <img src="{{ asset('uploads/avatar/' ~ comment.user.avatar) }}" 
-             alt="{{ comment.user.username }}" 
-             class="rounded-circle me-2" 
-             width="40" height="40">
-        <div>
-            <strong>{{ comment.user.username }}</strong>
-            <small class="text-muted">Posté le {{ comment.createdAt|date('d/m/Y H:i') }}</small>
-        </div>
+<div class="comment">
+    <div>
+        <strong>{{ comment.user.username }}</strong> - 
+        <small>{{ comment.createdAt|date('d/m/Y H:i') }}</small>
+        <p>{{ comment.content }}</p>
     </div>
-    <p>{{ comment.content }}</p>
 
-    <!-- Bouton pour afficher le formulaire de réponse -->
+    <!-- Formulaire de réponse -->
     {% if app.user %}
-        <button class="btn btn-sm btn-outline-primary reply-button" 
-                data-comment-id="{{ comment.id }}">Répondre</button>
-        <div id="reply-form-{{ comment.id }}" class="reply-form mt-3" style="display: none;">
+        <button type="button" class="reply-button" data-comment-id="{{ comment.id }}">
+            Répondre
+        </button>
+
+        <div id="reply-form-{{ comment.id }}" class="reply-form">
             {{ form_start(replyForms[comment.id]) }}
-            <div class="mb-2">
-                {{ form_widget(replyForms[comment.id].content, {'attr': {'class': 'form-control', 'placeholder': 'Votre réponse...' }}) }}
+            <div class="mb-3">
+                {{ form_widget(replyForms[comment.id].content, {'attr': {'class': 'form-control', 'placeholder': 'Votre réponse'}}) }}
             </div>
-            <button type="submit" class="btn btn-sm btn-primary">Envoyer</button>
+            <button type="submit" class="btn btn-primary btn-sm">Envoyer</button>
             {{ form_end(replyForms[comment.id]) }}
         </div>
     {% endif %}
 
-    <!-- Affichage des réponses -->
+    <!-- Réponses imbriquées -->
     {% if comment.replies|length > 0 %}
-        <div class="replies pl-4 mt-3 border-start">
+        <div class="replies">
             {% for reply in comment.replies %}
-                {% include 'front/subject/_comment.html.twig' with {'comment': reply, 'replyForms': replyForms} %}
+                <div class="reply">
+                    <strong>{{ reply.user.username }}</strong> - 
+                    <small>{{ reply.createdAt|date('d/m/Y H:i') }}</small>
+                    <p>{{ reply.content }}</p>
+                    
+                    <!-- Formulaire de réponse pour la réponse -->
+                    {% if app.user %}
+                        <button type="button" class="reply-button" data-comment-id="{{ reply.id }}">
+                            Répondre
+                        </button>
+
+                        <div id="reply-form-{{ reply.id }}" class="reply-form">
+                            {{ form_start(replyForms[reply.id]) }}
+                            <div class="mb-3">
+                                {{ form_widget(replyForms[reply.id].content, {'attr': {'class': 'form-control', 'placeholder': 'Votre réponse'}}) }}
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-sm">Envoyer</button>
+                            {{ form_end(replyForms[reply.id]) }}
+                        </div>
+                    {% endif %}
+                </div>
             {% endfor %}
         </div>
     {% endif %}
