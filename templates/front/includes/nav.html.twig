@@ -1,61 +1,62 @@
-<div class="mb-4">
-	<header id="header" style="margin-bottom: 3rem !important;margin-top: 3px;!important">
-		<nav class="navbar navbar-expand-lg fixed-top container-fluid text-dark mt-top-logo" style="background-color: #ffffff;">
-			<!-- Text Logo -->
-			<div class="logo">
-				<a href="{{ url('front_home') }}">
-					<img src="{{ asset('img/logo.png')}}" class="d-sm-none d-md-none d-lg-block" width="20%" height="30%" alt="Agence web à Avallon (89200)">
-				</a>
-				<a href="{{ url('front_home') }}">
-					<div class="logo-text d-md-block d-lg-none d-sm-block fw-bold" style="font-size: 1rem;">ScriptZenIT</div>
-				</a>
-			</div>
-			<!-- /Text Logo -->
-			<div class="burger" id="burger">
-				<span class="burger-line"></span>
-				<span class="burger-line"></span>
-				<span class="burger-line"></span>
-			</div>
-			<div class="menu" id="menu">
-				<ul class="menu-inner">
-                	<li class="menu-item {{ app.request.get('_route') == 'front_home' ? 'active' : '' }}">
-                    	<a class="nav-link" href="{{ url('front_home') }}">Accueil</a>
+<header id="header">
+    <nav class="navbar navbar-expand-lg fixed-top container-fluid text-dark bg-white" style="padding: 0.75rem 1.5rem;">
+        <!-- Logo -->
+        <div class="logo">
+            <a href="{{ url('front_home') }}">
+                <img src="{{ asset('img/logo.png') }}" class="d-sm-none d-md-none d-lg-block" width="17%" height="10%" alt="Agence web à Avallon (89200)">
+            </a>
+            <a href="{{ url('front_home') }}">
+                <div class="logo-text d-md-block d-lg-none d-sm-block fw-bold" style="font-size: 1rem;">ScriptZenIT</div>
+            </a>
+        </div>
+
+        <!-- Burger Menu -->
+        <div id="burger" class="burger">
+            <span class="burger-line"></span>
+            <span class="burger-line"></span>
+            <span class="burger-line"></span>
+        </div>
+
+        <!-- Menu -->
+        <div id="menu" class="menu">
+            <ul class="menu-inner">
+                <li class="menu-item {{ app.request.get('_route') == 'front_home' ? 'active' : '' }}">
+                    <a class="nav-link menu-link" href="{{ url('front_home') }}">Accueil</a>
+                </li>
+                <li class="menu-item {{ app.request.get('_route') == 'front_member_index' ? 'active' : '' }}">
+                    <a class="nav-link menu-link" href="{{ url('front_member_index') }}">A propos</a>
+                </li>
+                <li class="menu-item {{ app.request.get('_route') == 'front_project' ? 'active' : '' }}">
+                    <a class="nav-link menu-link" href="{{ url('front_project') }}">Nos réalisations</a>
+                </li>
+                <li class="menu-item {{ app.request.get('_route') == 'front_devis_new' ? 'active' : '' }}">
+                    <a class="nav-link menu-link" href="{{ url('front_devis_new') }}">Faire une demande</a>
+                </li>
+                {% if not app.user %}
+                    <li class="menu-item {{ app.request.get('_route') == 'app_register' ? 'active' : '' }}">
+                        <a class="btn btn-success menu-link" href="{{ url('app_register') }}">S'inscrire</a>
                     </li>
-                    <li class="menu-item {{ app.request.get('_route') == 'front_member_index' ? 'active' : '' }}">
-						<a class="nav-link" href="{{ url('front_member_index') }}">A propos</a>
-					</li>
-					<li class="menu-item {{ app.request.get('_route') == 'front_project' ? 'active' : '' }}">
-						<a class="nav-link" href="{{ url('front_project') }}">Nos réalisations</a>
-					</li>
-					<li class="menu-item {{ app.request.get('_route') == 'front_devis_new' ? 'active' : '' }}">
-						<a class="nav-link" href="{{ url('front_devis_new') }}">Faire une demande</a>
-					</li>
-					{% if not app.user %}
-						<li class="menu-item {{ app.request.get('_route') == 'app_register' ? 'active' : '' }}">
-							<a class="btn btn-success" href="{{ url('app_register') }}">S'inscrire</a>
-						</li>
-						<li class="menu-item {{ app.request.get('_route') == 'app_login' ? 'active' : '' }}">
-							<a class="btn btn-info" href="{{ url('app_login') }}">Connexion</a>
-						</li>
-					{% endif %}
-					{% if app.user %}
-						<li class="menu-item {{ app.request.get('_route') == 'front_assistance' ? 'active' : '' }}">
-							<a class="btn btn-info" href="{{ url('front_assistance') }}">Profil</a>
-						</li>
-						<li class="menu-item {{ app.request.get('_route') == 'front_profile_project' ? 'active' : '' }}">
-							<a class="btn btn-outline-secondary" href="{{ url('front_profile_project') }}">Mes projets</a>
-						</li>
-						<li class="menu-item {{ app.request.get('_route') == 'app_logout' ? 'active' : '' }}">
-							<a class="btn btn-danger" href="{{ url('app_logout') }}">Déconnexion</a>
-						</li>
-					{% endif %}
-					{% if is_granted('ROLE_ADMIN') %}
-						<li class="menu-item {{ app.request.get('_route') == 'back_index' ? 'active' : '' }}">
-							<a class="btn btn-danger" href="{{ url('back_index') }}">Admin panel</a>
-						</li>
-					{% endif %}
-				</ul>
-			</div>
-		</nav>
-	</header>
-</div>
+                    <li class="menu-item {{ app.request.get('_route') == 'app_login' ? 'active' : '' }}">
+                        <a class="btn btn-info menu-link" href="{{ url('app_login') }}">Connexion</a>
+                    </li>
+                {% endif %}
+                {% if app.user %}
+                    <li class="menu-item {{ app.request.get('_route') == 'front_assistance' ? 'active' : '' }}">
+                        <a class="btn btn-info menu-link" href="{{ url('front_assistance') }}">Profil</a>
+                    </li>
+                    <li class="menu-item {{ app.request.get('_route') == 'front_profile_project' ? 'active' : '' }}">
+                        <a class="btn btn-outline-secondary menu-link" href="{{ url('front_profile_project') }}">Mes projets</a>
+                    </li>
+                    <li class="menu-item {{ app.request.get('_route') == 'app_logout' ? 'active' : '' }}">
+                        <a class="btn btn-danger menu-link" href="{{ url('app_logout') }}">Déconnexion</a>
+                    </li>
+                {% endif %}
+                {% if is_granted('ROLE_ADMIN') %}
+                    <li class="menu-item {{ app.request.get('_route') == 'back_index' ? 'active' : '' }}">
+                        <a class="btn btn-danger menu-link" href="{{ url('back_index') }}">Admin panel</a>
+                    </li>
+                {% endif %}
+            </ul>
+        </div>
+    </nav>
+</header>

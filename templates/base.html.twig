@@ -53,7 +53,7 @@
 		</div>
 		<!-- /Scroll To Top Button -->
 
-		<div class="page-scroll">
+		<div class="page-scroll mt-lg-4">
 			<div id="page_container" class="page-container bg-move-effect">
 				{% block navbar %}
 					{% include "front/includes/nav.html.twig" %}
@@ -90,20 +90,20 @@
 		<!-- Front script -->
 		{% block javascripts %}
 
-    		<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-			<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
-			<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-Fy6S3B9q64WdZWQUiU+q4/2Lc9npb8tCaSX9FK7E8HnRr0Jz8D6OP9dO5Vg3Q9ct" crossorigin="anonymous"></script>
+    		<script src="https://code.jquery.com/jquery-3.6.0.min.js" defer></script>
+			<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js" defer></script>
+			<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-Fy6S3B9q64WdZWQUiU+q4/2Lc9npb8tCaSX9FK7E8HnRr0Jz8D6OP9dO5Vg3Q9ct" crossorigin="anonymous" defer></script>
 			{{ encore_entry_script_tags('imagesloaded') }}
-			<script src="{{ asset('js/modernizr.custom.js') }}"></script>
+			<script src="{{ asset('js/modernizr.custom.js') }}" defer></script>
 			{# <script src="{{ asset('js/jquery.shuffle.min.js') }}"></script> #}
-			<script src="{{ asset('js/masonry.pkgd.min.js') }}"></script>
-    		<script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
-			<script src="{{ asset('js/jquery.magnific-popup.min.js') }}"></script>
+			<script src="{{ asset('js/masonry.pkgd.min.js') }}" defer></script>
+    		<script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js" defer></script>
+			<script src="{{ asset('js/jquery.magnific-popup.min.js') }}" defer></script>
 			{{ encore_entry_script_tags('validator') }}
 			{{ encore_entry_script_tags('main') }}
-			<script src="{{ asset('js/jquery.shuffle.min.js')}}"></script>
+			<script src="{{ asset('js/jquery.shuffle.min.js')}}" defer></script>
 
-			<script src="{{ asset('assets/js/user.js') }}"></script>
+			<script src="{{ asset('assets/js/user.js') }}" defer></script>
 
 
 
@@ -197,7 +197,15 @@
 			// 	})
 			</script>#}
 
-			<script defer src="https://stats.youss.dev/script.js" data-website-id="2f81360d-92bc-460b-bcd6-81ba64683e42"></script>
+			<script defer src="https://stats.youss.dev/script.js" data-website-id="2f81360d-92bc-460b-bcd6-81ba64683e42" defer></script>
+			<script type="application/ld+json">
+			{
+				"@context": "https://schema.org",
+				"@type": "WebPage",
+				"name": "Agence Web ScriptzenIT",
+				"description": "Spécialiste de la création et gestion d'applications web et mobiles."
+			}
+			</script>
 		{% endblock %}
 	</body>
 </html>
