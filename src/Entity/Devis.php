@@ -73,9 +73,11 @@ class Devis
     private $tickets;
 
     /**
-     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="devis")
-     */
+    * @ORM\ManyToOne(targetEntity=User::class, inversedBy="devis")
+    * @ORM\JoinColumn(nullable=true)
+    */
     private $user;
+
 
     /**
      * @ORM\ManyToMany(targetEntity="App\Entity\AttenteDesignWeb", inversedBy="devis", cascade={"persist"})
@@ -244,36 +246,23 @@ class Devis
         return $this;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getUser()
+    public function getUser(): ?User
     {
         return $this->user;
     }
 
-    /**
-     * @param mixed $user
-     * @return Devis
-     */
-    public function setUser($user)
+    public function setUser(?User $user): self
     {
         $this->user = $user;
+
         return $this;
     }
 
-    /**
-     * @return Collection
-     */
     public function getAttentesDesignWeb(): Collection
     {
         return $this->attentesDesignWeb;
     }
 
-    /**
-     * @param Collection $attentesDesignWeb
-     * @return Devis
-     */
     public function setAttentesDesignWeb(Collection $attentesDesignWeb): Devis
     {
         $this->attentesDesignWeb = $attentesDesignWeb;

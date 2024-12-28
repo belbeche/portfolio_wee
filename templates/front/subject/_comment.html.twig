@@ -7,14 +7,14 @@
 
     <!-- Formulaire de réponse -->
     {% if app.user %}
-        <button type="button" class="reply-button" data-comment-id="{{ comment.id }}">
+        {# <button type="button" class="reply-button btn btn-secondary btn-sm" data-comment-id="{{ comment.id }}">
             Répondre
-        </button>
+        </button> #}
 
         <div id="reply-form-{{ comment.id }}" class="reply-form">
             {{ form_start(replyForms[comment.id]) }}
             <div class="mb-3">
-                {{ form_widget(replyForms[comment.id].content, {'attr': {'class': 'form-control', 'placeholder': 'Votre réponse'}}) }}
+                {{ form_widget(replyForms[comment.id].content, {'attr': {'class': 'form-control', 'placeholder': 'Votre réponse...'}}) }}
             </div>
             <button type="submit" class="btn btn-primary btn-sm">Envoyer</button>
             {{ form_end(replyForms[comment.id]) }}
@@ -25,27 +25,7 @@
     {% if comment.replies|length > 0 %}
         <div class="replies">
             {% for reply in comment.replies %}
-                <div class="reply">
-                    <strong>{{ reply.user.username }}</strong> - 
-                    <small>{{ reply.createdAt|date('d/m/Y H:i') }}</small>
-                    <p>{{ reply.content }}</p>
-                    
-                    <!-- Formulaire de réponse pour la réponse -->
-                    {% if app.user %}
-                        <button type="button" class="reply-button" data-comment-id="{{ reply.id }}">
-                            Répondre
-                        </button>
-
-                        <div id="reply-form-{{ reply.id }}" class="reply-form">
-                            {{ form_start(replyForms[reply.id]) }}
-                            <div class="mb-3">
-                                {{ form_widget(replyForms[reply.id].content, {'attr': {'class': 'form-control', 'placeholder': 'Votre réponse'}}) }}
-                            </div>
-                            <button type="submit" class="btn btn-primary btn-sm">Envoyer</button>
-                            {{ form_end(replyForms[reply.id]) }}
-                        </div>
-                    {% endif %}
-                </div>
+                {% include 'front/subject/_comment.html.twig' with { 'comment': reply, 'replyForms': replyForms } only %}
             {% endfor %}
         </div>
     {% endif %}

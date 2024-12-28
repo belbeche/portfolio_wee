@@ -3,59 +3,81 @@
 {% block title %}Répondre au Ticket{% endblock %}
 
 {% block content %}
-    <div class="container mt-5">
-        <h2>Répondre au Ticket</h2>
+<div class="container mt-7">
+    <!-- Notifications -->
+    <div>
+        {% for type, messages in app.flashes %}
+            {% for message in messages %}
+                <div class="alert alert-{{ type }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endfor %}
+        {% endfor %}
+    </div>
 
-        <div class="card mb-4">
-            <div class="card-header">
-                Message Original
-            </div>
-            <div class="card-body">
-                <p><strong>De :</strong>  {{ originalMessage.getSender() }}</p>
-                <p><strong>à :</strong> {{ originalMessage.getReceiver() }} </p>
-                <p><strong>Priorité :</strong> {{ originalMessage.getPriority() }}</p>
-                <p><strong>Contenu :</strong> {{ originalMessage.getContent() }}</p>
-            </div>
+    <!-- Header Section -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h4 fw-bold">Répondre au Ticket #{{ originalMessage.getId() }}</h1>
+        <a href="{{ path('front_show_ticket', {'id': originalMessage.getTicket().getId()}) }}" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left"></i> Retour aux Tickets
+        </a>
+    </div>
+
+    <!-- Original Message -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-primary text-white">
+            <h5 class="mb-0">Message Original</h5>
         </div>
-
-        <div class="card">
-            <div class="card-header">
-                Votre Réponse
-            </div>
-            <div class="card-body">
-                {{ form_start(form) }}
-                {{ form_row(form.content, {'label': 'Votre Message', 'attr': {'class': 'form-control', 'rows': '5', 'placeholder': 'Tapez votre réponse ici...'}}) }}
-                <div>
-                    {{ form_label(form.priority) }}
-                    {{ form_widget(form.priority) }}
-                </div>
-                <div>
-                    {{ form_label(form.status) }}
-                    {{ form_widget(form.status) }}
-                </div>
-
-                <div>
-                    {{ form_label(form.devis) }}
-                    {{ form_widget(form.devis) }}
-                </div>
-
-                <div>
-                    {{ form_label(form.sender) }}
-                    {{ form_widget(form.sender) }}
-                </div>
-
-                <div>
-                    {{ form_label(form.receiver) }}
-                    {{ form_widget(form.receiver) }}
-                </div>
-
-                <div>
-                    {{ form_label(form.attachment) }}
-                    {{ form_widget(form.attachment) }}
-                </div>
-                <button type="submit" class="btn btn-primary mt-3">Envoyer la Réponse</button>
-                {{ form_end(form) }}
-            </div>
+        <div class="card-body">
+            <p><strong>De :</strong> {{ originalMessage.getSender().getUsername() }}</p>
+            <p><strong>À :</strong> {{ originalMessage.getReceiver() }}</p>
+            <p><strong>Priorité :</strong>
+                <span class="badge 
+                    {% if originalMessage.getPriority() == 'faible' %}bg-success
+                    {% elseif originalMessage.getPriority() == 'moyenne' %}bg-warning
+                    {% elseif originalMessage.getPriority() == 'haute' %}bg-danger
+                    {% else %}bg-secondary{% endif %}">
+                    {{ originalMessage.getPriority()|capitalize }}
+                </span>
+            </p>
+            <p><strong>Contenu :</strong> {{ originalMessage.getContent() }}</p>
         </div>
     </div>
+
+    <!-- Response Form -->
+    <div class="card shadow-sm">
+        <div class="card-header bg-secondary text-white">
+            <h5 class="mb-0">Votre Réponse</h5>
+        </div>
+        <div class="card-body">
+            {{ form_start(form) }}
+
+            <div class="mb-3">
+                {{ form_label(form.content, 'Votre Message :', {'label_attr': {'class': 'form-label'}}) }}
+                {{ form_widget(form.content, {'attr': {'class': 'form-control', 'rows': 5, 'placeholder': 'Tapez votre réponse ici...'}}) }}
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    {{ form_label(form.priority, 'Priorité :', {'label_attr': {'class': 'form-label'}}) }}
+                    {{ form_widget(form.priority, {'attr': {'class': 'form-select'}}) }}
+                </div>
+                <div class="col-md-6 mb-3">
+                    {{ form_label(form.status, 'Statut :', {'label_attr': {'class': 'form-label'}}) }}
+                    {{ form_widget(form.status, {'attr': {'class': 'form-select'}}) }}
+                </div>
+            </div>
+
+            <div class="mb-3">
+                {{ form_label(form.attachment, 'Joindre un fichier (optionnel) :', {'label_attr': {'class': 'form-label'}}) }}
+                {{ form_widget(form.attachment, {'attr': {'class': 'form-control'}}) }}
+            </div>
+
+            {{ form_rest(form)}}
+            <button type="submit" class="btn btn-primary w-100">Envoyer la Réponse</button>
+            {{ form_end(form) }}
+        </div>
+    </div>
+</div>
 {% endblock %}

@@ -92,34 +92,54 @@ class HomeController extends AbstractController
 
         $form->handleRequest($request);
 
+        // Vérifier si la requête est AJAX (JSON)
+        $isAjax = $request->isXmlHttpRequest();
+
         if ($form->isSubmitted()) {
             if ($form->isValid()) {
                 $entityManager->persist($contact);
                 $entityManager->flush();
 
+                // Envoi de l'email
                 $email = (new TemplatedEmail())
-                    ->from('wbelbeche.s@gmail.com')
+                    ->from('contact@scriptzenit.fr')
                     ->to($contact->getEmail())
                     ->bcc('wbelbeche.s@gmail.com')
-                    ->subject('Prise de contact,ScriptZenIT')
+                    ->subject('Prise de contact, ScriptZenIT')
                     ->html($this->renderView('front/contact/email.html.twig', ['contact' => $contact]));
 
                 $mailer->send($email);
 
-                return new JsonResponse(['success' => true, 'message' => 'Votre message a été envoyé avec succès!']);
+                if ($isAjax) {
+                    return new JsonResponse(['success' => true, 'message' => 'Votre message a été envoyé avec succès!']);
+                }
+
+                // Redirection pour les requêtes non-AJAX
+                $this->addFlash('success', 'Votre message a été envoyé avec succès!');
+                return $this->redirectToRoute('front_contact');
             } else {
                 $errors = [];
                 foreach ($form->getErrors(true) as $error) {
                     $errors[$error->getOrigin()->getName()] = $error->getMessage();
                 }
-                return new JsonResponse(['success' => false, 'errors' => $errors]);
+
+                if ($isAjax) {
+                    return new JsonResponse(['success' => false, 'errors' => $errors], 400);
+                }
+
+                // Ajout des erreurs au flash pour les requêtes non-AJAX
+                foreach ($errors as $field => $error) {
+                    $this->addFlash('error', "$field: $error");
+                }
             }
         }
 
+        // Retour HTML pour les requêtes non-AJAX
         return $this->render('front/contact/index.html.twig', [
             'form' => $form->createView(),
         ]);
     }
+
 
     /**
      * @Route("/mentions-légales", name="front_mentions")

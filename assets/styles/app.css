@@ -4,17 +4,6 @@
     color: white;
 }
 
-.logo img {
-    -ms-interpolation-mode: bicubic;
-    border: 0;
-    height: auto;
-    max-width: 100%;
-    vertical-align: bottom;
-    position: absolute;
-    margin-top: 2px!important;
-    bottom: -13px;
-}
-
 .collapse ul {
     margin-top: 0!important;
 }
@@ -76,8 +65,15 @@
     padding: 50px;
 }
 @media screen and (min-width: 1024px) {
-    .left_logo > a > img {
-        margin-left: 50px;
+    .logo > a > img {
+        -ms-interpolation-mode: bicubic;
+        border: 0;
+        height: auto;
+        max-width: 100%;
+        vertical-align: bottom;
+        position: absolute;
+        margin-top: 2px!important;
+        bottom: -1px;
     }
 }
 

@@ -2,9 +2,14 @@
 
 {% block content %}
 
-    <script src="https://cdn.ckeditor.com/ckeditor5/36.0.1/classic/ckeditor.js"></script>
-
-    <div class="container-fluid text-center jumbotron">
+    <div class="container-fluid text-center jumbotron mt-7">
+        <div class="container">
+            {% for type, messages in app.flashes %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ type }}">{{ message }}</div>
+                {% endfor %}
+            {% endfor %}
+        </div>
         <h1>Support Technique</h1>
         <div class="page-subtitle">
             <br>
@@ -37,15 +42,4 @@
 
         </div>
     </div>
-
-    <script>
-        ClassicEditor
-            .create( document.querySelector( '#contenu' ) )
-            .then( editor => {
-                console.log( 'Editor was initialized', editor );
-            } )
-            .catch( error => {
-                console.error( error );
-            } );
-    </script>
 {% endblock %}

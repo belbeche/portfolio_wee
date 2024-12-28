@@ -5,6 +5,8 @@
 # https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
 parameters:
     images_directory: "%kernel.project_dir%/public/image_project"
+    subject_directory: "%kernel.project_dir%/public/uploads/subject/image"
+    message_directory: "%kernel.project_dir%/public/uploads/message/image"
     uploads_directory: "%kernel.project_dir%/public/uploads/avatar"
     prospects_directory: '%kernel.project_dir%/public/uploads/prospects'
     api_resource_token: "%env(API_RESOURCE_TOKEN)%"
@@ -21,6 +23,8 @@ services:
     App\Security\Voter\DevisVoter:
         tags:
             - { name: 'security.voter' }
+    App\Twig\AppExtension:
+        tags: ['twig.extension']
     _defaults:
         autowire: true # Automatically injects dependencies in your services.
         autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.

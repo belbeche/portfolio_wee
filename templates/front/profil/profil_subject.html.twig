@@ -1,78 +1,52 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Mes sujet(s){% endblock %}
+{% block title %}Profil - Sujets{% endblock %}
 
 {% block content %}
+<section id="content" class="mt-7">
+    <div class="content-wrap">
+        <div class="container mw-md">
+            <!-- Titre et bouton -->
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1 class="h2 fw-bold">Les sujets de {{ user.username }}</h1>
 
-    <!-- Page Title
-		============================================= -->
-    <section class="page-title bg-color border-bottom-0">
-        <div class="container">
-            <div class="page-title-row">
+                <a href="{{ path('front_subjects_new') }}" class="btn btn-primary">Créer un Nouveau Sujet</a>
+            </div>
 
-                <div class="page-title-content">
-                    <div class="d-flex align-items-center">
-                        <img src="{{ asset('/uploads/avatar/'~app.user.avatar) }}" width="35" height="35" class="rounded-circle me-3 border border-width-3 border-white" alt="{{ app.user.username }}" width="120" height="120">
-                        <div>
-                            <h2 class="h1 border-bottom border-dark border-width-4" style="font-weight: 800">Profil de {{ app.user.username }}</h2>
-                            <p class="mb-0">Rôle du forum : <strong>{% for role in app.user.roles %}{{ role }}{% endfor %}</strong></p>
-                        </div>
+            {% if subjects is not empty %}
+                <!-- Liste des sujets -->
+                <div class="card shadow-sm">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="mb-0">Sujets Récents de {{ user.civility }}. {{ user.nom|upper }} {{ user.prenom|ucfirst }}</h5>
+                    </div>
+                    <div class="list-group list-group-flush">
+                        {% for subject in subjects %}
+                            <a href="{{ path('front_subject_show', {'subjectId': subject.id}) }}" 
+                               class="list-group-item list-group-item-action d-flex justify-content-between align-items-start">
+                                <div class="me-3">
+                                    <h5 class="mb-1">{{ subject.title }}</h5>
+                                    <p class="mb-1 text-muted small">
+                                        Posté le {{ subject.createdAt|date('d/m/Y H:i') }}
+                                    </p>
+                                    <p class="mb-0 text-truncate small">{{ subject.content|slice(0, 150) ~ '...' }}</p>
+                                </div>
+                                <span class="badge bg-secondary rounded-pill">
+                                    {{ subject.comments|length }} Réponse(s)
+                                </span>
+                            </a>
+                        {% endfor %}
                     </div>
                 </div>
-
-                <nav aria-label="breadcrumb">
-                    <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a class="alt-color" href="{{ url('front_home') }}">Accueil</a></li>
-                        <li class="breadcrumb-item text-black-50 active" aria-current="page">{{ app.user.username }}</li>
-                    </ol>
-                </nav>
-
-            </div>
-        </div>
-    </section>
-
-    {% if app.user %}
-        <!-- Page Sub Menu  -->
-        <div id="page-menu" class="no-sticky">
-            <div id="page-menu-wrap" class="bg-alt">
-                <div class="container">
-                    <div class="page-menu-row">
-
-                        <nav class="page-menu-nav">
-                            <ul class="page-menu-container">
-                                <li class="page-menu-item"><a href="{{ url('front_profile') }}"><div>Profil</div></a></li>
-                                <li class="page-menu-item current"><a href="{{ url('front_user_subject', {id: app.user.id}) }}"><div>Sujets abordés</div></a>
-                                </li>
-                                <li class="page-menu-item"><a href="{{ url('front_user_response_subject', {id: app.user.id}) }}"><div>Réponses créées</div></a></li>
-                                <li class="page-menu-item"><a href="{{ url('front_edit_profile') }}"><div>Modifier</div></a></li>
-                            </ul>
-                        </nav>
-
-                        <div id="page-menu-trigger"><i class="bi-list"></i></div>
-
-                    </div>
+            {% else %}
+                <!-- Alerte si aucun sujet -->
+                <div class="alert mt-4" role="alert">
+                    <h4 class="alert-heading">Aucun sujet trouvé</h4>
+                    <p>Il semble que {{ user.username }} n'ait pas encore créé de sujet. Encouragez-le à commencer en cliquant sur le bouton ci-dessus !</p>
+                    <hr>
+                    <a href="{{ path('front_subjects_new') }}" class="btn btn-outline-primary">Créer un Sujet</a>
                 </div>
-            </div>
-        </div><!-- #page-menu end -->
-    {% endif %}
-
-    
-
-    <div class="container">
-        <div id="my_subject">
-            <h1>Sujet de {{ app.user.username }} ({{ app.user.Subjects|length }})</h1>
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="col-xs-1">Titre : </div>
-                    {% for Subject in app.user.Subjects %}
-                        <div class="col-xs-3"><a href="{{ Subject.title }}">{{ Subject.title }}</a> <div class="col-xs-3"><img src="{{ asset('/uploads/avatar/'~app.user.avatar) }}" width="35" height="35" class="rounded-circle me-3 border border-width-3 border-white" alt="{{ app.user.username }}" width="120" height="120">
-                            </div></div>
-                    {% endfor %}
-                </div>
-            </div>
-
+            {% endif %}
         </div>
     </div>
-
-
+</section>
 {% endblock %}

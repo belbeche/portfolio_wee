@@ -3,42 +3,65 @@
 {% block title %}{{ subject.title }}{% endblock %}
 
 {% block content %}
+
 <style>
-.comment {
-    margin-bottom: 1.5rem;
-    padding: 1rem;
-    background-color: #f9f9f9;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-}
+    .comment {
+        margin-bottom: 1.5rem;
+        padding: 1rem;
+        background-color: #f9f9f9;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        position: relative;
+    }
 
-.replies {
-    margin-left: 2rem; /* Décalage visuel pour les réponses */
-    border-left: 2px solid #ddd;
-    padding-left: 1rem;
-    margin-top: 1rem;
-}
+    .replies {
+        margin-left: 2rem;
+        border-left: 2px solid #ddd;
+        padding-left: 1rem;
+        margin-top: 1rem;
+    }
 
-.reply-form {
-    margin-top: 1rem;
-    display: none; /* Par défaut, caché */
-}
+    .reply {
+        margin-top: 1rem;
+        padding: 0.8rem;
+        background-color: #ffffff;
+        border: 1px solid #e6e6e6;
+        border-radius: 5px;
+        position: relative;
+    }
 
-.reply {
-    margin-top: 1rem;
-    padding: 0.8rem;
-    background-color: #fff;
-    border: 1px solid #e6e6e6;
-    border-radius: 5px;
-}
+    .reply-button {
+        margin-top: 0.5rem;
+        font-size: 0.875rem;
+        color: #007bff;
+        background: none;
+        border: none;
+        cursor: pointer;
+    }
+
+    .reply-button:hover {
+        text-decoration: underline;
+    }
+
+    .reply-form {
+        margin-top: 1rem;
+        display: none;
+    }
 </style>
 
-<section id="content">
+<section id="content" class="mt-7">
     <div class="content-wrap">
+        <div class="container">
+            {% for type, messages in app.flashes %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ type }}">{{ message }}</div>
+                {% endfor %}
+            {% endfor %}
+        </div>
         <div class="container mw-md">
             <!-- Détails du sujet -->
             <div class="topic-post">
-                <div class="row g-0 justify-content-between align-items-center border-top border-bottom py-3 mb-4">
+                <div class="row g-0 justify-content-center align-items-center border-top border-bottom py-3 mb-4">
                     <div class="col-9">
                         <div class="d-flex align-items-center">
                             <img src="{{ asset('uploads/avatar/' ~ subject.user.avatar) }}" 
@@ -47,10 +70,16 @@
                                  width="50" height="50">
                             <div>
                                 <h5 class="mb-0 h6 fw-semibold">
-                                    <a class="text-dark" href="#">{{ subject.user.username }}</a>
+                                    <a class="text-dark" href="{{ url('front_user_subject', {id: subject.user.id })}}">{{ subject.user.username }}</a>
                                 </h5>
                                 <small class="text-muted">Posté le {{ subject.createdAt|date('d/m/Y H:i') }}</small>
                             </div>
+                        </div>
+                        <div class="d-flex align-items-center">
+                            {% for image in subject.images %}
+                                <img src="{{ asset('uploads/subject/image/' ~ image.name) }}" 
+                                    alt="{{ subject.title }}">
+                            {% endfor %}
                         </div>
                     </div>
                 </div>
@@ -62,7 +91,7 @@
                 {{ form_start(formComment) }}
                 <div class="mb-3">
                     {{ form_label(formComment.content, 'Votre commentaire :', {'label_attr': {'class': 'form-label'}}) }}
-                    {{ form_widget(formComment.content, {'attr': {'class': 'form-control'}}) }}
+                    {{ form_widget(formComment.content, {'attr': {'class': 'form-control', 'placeholder': 'Partagez votre avis...'}}) }}
                 </div>
                 <button type="submit" class="btn btn-primary">Ajouter un commentaire</button>
                 {{ form_end(formComment) }}
@@ -72,87 +101,7 @@
             <div class="topic-post reply mt-5 p-4 border-top">
                 <h3 class="h2 fw-bolder mb-4">Réponses au sujet</h3>
                 {% for comment in comments %}
-                    <div class="comment">
-                        <div>
-                            <strong>{{ comment.user.username }}</strong> - 
-                            <small>{{ comment.createdAt|date('d/m/Y H:i') }}</small>
-                            <p>{{ comment.content }}</p>
-                        </div>
-
-                        <!-- Formulaire de réponse -->
-                        {% if app.user %}
-                            <button type="button" class="reply-button" data-comment-id="{{ comment.id }}">
-                                Répondre
-                            </button>
-
-                            <div id="reply-form-{{ comment.id }}" class="reply-form">
-                                {{ form_start(replyForms[comment.id]) }}
-                                <div class="mb-3">
-                                    {{ form_widget(replyForms[comment.id].content, {'attr': {'class': 'form-control', 'placeholder': 'Votre réponse'}}) }}
-                                </div>
-                                <button type="submit" class="btn btn-primary btn-sm">Envoyer</button>
-                                {{ form_end(replyForms[comment.id]) }}
-                            </div>
-                        {% endif %}
-
-                        <!-- Réponses imbriquées -->
-                        {% if comment.replies|length > 0 %}
-                            <div class="replies">
-                                {% for reply in comment.replies %}
-                                    <div class="reply">
-                                        <strong>{{ reply.user.username }}</strong> - 
-                                        <small>{{ reply.createdAt|date('d/m/Y H:i') }}</small>
-                                        <p>{{ reply.content }}</p>
-
-                                        <!-- Formulaire de réponse pour la réponse -->
-                                        {% if app.user %}
-                                            <button type="button" class="reply-button" data-comment-id="{{ reply.id }}">
-                                                Répondre
-                                            </button>
-
-                                            <div id="reply-form-{{ reply.id }}" class="reply-form">
-                                                {{ form_start(replyForms[reply.id]) }}
-                                                <div class="mb-3">
-                                                    {{ form_widget(replyForms[reply.id].content, {'attr': {'class': 'form-control', 'placeholder': 'Votre réponse'}}) }}
-                                                </div>
-                                                <button type="submit" class="btn btn-primary btn-sm">Envoyer</button>
-                                                {{ form_end(replyForms[reply.id]) }}
-                                            </div>
-                                        {% endif %}
-                                    </div>
-
-                                    <!-- Réponses imbriquées supplémentaires -->
-                                    {% if reply.replies|length > 0 %}
-                                        <div class="replies">
-                                            {% for subReply in reply.replies %}
-                                                <div class="reply">
-                                                    <strong>{{ subReply.user.username }}</strong> - 
-                                                    <small>{{ subReply.createdAt|date('d/m/Y H:i') }}</small>
-                                                    <p>{{ subReply.content }}</p>
-                                                    
-                                                    <!-- Formulaire de réponse pour les sous-réponses -->
-                                                    {% if app.user %}
-                                                        <button type="button" class="reply-button" data-comment-id="{{ subReply.id }}">
-                                                            Répondre
-                                                        </button>
-
-                                                        <div id="reply-form-{{ subReply.id }}" class="reply-form">
-                                                            {{ form_start(replyForms[subReply.id]) }}
-                                                            <div class="mb-3">
-                                                                {{ form_widget(replyForms[subReply.id].content, {'attr': {'class': 'form-control', 'placeholder': 'Votre réponse'}}) }}
-                                                            </div>
-                                                            <button type="submit" class="btn btn-primary btn-sm">Envoyer</button>
-                                                            {{ form_end(replyForms[subReply.id]) }}
-                                                        </div>
-                                                    {% endif %}
-                                                </div>
-                                            {% endfor %}
-                                        </div>
-                                    {% endif %}
-                                {% endfor %}
-                            </div>
-                        {% endif %}
-                    </div>
+                    {% include 'front/subject/_comment.html.twig' with {'comment': comment, 'replyForms': replyForms} %}
                 {% else %}
                     <p>Aucun commentaire pour le moment.</p>
                 {% endfor %}
@@ -171,6 +120,8 @@
                     const replyForm = document.getElementById(`reply-form-${commentId}`);
                     if (replyForm) {
                         replyForm.style.display = 'block';
+                    } else {
+                        replyForm.style.display = 'none';
                     }
                 });
             });

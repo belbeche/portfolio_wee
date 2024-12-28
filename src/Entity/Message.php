@@ -59,11 +59,16 @@ class Message
      */
     private ?User $sender;
 
-     /**
-     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="receivedMessages")
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private ?User $receiver = null;
+    /**
+    * @ORM\Column(type="string", length=255, nullable=false)
+    */
+    private ?string $receiver = null;
+
+    /**
+    * @ORM\ManyToOne(targetEntity=Ticket::class, inversedBy="messages")
+    * @ORM\JoinColumn(nullable=false)
+    */
+    private ?Ticket $ticket = null;
 
     /**
      * @throws \Exception
@@ -116,18 +121,11 @@ class Message
         return $this;
     }
 
-    /**
-     * @return mixed
-     */
     public function getAttachment()
     {
         return $this->attachment;
     }
 
-    /**
-     * @param mixed $attachment
-     * @return Message
-     */
     public function setAttachment($attachment)
     {
         $this->attachment = $attachment;
@@ -164,27 +162,23 @@ class Message
         return $this;
     }
 
-    /**
-     * Get the value of receiver
-     *
-     * @return ?User
-     */
-    public function getReceiver(): ?User
+    public function getReceiver(): ?string
     {
         return $this->receiver;
     }
 
-    /**
-     * Set the value of receiver
-     *
-     * @param ?User $receiver
-     *
-     * @return self
-     */
-    public function setReceiver(?User $receiver): self
+    public function setReceiver(?string $receiver): self
     {
         $this->receiver = $receiver;
 
+        return $this;
+    }
+    public function getTicket(): ?Ticket {
+        return $this->ticket;
+    }
+    
+    public function setTicket(?Ticket $ticket): self {
+        $this->ticket = $ticket;
         return $this;
     }
 }

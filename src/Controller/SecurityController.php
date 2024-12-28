@@ -71,7 +71,7 @@ class SecurityController extends AbstractController
                 // Hasher et définir le nouveau mot de passe
                 $hashedPassword = $passwordEncoder->encodePassword($user, $plainPassword);
                 $user->setPassword($hashedPassword);
-                $user->setUser($user);
+                $user->setUsername($user);
             }
 
             // Enregistrer l'utilisateur

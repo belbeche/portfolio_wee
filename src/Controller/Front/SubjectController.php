@@ -8,11 +8,13 @@ namespace App\Controller\Front;
 use App\Entity\Image;
 use App\Entity\Comment;
 use App\Entity\Subject;
+use App\Entity\Category;
+use App\Service\CommentService;
+use App\Repository\CommentRepository;
 use App\Form\Subject\Type\CommentType;
 use App\Form\Subject\Type\SubjectType;
-use App\Repository\CommentRepository;
-use App\Service\CommentService;
 use Doctrine\ORM\EntityManagerInterface;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -24,7 +26,7 @@ class SubjectController extends AbstractController
 {
 
     /**
-     * @Route("/subjects", name="front_subject_list")
+     * @Route("/support", name="front_subject_list")
      */
     public function listSubjects(EntityManagerInterface $entityManager): Response
     {
@@ -72,7 +74,7 @@ class SubjectController extends AbstractController
                     // On copie le fichier dans le dossier uploads
 
                     $image->move(
-                        $this->getParameter('images_directory'),
+                        $this->getParameter('subject_directory'),
                         $file
                     );
 
@@ -105,7 +107,7 @@ class SubjectController extends AbstractController
     }
 
     /**
-    * @Route("/subject/{subjectId}", name="front_subject_show")
+    * @Route("/utilisateur/sujet/{subjectId}", name="front_subject_show")
     */
     public function showSubject(
         string $subjectId,
@@ -186,6 +188,32 @@ class SubjectController extends AbstractController
             'comments' => $comments, 
             'formComment' => $formComment->createView(),
             'replyForms' => $replyForms,
+        ]);
+    }
+
+    /**
+     * @Route("/utilisateur/support/{id}", name="front_user_subject")
+     * @param EntityManagerInterface $entityManager
+     * @return Response
+     */
+    public function mySubject(EntityManagerInterface $entityManager, Request $request, PaginatorInterface $paginator)
+    {
+
+        $data = $entityManager->getRepository(Subject::class)->findBySubject();
+        $user = $this->getUser();
+
+        $subjects = $paginator->paginate(
+            $data,
+            $request->query->getInt('page', 1),
+            4
+        );
+
+        $categories = $entityManager->getRepository(Category::class)->findAll();
+
+        return $this->render('front/profil/profil_subject.html.twig', [
+            'subjects' => $subjects,
+            'categories' => $categories,
+            'user' => $user
         ]);
     }
 }

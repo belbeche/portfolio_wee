@@ -40,6 +40,17 @@ class DevisRepository extends ServiceEntityRepository
         }
     }
 
+    public function findByUser(User $user): array
+    {
+        return $this->createQueryBuilder('d')
+            ->andWhere('d.user = :user')
+            ->setParameter('user', $user)
+            ->orderBy('d.created_at', 'DESC')
+            ->getQuery()
+            ->getResult();
+    }
+
+
     //    /**
     //     * @return Devis[] Returns an array of Devis objects
     //     */

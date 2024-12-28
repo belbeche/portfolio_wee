@@ -1,0 +1,106 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Détails du Ticket{% endblock %}
+
+{% block content %}
+<div class="container mt-7">
+    <div class="container">
+		{% for type, messages in app.flashes %}
+			{% for message in messages %}
+				<div class="alert alert-{{ type }}">{{ message }}</div>
+			{% endfor %}
+		{% endfor %}
+	</div>
+    <!-- Header Section -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h4 fw-bold">Détails du Ticket #{{ ticket.id }}</h1>
+        <a href="{{ path('front_show_ticket', {'id': ticket.devis.id}) }}" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left"></i> Retour à la liste des tickets
+        </a>
+    </div>
+
+    <!-- Ticket Details -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-primary text-white">
+            <h5 class="mb-0">Informations sur le Ticket</h5>
+        </div>
+        <div class="card-body">
+            <dl class="row">
+                <dt class="col-sm-3">Numéro</dt>
+                <dd class="col-sm-9">#{{ ticket.id }}</dd>
+
+                <dt class="col-sm-3">Statut</dt>
+                <dd class="col-sm-9">
+                    <span class="badge 
+                        {% if ticket.status == 'en_attente' %}bg-warning
+                        {% elseif ticket.status == 'en_cours' %}bg-primary
+                        {% elseif ticket.status == 'resolu' %}bg-success
+                        {% else %}bg-secondary{% endif %}">
+                        {{ ticket.status|capitalize }}
+                    </span>
+                </dd>
+
+                <dt class="col-sm-3">Type de site web</dt>
+                <dd class="col-sm-9">{{ ticket.devis.typeDeSiteWeb }}</dd>
+
+                <dt class="col-sm-3">Type de design</dt>
+                <dd class="col-sm-9">
+                    {% for design in ticket.devis.attentesDesignWeb %}
+                        <span class="badge bg-info">{{ design.label }}</span>
+                    {% endfor %}
+                </dd>
+
+                <dt class="col-sm-3">Créé le</dt>
+                <dd class="col-sm-9">{{ ticket.createdAt|date('d/m/Y H:i') }}</dd>
+
+                <dt class="col-sm-3">Description</dt>
+                <dd class="col-sm-9">{{ ticket.content }}</dd>
+            </dl>
+        </div>
+    </div>
+
+    <!-- Messages Section -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-secondary text-white">
+            <h5 class="mb-0">Messages</h5>
+        </div>
+        <div class="card-body">
+            {% if ticket.messages|length > 0 %}
+                <ul class="list-unstyled">
+                    {% for message in ticket.messages %}
+                        <li class="mb-4">
+                            <div class="d-flex align-items-center mb-2">
+                                <img src="{{ asset('uploads/avatar/' ~ message.sender.avatar) }}" 
+                                     alt="{{ message.sender.username }}" 
+                                     class="rounded-circle me-2" width="40" height="40">
+                                <strong>{{ message.sender.username }}</strong> 
+                                <span class="text-muted small ms-2">{{ message.createdAt|date('d/m/Y H:i') }}</span>
+                            </div>
+                            <p class="mb-0">{{ message.content }}</p>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <div class="alert alert-info">Aucun message pour ce ticket pour le moment.</div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Response Form -->
+    <div class="card shadow-sm">
+        <div class="card-header bg-light">
+            <h5 class="mb-0">Envoyer une Réponse</h5>
+        </div>
+        <div class="card-body">
+            {{ form_start(responseForm) }}
+            <div class="mb-3">
+                {{ form_label(responseForm.content, 'Message :', {'label_attr': {'class': 'form-label'}}) }}
+                {{ form_widget(responseForm.content, {'attr': {'class': 'form-control', 'placeholder': 'Écrivez votre réponse ici...'}}) }}
+            </div>
+            {{ form_rest(responseForm )}}
+            <button type="submit" class="btn btn-primary">Envoyer</button>
+            {{ form_end(responseForm) }}
+        </div>
+    </div>
+</div>
+{% endblock %}

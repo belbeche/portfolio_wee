@@ -4,13 +4,17 @@
 
 {% block content %}
 
-    <div class="text-center">
+    <div class="text-center mt-7">
         <img class="d-block mx-auto mb-4" src="{{ asset('img/merci.png') }}" alt="ScriptZenIT vous remercie de votre demande">
         <h1 class="display-5 fw-bold text-body-emphasis">Devis crée avec success, un email vous a été envoyé</h1>
         <div class="col-lg-6 mx-auto">
             <p class="lead mb-4">Consulter votre boîte e-mail, si vous ne voyez pas le message dans la boite de réception, il se peut qu'il soit dans les spams.</p>
             <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
-                <a href="{{ url('app_login') }}" class="btn btn-primary btn-lg px-4 gap-3">Me connecter</a>
+                {% if app.user %}
+                    <a href="{{ url('front_assistance') }}" class="btn btn-primary btn-lg px-4 gap-3">Acceder à mon espace membre</a>
+                {% else %}
+                    <a href="{{ url('app_login') }}" class="btn btn-primary btn-lg px-4 gap-3">Me connecter</a>
+                {% endif %}
             </div>
         </div>
     </div>

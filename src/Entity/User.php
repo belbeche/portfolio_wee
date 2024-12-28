@@ -113,13 +113,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @ORM\OneToMany(targetEntity=Subject::class, mappedBy="user", orphanRemoval=true)
      */
-    private ?Collection $Subjects;
-
-    /**
-     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="devis")
-     * @ORM\JoinColumn(nullable=true)
-     */
-    private $user;
+    private ?Collection $subject;
 
     /**
      * @throws \Exception
@@ -131,9 +125,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->sentMessages = new ArrayCollection();
         $this->avatar = 'support0.svg';
         $this->roles = ['ROLE_USER'];
-        $this->user = null;
 
-        $this->Subjects = new ArrayCollection();
+        $this->subject = new ArrayCollection();
         $this->comments = new ArrayCollection();
         $this->likes = new ArrayCollection();
         $this->date = new \DateTime('now', new \DateTimeZone('Europe/Paris'));
@@ -145,7 +138,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     // public function generateSubjectIds(): void
     // {
-    //     foreach ($this->Subjects as $Subject) {
+    //     foreach ($this->subject as $Subject) {
     //         // Génération de l'UUID et affectation à l'Subject
     //         $this->id
     //     }
@@ -499,29 +492,25 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @return ArrayCollection
      */
-    public function getSubjects(): Collection
+    public function getsubject(): Collection
     {
-        return $this->Subjects;
+        return $this->subject;
     }
-
-    /**
-     * @param ArrayCollection $Subjects
-     * @return Collection
-     */
-    public function setSubjects(ArrayCollection $Subjects): Collection
+    
+    public function setsubject(ArrayCollection $subject): Collection
     {
-        $this->Subjects = $Subjects;
+        $this->subject = $subject;
         return $this;
     }
 
-    public function addSubject(Subject $Subject): User
+    public function addSubject(Subject $Subject): self
     {
-        $this->Subjects[] = $Subject;
+        $this->subject[] = $Subject;
     }
 
     public function removeSubject(Subject $Subject)
     {
-        $this->Subjects->removeElement($Subject);
+        $this->subject->removeElement($Subject);
     }
     public function getDate(): ?\DateTimeInterface
     {
@@ -576,18 +565,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
                 $sentMessage->setSender(null);
             }
         }
-
-        return $this;
-    }
-
-    public function getUser(): ?User
-    {
-        return $this->user;
-    }
-
-    public function setUser(?User $user): self
-    {
-        $this->user = $user;
 
         return $this;
     }

@@ -27,8 +27,8 @@ use Mpdf\Mpdf;
 class DevisController extends AbstractController
 {
     /**
-     * @Route("/devis-en-ligne", name="front_devis_new")
-     */
+    * @Route("/devis-en-ligne", name="front_devis_new")
+    */
     public function new(Request $request, EntityManagerInterface $entityManager, MailerInterface $mailer, Security $security): Response
     {
         $devis = new Devis();
@@ -43,57 +43,72 @@ class DevisController extends AbstractController
 
             // Définir le statut et le prix initial du devis
             $devis->setStatut('en_attente');
-            $devis->setPrix('0');
+            $devis->setPrix(0);
 
-            if ($this->getUser()) {
-                // Associer le devis à l'utilisateur connecté
-                $user = $security->getUser();
+            // Vérifier l'utilisateur connecté
+            $user = $security->getUser();
+            if ($user instanceof UserInterface) {
                 $devis->setEmailFromUser($user);
 
-                if ($user instanceof UserInterface && $user->getUserIdentifier()) {
+                if ($user->getUserIdentifier()) {
                     $devis->setEmail($user->getUserIdentifier());
                     $devis->setUser($user);
                 }
             }
 
-            $entityManager->persist($devis);
-            $entityManager->flush();
+            try {
+                $entityManager->persist($devis);
+                $entityManager->flush();
+            } catch (\Exception $e) {
+                $this->addFlash('error', 'Une erreur est survenue lors de la sauvegarde du devis.');
+                return $this->redirectToRoute('front_devis_new');
+            }
 
             // Générer le PDF du devis
-            $html = $this->renderView('front/devis/show.html.twig', [
-                'devis' => $devis
-            ]);
+            try {
+                $html = $this->renderView('front/devis/show.html.twig', [
+                    'devis' => $devis
+                ]);
 
-            $filename = 'devis_' . $devis->getId() . '.pdf';
-
-            $mpdf = new Mpdf();
-            $mpdf->WriteHTML($html);
-            $pdfContent = $mpdf->Output('', 'S'); // Générer le PDF en tant que chaîne
+                $filename = 'devis_' . $devis->getId() . '.pdf';
+                $mpdf = new Mpdf();
+                $mpdf->WriteHTML($html);
+                $pdfContent = $mpdf->Output('', 'S'); // Générer le PDF en tant que chaîne
+            } catch (\Exception $e) {
+                $this->addFlash('error', 'Impossible de générer le PDF du devis.');
+                return $this->redirectToRoute('front_devis_new');
+            }
 
             // Envoi de l'e-mail avec le récapitulatif du devis et le PDF en pièce jointe
-            $email = (new TemplatedEmail())
-                ->from(new Address('contact@scriptzenit.fr', 'L\'équipe Scriptzenit'))
-                ->to($devis->getEmail())
-                ->bcc('wbelbeche.s@gmail.com')
-                ->subject('Récapitulatif de votre demande de devis')
-                ->htmlTemplate('front/devis/email.html.twig')
-                ->context([
-                    'registredNumber' => $devis->getId(),
-                    'emailAddress' => $devis->getEmail(),
-                    'subject' => $devis->getTypeDeSiteWeb(),
-                    'designWebsite' => $devis->getAttentesDesignWeb(),
-                    'typeWeb' => $devis->getTypeDeSiteWeb(),
-                    'message' => $devis->getDescriptionProjet()
-                ])
-                ->attach($pdfContent, $filename, 'application/pdf');
+            try {
+                $email = (new TemplatedEmail())
+                    ->from(new Address('contact@scriptzenit.fr', 'L\'équipe Scriptzenit'))
+                    ->to($devis->getEmail())
+                    ->bcc('wbelbeche.s@gmail.com')
+                    ->subject('Récapitulatif de votre demande de devis')
+                    ->htmlTemplate('front/devis/email.html.twig')
+                    ->context([
+                        'registredNumber' => $devis->getId(),
+                        'emailAddress' => $devis->getEmail(),
+                        'subject' => $devis->getTypeDeSiteWeb(),
+                        'designWebsite' => $devis->getAttentesDesignWeb(),
+                        'typeWeb' => $devis->getTypeDeSiteWeb(),
+                        'message' => $devis->getDescriptionProjet()
+                    ])
+                    ->attach($pdfContent, $filename, 'application/pdf');
 
-            // Envoyer l'email
-            $mailer->send($email);
+                $mailer->send($email);
+            } catch (\Exception $e) {
+                $this->addFlash('error', 'Une erreur est survenue lors de l\'envoi de l\'email.');
+                return $this->redirectToRoute('front_devis_new');
+            }
 
             // Message de confirmation à l'utilisateur
-            $this->addFlash('success', 'Votre demande a bien été prise en compte, vérifiez votre adresse e-mail.');
+            $this->addFlash('success', 'Votre demande a bien été prise en compte. Vérifiez votre adresse e-mail.');
 
-            return $this->redirectToRoute('front_assistance');
+            return $this->redirectToRoute('front_confirmation_estimate', [
+                'id' => $devis->getId()
+            ]);
         }
 
         return $this->render('front/devis/new.html.twig', [
@@ -182,19 +197,14 @@ class DevisController extends AbstractController
     }
 
     /**
-     * @Route("/devis/remerciement/{email}", name="front_confirmation_estimate")
+     * @Route("/devis/remerciement/{id}", name="front_confirmation_estimate")
      */
     public function messageConfirmation(
         EntityManagerInterface $entityManager,
-        Request $request,
-        string $email
+        string $id
     ): Response
     {
-        $user = $entityManager->getRepository(User::class)->findOneBy(['email' => $email]);
-        /*if ($user === null) {
-            // Gérer l'erreur, peut-être rediriger vers une page d'erreur
-            throw $this->createNotFoundException('Aucun utilisateur avec cette adresse e-mail n\'a été trouvé.');
-        }*/
+        $user = $entityManager->getRepository(User::class)->find($id);
 
         return $this->render('front/devis/confirmation.html.twig', [
             'user' => $user,
