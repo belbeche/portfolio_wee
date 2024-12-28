@@ -25,7 +25,7 @@
 	<div class="container col-xl-10 col-xxl-8 px-4 py-5">
 		<div class="row align-items-center g-lg-5 py-5">
 			<div class="col-lg-7 text-center text-lg-start">
-				<h1 class="display-4 fw-bold lh-1 mb-3">Inscrivez-vous</h1>
+				<h1 class="display-4 fw-bold lh-1 mb-3 ">Inscrivez-vous</h1>
 				<p>Afin de suivre la progression de votre demande</p>
 				<div class="login">
 					<h6>Vous êtes membre ?</h6>
@@ -36,22 +36,22 @@
 			<div class="col-md-10 mx-auto col-lg-5">
 				{{ form_start(formRegister, {attr: {'class' : 'p-4 px-5 border rounded-3 no-validate'}}) }}
 					<div>
-						<label for="nom" class="sr-only">Civilité</label>
+						<label for="nom">Civilité</label>
 						{{ form_row(formRegister.civility) }}
 						{{ form_errors(formRegister.civility) }}
 					</div>
 					<div>
-						<label for="user_nom" class="sr-only">Nom</label>
+						<label for="user_nom">Nom</label>
 						{{ form_row(formRegister.nom) }}
 						{{ form_errors(formRegister.nom) }}
 					</div>
 					<div>
-						<label for="user_prenom" class="sr-only">Prenom</label>
+						<label for="user_prenom">Prenom</label>
 						{{ form_row(formRegister.prenom) }}
 						{{ form_errors(formRegister.prenom) }}
 					</div>
 					<div>
-						<label for="user_email" class="sr-only">Identifiant de connexion</label>
+						<label for="user_email">Identifiant de connexion</label>
 						{{ form_row(formRegister.email) }}
 					</div>
 					<div>
@@ -67,7 +67,7 @@
 						{{ form_errors(formRegister.checked) }}
 					</div>
 					<p>La sécurité de vos données est notre priorité absolue, et nos applications sont entièrement conformes aux normes de la
-					<a href="https://www.cnil.fr/fr/guide-rgpd-du-developpeur">CNIL</a>. Vous avez la possibilité de supprimer vos données instantanément depuis votre espace personnel.</p>
+					<p><a href="https://www.cnil.fr/fr/guide-rgpd-du-developpeur" class="text-blue">CNIL</a>. Vous avez la possibilité de supprimer vos données instantanément depuis votre espace personnel.</p>
 					<div class="container">
 						<button type="submit" class="btn btn-primary">Valider</button>
 					</div>

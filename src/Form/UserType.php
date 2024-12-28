@@ -46,6 +46,9 @@ class UserType extends AbstractType
         }
         $builder
             ->add('email', EmailType::class, [
+                'attr' => [
+                    'class' => 'form-control',
+                ],
                 'constraints' => [
                     new Assert\NotBlank(),
                     new Assert\Email(),
@@ -56,30 +59,40 @@ class UserType extends AbstractType
                 ]
             )
             ->add('nom', TextType::class, [
+                'attr' => [
+                    'class' => 'form-control ',
+                ],
                 'constraints' => [
                     new Assert\NotBlank(),
                 ],
+                'label' => false
             ])
             ->add('prenom', TextType::class, [
+                'attr' => [
+                    'class' => 'form-control ',
+                ],
                 'constraints' => [
                     new Assert\NotBlank(),
                 ],
+                'label' => false
             ])
             ->add('civility', ChoiceType::class, [
-                'label' => 'Civilité',
+                'label' => false,
                 'choices' => [
                     'M.' => 'M',
                     'Mme.' => 'Mme',
                 ],
-                'expanded' => true,   // Utilisez ceci si vous souhaitez des boutons radio
-                'multiple' => false,  // Gardez ceci sur false pour ne permettre qu'un seul choix
+                'expanded' => true,   // Liste déroulante
+                'multiple' => false,  // Sélection multiple
             ])
             ->add('password', RepeatedType::class, $passwordFieldOptions)
             ->add('checked', CheckboxType::class, [
+                'attr' => [
+                    'class' => 'form-check-input',
+                ],
                 'label' => 'Je reconnais avoir lu et compris les CGU ainsi que les CGUV et je les accepte',
                 'required' => true,
-                'mapped' => false,
-                'help' => 'Les conditions générales d\'utilisations ainsi que les mentions légales sont accessible en bas de page',
+                'mapped' => false
             ])
             ;
 

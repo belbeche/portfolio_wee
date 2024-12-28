@@ -1,59 +1,71 @@
 <header id="header">
-    <nav class="navbar navbar-expand-lg fixed-top container-fluid text-dark bg-white" style="padding: 0.75rem 1.5rem;">
+    <nav class="navbar navbar-expand-lg fixed-top container-fluid text-white">
         <!-- Logo -->
         <div class="logo">
             <a href="{{ url('front_home') }}">
-                <img src="{{ asset('img/logo.png') }}" class="d-sm-none d-md-none d-lg-block" width="17%" height="10%" alt="Agence web à Avallon (89200)">
+                <img src="{{ asset('img/logo.png') }}" class="d-sm-none d-md-none d-lg-block ml-5" width="15%" alt="Agence web à Avallon (89200)">
             </a>
             <a href="{{ url('front_home') }}">
-                <div class="logo-text d-md-block d-lg-none d-sm-block fw-bold" style="font-size: 1rem;">ScriptZenIT</div>
+                <div class="text-white d-md-block d-lg-none d-sm-block fw-bold" style="font-size: 1rem;margin-left: 21px!important;">ScriptZenIT</div>
             </a>
         </div>
 
         <!-- Burger Menu -->
-        <div id="burger" class="burger">
-            <span class="burger-line"></span>
-            <span class="burger-line"></span>
-            <span class="burger-line"></span>
-        </div>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMenu" aria-controls="navbarMenu" aria-expanded="false" aria-label="Toggle navigation">
+            <div class="list mt-3">
+                <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="white" class="bi bi-list" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5"/>
+                </svg>
+            </div>
+        </button>
 
         <!-- Menu -->
-        <div id="menu" class="menu">
-            <ul class="menu-inner">
-                <li class="menu-item {{ app.request.get('_route') == 'front_home' ? 'active' : '' }}">
-                    <a class="nav-link menu-link" href="{{ url('front_home') }}">Accueil</a>
+        <div class="collapse navbar-collapse" id="navbarMenu">
+            <ul class="navbar-nav ms-auto menu_mobile"> <!-- Couleur des menus -->
+                <li class="nav-item {{ app.request.get('_route') == 'front_home' ? 'active' : '' }}">
+                    <a class="nav-link" href="{{ url('front_home') }}">Accueil</a>
                 </li>
-                <li class="menu-item {{ app.request.get('_route') == 'front_member_index' ? 'active' : '' }}">
-                    <a class="nav-link menu-link" href="{{ url('front_member_index') }}">A propos</a>
+                <li class="nav-item {{ app.request.get('_route') == 'front_member_index' ? 'active' : '' }}">
+                    <a class="nav-link" href="{{ url('front_member_index') }}">A propos</a>
                 </li>
-                <li class="menu-item {{ app.request.get('_route') == 'front_project' ? 'active' : '' }}">
-                    <a class="nav-link menu-link" href="{{ url('front_project') }}">Nos réalisations</a>
+                <li class="nav-item {{ app.request.get('_route') == 'front_project' ? 'active' : '' }}">
+                    <a class="nav-link" href="{{ url('front_project') }}">Nos réalisations</a>
                 </li>
-                <li class="menu-item {{ app.request.get('_route') == 'front_devis_new' ? 'active' : '' }}">
-                    <a class="nav-link menu-link" href="{{ url('front_devis_new') }}">Faire une demande</a>
+                <li class="nav-item {{ app.request.get('_route') == 'front_devis_new' ? 'active' : '' }}">
+                    <a class="nav-link" href="{{ url('front_devis_new') }}">Faire une demande</a>
                 </li>
-                {% if not app.user %}
-                    <li class="menu-item {{ app.request.get('_route') == 'app_register' ? 'active' : '' }}">
-                        <a class="btn btn-success menu-link" href="{{ url('app_register') }}">S'inscrire</a>
-                    </li>
-                    <li class="menu-item {{ app.request.get('_route') == 'app_login' ? 'active' : '' }}">
-                        <a class="btn btn-info menu-link" href="{{ url('app_login') }}">Connexion</a>
+                <div class="user">
+                    {% if not app.user %}
+                        <li class="nav-item {{ app.request.get('_route') == 'app_register' ? 'active' : '' }}">
+                            <a class="nav-link" href="{{ url('app_register') }}">S'inscrire</a>
+                        </li>
+                        <li class="nav-item {{ app.request.get('_route') == 'app_login' ? 'active' : '' }}">
+                            <a class="nav-link" href="{{ url('app_login') }}">Connexion</a>
+                        </li>
+                    {% endif %}
+                </div>
+                {% if is_granted('ROLE_ADMIN') %}
+                    <li class="nav-item {{ app.request.get('_route') == 'back_index' ? 'active' : '' }}">
+                        <a class="nav-link" href="{{ url('back_index') }}">Admin panel</a>
                     </li>
                 {% endif %}
                 {% if app.user %}
-                    <li class="menu-item {{ app.request.get('_route') == 'front_assistance' ? 'active' : '' }}">
-                        <a class="btn btn-info menu-link" href="{{ url('front_assistance') }}">Profil</a>
-                    </li>
-                    <li class="menu-item {{ app.request.get('_route') == 'front_profile_project' ? 'active' : '' }}">
-                        <a class="btn btn-outline-secondary menu-link" href="{{ url('front_profile_project') }}">Mes projets</a>
-                    </li>
-                    <li class="menu-item {{ app.request.get('_route') == 'app_logout' ? 'active' : '' }}">
-                        <a class="btn btn-danger menu-link" href="{{ url('app_logout') }}">Déconnexion</a>
-                    </li>
-                {% endif %}
-                {% if is_granted('ROLE_ADMIN') %}
-                    <li class="menu-item {{ app.request.get('_route') == 'back_index' ? 'active' : '' }}">
-                        <a class="btn btn-danger menu-link" href="{{ url('back_index') }}">Admin panel</a>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Mon compte
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end" style="z-index: 1080;">
+                            <li class="menu-item {{ app.request.get('_route') == 'front_assistance' ? 'active' : '' }}">
+                                <a class="dropdown-item text-black" href="{{ url('front_assistance') }}">Profil</a>
+                            </li>
+                            <li class="menu-item {{ app.request.get('_route') == 'front_profile_project' ? 'active' : '' }}">
+                                <a class="dropdown-item text-black" href="{{ url('front_profile_project') }}">Mes projets</a>
+                            </li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li class="menu-item {{ app.request.get('_route') == 'app_logout' ? 'active' : '' }}">
+                                <a class="btn btn-outline-danger dropdown-item text-black" href="{{ url('app_logout') }}">Déconnexion</a>
+                            </li>
+                        </ul>
                     </li>
                 {% endif %}
             </ul>

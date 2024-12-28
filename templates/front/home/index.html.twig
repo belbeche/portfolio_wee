@@ -6,116 +6,69 @@
 
 {% block content %}
 
-	<script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js" defer></script>
 
-    <div class="container">
-        {% for type, messages in app.flashes %}
-            {% for message in messages %}
-                <div class="alert alert-{{ type }}">{{ message }}</div>
-            {% endfor %}
-        {% endfor %}
-    </div>
-
-    <section id="hero" class="container-fluid text-white position-relative bg-primary" style="height: 100vh;">
+<!-- Hero Section -->
+<section id="hero" class="container-fluid text-white position-relative bg-primary" style="min-height: 100vh;">
     <!-- Particles Background -->
     <div id="particles-js" class="position-absolute w-100 h-100"></div>
 
     <!-- Content -->
-    <div class="row h-100 align-items-center position-relative">
-        <!-- Texte et boutons -->
-        <div class="col-lg-7 d-flex flex-column justify-content-center px-5 z-index-2">
-            <p class="fs-5 mb-4 text-white">
-                Rejoignez les entreprises visionnaires qui révolutionnent leur stratégie numérique grâce à ScriptzenIT.
-                Faites confiance à notre expertise en développement web sur mesure et en gestion numérique avancée pour
-                propulser votre activité. Profitez d’une suite d’outils innovants conçus pour optimiser vos performances,
-                surveiller vos applications en temps réel, et garantir une disponibilité infaillible.
-            </p>
-            <div class="d-flex gap-3">
-                <a href="{{ url('front_contact') }}" class="btn btn-primary btn-lg">Obtenez votre audit gratuit</a>
-                <a href="{{ url('front_devis_new') }}" class="btn btn-outline-light btn-lg">Demandez un devis personnalisé</a>
+    <div class="d-flex align-items-center position-relative" style="min-height: 100vh;">
+        <div class="row w-100 mx-0 align-items-center">
+            <!-- Texte et boutons -->
+            <div class="col-lg-7 col-md-12 d-flex flex-column justify-content-center px-4 px-md-5 text-center text-lg-start mb-4 mb-lg-0 intro_mobile">
+                <h1 class="display-4 fw-bold mb-4">
+                    Votre Agence Web <span class="text-warning">Dans l'Yonne</span>
+                </h1>
+                <p class="fs-5 mb-4 text-white">
+                    Envie de donner un nouveau souffle à votre stratégie digitale ? Chez <strong>ScriptzenIT</strong>, nous combinons innovation et expertise pour vous accompagner dans la <strong>création de sites web professionnels</strong>, le <strong>développement d'applications sur mesure</strong>, et l’<strong>optimisation de votre présence en ligne</strong>.
+                </p>
+                <p class="fs-5 mb-4 text-white">
+                    Faites confiance à une équipe d'experts passionnés pour transformer vos défis numériques en succès mesurables. Grâce à nos outils et technologies de pointe, nous vous aidons à propulser votre activité tout en restant compétitif dans un monde digital en constante évolution.
+                </p>
+                <div class="d-flex flex-column flex-md-row gap-3 justify-content-center">
+                    <a href="{{ url('front_contact') }}" class="btn btn-warning btn-lg">Obtenez votre audit gratuit</a>
+                    <a href="{{ url('front_devis_new') }}" class="btn btn-outline-light btn-lg">Demandez un devis personnalisé</a>
+                </div>
             </div>
-        </div>
 
-        <!-- Formulaire -->
-        <div class="col-lg-5 d-flex justify-content-center z-index-2">
-            <div class="rounded shadow-lg bg-light p-4" style="width: 100%; max-width: 400px;">
-                <div id="successMessage" class="alert alert-success" style="display: none;">
-                    Votre demande a été envoyée avec succès !
+            <!-- Formulaire -->
+            <div class="col-lg-5 col-md-12 d-flex justify-content-center mt-4 mb-4 mt-lg-0">
+                <div class="rounded shadow-lg bg-light p-4" style="width: 100%; max-width: 400px;">
+                    <div id="successMessage" class="alert alert-success" style="display: none;">
+                        Votre demande a été envoyée avec succès !
+                    </div>
+                    <div id="callbackForm">
+                        {{ form_start(form, {'attr': {'class': 'needs-validation'}, 'method': 'POST'}) }}
+                            <div class="form-floating mb-3">
+                                {{ form_widget(form.name, {'attr': {'class': 'form-control', 'id': 'name', 'placeholder': 'Votre nom'}}) }}
+                                {{ form_label(form.name, 'Votre nom', {'attr': {'class': 'form-label'}}) }}
+                            </div>
+                            <div class="form-floating mb-3">
+                                {{ form_widget(form.phone, {'attr': {'class': 'form-control', 'id': 'phone', 'placeholder': 'Votre téléphone'}}) }}
+                                {{ form_label(form.phone, 'Votre téléphone', {'attr': {'class': 'form-label'}}) }}
+                            </div>
+                            <div class="form-floating mb-3">
+                                {{ form_widget(form.email, {'attr': {'class': 'form-control', 'id': 'email', 'placeholder': 'Votre email'}}) }}
+                                {{ form_label(form.email, 'Votre email', {'attr': {'class': 'form-label'}}) }}
+                            </div>
+                            <button type="submit" id="submitButton" class="btn btn-primary w-100">
+                                Me faire rappeler
+                            </button>
+                        {{ form_end(form) }}
+                    </div>
+                    <small class="mt-3 d-block text-center text-dark" style="font-size: 14px;">
+                        En cliquant sur "Me faire rappeler", vous acceptez nos conditions d'utilisation.
+                    </small>
                 </div>
-                <div id="callbackForm">
-                    {{ form_start(form, {'attr': {'class': 'needs-validation'}, 'method': 'POST'}) }}
-                        <div class="form-floating mb-4">
-                            {{ form_widget(form.name, {'attr': {'class': 'form-control', 'id': 'name', 'placeholder': 'Votre nom'}}) }}
-                            {{ form_label(form.name, 'Votre nom', {'attr': {'class': 'form-label'}}) }}
-                        </div>
-                        <div class="form-floating mb-4">
-                            {{ form_widget(form.phone, {'attr': {'class': 'form-control', 'id': 'phone', 'placeholder': 'Votre téléphone'}}) }}
-                            {{ form_label(form.phone, 'Votre téléphone', {'attr': {'class': 'form-label'}}) }}
-                        </div>
-                        <div class="form-floating mb-4">
-                            {{ form_widget(form.email, {'attr': {'class': 'form-control', 'id': 'email', 'placeholder': 'Votre email'}}) }}
-                            {{ form_label(form.email, 'Votre email', {'attr': {'class': 'form-label'}}) }}
-                        </div>
-                        <button type="submit" id="submitButton" class="btn btn-primary w-100">
-                            Me faire rappeler
-                        </button>
-                    {{ form_end(form) }}
-                </div>
-                <small class="mt-3 d-block text-center text-dark" style="font-size: 14px;">
-                    En cliquant sur "Me faire rappeler", vous acceptez nos conditions d'utilisation.
-                </small>
             </div>
         </div>
     </div>
 </section>
 
-
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const form = document.querySelector('#callbackForm form');
-            const submitButton = document.getElementById('submitButton');
-            const successMessage = document.getElementById('successMessage');
-            const inputs = form.querySelectorAll('input');
-
-            function validateInput(input) {
-                if (input.value.trim() === '') {
-                    input.classList.remove('is-valid');
-                    input.classList.add('is-invalid');
-                } else {
-                    input.classList.remove('is-invalid');
-                    input.classList.add('is-valid');
-                }
-            }
-
-            inputs.forEach(input => {
-                input.addEventListener('input', () => validateInput(input));
-            });
-
-            form.addEventListener('submit', function (e) {
-
-                let allValid = true;
-                inputs.forEach(input => {
-                    validateInput(input);
-                    if (input.classList.contains('is-invalid')) {
-                        allValid = false;
-                    }
-                });
-
-                if (allValid) {
-                    // Simuler l'envoi du formulaire
-                    form.style.display = 'none';
-                    successMessage.style.display = 'block';
-
-                    // En production, réactiver la soumission :
-                    // form.submit();
-                }
-            });
-        });
-    </script>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
         particlesJS("particles-js", {
             "particles": {
                 "number": {
@@ -140,23 +93,13 @@
                 },
                 "opacity": {
                     "value": 0.5,
-                    "random": false,
                     "anim": {
-                        "enable": false,
-                        "speed": 1,
-                        "opacity_min": 0.1,
-                        "sync": false
+                        "enable": false
                     }
                 },
                 "size": {
                     "value": 3,
-                    "random": true,
-                    "anim": {
-                        "enable": false,
-                        "speed": 40,
-                        "size_min": 0.1,
-                        "sync": false
-                    }
+                    "random": true
                 },
                 "line_linked": {
                     "enable": true,
@@ -169,15 +112,7 @@
                     "enable": true,
                     "speed": 6,
                     "direction": "none",
-                    "random": false,
-                    "straight": false,
-                    "out_mode": "out",
-                    "bounce": false,
-                    "attract": {
-                        "enable": false,
-                        "rotateX": 600,
-                        "rotateY": 1200
-                    }
+                    "random": false
                 }
             },
             "interactivity": {
@@ -190,8 +125,7 @@
                     "onclick": {
                         "enable": true,
                         "mode": "push"
-                    },
-                    "resize": true
+                    }
                 },
                 "modes": {
                     "grab": {
@@ -199,346 +133,376 @@
                         "line_linked": {
                             "opacity": 1
                         }
-                    },
-                    "bubble": {
-                        "distance": 400,
-                        "size": 40,
-                        "duration": 2,
-                        "opacity": 8,
-                        "speed": 3
-                    },
-                    "repulse": {
-                        "distance": 200,
-                        "duration": 0.4
-                    },
-                    "push": {
-                        "particles_nb": 4
-                    },
-                    "remove": {
-                        "particles_nb": 2
                     }
                 }
             },
             "retina_detect": true
         });
     });
+</script>
 
-    </script>
+{# ./ Hero Section #}
 
 
-
-    {# ./ Hero Section#}
-
-    <!-- Pourquoi nous choisir -->
-    <section class="py-5 bg-secondary">
-        <div class="container">
-            <div class="row align-items-center">
-                <div class="col-lg-6">
-                    <img class="img-fluid rounded" loading="lazy" src="{{ asset('img/before.png') }}" alt="Pourquoi nous choisir">
-                </div>
-                <div class="col-lg-6">
-                    <h2 class="mb-3 text-white">Faites confiance à ScriptzenIT !</h2>
-                    <p class="lead text-white">Fondée en 2023, ScriptzenIT redéfinit les frontières de l'innovation numérique. Nous collaborons avec des entreprises de toutes tailles pour concevoir des stratégies sur mesure.</p>
-                    <ul class="list-unstyled">
-                        <li class="mb-3 d-flex align-items-center">
-                            <i class="bi bi-check-circle-fill text-primary me-3"></i>
-                            <span class="fs-5 text-white">Notre approche est centrée sur vous, nos clients.</span>
-                        </li>
-                        <li class="mb-3 d-flex align-items-center">
-                            <i class="bi bi-check-circle-fill text-primary me-3"></i>
-                            <span class="fs-5 text-white">Nous dépassons vos attentes à chaque étape.</span>
-                        </li>
-                    </ul>
-                    <a href="{{ url('app_login') }}" class="btn btn-info rounded-pill">Connectez-vous maintenant</a>
-                </div>
-            </div>
+<!-- Pourquoi nous choisir -->
+<section class="container-fluid bg-secondary text-white position-relative" style="height: 100vh;">
+    <div class="row h-100 align-items-center">
+        <!-- Image -->
+        <div class="col-lg-6 col-md-12 d-flex justify-content-center">
+            <img src="{{ asset('img/before.png') }}" loading="lazy" 
+                alt="ScriptzenIT - Agence web de confiance, spécialisée en solutions numériques sur mesure" 
+                class="img-fluid rounded shadow-lg"
+                width="60%"
+                >
         </div>
-    </section>
 
-    <div class="divider"></div>
-
-    {# Services de l'Agence #}
-
-	<section>
-		<div class="container">
-			<ul class="process">
-				<li class="process__item">
-                    <span class="process__number">
-                        <i class="fas fa-lightbulb"></i>
-                    </span>
-					<span class="process__title">Analyse & Stratégie</span>
-					<span class="process__subtitle text-justify">Nous analysons vos besoins et développons une stratégie sur mesure.</span>
-
-				</li>
-				<li class="process__item">
-                    <span class="process__number">
-                        <i class="fas fa-pen-nib"></i>
-                    </span>
-					<span class="process__title">Conception & Design</span>
-					<span class="process__subtitle text-justify">Nous créons des designs attrayants qui reflètent votre marque.</span>
-				</li>
-				<li class="process__item">
-                    <span class="process__number">
-                        <i class="fas fa-laptop-code"></i>
-                    </span>
-					<span class="process__title">Développement & Intégration</span>
-					<span class="process__subtitle text-justify">Nos développeurs transforment les designs en sites Web fonctionnels.</span>
-				</li>
-				<li class="process__item">
-                    <span class="process__number">
-                        <i class="fas fa-rocket"></i>
-                    </span>
-					<span class="process__title">Lancement & Support</span>
-					<span class="process__subtitle text-justify">Nous assurons un lancement fluide et un support continu.</span>
-				</li>
-			</ul>
-		</div>
-	</section>
-	<!-- Fin du Processus -->
-
-    <div class="divider"></div>
-
-    <!-- Réalisations -->
-	<section class="pb-5">
-		<div class="container">
-			<div class="row">
-				<div class="col-12 text-center">
-					<h2 class="font-weight-bold">Nos Réalisations</h2>
-					<p class="lead text-muted">Découvrez quelques-unes de nos réalisations les plus récentes.</p>
-				</div>
-			</div>
-			<div class="row justify-content-center">
-				<div id="content" class="container page-content site-content single-post" role="main">
-					<div class="row">
-						<div class="col-xs-12 col-sm-12">
-							<!-- Portfolio Content -->
-							<div id="portfolio_content_q" class="portfolio-content">
-								<ul class="portfolio-filters">
-									<li>
-										<a class="filter btn btn-sm btn-link" data-group="toutes_categories">Toutes les catégories</a>
-									</li>
-									<li>
-										<a class="filter btn btn-sm btn-link" data-group="détaillé">Projets Détaillés</a>
-									</li>
-									<li>
-										<a class="filter btn btn-sm btn-link" data-group="lien-direct">Liens fonctionnels</a>
-									</li>
-									<li>
-										<a class="filter btn btn-sm btn-link" data-group="prototype">Prototype</a>
-									</li>
-								</ul>
-
-								<!-- Portfolio Grid -->
-								<div class="portfolio-grid four-columns shuffle">
-									{% for project in projects %}
-										{% set dataGroups = ['toutes_categories'] %}
-
-										{% if 'détaillé' in project.category %}
-											{% set dataGroups = dataGroups|merge(['détaillé']) %}
-										{% endif %}
-										{% if 'lien-direct' in project.category %}
-											{% set dataGroups = dataGroups|merge(['lien-direct']) %}
-										{% endif %}
-										{% if 'prototype' in project.category %}
-											{% set dataGroups = dataGroups|merge(['prototype']) %}
-										{% endif %}
-
-										<figure class="item standard" data-groups='["{{ dataGroups|join('", "') }}"]'>
-											<div class="portfolio-item-img">
-												{% for image in project.images %}
-													<img src="{{ asset('image_project/'~image.name) }}" loading="lazy" alt="{{ image.name }}"/>
-												{% endfor %}
-												<a href="{{ url('front_project_show', {id: project.id}) }}"></a>
-											</div>
-
-											<i class="far fa-file-alt"></i>
-											{# <h4 class="name">{{ project.title }}</h4> #}
-											<span class="category">{{ project.category|join(', ')|title }}</span>
-										</figure>
-									{% endfor %}
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</section>
-	<!-- Fin des Réalisations -->
-
-    <div class="divider"></div>
-
-    <!-- Contact Section -->
-    <section>
-        <div class="container-fluid">
-            <div class="row align-items-center bg-black text-white px-5 py-5">
-                <div class="col-md-4">
-                    <h1>BESOIN D'ÉCLAIRAGE ?</h1>
-                    <p class="text-justify" style="font-size: 20px;color: white;">Transformez les défis techniques en opportunités. Lorsque vous êtes confronté à des problèmes techniques, vous faites face à des occasions de grandir et d'apprendre, discutons-en !</p>
-                    <a href="https://calendly.com/walid_belbeche/expertise-offerte" class="text-warning display-6">Réserver un appel de découverte</a>
-                </div>
-                <div class="col-md-8">
-                    <img src="{{ asset('img/home_section.webp') }}" loading="lazy" alt="agence web dans la Nièvre (58)" width="800" height="600" alt="Section principale" class="img-fluid">
-                </div>
-            </div>
+        <!-- Texte -->
+        <div class="col-lg-6 col-md-12 d-flex flex-column justify-content-center px-5">
+            <h2 class="display-4 fw-bold mb-4">Pourquoi choisir ScriptZenIT ?</h2>
+            <p class="fs-5 mb-4 text-white">
+                Chez <strong>ScriptzenIT</strong>, nous nous engageons à transformer votre vision numérique en réalité. 
+                Depuis notre création en 2023, nous aidons les entreprises de toutes tailles à <strong>réaliser leurs objectifs digitaux</strong>, 
+                qu'il s'agisse de <strong>création de sites web professionnels</strong>, de développement 
+                d'<strong>applications web sur mesure</strong>, ou encore d'<strong>optimisation de leur présence en ligne</strong>.
+            </p>
+            <ul class="list-unstyled mb-4">
+                <li class="mb-3 d-flex align-items-start">
+                    <i class="bi bi-check-circle-fill text-primary me-3 text-white"></i>
+                    <span>Une approche personnalisée qui place vos besoins au centre de nos solutions.</span>
+                </li>
+                <li class="mb-3 d-flex align-items-start">
+                    <i class="bi bi-check-circle-fill text-primary me-3 text-white"></i>
+                    <span>Une expertise éprouvée pour dépasser vos attentes à chaque étape du projet.</span>
+                </li>
+                <li class="mb-3 d-flex align-items-start">
+                    <i class="bi bi-check-circle-fill text-primary me-3 text-white"></i>
+                    <span>Des solutions innovantes pour vous maintenir à l'avant-garde du numérique.</span>
+                </li>
+            </ul>
+            <a href="{{ url('app_login') }}" class="btn btn-info btn-lg rounded-pill">Connectez-vous maintenant</a>
         </div>
-    </section>
+    </div>
+</section>
 
-    <div class="divider"></div>
+<div class="divider"></div>
 
-    <!-- Technologie et outils -->
-    <section class="container">
-        <h2 class="text-center">Outils et technologies</h2>
+{# Services de l'Agence #}
+
+<section>
+    <div class="container">
+        <ul class="process">
+            <li class="process__item">
+                <span class="process__number">
+                    <i class="fas fa-lightbulb"></i>
+                </span>
+                <span class="process__title">Analyse & Stratégie</span>
+                <span class="process__subtitle text-justify">Nous analysons vos besoins et développons une stratégie sur mesure.</span>
+
+            </li>
+            <li class="process__item">
+                <span class="process__number">
+                    <i class="fas fa-pen-nib"></i>
+                </span>
+                <span class="process__title">Conception & Design</span>
+                <span class="process__subtitle text-justify">Nous créons des designs attrayants qui reflètent votre marque.</span>
+            </li>
+            <li class="process__item">
+                <span class="process__number">
+                    <i class="fas fa-laptop-code"></i>
+                </span>
+                <span class="process__title">Développement & Intégration</span>
+                <span class="process__subtitle text-justify">Nos développeurs transforment les designs en sites Web fonctionnels.</span>
+            </li>
+            <li class="process__item">
+                <span class="process__number">
+                    <i class="fas fa-rocket"></i>
+                </span>
+                <span class="process__title">Lancement & Support</span>
+                <span class="process__subtitle text-justify">Nous assurons un lancement fluide et un support continu.</span>
+            </li>
+        </ul>
+    </div>
+</section>
+<!-- Fin du Processus -->
+
+<div class="divider"></div>
+
+<!-- Réalisations -->
+<section class="pb-5">
+    <div class="container">
         <div class="row">
-            {% set tools = [
-                { 'img': 'spec-1.png', 'name': 'PHP' },
-                { 'img': 'spec-2.png', 'name': 'HTML 5 / CSS 3' },
-                { 'img': 'spec-3.png', 'name': 'Git + SSH' },
-                { 'img': 'spec-4.png', 'name': 'Symfony' },
-                { 'img': 'spec-5.svg', 'name': 'React / VueJs' },
-                { 'img': 'spec-7.png', 'name': 'SaaS' },
-                { 'img': 'spec-8.svg', 'name': 'Json web token' },
-                { 'img': 'spec-9.png', 'name': 'Axios/Ajax' }
-            ] %}
-            {% for tool in tools %}
-                <div class="col-xs-12 col-sm-3">
-                    <div class="lm-info-block gray-default text-center">
-                        <img src="{{ asset('img/clients/' ~ tool.img) }}" loading="lazy" alt="{{ tool.name }}" class="img-fluid">
-                        <h4>{{ tool.name }}</h4>
+            <div class="col-12 text-center">
+                <h2 class="font-weight-bold">Nos Réalisations</h2>
+                <p class="lead text-muted">Découvrez quelques-unes de nos réalisations les plus récentes.</p>
+            </div>
+        </div>
+        <div class="row justify-content-center">
+            <div id="content" class="container page-content site-content single-post" role="main">
+                <div class="row">
+                    <div class="col-xs-12 col-sm-12">
+                        <!-- Portfolio Content -->
+                        <div id="portfolio_content_q" class="portfolio-content">
+                            <ul class="portfolio-filters">
+                                <li>
+                                    <a class="filter btn btn-sm btn-link" data-group="toutes_categories">Toutes les catégories</a>
+                                </li>
+                                <li>
+                                    <a class="filter btn btn-sm btn-link" data-group="détaillé">Projets Détaillés</a>
+                                </li>
+                                <li>
+                                    <a class="filter btn btn-sm btn-link" data-group="lien-direct">Liens fonctionnels</a>
+                                </li>
+                                <li>
+                                    <a class="filter btn btn-sm btn-link" data-group="prototype">Prototype</a>
+                                </li>
+                            </ul>
+
+                            <!-- Portfolio Grid -->
+                            <div class="portfolio-grid four-columns shuffle">
+                                {% for project in projects %}
+                                    {% set dataGroups = ['toutes_categories'] %}
+
+                                    {% if 'détaillé' in project.category %}
+                                        {% set dataGroups = dataGroups|merge(['détaillé']) %}
+                                    {% endif %}
+                                    {% if 'lien-direct' in project.category %}
+                                        {% set dataGroups = dataGroups|merge(['lien-direct']) %}
+                                    {% endif %}
+                                    {% if 'prototype' in project.category %}
+                                        {% set dataGroups = dataGroups|merge(['prototype']) %}
+                                    {% endif %}
+
+                                    <figure class="item standard" data-groups='["{{ dataGroups|join('", "') }}"]'>
+                                        <div class="portfolio-item-img">
+                                            {% for image in project.images %}
+                                                <img src="{{ asset('image_project/'~image.name) }}" loading="lazy" alt="{{ image.name }}"/>
+                                            {% endfor %}
+                                            <a href="{{ url('front_project_show', {id: project.id}) }}"></a>
+                                        </div>
+
+                                        <i class="far fa-file-alt"></i>
+                                        {# <h4 class="name">{{ project.title }}</h4> #}
+                                        <span class="category">{{ project.category|join(', ')|title }}</span>
+                                    </figure>
+                                {% endfor %}
+                            </div>
+                        </div>
                     </div>
                 </div>
-            {% endfor %}
+            </div>
         </div>
-    </section>
+    </div>
+</section>
+<!-- Fin des Réalisations -->
 
-    <div class="divider"></div>
+<div class="divider"></div>
 
-	<section class="container">
-		<div class="row">
-			<div class="col-xs-12 col-sm-12 ">
-				<div class="fw-pricing clearfix row">
+<!-- Contact Section -->
+<section class="container-fluid bg-black text-white position-relative" style="height: 100vh;">
+    <div class="row h-100 align-items-center">
+        <!-- Texte -->
+        <div class="col-md-6 d-flex flex-column justify-content-center px-5">
+            <h1 class="display-4 fw-bold mb-4">Besoin d'Éclairage ?</h1>
+            <p class="fs-5 mb-4 text-justify text-white">
+                En tant qu'<strong>agence web de référence</strong>, ScriptZenIT vous accompagne dans la résolution de vos défis numériques. Que ce soit pour la création de votre <strong>site web professionnel</strong>, le développement d'<strong>applications web sur mesure</strong>, ou l'optimisation de votre <strong>stratégie digitale</strong>, nous sommes là pour transformer vos idées en succès.
+            </p>
+            <p class="fs-5 mb-4 text-justify text-white">
+                Faites le choix d'une <strong>équipe d'experts passionnés</strong> en conception web, développement backend, et marketing numérique. Nos solutions innovantes et nos outils personnalisés vous permettent de rester compétitif dans un monde digital en constante évolution.
+            </p>
+            <p class="fs-5 mb-4 text-justify text-white">
+                Prenez le contrôle de votre présence en ligne dès maintenant. <strong>Réservez un appel de découverte</strong> et commencez à exploiter tout votre potentiel numérique !
+            </p>
+            <a href="https://calendly.com/walid_belbeche/expertise-offerte" class="btn btn-warning btn-lg mb-2">Réserver un appel de découverte</a>
+            <a href="{{ url('front_contact') }}" class="btn btn-outline-light btn-lg">Nous contacter</a>
+        </div>
 
-					<div class="fw-package-wrap col-md-4 ">
-						<div class="fw-package">
-							<div class="fw-heading-row">
-								<span class="text-uppercase">Expertise Offerte</span>
-							</div>
+        <!-- Image -->
+        <div class="col-md-6">
+            <img src="{{ asset('img/home_section.webp') }}" loading="lazy" 
+                alt="Agence web experte en Nièvre (58), spécialisée en création de sites web" 
+                class="img-fluid rounded shadow-lg">
+        </div>
+    </div>
+</section>
 
-							<div class="fw-pricing-row">
-								<span>Un échange convivial avec des réponses</span>
-							</div>
 
-							<div class="fw-button-row">
-								<a href="https://calendly.com/walid_belbeche/expertise-offerte" target="_self" class="btn btn-primary">Réserver</a>
+<div class="divider"></div>
 
-							</div>
+<!-- Technologie et outils -->
+<section class="container">
+    <h2 class="text-center">Outils et technologies</h2>
+    <div class="row">
+        {% set tools = [
+            { 'img': 'spec-1.png', 'name': 'PHP' },
+            { 'img': 'spec-2.png', 'name': 'HTML 5 / CSS 3' },
+            { 'img': 'spec-3.png', 'name': 'Git + SSH' },
+            { 'img': 'spec-4.png', 'name': 'Symfony' },
+            { 'img': 'spec-5.svg', 'name': 'React' },
+            { 'img': 'spec-10.png', 'name': 'Next.js' },
+            { 'img': 'spec-11.png', 'name': 'WebSocket (Socket.io)' },
+            { 'img': 'spec-12.png', 'name': 'Node.js' },
+            { 'img': 'spec-7.png', 'name': 'SaaS' },
+            { 'img': 'spec-8.svg', 'name': 'Json web token' },
+            { 'img': 'spec-9.png', 'name': 'Axios/Ajax' },
+            { 'img': 'shopify-logo.svg', 'name': 'Shopify' },
+            { 'img': 'spec-13.png', 'name': 'WordPress' }
+        ] %}
+        {% for tool in tools %}
+            <div class="col-xs-12 col-sm-3">
+                <div class="lm-info-block gray-default text-center">
+                    <img src="{{ asset('img/clients/' ~ tool.img) }}" loading="lazy" alt="{{ tool.name }}" class="img-fluid">
+                    <h4>{{ tool.name }}</h4>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</section>
 
-							<div class="fw-default-row text-justify">Vous souhaitez être accompagné dans le développement de votre solution numérique ? Discutons ensemble de vos besoins</div>
-						</div>
-					</div>
 
-					<div class="fw-package-wrap col-md-4 ">
-						<div class="fw-package">
-							<div class="fw-heading-row">
-								<span class="text-uppercase">Développement entreprise</span>
-							</div>
+<div class="divider"></div>
 
-							<div class="fw-pricing-row">
-								<span>Un prix compétitif avec des fonctionnalités de bases</span>
-							</div>
+<section class="container">
+    <div class="row">
+        <div class="col-xs-12 col-sm-12 ">
+            <div class="fw-pricing clearfix row">
 
-							<div class="fw-button-row">
-								<a href="{{ url('front_devis_new', {'type': 'site_vitrine'}) }}" target="_self" class="btn btn-primary">Basic</a>
-
-							</div>
-
-							<div class="fw-default-row text-justify">Vous êtes une marque souhaitant donner un coup de neuf à son site
-								web ou une entreprise souhaitant redynamiser sa présence sur le web ? Optez pour une
-								création d'application / site web sur mesure, dynamique et novateur. A votre image.
-							</div>
-						</div>
-					</div>
-
-					<div class="fw-package-wrap col-md-4">
-						<div class="fw-package pt-5">
-							<div class="fw-heading-row">
-								<span>DÉVELOPPEMENT SUR MESURE</span>
-							</div>
-
-							<div class="fw-pricing-row">
-								<span>Pour un besoin spécifique</span>
-							</div>
-
-							<div class="fw-button-row">
-								<a href="{{ url('front_devis_new', {'type': 'cross_plateforme'}) }}" target="_self" class="btn btn-primary">Sur-mesure</a>
-
-							</div>
-
-							<div class="fw-default-row text-justify">Vous souhaitez aller un peu plus loin en ajoutant des fonctionnalités bien précises pour votre nouveau site internet ? Discutons ensemble de votre développement web sur mesure !
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-			<!-- /Pricing -->
-		</div>
-	</section>
-
-    <div class="divider"></div>
-
-    <!-- Testimonials -->
-    <section class="container">
-        <h2 class="text-center">Ils en parlent mieux que nous</h2>
-        <div id="testimonials_1" class="testimonials owl-carousel">
-            {% set testimonials = [
-                { 'name': 'Alain Tixier', 'role': 'CEO SPIN OFF', 'img': 'sunday.png', 'text': 'La Nièvre c’est loin, mais heureusement il y a internet pour bosser !' },
-                { 'name': 'Pascal Stier', 'role': 'Dirigeant Entreprise STIER', 'img': 'plomber.png', 'text': 'Très bonne prestation, je recommande. Demandez-lui ce qui vous intéresse, il va vous le réaliser.' },
-                { 'name': 'Michele GUERRIN', 'role': 'PDG OnlineFormapro', 'img': 'rating.png', 'text': 'Walid, un jeune sérieux, motivé et volontaire. Une grande envie de progresser et réussir. Passionné par le code, mérite de réussir.' },
-                { 'name': 'Badreddine HADJOUDJ', 'role': 'J\'accompagne les structures à la création de leur site web responsive ♦ Concepteur d\'application web', 'img': 'about.jpg', 'text': 'Je suis heureux de recommander Walid pour toute opportunité professionnelle liée à la conception et au développement d\'applications. Au cours de nos échanges, j\'ai été très impressionné par son expertise pointue en matière de technologies front-end et back-end. Walid est un véritable passionné de la programmation, toujours en quête de nouvelles connaissances pour améliorer ses compétences. De plus, il possède des qualités de communication exceptionnelles, ce qui est un atout précieux pour tout projet de développement d\'applications. Je suis convaincu que Walid apportera une grande valeur ajoutée à toute entreprise évoluant dans ce secteur d\'activité.' }
-
-            ] %}
-            {% for testimonial in testimonials %}
-                <div class="testimonial-item">
-                    <div class="testimonial-content">
-                        <div class="testimonial-picture">
-                            <img src="{{ asset('img/' ~ testimonial.img) }}" loading="lazy" alt="{{ testimonial.name }}" class="img-fluid rounded-circle">
+                <div class="fw-package-wrap col-md-4 ">
+                    <div class="fw-package">
+                        <div class="fw-heading-row">
+                            <span class="text-uppercase">Expertise Offerte</span>
                         </div>
-                        <p class="testimonial-text">{{ testimonial.text }}</p>
-                        <div class="testimonial-author-info">
-                            <h5 class="testimonial-author">{{ testimonial.name }}</h5>
-                            <p class="testimonial-firm">{{ testimonial.role }}</p>
+
+                        <div class="fw-pricing-row">
+                            <span>Un échange convivial avec des réponses</span>
                         </div>
-                        <i class="fa fa-quote-left testimonial-icon"></i>
-                        <i class="fa fa-quote-right testimonial-icon-big"></i>
+
+                        <div class="fw-button-row">
+                            <a href="https://calendly.com/walid_belbeche/expertise-offerte" target="_self" class="btn btn-primary">Réserver</a>
+
+                        </div>
+
+                        <div class="fw-default-row text-justify">Vous souhaitez être accompagné dans le développement de votre solution numérique ? Discutons ensemble de vos besoins</div>
                     </div>
                 </div>
-            {% endfor %}
+
+                <div class="fw-package-wrap col-md-4 ">
+                    <div class="fw-package">
+                        <div class="fw-heading-row">
+                            <span class="text-uppercase">Développement entreprise</span>
+                        </div>
+
+                        <div class="fw-pricing-row">
+                            <span>Un prix compétitif avec des fonctionnalités de bases</span>
+                        </div>
+
+                        <div class="fw-button-row">
+                            <a href="{{ url('front_devis_new', {'type': 'site_vitrine'}) }}" target="_self" class="btn btn-primary">Basic</a>
+
+                        </div>
+
+                        <div class="fw-default-row text-justify">Vous êtes une marque souhaitant donner un coup de neuf à son site
+                            web ou une entreprise souhaitant redynamiser sa présence sur le web ? Optez pour une
+                            création d'application / site web sur mesure, dynamique et novateur. A votre image.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="fw-package-wrap col-md-4">
+                    <div class="fw-package pt-5">
+                        <div class="fw-heading-row">
+                            <span>DÉVELOPPEMENT SUR MESURE</span>
+                        </div>
+
+                        <div class="fw-pricing-row">
+                            <span>Pour un besoin spécifique</span>
+                        </div>
+
+                        <div class="fw-button-row">
+                            <a href="{{ url('front_devis_new', {'type': 'cross_plateforme'}) }}" target="_self" class="btn btn-primary">Sur-mesure</a>
+
+                        </div>
+
+                        <div class="fw-default-row text-justify">Vous souhaitez aller un peu plus loin en ajoutant des fonctionnalités bien précises pour votre nouveau site internet ? Discutons ensemble de votre développement web sur mesure !
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-    </section>
+        <!-- /Pricing -->
+    </div>
+</section>
 
-    <div class="divider"></div>
+<div class="divider"></div>
 
-    <!-- Final CTA Section -->
-    <section class="text-white bg-tertiary text-center py-5" id="agence">
-        <h1 class="display-5 fw-bold mb-3">Soyez Zen, On s'occupe de tout !</h1>
-        <p class="lead mb-4 text-white">Transitionnez de la planification au site grâce à ScriptZenIT, le créateur de sites Web destiné aux professionnels et aux artisans.</p>
-        <a href="{{ url('front_devis_new')}}" class="btn btn-primary btn-lg shadow">Obtenez votre devis gratuit maintenant</a>
-    </section>
+<!-- Testimonials -->
+<section class="container">
+    <h2 class="text-center">Ils en parlent mieux que nous</h2>
+    <div id="testimonials_1" class="testimonials owl-carousel">
+        {% set testimonials = [
+            { 'name': 'Alain Tixier', 'role': 'CEO SPIN OFF', 'img': 'sunday.png', 'text': 'La Nièvre c’est loin, mais heureusement il y a internet pour bosser !' },
+            { 'name': 'Pascal Stier', 'role': 'Dirigeant Entreprise STIER', 'img': 'plomber.png', 'text': 'Très bonne prestation, je recommande. Demandez-lui ce qui vous intéresse, il va vous le réaliser.' },
+            { 'name': 'Michele GUERRIN', 'role': 'PDG OnlineFormapro', 'img': 'rating.png', 'text': 'Walid, un jeune sérieux, motivé et volontaire. Une grande envie de progresser et réussir. Passionné par le code, mérite de réussir.' },
+            { 'name': 'Badreddine HADJOUDJ', 'role': 'J\'accompagne les structures à la création de leur site web responsive ♦ Concepteur d\'application web', 'img': 'about.jpg', 'text': 'Je suis heureux de recommander Walid pour toute opportunité professionnelle liée à la conception et au développement d\'applications. Au cours de nos échanges, j\'ai été très impressionné par son expertise pointue en matière de technologies front-end et back-end. Walid est un véritable passionné de la programmation, toujours en quête de nouvelles connaissances pour améliorer ses compétences. De plus, il possède des qualités de communication exceptionnelles, ce qui est un atout précieux pour tout projet de développement d\'applications. Je suis convaincu que Walid apportera une grande valeur ajoutée à toute entreprise évoluant dans ce secteur d\'activité.' }
 
-    <div class="divider"></div>
+        ] %}
+        {% for testimonial in testimonials %}
+            <div class="testimonial-item">
+                <div class="testimonial-content">
+                    <div class="testimonial-picture">
+                        <img src="{{ asset('img/' ~ testimonial.img) }}" loading="lazy" alt="{{ testimonial.name }}" class="img-fluid rounded-circle">
+                    </div>
+                    <p class="testimonial-text">{{ testimonial.text }}</p>
+                    <div class="testimonial-author-info">
+                        <h5 class="testimonial-author">{{ testimonial.name }}</h5>
+                        <p class="testimonial-firm">{{ testimonial.role }}</p>
+                    </div>
+                    <i class="fa fa-quote-left testimonial-icon"></i>
+                    <i class="fa fa-quote-right testimonial-icon-big"></i>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</section>
 
-    <!-- Footer -->
-	<section class="thank-you text-center py-5">
-		<h2>Merci d'avoir visité notre site !</h2>
-		<p>Si vous avez des questions, des commentaires ou avez besoin de plus d'informations, n'hésitez pas à nous contacter.</p>
-		<a href="{{ url('front_contact') }}" class="btn btn-primary mb-4">Nous contacter</a>
-		<div class="d-flex flex-column align-items-center">
-			<a href="https://g.page/r/CSj9BKNjCGCBEAI/review" class="text-center">
-				<img src="{{ asset('img/rating.png') }}" loading="lazy" alt="évaluez-nous" width="20%" height="20%">
-				<div>Évaluez-nous</div>
-			</a>
-		</div>
-	</section>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        $('#testimonials_1').owlCarousel({
+            items: 1, // Nombre de témoignages affichés simultanément
+            loop: true, // Activer la boucle infinie
+            margin: 10, // Marge entre les items
+            autoplay: true, // Activer l'autoplay
+            autoplayTimeout: 5000, // Temps entre les slides (5 secondes)
+            autoplayHoverPause: true, // Pause au survol
+            nav: true, // Afficher les flèches de navigation
+            dots: true // Afficher les points de navigation
+        });
+    });
+</script>
+
+
+<div class="divider"></div>
+
+<!-- Final CTA Section -->
+<section class="text-white bg-tertiary text-center py-5" id="agence">
+    <h1 class="display-5 fw-bold mb-3">Soyez Zen, On s'occupe de tout !</h1>
+    <p class="lead mb-4 text-white">Transitionnez de la planification au site grâce à ScriptZenIT, le créateur de sites Web destiné aux professionnels et aux artisans.</p>
+    <a href="{{ url('front_devis_new')}}" class="btn btn-primary btn-lg shadow">Obtenez votre devis gratuit maintenant</a>
+</section>
+
+<div class="divider"></div>
+
+<!-- Footer -->
+<section class="thank-you text-center py-5">
+    <h2>Merci d'avoir visité notre site !</h2>
+    <p>Si vous avez des questions, des commentaires ou avez besoin de plus d'informations, n'hésitez pas à nous contacter.</p>
+    <a href="{{ url('front_contact') }}" class="btn btn-primary mb-4">Nous contacter</a>
+    <div class="d-flex flex-column align-items-center">
+        <a href="https://g.page/r/CSj9BKNjCGCBEAI/review" class="text-center">
+            <img src="{{ asset('img/rating.png') }}" loading="lazy" alt="évaluez-nous" width="20%" height="20%">
+            <div>Évaluez-nous</div>
+        </a>
+    </div>
+</section>
 
 
 {% endblock %}

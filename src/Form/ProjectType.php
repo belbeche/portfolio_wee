@@ -81,6 +81,18 @@ class ProjectType extends AbstractType
                     'placeholder' => 'Lien fonctionnel du projet'
                 ]
             ])
+            ->add('client', TextType::class, [
+                'required' => false,
+                'attr' => [
+                    'placeholder' => 'Nom du client'
+                ]
+            ])
+            ->add('developer', TextType::class, [
+                'required' => false,
+                'attr' => [
+                    'placeholder' => 'Nom du développeur'
+                ]
+            ])
             ;
     }
 

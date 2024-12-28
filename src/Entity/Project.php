@@ -63,6 +63,16 @@ class Project
     private ?string $link;
 
     /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private ?string $client;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private ?string $developer;
+
+    /**
      * @throws \Exception
      */
     public function __construct()
@@ -208,6 +218,54 @@ class Project
     public function setLink(?string $link): self
     {
         $this->link = $link;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of client
+     *
+     * @return ?string
+     */
+    public function getClient(): ?string
+    {
+        return $this->client;
+    }
+
+    /**
+     * Set the value of client
+     *
+     * @param ?string $client
+     *
+     * @return self
+     */
+    public function setClient(?string $client): self
+    {
+        $this->client = $client;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of developer
+     *
+     * @return ?string
+     */
+    public function getDeveloper(): ?string
+    {
+        return $this->developer;
+    }
+
+    /**
+     * Set the value of developer
+     *
+     * @param ?string $developer
+     *
+     * @return self
+     */
+    public function setDeveloper(?string $developer): self
+    {
+        $this->developer = $developer;
 
         return $this;
     }

@@ -5,95 +5,60 @@
 {% endblock %}
 
 {% block content %}
-    <div id="ajax-page" class="ajax-page-content container">
-        <div class="ajax-page-wrapper">
-            <div class="ajax-page-nav">
-				<div class="nav-item">
-					<a href="{{ url('front_project_show', {id: project.id - 1}) }}" aria-label="Projet précédent" class="nav-link">
-						<i class="lnr lnr-chevron-left"></i>
-						<span class="sr-only">Précédent</span>
-					</a>
-					<a href="{{ url('front_project_show', {id: project.id + 1}) }}" aria-label="Projet suivant" class="nav-link">
-						<i class="lnr lnr-chevron-right"></i>
-						<span class="sr-only">Suivant</span>
-					</a>
-				</div>
-				<div class="nav-item ajax-page-close-button">
-					<a id="close-button" href="{{ url('front_project') }}" aria-label="Fermer le projet" class="btn-close">
-						<i class="lnr lnr-cross"></i>
-					</a>
-				</div>
-			</div>
+<div class="container mt-5">
 
+    <!-- Portfolio Item Heading -->
+    <h1 class="my-4">{{ project.title }}
+        <small>Par {{ project.developer }}</small>
+    </h1>
 
-            <div class="ajax-page-title">
-                <div class="container">
-                    <nav aria-label="Breadcrumb">
-                        <ol class="breadcrumb">
-                            <li class="breadcrumb-item">
-                                <a href="{{ url('front_home') }}">Accueil</a>
-                            </li>
-                            <li class="breadcrumb-item">
-                                <a href="{{ url('front_project') }}">Mes réalisations</a>
-                            </li>
-                            <li class="breadcrumb-item active" aria-current="page">{{ project.title }}</li>
-                        </ol>
-                    </nav>
-                </div>
-            </div>
+    <!-- Portfolio Item Row -->
+    <div class="row">
+        <div class="col-md-8">
+            {% for image in project.images %}
+                <img class="img-fluid mb-4" src="{{ asset('image_project/' ~ image.name) }}" alt="{{ image.name }}" loading="lazy">
+            {% endfor %}
+        </div>
 
-            <div class="row">
-				<div class="col-sm-12 col-md-8 portfolio-block">
-					<div class="owl-carousel portfolio-page-carousel">
-						{% for image in project.images %}
-							<div class="item">
-								<a href="{{ asset('image_project/'~image.name) }}" class="lightbox" data-fancybox="gallery">
-									<img src="{{ asset('image_project/'~image.name) }}" alt="{{ image.name }}" class="img-fluid" loading="lazy" />
-								</a>
-							</div>
-						{% endfor %}
-					</div>
-				</div>
-
-				<div class="col-sm-12 col-md-4 portfolio-block">
-					<div class="project-description">
-						<div class="block-title">
-							<h3>Description du projet</h3>
-						</div>
-						<ul class="project-general-info">
-							<li>
-								<p>
-									<i class="fa fa-user"></i> Walid BELBECHE
-								</p>
-							</li>
-							<li>
-								<p>
-									<i class="fa fa-globe"></i>
-									<a href="{{ project.link }}" target="_blank" rel="noopener noreferrer">{{ project.title }}</a>
-								</p>
-							</li>
-							<li>
-								<p>
-									<i class="fa fa-calendar"></i> {{ project.createdAt|format_datetime(locale='fr') }}
-								</p>
-							</li>
-						</ul>
-						<p class="text-justify">{{ project.description }}</p>
-
-						<div class="tags-block">
-							<div class="block-title">
-								<h3>Catégories</h3>
-							</div>
-							<ul class="tags">
-								{% for category in project.categories %}
-									<li><a href="{{ url('front_category_show', {id: category.id}) }}">{{ category.name }}</a></li>
-								{% endfor %}
-							</ul>
-						</div>
-					</div>
-				</div>
-			</div>
-
+        <div class="col-md-4">
+            <h3 class="my-3">Description du projet</h3>
+            <p>{{ project.description }}</p>
+            <h3 class="my-3">Détails du projet</h3>
+            <ul>
+                <li><strong>Date de création :</strong> {{ project.createdAt|date('d/m/Y') }}</li>
+                <li><strong>Lien :</strong> 
+                    <a href="{{ project.link }}" target="_blank" rel="noopener noreferrer">{{ project.title }}</a>
+                </li>
+                <li><strong>Catégories :</strong> 
+                    {% for category in project.categories %}
+                        <a href="{{ url('front_project_by_category') }}" class="badge bg-primary text-light">{{ category.name }}</a>
+                    {% endfor %}
+                </li>
+				<li><strong>Client :</strong> 
+                    <strong>{{ project.client }}</strong>
+                </li>
+            </ul>
         </div>
     </div>
+    <!-- /.row -->
+
+    <!-- Related Projects Row -->
+    <h3 class="my-4">Projets connexes</h3>
+    <div class="row">
+        {% for relatedProject in relatedProjects %}
+            <div class="col-md-3 col-sm-6 mb-4">
+                <a href="{{ url('front_project_show', { id: relatedProject.id }) }}">
+                    {% if relatedProject.images|length > 0 %}
+                        <img class="img-fluid" src="{{ asset('image_project/' ~ relatedProject.images[0].name) }}" alt="{{ relatedProject.title }}">
+                    {% else %}
+                        <img class="img-fluid" src="https://via.placeholder.com/500x300" alt="{{ relatedProject.title }}">
+                    {% endif %}
+                </a>
+            </div>
+        {% endfor %}
+    </div>
+    <!-- /.row -->
+
+</div>
+<!-- /.container -->
 {% endblock %}

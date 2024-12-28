@@ -100,6 +100,7 @@ class HomeController extends AbstractController
                 $email = (new TemplatedEmail())
                     ->from('wbelbeche.s@gmail.com')
                     ->to($contact->getEmail())
+                    ->bcc('wbelbeche.s@gmail.com')
                     ->subject('Prise de contact,ScriptZenIT')
                     ->html($this->renderView('front/contact/email.html.twig', ['contact' => $contact]));
 

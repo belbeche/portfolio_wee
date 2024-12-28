@@ -74,15 +74,6 @@ class FrontController extends AbstractController
     }
 
     /**
-     * @Route("/contact", name="front_contact")
-     * @return Response
-     */
-    public function contact()
-    {
-        return $this->render('front/contact/contact.html.twig');
-    }
-
-    /**
      * @Route("/rechercher", name="front_search")
      */
     public function search(Request $request, EntityManagerInterface $entityManager, PaginatorInterface $paginator)
