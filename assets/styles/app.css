@@ -12,7 +12,7 @@
     vertical-align: bottom;
     position: absolute;
     margin-top: 2px!important;
-    bottom: -2px;
+    bottom: -13px;
 }
 
 .collapse ul {
@@ -75,16 +75,9 @@
 .thank-you{
     padding: 50px;
 }
-@media screen and (max-width: 1024px) {
-    .logo img {
-        -ms-interpolation-mode: bicubic;
-        border: 0;
-        height: auto;
-        max-width: 100%;
-        vertical-align: bottom;
-        position: absolute;
-        margin-top: 2px!important;
-        bottom: -3px!important;
+@media screen and (min-width: 1024px) {
+    .left_logo > a > img {
+        margin-left: 50px;
     }
 }
 

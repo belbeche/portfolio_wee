@@ -152,6 +152,14 @@ class HomeController extends AbstractController
     }
 
     /**
+     * @Route("/politique-cookies", name="front_pc")
+     */
+    public function politiqueCookies(): Response
+    {
+        return $this->render('front/administrative/pc.html.twig');
+    }
+
+    /**
      * @Route("/profil/mes_projets/list", name="front_profile_project")
      */
     public function profileProject(): Response

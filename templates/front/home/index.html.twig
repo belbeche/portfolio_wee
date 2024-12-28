@@ -14,7 +14,7 @@
     <div id="particles-js" class="position-absolute w-100 h-100"></div>
 
     <!-- Content -->
-    <div class="d-flex align-items-center position-relative" style="min-height: 100vh;">
+    <div class="d-flex align-items-center position-relative">
         <div class="row w-100 mx-0 align-items-center">
             <!-- Texte et boutons -->
             <div class="col-lg-7 col-md-12 d-flex flex-column justify-content-center px-4 px-md-5 text-center text-lg-start mb-4 mb-lg-0 intro_mobile">
@@ -28,8 +28,8 @@
                     Faites confiance à une équipe d'experts passionnés pour transformer vos défis numériques en succès mesurables. Grâce à nos outils et technologies de pointe, nous vous aidons à propulser votre activité tout en restant compétitif dans un monde digital en constante évolution.
                 </p>
                 <div class="d-flex flex-column flex-md-row gap-3 justify-content-center">
-                    <a href="{{ url('front_contact') }}" class="btn btn-warning btn-lg">Obtenez votre audit gratuit</a>
-                    <a href="{{ url('front_devis_new') }}" class="btn btn-outline-light btn-lg">Demandez un devis personnalisé</a>
+                    <a href="{{ url('front_contact') }}" class="btn btn-warning btn-lg mb-2">Obtenez votre audit gratuit</a>
+                    <a href="{{ url('front_devis_new') }}" class="btn btn-outline-light btn-lg mt-4">Demandez un devis personnalisé</a>
                 </div>
             </div>
 
@@ -145,7 +145,7 @@
 
 
 <!-- Pourquoi nous choisir -->
-<section class="container-fluid bg-secondary text-white position-relative" style="height: 100vh;">
+<section class="container-fluid bg-secondary text-white position-relative">
     <div class="row h-100 align-items-center">
         <!-- Image -->
         <div class="col-lg-6 col-md-12 d-flex justify-content-center">
@@ -158,7 +158,7 @@
 
         <!-- Texte -->
         <div class="col-lg-6 col-md-12 d-flex flex-column justify-content-center px-5">
-            <h2 class="display-4 fw-bold mb-4">Pourquoi choisir ScriptZenIT ?</h2>
+            <h2 class="display-4 fw-bold mb-4 mt-4">Pourquoi choisir ScriptZenIT ?</h2>
             <p class="fs-5 mb-4 text-white">
                 Chez <strong>ScriptzenIT</strong>, nous nous engageons à transformer votre vision numérique en réalité. 
                 Depuis notre création en 2023, nous aidons les entreprises de toutes tailles à <strong>réaliser leurs objectifs digitaux</strong>, 
@@ -179,7 +179,7 @@
                     <span>Des solutions innovantes pour vous maintenir à l'avant-garde du numérique.</span>
                 </li>
             </ul>
-            <a href="{{ url('app_login') }}" class="btn btn-info btn-lg rounded-pill">Connectez-vous maintenant</a>
+            <a href="{{ url('app_login') }}" class="btn btn-info btn-lg rounded-pill mb-4">Connectez-vous maintenant</a>
         </div>
     </div>
 </section>
@@ -190,7 +190,8 @@
 
 <section>
     <div class="container">
-        <ul class="process">
+        <h2 class="text-center display-4 fw-bold mb-5 mt-4">Notre Processus de Travail</h2>
+        <ul class="process mt-5" style="list-style-type: none;">
             <li class="process__item">
                 <span class="process__number">
                     <i class="fas fa-lightbulb"></i>
@@ -247,7 +248,7 @@
                                     <a class="filter btn btn-sm btn-link" data-group="toutes_categories">Toutes les catégories</a>
                                 </li>
                                 <li>
-                                    <a class="filter btn btn-sm btn-link" data-group="détaillé">Projets Détaillés</a>
+                                    <a class="filter btn btn-sm btn-link" data-group="detaille">Projets Détaillés</a>
                                 </li>
                                 <li>
                                     <a class="filter btn btn-sm btn-link" data-group="lien-direct">Liens fonctionnels</a>
@@ -262,8 +263,8 @@
                                 {% for project in projects %}
                                     {% set dataGroups = ['toutes_categories'] %}
 
-                                    {% if 'détaillé' in project.category %}
-                                        {% set dataGroups = dataGroups|merge(['détaillé']) %}
+                                    {% if 'detaille' in project.category %}
+                                        {% set dataGroups = dataGroups|merge(['detaille']) %}
                                     {% endif %}
                                     {% if 'lien-direct' in project.category %}
                                         {% set dataGroups = dataGroups|merge(['lien-direct']) %}
@@ -298,11 +299,11 @@
 <div class="divider"></div>
 
 <!-- Contact Section -->
-<section class="container-fluid bg-black text-white position-relative" style="height: 100vh;">
+<section class="container-fluid bg-black text-white position-relative">
     <div class="row h-100 align-items-center">
         <!-- Texte -->
         <div class="col-md-6 d-flex flex-column justify-content-center px-5">
-            <h1 class="display-4 fw-bold mb-4">Besoin d'Éclairage ?</h1>
+            <h1 class="display-4 fw-bold mb-4 mt-4 badge text-warning">Besoin d'Éclairage ?</h1>
             <p class="fs-5 mb-4 text-justify text-white">
                 En tant qu'<strong>agence web de référence</strong>, ScriptZenIT vous accompagne dans la résolution de vos défis numériques. Que ce soit pour la création de votre <strong>site web professionnel</strong>, le développement d'<strong>applications web sur mesure</strong>, ou l'optimisation de votre <strong>stratégie digitale</strong>, nous sommes là pour transformer vos idées en succès.
             </p>
@@ -313,7 +314,7 @@
                 Prenez le contrôle de votre présence en ligne dès maintenant. <strong>Réservez un appel de découverte</strong> et commencez à exploiter tout votre potentiel numérique !
             </p>
             <a href="https://calendly.com/walid_belbeche/expertise-offerte" class="btn btn-warning btn-lg mb-2">Réserver un appel de découverte</a>
-            <a href="{{ url('front_contact') }}" class="btn btn-outline-light btn-lg">Nous contacter</a>
+            <a href="{{ url('front_contact') }}" class="btn btn-outline-light btn-lg mb-4">Nous contacter</a>
         </div>
 
         <!-- Image -->
@@ -329,7 +330,7 @@
 <div class="divider"></div>
 
 <!-- Technologie et outils -->
-<section class="container">
+<section class="container mt-4">
     <h2 class="text-center">Outils et technologies</h2>
     <div class="row">
         {% set tools = [
@@ -337,7 +338,8 @@
             { 'img': 'spec-2.png', 'name': 'HTML 5 / CSS 3' },
             { 'img': 'spec-3.png', 'name': 'Git + SSH' },
             { 'img': 'spec-4.png', 'name': 'Symfony' },
-            { 'img': 'spec-5.svg', 'name': 'React' },
+            { 'img': 'spec-5.svg', 'name': 'VueJS' },
+            { 'img': 'spec-14.png', 'name': 'React' },
             { 'img': 'spec-10.png', 'name': 'Next.js' },
             { 'img': 'spec-11.png', 'name': 'WebSocket (Socket.io)' },
             { 'img': 'spec-12.png', 'name': 'Node.js' },
@@ -362,6 +364,7 @@
 <div class="divider"></div>
 
 <section class="container">
+    <h2 class="text-center display-4 fw-bold mb-5 mt-4">Nos Tarifs Compétitifs</h2>
     <div class="row">
         <div class="col-xs-12 col-sm-12 ">
             <div class="fw-pricing clearfix row">
@@ -377,7 +380,7 @@
                         </div>
 
                         <div class="fw-button-row">
-                            <a href="https://calendly.com/walid_belbeche/expertise-offerte" target="_self" class="btn btn-primary">Réserver</a>
+                            <a href="https://calendly.com/walid_belbeche/expertise-offerte" target="_self" class="btn btn-primary">Je réserve</a>
 
                         </div>
 
@@ -396,7 +399,7 @@
                         </div>
 
                         <div class="fw-button-row">
-                            <a href="{{ url('front_devis_new', {'type': 'site_vitrine'}) }}" target="_self" class="btn btn-primary">Basic</a>
+                            <a href="{{ url('front_devis_new', {'type': 'site_vitrine'}) }}" target="_self" class="btn btn-primary">Je veux un site Basic</a>
 
                         </div>
 
@@ -418,7 +421,7 @@
                         </div>
 
                         <div class="fw-button-row">
-                            <a href="{{ url('front_devis_new', {'type': 'cross_plateforme'}) }}" target="_self" class="btn btn-primary">Sur-mesure</a>
+                            <a href="{{ url('front_devis_new', {'type': 'cross_plateforme'}) }}" target="_self" class="btn btn-primary">Je suis avancé(e)</a>
 
                         </div>
 
@@ -442,7 +445,7 @@
             { 'name': 'Alain Tixier', 'role': 'CEO SPIN OFF', 'img': 'sunday.png', 'text': 'La Nièvre c’est loin, mais heureusement il y a internet pour bosser !' },
             { 'name': 'Pascal Stier', 'role': 'Dirigeant Entreprise STIER', 'img': 'plomber.png', 'text': 'Très bonne prestation, je recommande. Demandez-lui ce qui vous intéresse, il va vous le réaliser.' },
             { 'name': 'Michele GUERRIN', 'role': 'PDG OnlineFormapro', 'img': 'rating.png', 'text': 'Walid, un jeune sérieux, motivé et volontaire. Une grande envie de progresser et réussir. Passionné par le code, mérite de réussir.' },
-            { 'name': 'Badreddine HADJOUDJ', 'role': 'J\'accompagne les structures à la création de leur site web responsive ♦ Concepteur d\'application web', 'img': 'about.jpg', 'text': 'Je suis heureux de recommander Walid pour toute opportunité professionnelle liée à la conception et au développement d\'applications. Au cours de nos échanges, j\'ai été très impressionné par son expertise pointue en matière de technologies front-end et back-end. Walid est un véritable passionné de la programmation, toujours en quête de nouvelles connaissances pour améliorer ses compétences. De plus, il possède des qualités de communication exceptionnelles, ce qui est un atout précieux pour tout projet de développement d\'applications. Je suis convaincu que Walid apportera une grande valeur ajoutée à toute entreprise évoluant dans ce secteur d\'activité.' }
+            { 'name': 'Badreddine HADJOUDJ', 'role': 'J\'accompagne les structures à la création de leur site web responsive ♦ Concepteur d\'application web', 'img': 'about.jpg', 'text': 'Je suis heureux de recommander Walid pour toute opportunité professionnelle liée à la conception et au développement d\'applications.' }
 
         ] %}
         {% for testimonial in testimonials %}

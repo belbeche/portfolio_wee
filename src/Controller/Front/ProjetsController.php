@@ -15,11 +15,13 @@ class ProjetsController extends AbstractController
      * @Route("/realisations", name="front_project")
      * @Route("/realisations/{category}", name="front_project_by_category")
      */
-    public function index(EntityManagerInterface $entityManager, ?Category $category = null): Response
+    public function index(EntityManagerInterface $entityManager, string $category = null): Response
     {
-        $projects = $category 
-            ? $entityManager->getRepository(Project::class)->findBy(['categories' => $category])
-            : $entityManager->getRepository(Project::class)->findAll();
+        if ($category) {
+            $projects = $entityManager->getRepository(Project::class)->findBy(['category' => $category]);
+        } else {
+            $projects = $entityManager->getRepository(Project::class)->findAll();
+        }
 
         return $this->render('front/projets/index.html.twig', [
             'projects' => $projects,

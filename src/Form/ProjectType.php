@@ -64,7 +64,7 @@ class ProjectType extends AbstractType
                 'category',
                 ChoiceType::class,[
                     'choices' => [
-                        'détaillé' => 'détaillé',
+                        'détaillé' => 'detaille',
                         'lien-direct' => 'lien-direct',
                         'prototype' => 'prototype',
                         'toutes_categories' => 'toutes_categories',

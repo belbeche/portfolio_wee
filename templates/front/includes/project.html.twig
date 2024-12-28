@@ -8,7 +8,7 @@
 						<a class="filter btn btn-sm btn-link" data-group="toutes_categories">Toutes les catégories</a>
 					</li>
 					<li>
-						<a class="filter btn btn-sm btn-link" data-group="détaillé">Projets Détaillés</a>
+						<a class="filter btn btn-sm btn-link" data-group="detaille">Projets Détaillés</a>
 					</li>
 					<li>
 						<a class="filter btn btn-sm btn-link" data-group="lien-direct">Liens fonctionnels</a>
@@ -24,7 +24,7 @@
 						{% set dataGroups = ['toutes_categories'] %}
 
 						{% if 'détaillé' in project.category %}
-							{% set dataGroups = dataGroups|merge(['détaillé']) %}
+							{% set dataGroups = dataGroups|merge(['detaille']) %}
 						{% endif %}
 						{% if 'lien-direct' in project.category %}
 							{% set dataGroups = dataGroups|merge(['lien-direct']) %}

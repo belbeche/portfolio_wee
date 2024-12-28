@@ -3,7 +3,7 @@
         <!-- Logo -->
         <div class="logo">
             <a href="{{ url('front_home') }}">
-                <img src="{{ asset('img/logo.png') }}" class="d-sm-none d-md-none d-lg-block ml-5" width="15%" alt="Agence web à Avallon (89200)">
+                <img src="{{ asset('img/logo.png') }}" class="d-sm-none d-md-none d-lg-block ml-5" width="250" alt="Agence web à Avallon (89200)">
             </a>
             <a href="{{ url('front_home') }}">
                 <div class="text-white d-md-block d-lg-none d-sm-block fw-bold" style="font-size: 1rem;margin-left: 21px!important;">ScriptZenIT</div>
@@ -20,7 +20,7 @@
         </button>
 
         <!-- Menu -->
-        <div class="collapse navbar-collapse" id="navbarMenu">
+        <div class="collapse navbar-collapse justify-content-end" id="navbarMenu">
             <ul class="navbar-nav ms-auto menu_mobile"> <!-- Couleur des menus -->
                 <li class="nav-item {{ app.request.get('_route') == 'front_home' ? 'active' : '' }}">
                     <a class="nav-link" href="{{ url('front_home') }}">Accueil</a>
