@@ -8,7 +8,7 @@
 // any CSS you import will output into a single css file (app.css in this case)
 import './styles/main.css';
 import './styles/normalize.css';
-// import './styles/bootstrap.min.css';
+import './styles/bootstrap.min.css';
 import './styles/magnific-popup.css';
 import './styles/email.css';
 import './styles/pixel.scss';
