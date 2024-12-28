@@ -240,6 +240,29 @@
     .register-form{
         margin-top: 20%;
     }
+    .header_intro > div{
+        margin-top: 156px;
+    }
+    .button_intro > a {
+        box-shadow: rgba(0, 0, 0, 0.3) 0px 19px 38px, rgba(0, 0, 0, 0.22) 0px 15px 12px;
+        margin-left: 20px;
+        background-color: #5984bd; /* Tomato color */
+        color: white;
+        padding: 10px 20px;
+        text-decoration: none;
+        border-radius: 5px;
+        transition: background-color 0.3s ease, transform 0.3s ease;
+    }
+    .button_intro > a:hover {
+        background-color: #0061e0; /* OrangeRed color */
+        transform: translateY(-5px);
+    }
+    .button_intro > a:nth-last-child(1) {
+        background-color: #2e8b57; /* SeaGreen color */
+    }
+    .button_intro > a:nth-last-child(1):hover {
+        background-color: #006400; /* DarkGreen color */
+    }
 }
 
 
@@ -261,6 +284,27 @@
 @media screen and (max-width: 500px){
     .man_mobile{
         margin-top: 10px;
+    }
+    .button_intro > a {
+        box-shadow: rgba(0, 0, 0, 0.35) 0px -50px 36px -28px inset;
+        margin-left: 20px;
+        background-color: #5984bd; /* Tomato color */
+        color: white;
+        padding: 10px 20px;
+        text-decoration: none;
+        border-radius: 5px;
+        transition: background-color 0.3s ease, transform 0.3s ease;
+        margin-top: 15px;
+    }
+    .button_intro > a:hover {
+        background-color: #0061e0; /* OrangeRed color */
+        transform: translateY(-5px);
+    }
+    .button_intro > a:nth-last-child(1) {
+        background-color: #2e8b57; /* SeaGreen color */
+    }
+    .button_intro > a:nth-last-child(1):hover {
+        background-color: #006400; /* DarkGreen color */
     }
 }
 
