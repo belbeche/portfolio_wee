@@ -113,7 +113,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @ORM\OneToMany(targetEntity=Subject::class, mappedBy="user", orphanRemoval=true)
      */
-    private ?Collection $subject;
+    private ?Collection $Subject;
 
     /**
      * @throws \Exception
@@ -126,7 +126,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->avatar = 'support0.svg';
         $this->roles = ['ROLE_USER'];
 
-        $this->subject = new ArrayCollection();
+        $this->Subject = new ArrayCollection();
         $this->comments = new ArrayCollection();
         $this->likes = new ArrayCollection();
         $this->date = new \DateTime('now', new \DateTimeZone('Europe/Paris'));
@@ -138,7 +138,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     // public function generateSubjectIds(): void
     // {
-    //     foreach ($this->subject as $Subject) {
+    //     foreach ($this->Subject as $Subject) {
     //         // Génération de l'UUID et affectation à l'Subject
     //         $this->id
     //     }
@@ -492,25 +492,25 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @return ArrayCollection
      */
-    public function getsubject(): Collection
+    public function getSubject(): Collection
     {
-        return $this->subject;
+        return $this->Subject;
     }
     
-    public function setsubject(ArrayCollection $subject): Collection
+    public function setSubject(ArrayCollection $Subject): Collection
     {
-        $this->subject = $subject;
+        $this->Subject = $Subject;
         return $this;
     }
 
     public function addSubject(Subject $Subject): self
     {
-        $this->subject[] = $Subject;
+        $this->Subject[] = $Subject;
     }
 
     public function removeSubject(Subject $Subject)
     {
-        $this->subject->removeElement($Subject);
+        $this->Subject->removeElement($Subject);
     }
     public function getDate(): ?\DateTimeInterface
     {
