@@ -259,6 +259,14 @@ class SubjectControllerBack extends AbstractController
 
         if ($subject->getCreatedAt(true)) {
             $this->addFlash('success', "Le sujet " . $subject->getTitle() . " est supprimé avec success !");
+
+            // Remove related comments first
+            $comments = $subject->getComments();
+            foreach ($comments as $comment) {
+                $this->entityManager->remove($comment);
+            }
+
+            // Now remove the subject
             $this->entityManager->remove($subject);
             $this->entityManager->flush();
         } else {

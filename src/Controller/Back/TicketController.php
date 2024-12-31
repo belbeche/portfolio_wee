@@ -55,13 +55,8 @@ class TicketController extends AbstractController
             throw $this->createNotFoundException('Message not found!');
         }
 
-        // Corrige l'assignation du champ sender en utilisant l'entité User
-        $user = $entityManager->getRepository(User::class)->findOneBy(['email' => $currentMessage->getSender()->getEmail()]);
-
         $ticket = new Ticket();
         $form = $this->createForm(TicketType::class, $ticket);
-
-        $form->get('sender')->setData($currentUser);
 
         $form->handleRequest($request);
 
@@ -70,18 +65,25 @@ class TicketController extends AbstractController
 
             $message
                 ->setDevis($currentMessage->getDevis())
-                ->setSender($currentUser)
-                ->setReceiver($currentMessage->getSender())
+                ->setSender($currentMessage->getSender())
+                ->setReceiver($currentMessage->getReceiver())
                 ->setContent($ticket->getContent())
                 ->setPriority($ticket->getPriority())
-                ->setStatus('en_cours');
+                ->setStatus('en_cours')
+                ->setTicket($ticket)
+                ;
 
             $ticket
                 ->setDevis($currentMessage->getDevis())
-                ->setReceiver($currentMessage->getReceiver())
-                ->setSender($currentUser)
+                ->setReceiver($currentUser)
+                ->setSender($message->getSender())
                 ->setStatus('en_cours')
-                ->setPriority($ticket->getPriority());
+                ->setPriority($ticket->getPriority())
+                ->setContent($ticket->getContent())
+                ->setCreatedAt(new \DateTime())
+                ->setUpdatedAt(new \DateTime())
+                ;
+
 
             $entityManager->persist($message);
             $entityManager->persist($ticket);
@@ -120,24 +122,33 @@ class TicketController extends AbstractController
     }
 
     /**
-     * @Route("back/supprimer/{id}/ticket", name="back_delete_ticket", methods={"POST"})
-     * @IsGranted("ROLE_ADMIN")
-     */
-    public function remove(EntityManagerInterface $entityManager, Message $message, Request $request, Filesystem $filesystem): RedirectResponse
-    {
-        if ($this->isCsrfTokenValid('delete' . $message->getId(), $request->request->get('_token'))) {
-            $attachmentPath = $this->getParameter('uploads_directory') . '/' . $message->getAttachment();
+    * @Route("back/supprimer/{id}/ticket", name="back_delete_ticket", methods={"POST"})
+    * @IsGranted("ROLE_ADMIN")
+    */
+    public function remove(
+        EntityManagerInterface $entityManager,
+        Request $request,
+        string $id
+    ): RedirectResponse {
+        $ticket = $entityManager->getRepository(Ticket::class)->find($id);
 
-            if ($filesystem->exists($attachmentPath)) {
-                $filesystem->remove($attachmentPath);
+        // Valider le token CSRF
+        if ($this->isCsrfTokenValid('delete' . $id, $request->request->get('_token'))) {
+            // Supprimer le ticket
+            try {
+                $entityManager->remove($ticket);
+                $entityManager->flush();
+
+                $this->addFlash('success', 'Le ticket a été supprimé avec succès.');
+            } catch (\Exception $e) {
+                $this->addFlash('error', 'Une erreur est survenue lors de la suppression du ticket.');
             }
-
-            $entityManager->remove($message);
-            $entityManager->flush();
+        } else {
+            $this->addFlash('error', 'Échec de la validation du token CSRF. Ticket non supprimé.');
         }
 
         return $this->redirectToRoute('back_show_ticket', [
-            'id' => $message->getDevis()->getId()
+            'id' => $id
         ]);
     }
 }

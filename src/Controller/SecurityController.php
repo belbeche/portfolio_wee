@@ -116,28 +116,28 @@ class SecurityController extends AbstractController
 
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            // Encodage du mot de passe uniquement si le champ de mot de passe est rempli
-            $plainPassword = $form->get('password')->getData();
-            if (!empty($plainPassword)) {
-                $user->setPassword($userPasswordHasher->hashPassword($user, $plainPassword));
-            }
-
-            // Gestion de l'avatar
-            $avatar = $form->get('avatar')->getData();
-            if ($avatar) {
-                $fileName = md5(uniqid()) . '.' . $avatar->guessExtension();
-                $avatar->move($this->getParameter('uploads_directory'), $fileName);
-                $user->setAvatar($fileName);
-            }
-
-            $entityManager->persist($user);
-            $entityManager->flush();
-
-            $this->addFlash('success', 'Profil mis à jour avec succès.');
-
-            return $this->redirectToRoute('front_profile_project');
+    if ($form->isSubmitted() && $form->isValid()) {
+        // Encodage du mot de passe uniquement si le champ de mot de passe est rempli
+        $plainPassword = $form->get('password')->getData();
+        if (!empty($plainPassword)) {
+            $user->setPassword($userPasswordHasher->hashPassword($user, $plainPassword));
         }
+
+        // Gestion de l'avatar
+        $avatar = $form->get('avatar')->getData();
+        if ($avatar) {
+            $fileName = md5(uniqid()) . '.' . $avatar->guessExtension();
+            $avatar->move($this->getParameter('uploads_directory'), $fileName);
+            $user->setAvatar($fileName);
+        }
+
+        $entityManager->persist($user);
+        $entityManager->flush();
+
+        $this->addFlash('success', 'Profil mis à jour avec succès.');
+
+        return $this->redirectToRoute('front_profile_project');
+    }
 
         return $this->render('front/profil/edit.html.twig', [
             'form' => $form->createView(),

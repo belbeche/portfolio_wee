@@ -32,11 +32,15 @@
                 <dt class="col-sm-3">Statut</dt>
                 <dd class="col-sm-9">
                     <span class="badge 
-                        {% if ticket.status == 'en_attente' %}bg-warning
-                        {% elseif ticket.status == 'en_cours' %}bg-primary
-                        {% elseif ticket.status == 'resolu' %}bg-success
+                        {% if ticket.status == 'en_cours' %}
+                            <h1 class="text-body-emphasis">Réponse du support </h1>
+                        {% elseif ticket.status == 'en_attente' %}
+                            <h1 class="text-body-emphasis">Message du client </h1>
+                        {% elseif ticket.status == 'termine' %}
+                        <h1 class="text-body-emphasis">Cloture du ticket </h1>
                         {% else %}bg-secondary{% endif %}">
-                        {{ ticket.status|capitalize }}
+                        {{ message.status|capitalize }}
+                        {% endif %}
                     </span>
                 </dd>
 

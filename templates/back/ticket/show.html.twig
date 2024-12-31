@@ -1,67 +1,79 @@
 {% extends "base.html.twig" %}
 
 {% block title %}
-    Assistance
+    Back Office - Support
 {% endblock %}
 
 {% block content %}
+<div class="container mt-6">
+    {% for type, messages in app.flashes %}
+            {% for message in messages %}
+                <div class="alert alert-{{ type }}">{{ message }}</div>
+            {% endfor %}
+    {% endfor %}
+    <h1 class="text-center mb-4">Gestion des Tickets</h1>
 
-    <div class="container">
-        <h1 class="text-center">Liste des tickets</h1>
-
-        {% if tickets is empty %}
-            <p class="text-center">Aucun ticket actif pour le moment.</p>
-        {% else %}
-            <ul>
-                {% for ticket in tickets %}
-                    <div class="container">
-                        <div class="position-relative text-center text-muted bg-body border border-dashed rounded-5">
-                            <a href="{{ url('back_respond_to_ticket', {'id': ticket.id}) }}" class="btn btn-success">Répondre</a>
-                            <!-- Formulaire de suppression pour le ticket -->
-                            <form action="{{ path('back_delete_ticket', {'id': ticket.id}) }}" method="post" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce ticket ?');">
-                                <!-- Bouton de fermeture qui va maintenant servir à fermer le ticket -->
-                                {#
-                                <button type="submit" class="position-absolute top-0 end-0 p-3 m-3 btn-close bg-secondary rounded-pill" aria-label="Supprimer le ticket"></button>
-                                #}
-
-                                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ ticket.id) }}">
-
-                                <svg class="bi mt-5 mb-3" width="48" height="48"><use xlink:href="#check2-circle"/></svg>
-                                {% if ticket.status == 'en_cours' %}
-                                    <h1 class="text-body-emphasis">Réponse du support </h1>
-                                {% elseif ticket.status == 'en_attente' %}
-                                    <h1 class="text-body-emphasis">Message de votre part </h1>
+    {% if tickets is empty %}
+        <div class="alert alert-info text-center">
+            Aucun ticket actif pour le moment.
+        </div>
+    {% else %}
+        <div class="table-responsive">
+            <table class="table table-striped table-bordered">
+                <thead class="table-dark">
+                    <tr>
+                        <th>#</th>
+                        <th>Statut</th>
+                        <th>Message</th>
+                        <th>Priorité</th>
+                        <th>Date de Création</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for ticket in tickets %}
+                        <tr>
+                            <td>{{ ticket.id }}</td>
+                            <td>
+                                {% if ticket.status == 'en_attente' %}
+                                    <span class="badge bg-warning">En Attente</span>
+                                {% elseif ticket.status == 'en_cours' %}
+                                    <span class="badge bg-primary">En Cours</span>
                                 {% elseif ticket.status == 'termine' %}
-                                    <h1 class="text-body-emphasis">Cloture du ticket </h1>
+                                    <span class="badge bg-success">Terminé</span>
+                                {% else %}
+                                    <span class="badge bg-secondary">Inconnu</span>
                                 {% endif %}
-                                <p class="col-lg-6 mx-auto mb-4">
-                                    {{ ticket.getContent() }}
-                                </p>
-                                <hr>
-                                <h6>Priorité de la demande</h6>
-                                <p class="col-lg-6 mx-auto mb-4">
-                                    {{ ticket.getPriority }}
-                                </p>
-                                <h6>
-                                    Date de création
-                                </h6>
-                                <p class="col-lg-6 mx-auto mb-4">
-                                    {{ ticket.createdAt|date('Y-m-d H:i:s') }}
-                                </p>
-
-                                <!-- Si vous souhaitez toujours avoir un bouton "Supprimer" visible -->
-                                <button type="submit" class="btn btn-primary px-5 mb-5">Supprimer le message</button>
-
-                                {% if ticket.attachment %}
-                                    <a href="{{ asset('uploads/' ~ ticket.attachment) }}" target="_blank" class="btn btn-info px-5 mb-5">Voir le fichier joint</a>
+                            </td>
+                            <td>{{ ticket.content|nl2br }}</td>
+                            <td>
+                                {% if ticket.priority == 'faible' %}
+                                    <span class="badge bg-info">Faible</span>
+                                {% elseif ticket.priority == 'moyenne' %}
+                                    <span class="badge bg-warning">Moyenne</span>
+                                {% elseif ticket.priority == 'haute' %}
+                                    <span class="badge bg-danger">Haute</span>
+                                {% elseif ticket.priority == 'urgente' %}
+                                    <span class="badge bg-danger text-uppercase">Urgente</span>
                                 {% endif %}
-                            </form>
-                        </div>
-                    </div>
-                {% endfor %}
-            </ul>
-        {% endif %}
-    </div>
-
-
+                            </td>
+                            <td>{{ ticket.createdAt|date('d/m/Y H:i') }}</td>
+                            <td>
+                                <a href="{{ path('back_respond_to_ticket', {'id': ticket.id}) }}" class="btn btn-success btn-sm mb-2">
+                                    <i class="bi bi-reply-fill"></i> Répondre
+                                </a>
+                                <form action="{{ path('back_delete_ticket', {'id': ticket.id}) }}" method="POST" class="d-inline">
+                                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ ticket.id) }}">
+                                    <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Confirmer la suppression ?');">
+                                        <i class="bi bi-trash"></i> Supprimer
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% endif %}
+</div>
 {% endblock %}

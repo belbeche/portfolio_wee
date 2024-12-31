@@ -26,7 +26,7 @@
             Modifier le :  {{ subject.updatedAt|format_datetime('full', 'short', locale='fr') }}
         </p>
 
-        <a href="{{ path('front_subjects_show', {'subjectTitle': subject.title}) }}">Voir le sujet</a>
+        <a href="{{ path('front_subject_show', {'subjectId': subject.id}) }}">Voir le sujet</a>
         
     </div>
 
