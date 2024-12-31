@@ -13,7 +13,7 @@
 	</div>
     <!-- Header Section -->
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1 class="h4 fw-bold">Détails du Ticket #{{ ticket.id }}</h1>
+        <h1 class="h4 fw-bold">Détails du Ticket #{{ ticket.devis.id }}</h1>
         <a href="{{ path('front_show_ticket', {'id': ticket.devis.id}) }}" class="btn btn-outline-secondary">
             <i class="bi bi-arrow-left"></i> Retour à la liste des tickets
         </a>
@@ -31,17 +31,19 @@
 
                 <dt class="col-sm-3">Statut</dt>
                 <dd class="col-sm-9">
-                    <span class="badge 
+                    <div>
                         {% if ticket.status == 'en_cours' %}
-                            <h1 class="text-body-emphasis">Réponse du support </h1>
+                            <h1 class="text-body-emphasis badge bg-primary text-white">Réponse du support</h1>
                         {% elseif ticket.status == 'en_attente' %}
-                            <h1 class="text-body-emphasis">Message du client </h1>
+                            <h1 class="text-body-emphasis badge bg-warning">Message du client</h1>
                         {% elseif ticket.status == 'termine' %}
-                        <h1 class="text-body-emphasis">Cloture du ticket </h1>
-                        {% else %}bg-secondary{% endif %}">
-                        {{ message.status|capitalize }}
+                            <h1 class="text-body-emphasis badge bg-success">Clôture du ticket</h1>
+                        {% elseif ticket.status == 'livre' %}
+                            <h1 class="text-body-emphasis badge bg-info">Service livré</h1>
+                        {% else %}
+                            <h1 class="text-body-emphasis badge bg-secondary">{{ ticket.status|capitalize }}</h1>
                         {% endif %}
-                    </span>
+                    </div>
                 </dd>
 
                 <dt class="col-sm-3">Type de site web</dt>

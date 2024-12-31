@@ -41,6 +41,7 @@ class MessageType extends AbstractType
                     'En cours' => 'en_cours',
                     'En attente' => 'en_attente',
                     'Terminé' => 'termine',
+                    'Livré' => 'livre',
                 ],
                 'attr' => [
                     'style' => 'display: none;',

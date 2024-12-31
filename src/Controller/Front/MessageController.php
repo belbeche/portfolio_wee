@@ -207,11 +207,15 @@ class MessageController extends AbstractController
             throw $this->createNotFoundException('Utilisateur introuvable.');
         }
 
-        // Récupérer le ticket
-        $ticket = $entityManager->getRepository(Ticket::class)->find($id);
+        // Recuperer le ticket de l'utilisateur
+        $ticket = $entityManager->getRepository(Ticket::class)->findOneBy(['sender' => $user]);
+
+        // Recuperer le ticket
+
+        $ticketUser = $entityManager->getRepository(Ticket::class)->find($id);
 
         // Vérifier que le ticket existe et appartient à l'utilisateur
-        if (!$ticket || $ticket->getSender() !== $currentUser) {
+        if (!$ticket) {
             $this->addFlash('error', 'Ticket non trouvé ou vous n\'avez pas accès à ce ticket.');
             return $this->redirectToRoute('front_show_ticket');
         }
@@ -226,7 +230,7 @@ class MessageController extends AbstractController
 
         // Préparer le formulaire de réponse
         $responseMessage = new Message();
-        $responseMessage->setTicket($ticket);
+        $responseMessage->setTicket($ticketUser); // Associe le ticket
         $responseMessage->setSender($currentUser); // Associe l'utilisateur connecté
         $responseMessage->setCreatedAt(new \DateTime());
 
@@ -251,6 +255,7 @@ class MessageController extends AbstractController
         return $this->render('front/ticket/details.html.twig', [
             'ticket' => $ticket,
             'responseForm' => $responseForm->createView(),
+            'ticketUser' => $ticketUser,
         ]);
     }
 

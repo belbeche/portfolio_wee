@@ -35,15 +35,19 @@
                         <tr>
                             <td>{{ ticket.id }}</td>
                             <td>
-                                {% if ticket.status == 'en_attente' %}
-                                    <span class="badge bg-warning">En Attente</span>
-                                {% elseif ticket.status == 'en_cours' %}
-                                    <span class="badge bg-primary">En Cours</span>
-                                {% elseif ticket.status == 'termine' %}
-                                    <span class="badge bg-success">Terminé</span>
-                                {% else %}
-                                    <span class="badge bg-secondary">Inconnu</span>
-                                {% endif %}
+                                <div>
+                                    {% if ticket.status == 'en_cours' %}
+                                        <h1 class="text-body-emphasis badge bg-primary text-white">Réponse du support</h1>
+                                    {% elseif ticket.status == 'en_attente' %}
+                                        <h1 class="text-body-emphasis badge bg-warning">Message du client</h1>
+                                    {% elseif ticket.status == 'termine' %}
+                                        <h1 class="text-body-emphasis badge bg-success">Clôture du ticket</h1>
+                                    {% elseif ticket.status == 'livre' %}
+                                        <h1 class="text-body-emphasis badge bg-info">Service livré</h1>
+                                    {% else %}
+                                        <h1 class="text-body-emphasis badge bg-secondary">{{ ticket.status|capitalize }}</h1>
+                                    {% endif %}
+                                </div>
                             </td>
                             <td>{{ ticket.content|nl2br }}</td>
                             <td>
