@@ -8,6 +8,7 @@ use App\Entity\Ticket;
 use App\Entity\Message;
 use App\Form\MessageType;
 use App\Repository\DevisRepository;
+use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\Filesystem\Filesystem;
@@ -230,9 +231,9 @@ class MessageController extends AbstractController
 
         // Préparer le formulaire de réponse
         $responseMessage = new Message();
-        $responseMessage->setTicket($ticketUser); // Associe le ticket
         $responseMessage->setSender($currentUser); // Associe l'utilisateur connecté
         $responseMessage->setCreatedAt(new \DateTime());
+        $responseMessage->setTicket($ticketUser); // Associe le ticket
 
         $responseForm = $this->createForm(MessageType::class, $responseMessage, [
             'current_user' => $currentUser,
@@ -268,16 +269,17 @@ class MessageController extends AbstractController
         EntityManagerInterface $entityManager,
         MailerInterface $mailer,
         Message $originalMessage,
-        DevisRepository $devisRepository,
+        DevisRepository $devisRepository
     ): Response {
         $currentUser = $this->getUser();
-
+        dump($originalMessage);
         if (!$currentUser) {
             return $this->redirectToRoute('app_login');
         }
 
         // Vérifier que le message d'origine a un ticket associé
         $ticket = $originalMessage->getTicket();
+
         if (!$ticket) {
             $this->addFlash('error', 'Le ticket associé au message original est introuvable.');
             return $this->redirectToRoute('front_show_ticket');
@@ -345,6 +347,7 @@ class MessageController extends AbstractController
         return $this->render('front/ticket/respond_to_ticket.html.twig', [
             'form' => $form->createView(),
             'originalMessage' => $originalMessage,
+            'user' => $user
         ]);
     }
 

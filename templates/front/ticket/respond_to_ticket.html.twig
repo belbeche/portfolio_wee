@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Répondre au Ticket{% endblock %}
+{% block title %}Assistance - Répondre au Ticket{% endblock %}
 
 {% block content %}
 <div class="container mt-7">
@@ -18,7 +18,7 @@
 
     <!-- Header Section -->
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1 class="h4 fw-bold">Répondre au Ticket #{{ originalMessage.getId() }}</h1>
+        <h1 class="h3 fw-bold">Détails du Ticket #{{ originalMessage.getId() }}</h1>
         <a href="{{ path('front_show_ticket', {'id': originalMessage.getTicket().getId()}) }}" class="btn btn-outline-secondary">
             <i class="bi bi-arrow-left"></i> Retour aux Tickets
         </a>
@@ -30,18 +30,27 @@
             <h5 class="mb-0">Message Original</h5>
         </div>
         <div class="card-body">
-            <p><strong>De :</strong> {{ originalMessage.getSender().getUsername() }}</p>
-            <p><strong>À :</strong> {{ originalMessage.getReceiver() }}</p>
-            <p><strong>Priorité :</strong>
-                <span class="badge 
-                    {% if originalMessage.getPriority() == 'faible' %}bg-success
-                    {% elseif originalMessage.getPriority() == 'moyenne' %}bg-warning
-                    {% elseif originalMessage.getPriority() == 'haute' %}bg-danger
-                    {% else %}bg-secondary{% endif %}">
-                    {{ originalMessage.getPriority()|capitalize }}
-                </span>
-            </p>
-            <p><strong>Contenu :</strong> {{ originalMessage.getContent() }}</p>
+            <dl class="row">
+                <dt class="col-sm-3">De</dt>
+                <dd class="col-sm-9">{{ originalMessage.getSender().getUsername() }}</dd>
+
+                <dt class="col-sm-3">À</dt>
+                <dd class="col-sm-9">{{ originalMessage.getReceiver() }}</dd>
+
+                <dt class="col-sm-3">Priorité</dt>
+                <dd class="col-sm-9">
+                    <span class="badge 
+                        {% if originalMessage.getPriority() == 'faible' %}bg-success
+                        {% elseif originalMessage.getPriority() == 'moyenne' %}bg-warning
+                        {% elseif originalMessage.getPriority() == 'haute' %}bg-danger
+                        {% else %}bg-secondary{% endif %}">
+                        {{ originalMessage.getPriority()|capitalize }}
+                    </span>
+                </dd>
+
+                <dt class="col-sm-3">Contenu</dt>
+                <dd class="col-sm-9">{{ originalMessage.getContent() }}</dd>
+            </dl>
         </div>
     </div>
 
@@ -55,7 +64,7 @@
 
             <div class="mb-3">
                 {{ form_label(form.content, 'Votre Message :', {'label_attr': {'class': 'form-label'}}) }}
-                {{ form_widget(form.content, {'attr': {'class': 'form-control', 'rows': 5, 'placeholder': 'Tapez votre réponse ici...'}}) }}
+                {{ form_widget(form.content, {'attr': {'class': 'form-control', 'placeholder': 'Écrivez votre réponse ici...'}}) }}
             </div>
 
             <div class="row">
@@ -74,7 +83,7 @@
                 {{ form_widget(form.attachment, {'attr': {'class': 'form-control'}}) }}
             </div>
 
-            {{ form_rest(form)}}
+            {{ form_rest(form) }}
             <button type="submit" class="btn btn-primary w-100">Envoyer la Réponse</button>
             {{ form_end(form) }}
         </div>

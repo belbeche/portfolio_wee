@@ -84,6 +84,9 @@
                             </div>
                             <p class="mb-0">{{ message.content }}</p>
                         </li>
+                        <a href="{{ path('respond_to_ticket', {'id': message.id}) }}" class="btn btn-outline-primary btn-sm" title="Répondre">
+                            <i class="bi bi-reply"></i> Répondre
+                        </a>
                     {% endfor %}
                 </ul>
             {% else %}
@@ -93,7 +96,7 @@
     </div>
 
     <!-- Response Form -->
-    <div class="card shadow-sm">
+    {# <div class="card shadow-sm">
         <div class="card-header bg-light">
             <h5 class="mb-0">Envoyer une Réponse</h5>
         </div>
@@ -107,6 +110,6 @@
             <button type="submit" class="btn btn-primary">Envoyer</button>
             {{ form_end(responseForm) }}
         </div>
-    </div>
+    </div> #}
 </div>
 {% endblock %}
