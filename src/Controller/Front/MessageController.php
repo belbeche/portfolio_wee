@@ -168,7 +168,7 @@ class MessageController extends AbstractController
 
         // Récupérer les devis de l'utilisateur connecté
         $userDevis = $entityManager->getRepository(Devis::class)->findBy(['user' => $currentUser]);
-
+        
         // Si le devis n'existe pas ou n'appartient pas à l'utilisateur, rediriger
         if (!$userDevis) {
             $this->addFlash('error', 'Devis non trouvé ou vous n\'avez pas accès à ce devis.');
