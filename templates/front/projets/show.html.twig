@@ -12,44 +12,14 @@
     <small>Par {{ project.developer }}</small>
 </h1>
 
-<<<<<<< Updated upstream
+
 <!-- Portfolio Item Row -->
 <div class="row">
     <div class="col-md-8">
         {% for image in project.images %}
             <img class="img-fluid mb-4" src="{{ asset('image_project/' ~ image.name) }}" alt="{{ image.name }}" loading="lazy">
         {% endfor %}
-=======
-    <!-- Portfolio Item Row -->
-    <div class="row">
-        <div class="col-md-8">
-            {% for image in project.images %}
-                <img class="img-fluid mb-4" src="{{ asset('image_project/' ~ image.name) }}" alt="{{ image.name }}" loading="lazy">
-            {% endfor %}
-        </div>
-
-        <div class="col-md-4">
-            <h3 class="my-3">Description du projet</h3>
-            <p>{{ project.description|nl2br }}</p>
-            <h3 class="my-3">Détails du projet</h3>
-            <ul>
-                <li><strong>Date de création :</strong> {{ project.createdAt|date('d/m/Y') }}</li>
-                <li><strong>Lien :</strong> 
-                    <a href="{{ project.link }}" target="_blank" rel="noopener noreferrer">{{ project.title }}</a>
-                </li>
-                <li><strong>Catégories :</strong> 
-                    {% for category in project.categories %}
-                        <a href="{{ url('front_project_by_category') }}" class="badge bg-primary text-light">{{ category.name }}</a>
-                    {% endfor %}
-                </li>
-				<li><strong>Client :</strong> 
-                    <strong>{{ project.client }}</strong>
-                </li>
-            </ul>
-        </div>
->>>>>>> Stashed changes
     </div>
-
     <div class="col-md-4">
         <h3 class="my-3">Description du projet</h3>
         <p>{{ project.description|nl2br }}</p>

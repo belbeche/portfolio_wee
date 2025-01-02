@@ -33,7 +33,7 @@
                             <ul>
                                 {% for attente in devis.attentesDesignWeb %}
                                     <li>
-									{% for list in attente %}
+									{% for list in devis.attentesDesignWeb %}
 										{{ list.label }}
 									{% endfor %}
 									</li>

@@ -32,6 +32,21 @@
 				<th>Date de création</th>
 				<td>{{ devis.createdAt|date('Y-m-d H:i:s') }}</td>
 			</tr>
+            <tr>
+            	<th>Attentes désign</th>
+            	<td>
+                	{% if devis.attentesDesignWeb is not empty %}
+                        <ul>
+                            <li>
+                                {% for list in devis.attentesDesignWeb %}
+                                    {{ list.label }}
+                                {% endfor %}
+                            </li>
+                        </ul>
+                    {% else %}
+                        N/A
+                    {% endif %}
+            	</td>
 			<tr>
 				<th>Prix</th>
 				<td>{{ devis.prix }} €</td>
