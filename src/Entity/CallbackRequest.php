@@ -20,25 +20,33 @@ class CallbackRequest
     private $id;
 
     /**
-     * @Assert\NotBlank(message="Le nom et prénom est obligatoire.")
-     * @Assert\Length(min=2, max=100, minMessage="Le nom et prénom doit contenir au moins 2 caractères.")
-     * @ORM\Column(type="string", length=100)
+     * @Assert\NotBlank(message="Le nom est obligatoire.")
+     * @Assert\Length(
+     *     max=50,
+     *     maxMessage="Le nom ne peut pas dépasser {{ limit }} caractères."
+     * )
      */
-    private $name;
+    private ?string $name = null;
 
     /**
-     * @Assert\NotBlank(message="Le numéro de téléphone est obligatoire.")
-     * @Assert\Regex(pattern="/^\+?[0-9]*$/", message="Le numéro de téléphone n'est pas valide.")
-     * @ORM\Column(type="string", length=20)
-     */
-    private $phone;
+    * @Assert\NotBlank(message="L'indicatif téléphonique est obligatoire.")
+    */
+    private ?string $phonePrefix = '+33';
+
+    /**
+    * @Assert\NotBlank(message="Le numéro de téléphone est obligatoire.")
+    * @Assert\Regex(
+    *     pattern="/^[1-9](\d{2}){4}$/",
+    *     message="Le numéro de téléphone doit être valide pour l'indicatif sélectionné."
+    * )
+    */
+    private ?string $phone = null;
 
     /**
      * @Assert\NotBlank(message="L'email est obligatoire.")
-     * @Assert\Email(message="L'email n'est pas valide.")
-     * @ORM\Column(type="string", length=100)
+     * @Assert\Email(message="L'email doit être valide.")
      */
-    private $email;
+    private ?string $email = null;
 
     /**
      * @ORM\Column(type="string", length=20, options={"default": "pending"})
@@ -69,6 +77,17 @@ class CallbackRequest
     {
         $this->name = $name;
 
+        return $this;
+    }
+
+    public function getPhonePrefix(): ?string
+    {
+        return $this->phonePrefix;
+    }
+
+    public function setPhonePrefix(?string $phonePrefix): self
+    {
+        $this->phonePrefix = $phonePrefix;
         return $this;
     }
 

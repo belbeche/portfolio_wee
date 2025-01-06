@@ -6,7 +6,20 @@
 
 {% block content %}
 
+<style>
+    .select2-container .select2-selection--single {
+        height: calc(2.5em + 2px);
+        line-height: 41px!important;
+        margin-left: 2px;
+        padding-top: 2px;
+    }
+    .select2-container .select2-selection__arrow {
+        height: calc(2.5em + 2px);
+    }
+</style>
+
 <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js" defer></script>
+
 
 <!-- Hero Section -->
 <section id="hero" class="container-fluid text-white position-relative bg-primary" style="min-height: 100vh;">
@@ -16,6 +29,13 @@
     <!-- Content -->
     <div class="d-flex align-items-center position-relative header_intro">
         <div class="row w-100 mx-0 align-items-center">
+            <div class="container">
+                {% for type, messages in app.flashes %}
+                    {% for message in messages %}
+                        <div class="alert alert-{{ type }}">{{ message }}</div>
+                    {% endfor %}
+                {% endfor %}
+            </div>
             <!-- Texte et boutons -->
             <div class="col-lg-7 col-md-12 d-flex flex-column justify-content-center px-4 px-md-5 text-center text-lg-start mb-4 mb-lg-0 intro_mobile">
                 <h1 class="display-4 fw-bold mb-4">
@@ -33,39 +53,87 @@
                 </div>
             </div>
 
-            <!-- Formulaire -->
             <div class="col-lg-5 col-md-12 d-flex justify-content-center mt-4 mb-4 mt-lg-0">
                 <div class="rounded shadow-lg bg-light p-4" style="width: 100%; max-width: 400px;">
-                    <div id="successMessage" class="alert alert-success" style="display: none;">
-                        Votre demande a été envoyée avec succès !
-                    </div>
-                    <div id="callbackForm">
-                        {{ form_start(form, {'attr': {'class': 'needs-validation'}, 'method': 'POST'}) }}
-                            <div class="form-floating mb-3">
-                                {{ form_widget(form.name, {'attr': {'class': 'form-control', 'id': 'name', 'placeholder': 'Votre nom'}}) }}
-                                {{ form_label(form.name, 'Votre nom', {'attr': {'class': 'form-label'}}) }}
-                            </div>
-                            <div class="form-floating mb-3">
-                                {{ form_widget(form.phone, {'attr': {'class': 'form-control', 'id': 'phone', 'placeholder': 'Votre téléphone'}}) }}
-                                {{ form_label(form.phone, 'Votre téléphone', {'attr': {'class': 'form-label'}}) }}
-                            </div>
-                            <div class="form-floating mb-3">
-                                {{ form_widget(form.email, {'attr': {'class': 'form-control', 'id': 'email', 'placeholder': 'Votre email'}}) }}
-                                {{ form_label(form.email, 'Votre email', {'attr': {'class': 'form-label'}}) }}
-                            </div>
-                            <button type="submit" id="submitButton" class="btn btn-primary w-100">
-                                Me faire rappeler
-                            </button>
-                        {{ form_end(form) }}
-                    </div>
-                    <small class="mt-3 d-block text-center text-dark" style="font-size: 14px;">
-                        En cliquant sur "Me faire rappeler", vous acceptez nos conditions d'utilisation.
-                    </small>
+                    {% if app.request.query.get('submitted') %}
+                        <div id="successMessage" class="alert alert-success text-center">
+                            Votre demande a été enregistrée avec succès. Nous vous rappellerons bientôt !
+                        </div>
+                    {% else %}
+                        <div id="callbackForm">
+                            {{ form_start(form, {'attr': {'class': 'needs-validation'}, 'method': 'POST'}) }}
+                                <div class="form-floating mb-3">
+                                    {{ form_row(form.name, {'attr': {'class': 'form-control', 'id': 'name', 'placeholder': 'Votre nom'}}) }}
+                                    {{ form_errors(form.name) }}
+                                </div>
+                                <div class="form-floating mb-3">
+                                    {{ form_row(form.phonePrefix, {'attr': {'class': 'select2', 'id': 'phonePrefix'}}) }}
+                                    {{ form_errors(form.phonePrefix) }}
+                                </div>
+                                <div class="form-floating mb-3">
+                                    {{ form_row(form.phone, {'attr': {'class': 'form-control', 'id': 'phone', 'placeholder': 'Votre téléphone'}}) }}
+                                    {{ form_errors(form.phone) }}
+                                </div>
+                                <div class="form-floating mb-3">
+                                    {{ form_row(form.email, {'attr': {'class': 'form-control', 'id': 'email', 'placeholder': 'Votre email'}}) }}
+                                    {{ form_errors(form.email) }}
+                                </div>
+                                <button type="submit" id="submitButton" class="btn btn-primary w-100">
+                                    Me faire rappeler
+                                </button>
+                            {{ form_end(form) }}
+                        </div>
+                    {% endif %}
                 </div>
             </div>
         </div>
     </div>
 </section>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Initialiser Select2 sur les champs avec la classe "select2"
+        $('.select2').select2({
+            placeholder: 'Sélectionnez un indicatif',
+            allowClear: true,
+            tags: true, // Permet d'ajouter une nouvelle option
+            width: '100%'
+        });
+    });
+</script>
+
+<script>
+    document.querySelector('#callbackForm').addEventListener('submit', function (e) {
+        const phone = document.querySelector('#phone').value;
+        const email = document.querySelector('#email').value;
+        const phoneRegex = /^(\+33|0)[1-9](\d{2}){4}$/;
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+        if (!phoneRegex.test(phone)) {
+            alert('Veuillez saisir un numéro de téléphone valide.');
+            e.preventDefault();
+            return false;
+        }
+
+        if (!emailRegex.test(email)) {
+            alert('Veuillez saisir une adresse email valide.');
+            e.preventDefault();
+            return false;
+        }
+    });
+
+</script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const successMessage = document.getElementById('successMessage');
+        const callbackForm = document.getElementById('callbackForm');
+
+        if (successMessage) {
+            callbackForm.style.display = 'none';
+        }
+    });
+</script>
 
 <script>
     document.addEventListener('DOMContentLoaded', () => {

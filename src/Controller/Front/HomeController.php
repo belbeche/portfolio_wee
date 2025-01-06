@@ -22,9 +22,9 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 class HomeController extends AbstractController
 {
     /**
-     * @Route("/", name="front_home")
-     * @Route("/realisations/{category}", name="front_project_by_category")
-     */
+    * @Route("/", name="front_home")
+    * @Route("/realisations/{category}", name="front_project_by_category")
+    */
     public function index(EntityManagerInterface $entityManager, Request $request, MailerInterface $mailer, string $category = null): Response
     {
         $callbackRequest = new CallbackRequest();
@@ -35,7 +35,9 @@ class HomeController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $callbackRequest->setEmail($form->get('email')->getData());
             $callbackRequest->setName($form->get('name')->getData());
-            $callbackRequest->setPhone($form->get('phone')->getData());
+            $phonePrefix = $callbackRequest->getPhonePrefix();
+            $phone = $callbackRequest->getPhone();
+            $callbackRequest->setPhone($phonePrefix . $phone);
 
             $entityManager->persist($callbackRequest);
             $entityManager->flush();
@@ -50,16 +52,17 @@ class HomeController extends AbstractController
                 ->context([
                     'name' => $callbackRequest->getName(),
                     'phone' => $callbackRequest->getPhone(),
-                    'user_email' => $callbackRequest->getEmail(),  // Utilisez 'user_email' au lieu de 'email'
+                    'user_email' => $callbackRequest->getEmail(),
                 ]);
 
             $mailer->send($email);
-
 
             $this->addFlash('success', 'Votre demande a été enregistrée avec succès. Nous vous rappellerons bientôt.');
 
             // Rediriger pour éviter la soumission multiple du formulaire
             return $this->redirectToRoute('front_home');
+        } elseif ($form->isSubmitted() && !$form->isValid()) {
+            $this->addFlash('error', 'Une erreur est survenue. Veuillez vérifier les informations saisies.');
         }
 
         if ($category) {
@@ -73,6 +76,7 @@ class HomeController extends AbstractController
             'form' => $form->createView(),
         ]);
     }
+
 
     /**
      * @Route("/a-propos", name="front_about")

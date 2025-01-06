@@ -111,7 +111,7 @@ class MessageController extends AbstractController
                 ->setDevis($form->get('devis')->getData())
                 ->setContent($form->get('content')->getData())
                 ->setTicket($ticket)
-                ->setStatus($form->get('status')->getData());
+                ->setStatus('en_cours');
 
             $entityManager->persist($message);
             $entityManager->flush();
