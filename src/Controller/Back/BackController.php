@@ -21,34 +21,24 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 class BackController extends AbstractController
 {
     /**
-     * @Route("/admin/callback-requests", name="back_callback_requests")
-     * @IsGranted("ROLE_ADMIN")
-     */
-    public function listCallbackRequests(EntityManagerInterface $entityManager, Request $request): Response
+    * @Route("/admin/callback-requests", name="back_callback_requests")
+    * @IsGranted("ROLE_ADMIN")
+    */
+    public function listCallbackRequests(EntityManagerInterface $entityManager): Response
     {
-        // Récupérer les paramètres de tri
-        $sortField = $request->query->get('sort', 'id'); // par défaut, tri par ID
-        $sortOrder = $request->query->get('order', 'asc'); // par défaut, ordre croissant
-
-        // Valider le champ de tri et l'ordre
-        $validSortFields = ['id', 'name', 'phone', 'email', 'status'];
-        if (!in_array($sortField, $validSortFields)) {
-            $sortField = 'id';
-        }
-        if (!in_array(strtolower($sortOrder), ['asc', 'desc'])) {
-            $sortOrder = 'asc';
-        }
-
         // Récupérer les demandes de rappel avec tri
-        $callbackRequests = $entityManager->getRepository(CallbackRequest::class)
-            ->findBy([], [$sortField => $sortOrder]);
+        $callbackRequests = $entityManager->getRepository(CallbackRequest::class)->findAll();
+
+        // Vérifier si des demandes existent
+        if (!$callbackRequests) {
+            $this->addFlash('info', 'Aucune demande de rappel n\'a été trouvée.');
+        }
 
         return $this->render('back/callback/callback_requests.html.twig', [
-            'callbackRequests' => $callbackRequests,
-            'sortField' => $sortField,
-            'sortOrder' => $sortOrder,
+            'callbackRequests' => $callbackRequests
         ]);
     }
+
 
      /**
      * @Route("/admin/callback-requests/validate/{id}", name="back_callback_request_validate")

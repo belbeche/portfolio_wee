@@ -25,11 +25,13 @@ class CallbackRequest
      *     max=50,
      *     maxMessage="Le nom ne peut pas dépasser {{ limit }} caractères."
      * )
+     * @ORM\Column(type="string", length=50)
      */
     private ?string $name = null;
 
     /**
     * @Assert\NotBlank(message="L'indicatif téléphonique est obligatoire.")
+    * @ORM\Column(type="string", length=5)
     */
     private ?string $phonePrefix = '+33';
 
@@ -39,12 +41,14 @@ class CallbackRequest
     *     pattern="/^[1-9](\d{2}){4}$/",
     *     message="Le numéro de téléphone doit être valide pour l'indicatif sélectionné."
     * )
+    *   @ORM\Column(type="string", length=20)
     */
     private ?string $phone = null;
 
     /**
      * @Assert\NotBlank(message="L'email est obligatoire.")
      * @Assert\Email(message="L'email doit être valide.")
+     * @ORM\Column(type="string", length=100)
      */
     private ?string $email = null;
 
