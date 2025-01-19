@@ -1,0 +1,140 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ post ? 'Modifier' : 'Créer' }} un Article{% endblock %}
+
+{% block content %}
+<div class="container mt-6">
+    <h1>{{ post ? 'Modifier' : 'Créer' }} un Article</h1>
+    {{ form_start(form) }}
+
+    <!-- Informations générales -->
+    <div class="card p-4 mb-4">
+        <h2 class="card-title">Informations générales</h2>
+        <div class="mb-3">
+            {{ form_row(form.title) }}
+        </div>
+        <div class="mb-3">
+            {{ form_row(form.slug) }}
+        </div>
+        <div class="mb-3">
+            {{ form_row(form.content)}}
+        </div>
+
+        <div class="mb-3">
+            {{ form_row(form.category)}}
+        </div>
+    </div>
+
+    <!-- Sections dynamiques -->
+    <div class="card p-4 mb-4">
+        <h2 class="card-title">Article</h2>
+        <div class="sections-collection" data-prototype="{{ form_widget(form.sections.vars.prototype)|e('html_attr') }}">
+            {% for section in form.sections %}
+                <div class="form-group border p-3 mb-3 rounded section-item">
+                    {{ form_widget(section) }}
+                    <button type="button" class="btn btn-danger mt-2 remove-item">Supprimer</button>
+                </div>
+            {% endfor %}
+        </div>
+        <div class="d-flex justify-content-between mt-3">
+            <button type="button" class="btn btn-primary add-content-section">Ajouter une Section de Contenu</button>
+            <button type="button" class="btn btn-secondary add-code-section">Ajouter un Bloc de Code</button>
+            <button type="button" class="btn btn-info add-media-section">Ajouter un Média</button>
+        </div>
+    </div>
+
+    <button type="submit" class="btn btn-success mt-4">{{ post ? 'Enregistrer' : 'Créer' }}</button>
+    {{ form_end(form) }}
+    <a href="{{ path('admin_blog_index') }}" class="btn btn-secondary mt-2">Retour à la liste</a>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const collectionHolder = document.querySelector('.sections-collection');
+        if (!collectionHolder) return;
+
+        // Initialiser l'index des sections
+        collectionHolder.dataset.index = collectionHolder.querySelectorAll('.section-item').length;
+
+        // Fonction pour ajouter un nouvel élément dynamique
+        const addDynamicElement = (type) => {
+            const prototype = collectionHolder.dataset.prototype;
+            if (!prototype) {
+                console.error('Le data-prototype est manquant pour la collection.');
+                return;
+            }
+            const index = collectionHolder.dataset.index || collectionHolder.children.length;
+            const newForm = prototype.replace(/__name__/g, index);
+            collectionHolder.dataset.index = parseInt(index) + 1;
+
+            const div = document.createElement('div');
+            div.classList.add('form-group', 'border', 'p-3', 'mb-3', 'rounded', 'section-item');
+            div.innerHTML = newForm;
+
+            // Pré-configurer le champ "type" et afficher les champs spécifiques si nécessaire
+            const typeField = div.querySelector('[name$="[type]"]');
+            if (typeField) {
+                typeField.value = type;
+
+                // Ajouter un événement pour afficher dynamiquement les champs
+                if (type === 'media') {
+                    showMediaFields(div);
+                } else if (type === 'code') {
+                    showCodeFields(div);
+                }
+            }
+
+            const removeButton = document.createElement('button');
+            removeButton.textContent = 'Supprimer';
+            removeButton.type = 'button';
+            removeButton.classList.add('btn', 'btn-danger', 'mt-2');
+            removeButton.addEventListener('click', () => div.remove());
+
+            div.appendChild(removeButton);
+            collectionHolder.appendChild(div);
+        };
+
+        // Fonction pour afficher les champs spécifiques pour le type "media"
+        const showMediaFields = (container) => {
+            const mediaTypeField = container.querySelector('[name$="[mediaType]"]');
+            const mediaFileField = container.querySelector('[name$="[mediaFile]"]');
+
+            if (mediaTypeField) {
+                mediaTypeField.parentElement.style.display = 'block';
+            }
+
+            if (mediaFileField) {
+                mediaFileField.parentElement.style.display = 'block';
+            }
+        };
+
+        // Fonction pour afficher les champs spécifiques pour le type "code"
+        const showCodeFields = (container) => {
+            const languageField = container.querySelector('[name$="[language]"]');
+            if (languageField) {
+                languageField.parentElement.style.display = 'block';
+            }
+        };
+
+        // Gestion des boutons d'ajout
+        document.querySelector('.add-content-section').addEventListener('click', () => {
+            addDynamicElement('content');
+        });
+
+        document.querySelector('.add-code-section').addEventListener('click', () => {
+            addDynamicElement('code');
+        });
+
+        document.querySelector('.add-media-section').addEventListener('click', () => {
+            addDynamicElement('media');
+        });
+
+        // Supprimer un élément existant
+        collectionHolder.querySelectorAll('.remove-item').forEach((button) => {
+            button.addEventListener('click', (e) => {
+                e.target.closest('.section-item').remove();
+            });
+        });
+    });
+</script>
+{% endblock %}

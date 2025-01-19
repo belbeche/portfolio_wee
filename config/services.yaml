@@ -8,6 +8,7 @@ parameters:
     subject_directory: "%kernel.project_dir%/public/uploads/subject/image"
     message_directory: "%kernel.project_dir%/public/uploads/message/image"
     uploads_directory: "%kernel.project_dir%/public/uploads/avatar"
+    media_directory: '%kernel.project_dir%/public/uploads/media'
     prospects_directory: '%kernel.project_dir%/public/uploads/prospects'
     api_resource_token: "%env(API_RESOURCE_TOKEN)%"
     api_resource_url: "%env(API_RESOURCE_URL)%"

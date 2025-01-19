@@ -1,0 +1,88 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Génération de Devis Automatisés - ScriptZenIT{% endblock %}
+
+{% block content %}
+<div class="container mt-6">
+    <h1 class="mb-5 text-center">Génération de Devis Automatisés</h1>
+    <p class="lead text-center mb-5">
+        Simplifiez vos processus commerciaux avec des solutions de génération de devis rapides, précises et personnalisées.
+    </p>
+    
+    <!-- Présentation -->
+    <div class="row mb-5">
+        <div class="col-md-6">
+            <h3>Pourquoi choisir une solution de génération de devis ?</h3>
+            <ul>
+                <li><strong>Gain de temps :</strong> Réduisez le temps passé sur les devis grâce à l'automatisation.</li>
+                <li><strong>Précision :</strong> Minimisez les erreurs humaines avec des calculs automatisés.</li>
+                <li><strong>Personnalisation :</strong> Offrez des devis adaptés aux besoins spécifiques de vos clients.</li>
+                <li><strong>Traçabilité :</strong> Suivez chaque devis grâce à des archives numériques.</li>
+            </ul>
+        </div>
+        <div class="col-md-6">
+            <img src="{{ asset('img/quote-generation.jpg') }}" alt="Génération de devis par ScriptZenIT" class="img-fluid shadow-sm rounded">
+        </div>
+    </div>
+
+    <!-- Fonctionnalités -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <h2 class="mb-4 text-center">Fonctionnalités de nos Solutions</h2>
+        </div>
+        <div class="col-md-6">
+            <h4 class="text-primary">1. Génération Instantanée</h4>
+            <p>
+                Produisez des devis professionnels en quelques clics avec des champs pré-remplis et des calculs automatisés.
+            </p>
+        </div>
+        <div class="col-md-6">
+            <h4 class="text-primary">2. Exportation en PDF</h4>
+            <p>
+                Obtenez des devis formatés en PDF pour un partage facile par e-mail ou impression directe.
+            </p>
+        </div>
+        <div class="col-md-6 mt-4">
+            <h4 class="text-primary">3. Gestion Multi-Utilisateur</h4>
+            <p>
+                Permettez à plusieurs membres de votre équipe de collaborer sur les devis tout en suivant les modifications.
+            </p>
+        </div>
+        <div class="col-md-6 mt-4">
+            <h4 class="text-primary">4. Historique et Archivage</h4>
+            <p>
+                Accédez à tous vos devis précédents, avec des options de recherche avancée et de filtres.
+            </p>
+        </div>
+    </div>
+
+    <!-- Avantages -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <h2 class="mb-4 text-center">Pourquoi choisir ScriptZenIT ?</h2>
+        </div>
+        <div class="col-md-4 text-center">
+            <i class="fas fa-clock fa-3x text-primary mb-3"></i>
+            <h5>Rapidité</h5>
+            <p>Des processus simplifiés pour répondre plus rapidement à vos prospects.</p>
+        </div>
+        <div class="col-md-4 text-center">
+            <i class="fas fa-check-circle fa-3x text-primary mb-3"></i>
+            <h5>Fiabilité</h5>
+            <p>Des outils robustes et testés pour garantir des résultats précis à chaque fois.</p>
+        </div>
+        <div class="col-md-4 text-center">
+            <i class="fas fa-user-shield fa-3x text-primary mb-3"></i>
+            <h5>Sécurité</h5>
+            <p>Des données client protégées selon les normes les plus strictes.</p>
+        </div>
+    </div>
+
+    <!-- Appel à action -->
+    <div class="text-center mt-5">
+        <h3 class="mb-4">Envie de simplifier votre gestion des devis ?</h3>
+        <p>Contactez-nous pour découvrir comment nos solutions peuvent transformer votre processus commercial.</p>
+        <a href="{{ path('front_devis_new') }}" class="btn btn-primary btn-lg">Demander un Devis</a>
+    </div>
+</div>
+{% endblock %}

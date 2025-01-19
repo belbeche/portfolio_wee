@@ -1,0 +1,88 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Automatisation des Tâches - ScriptZenIT{% endblock %}
+
+{% block content %}
+<div class="container mt-6">
+    <h1 class="mb-5 text-center">Automatisation des Tâches</h1>
+    <p class="lead text-center mb-5">
+        Gagnez du temps, réduisez les erreurs et améliorez votre productivité grâce à des solutions d’automatisation sur mesure.
+    </p>
+    
+    <!-- Présentation -->
+    <div class="row mb-5">
+        <div class="col-md-6">
+            <h3>Pourquoi automatiser vos processus ?</h3>
+            <ul>
+                <li><strong>Gain de temps :</strong> Automatisez les tâches répétitives pour vous concentrer sur ce qui compte.</li>
+                <li><strong>Réduction des erreurs :</strong> Des processus automatisés réduisent les risques liés aux erreurs humaines.</li>
+                <li><strong>Amélioration de la productivité :</strong> Optimisez vos ressources et atteignez vos objectifs plus rapidement.</li>
+                <li><strong>Adaptabilité :</strong> Des solutions personnalisées qui évoluent avec vos besoins.</li>
+            </ul>
+        </div>
+        <div class="col-md-6">
+            <img src="{{ asset('img/task-automation.png') }}" alt="Automatisation des tâches par ScriptZenIT" class="img-fluid shadow-sm rounded">
+        </div>
+    </div>
+
+    <!-- Cas d'usage -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <h2 class="mb-4 text-center">Cas d'usage de l'automatisation</h2>
+        </div>
+        <div class="col-md-6">
+            <h4 class="text-primary">1. Gestion des flux de travail</h4>
+            <p>
+                Automatisez les processus complexes de votre entreprise, comme la gestion des approbations, des factures, ou des rapports.
+            </p>
+        </div>
+        <div class="col-md-6">
+            <h4 class="text-primary">2. Automatisation du marketing</h4>
+            <p>
+                Générez des campagnes e-mail, planifiez des publications sur les réseaux sociaux et analysez les performances automatiquement.
+            </p>
+        </div>
+        <div class="col-md-6 mt-4">
+            <h4 class="text-primary">3. Collecte et traitement des données</h4>
+            <p>
+                Automatisez la collecte de données à partir de multiples sources et générez des rapports instantanés.
+            </p>
+        </div>
+        <div class="col-md-6 mt-4">
+            <h4 class="text-primary">4. Gestion des ressources humaines</h4>
+            <p>
+                Simplifiez le recrutement, l'onboarding, et le suivi des performances grâce à des outils dédiés.
+            </p>
+        </div>
+    </div>
+
+    <!-- Avantages -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <h2 class="mb-4 text-center">Pourquoi choisir ScriptZenIT ?</h2>
+        </div>
+        <div class="col-md-4 text-center">
+            <i class="fas fa-cogs fa-3x text-primary mb-3"></i>
+            <h5>Solutions sur mesure</h5>
+            <p>Chaque solution est conçue pour répondre spécifiquement à vos besoins.</p>
+        </div>
+        <div class="col-md-4 text-center">
+            <i class="fas fa-chart-line fa-3x text-primary mb-3"></i>
+            <h5>Performance & Efficacité</h5>
+            <p>Optimisez vos processus pour maximiser vos résultats.</p>
+        </div>
+        <div class="col-md-4 text-center">
+            <i class="fas fa-user-friends fa-3x text-primary mb-3"></i>
+            <h5>Support & Formation</h5>
+            <p>Nous vous accompagnons à chaque étape, avec des formations pour vos équipes.</p>
+        </div>
+    </div>
+
+    <!-- Appel à action -->
+    <div class="text-center mt-5">
+        <h3 class="mb-4">Besoin d'automatiser vos tâches ?</h3>
+        <p>Contactez-nous pour discuter de vos besoins et découvrir comment l'automatisation peut transformer votre entreprise.</p>
+        <a href="{{ path('front_devis_new') }}" class="btn btn-primary btn-lg">Demander un Devis</a>
+    </div>
+</div>
+{% endblock %}

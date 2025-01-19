@@ -1,0 +1,9 @@
+# config/packages/fos_ck_editor.yaml
+fos_ck_editor:
+    default_config: default
+    configs:
+        default:
+            toolbar: full
+            language: en
+            extraPlugins: "codesnippet"
+            codeSnippet_theme: "monokai_sublime"

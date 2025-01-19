@@ -48,28 +48,58 @@
                 <li class="nav-item {{ app.request.get('_route') == 'front_home' ? 'active' : '' }}">
                     <a class="nav-link" href="{{ url('front_home') }}">Accueil</a>
                 </li>
-                <li class="nav-item {{ app.request.get('_route') == 'front_member_index' ? 'active' : '' }}">
-                    <a class="nav-link" href="{{ url('front_member_index') }}">A propos</a>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Découvrir notre agence
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end" style="z-index: 1080;">
+                        <li class="menu-item {{ app.request.get('_route') == 'front_member_index' ? 'active' : '' }}">
+                            <a class="dropdown-item text-black" href="{{ url('front_member_index') }}">A propos</a>
+                        </li>
+                        <li class="menu-item {{ app.request.get('_route') == 'front_project' ? 'active' : '' }}">
+                            <a class="dropdown-item text-black" href="{{ url('front_project') }}">Nos réalisations</a>
+                        </li>
+                        <li class="menu-item {{ app.request.get('_route') == 'front_devis_new' ? 'active' : '' }}">
+                            <a class="dropdown-item text-black" href="{{ url('front_devis_new') }}">Faire une demande</a>
+                        </li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li class="menu-item {{ app.request.get('_route') == 'blog_index' ? 'active' : '' }}">
+                            <a class="btn btn-outline-danger dropdown-item text-black" href="{{ url('blog_index') }}">Actualités</a>
+                        </li>
+                    </ul>
                 </li>
-                <li class="nav-item {{ app.request.get('_route') == 'front_project' ? 'active' : '' }}">
-                    <a class="nav-link" href="{{ url('front_project') }}">Nos réalisations</a>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="servicesDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Nos Services
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="servicesDropdown">
+                        <li><a class="dropdown-item text-black" href="{{ path('expertise_web') }}">Création de Site Web</a></li>
+                        <li><a class="dropdown-item text-black" href="{{ path('custom_app') }}">Applications sur Mesure</a></li>
+                        <li><a class="dropdown-item text-black" href="{{ path('quote_generation') }}">Création de Devis</a></li>
+                        <li><a class="dropdown-item text-black" href="{{ path('task_automation') }}">Automatisation de Tâches</a></li>
+                    </ul>
                 </li>
-                <li class="nav-item {{ app.request.get('_route') == 'front_devis_new' ? 'active' : '' }}">
-                    <a class="nav-link" href="{{ url('front_devis_new') }}">Faire une demande</a>
-                </li>
-                <li class="nav-item {{ app.request.get('_route') == 'front_contact' ? 'active' : '' }}">
-                    <a class="nav-link" href="{{ url('front_contact') }}">Contact</a>
-                </li>
+                {% if not app.user %}
                 <div class="user">
-                    {% if not app.user %}
-                        <li class="nav-item {{ app.request.get('_route') == 'app_register' ? 'active' : '' }}">
-                            <a class="nav-link" href="{{ url('app_register') }}">S'inscrire</a>
-                        </li>
-                        <li class="nav-item {{ app.request.get('_route') == 'app_login' ? 'active' : '' }}">
-                            <a class="nav-link" href="{{ url('app_login') }}">Connexion</a>
-                        </li>
-                    {% endif %}
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Espace client
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end" style="z-index: 1080;">
+                            <li class="menu-item {{ app.request.get('_route') == 'app_register' ? 'active' : '' }}">
+                                <a class="dropdown-item text-black" href="{{ url('app_register') }}">S'inscrire</a>
+                            </li>
+                            <li class="menu-item {{ app.request.get('_route') == 'app_login' ? 'active' : '' }}">
+                                <a class="dropdown-item text-black" href="{{ url('app_login') }}">Connexion</a>
+                            </li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li class="menu-item {{ app.request.get('_route') == 'front_contact' ? 'active' : '' }}">
+                                <a class="btn btn-outline-danger dropdown-item text-black" href="{{ url('front_contact') }}">Contact</a>
+                            </li>
+                        </ul>
+                    </li>
                 </div>
+                {% endif %}
                 {% if is_granted('ROLE_ADMIN') %}
                     <li class="nav-item {{ app.request.get('_route') == 'back_index' ? 'active' : '' }}">
                         <a class="nav-link" href="{{ url('back_index') }}">Admin panel</a>

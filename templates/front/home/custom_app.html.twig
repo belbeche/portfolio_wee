@@ -1,0 +1,90 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Applications sur Mesure - ScriptZenIT{% endblock %}
+
+{% block content %}
+<div class="container mt-6">
+    <h1 class="mb-5 text-center">Applications sur Mesure</h1>
+    <p class="lead text-center mb-5">Des solutions sur mesure adaptées à vos besoins spécifiques, pour transformer vos idées en réalité digitale et optimiser vos performances.</p>
+    
+    <!-- Section présentation -->
+    <div class="row mb-5">
+        <div class="col-md-6">
+            <h3>Pourquoi opter pour une application sur mesure ?</h3>
+            <ul>
+                <li><strong>Personnalisation totale :</strong> Une solution entièrement adaptée à vos processus métier.</li>
+                <li><strong>Optimisation des coûts :</strong> Éliminez les fonctionnalités inutiles pour vous concentrer sur l'essentiel.</li>
+                <li><strong>Évolutivité :</strong> Une application qui grandit avec vos besoins.</li>
+                <li><strong>Avantage concurrentiel :</strong> Différenciez-vous avec des outils uniques et innovants.</li>
+            </ul>
+        </div>
+        <div class="col-md-6">
+            <img src="{{ asset('img/custom_app.jpg') }}" alt="Applications sur mesure par ScriptZenIT " class="img-fluid shadow-sm rounded">
+        </div>
+    </div>
+
+    <!-- Services -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <h2 class="mb-4 text-center">Nos Services en Développement d'Applications</h2>
+        </div>
+        <div class="col-md-6">
+            <h4 class="text-primary">1. Applications Métier</h4>
+            <p>
+                Des outils conçus spécifiquement pour répondre à vos besoins professionnels : gestion des ressources humaines, 
+                suivi des projets, reporting, et bien plus encore.
+            </p>
+        </div>
+        <div class="col-md-6">
+            <h4 class="text-primary">2. Portails Interactifs</h4>
+            <p>
+                Développez des portails interactifs pour vos clients, partenaires ou employés, avec des fonctionnalités personnalisées 
+                telles que la gestion de contenu, les tableaux de bord ou les workflows automatisés.
+            </p>
+        </div>
+        <div class="col-md-6 mt-4">
+            <h4 class="text-primary">3. Intégration et Automatisation</h4>
+            <p>
+                Intégrez vos outils existants (ERP, CRM, etc.) dans une application centralisée pour simplifier vos opérations 
+                et automatiser les tâches répétitives.
+            </p>
+        </div>
+        <div class="col-md-6 mt-4">
+            <h4 class="text-primary">4. Maintenance et Évolution</h4>
+            <p>
+                Profitez d'un suivi continu pour garantir la stabilité, la sécurité et l'évolution de votre application en fonction 
+                des nouvelles exigences.
+            </p>
+        </div>
+    </div>
+
+    <!-- Avantages -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <h2 class="mb-4 text-center">Pourquoi choisir ScriptZenIT ?</h2>
+        </div>
+        <div class="col-md-4 text-center">
+            <i class="fas fa-cogs fa-3x text-primary mb-3"></i>
+            <h5>Solutions Sur Mesure</h5>
+            <p>Chaque application est conçue pour répondre exactement à vos besoins spécifiques.</p>
+        </div>
+        <div class="col-md-4 text-center">
+            <i class="fas fa-lock fa-3x text-primary mb-3"></i>
+            <h5>Sécurité et Fiabilité</h5>
+            <p>Des applications robustes, sécurisées et conformes aux normes actuelles.</p>
+        </div>
+        <div class="col-md-4 text-center">
+            <i class="fas fa-chart-line fa-3x text-primary mb-3"></i>
+            <h5>Performance et Scalabilité</h5>
+            <p>Des performances optimales avec des possibilités d'évolution à long terme.</p>
+        </div>
+    </div>
+
+    <!-- Appel à action -->
+    <div class="text-center mt-5">
+        <h3 class="mb-4">Prêt à passer à l'étape suivante ?</h3>
+        <p>Contactez-nous dès aujourd’hui pour discuter de vos besoins ou demander un devis personnalisé.</p>
+        <a href="{{ path('front_devis_new') }}" class="btn btn-primary btn-lg">Demander un Devis</a>
+    </div>
+</div>
+{% endblock %}

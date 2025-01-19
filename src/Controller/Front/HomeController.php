@@ -190,4 +190,39 @@ class HomeController extends AbstractController
     {
        return $this->render('front/profil/show.html.twig');
     }
+
+    /**
+     * @Route("/expertise_web", name="expertise_web")
+     */
+    public function expertiseWeb(): Response{
+        return $this->render('front/home/web.html.twig');
+    }
+
+    /**
+     * @Route("/expertise_sur_mesure", name="expertise_sur_mesure")
+     */
+    public function expertiseSurMesure(): Response{
+        return $this->render('front/home/sur_mesure.html.twig');
+    }
+
+    /**
+     * @Route("/task_automation", name="task_automation")
+     */
+    public function taskAutomation(): Response{
+        return $this->render('front/home/task_automation.html.twig');
+    }
+
+    /**
+     * @Route("/quote_generation", name="quote_generation")
+     */
+    public function quoteGeneration(): Response{
+        return $this->render('front/home/quote_generation.html.twig');
+    }
+
+    /**
+     * @Route("/custom_app", name="custom_app")
+     */
+    public function customApp(): Response{
+        return $this->render('front/home/custom_app.html.twig');
+    }
 }

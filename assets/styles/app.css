@@ -352,3 +352,76 @@
     justify-content: space-evenly;
     margin-top: 20px;
 }
+
+.card-title {
+    font-size: 1.25rem;
+    font-weight: bold;
+}
+
+.card-text {
+    font-size: 0.9rem;
+    color: #6c757d;
+}
+
+.list-group-item.active {
+    background-color: #007bff;
+    color: white;
+    border-color: #007bff;
+}
+
+.btn-outline-primary.active {
+    background-color: #007bff;
+    color: white;
+    border-color: #007bff;
+}
+
+.btn-outline-primary:hover {
+    background-color: #e9ecef;
+    color: #007bff;
+}
+
+/* Global styles */
+.option-card {
+    min-width: 100%; /* Par défaut, chaque carte prend toute la largeur sur mobile */
+    max-width: 300px; /* Limite la taille des cartes */
+    flex: 0 0 auto;
+    transition: transform 0.2s, border-color 0.2s;
+    cursor: pointer;
+    border: 2px solid transparent;
+}
+
+.option-card:hover {
+    transform: scale(1.05);
+    border-color: #007bff;
+}
+
+.option-card input[type="checkbox"]:checked + span,
+.option-card input[type="radio"]:checked + span {
+    font-weight: bold;
+    color: #007bff;
+}
+
+/* Scroll container styles */
+.scroll-container {
+    overflow-x: auto;
+    display: flex;
+    -webkit-overflow-scrolling: touch; /* Défilement fluide pour mobile */
+    gap: 1rem; /* Espace entre les cartes */
+}
+
+.scroll-container::-webkit-scrollbar {
+    height: 8px;
+}
+
+.scroll-container::-webkit-scrollbar-thumb {
+    background-color: #007bff;
+    border-radius: 4px;
+}
+
+/* Desktop styles */
+@media (min-width: 768px) {
+    .option-card {
+        flex: 1 1 30%; /* Affiche plusieurs cartes côte à côte */
+        min-width: auto; /* Supprime la largeur fixe sur desktop */
+    }
+}

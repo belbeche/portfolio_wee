@@ -1,0 +1,74 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ post.title }}{% endblock %}
+
+{% block content %}
+<!-- Prism.js for syntax highlighting -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/themes/prism-tomorrow.min.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/prism.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/components/prism-core.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/components/prism-clike.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/components/prism-php.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/components/prism-javascript.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/components/prism-css.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/components/prism-markup.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/components/prism-bash.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/components/prism-json.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/components/prism-sql.min.js"></script>
+
+<div class="container mt-6">
+    <h1 class="mb-4">{{ post.title }}</h1>
+    <p class="text-muted">Publié le {{ post.createdAt|date('d/m/Y') }}</p>
+
+    <!-- Contenu principal -->
+    <div class="content mb-5">
+        {{ post.content|raw }}
+    </div>
+
+    <!-- Sections dynamiques -->
+    {% if post.sections|length > 0 %}
+        <div class="article-sections">
+            {% for section in post.sections %}
+                {% if section.type == 'content' %}
+                    <!-- Section de contenu -->
+                    <div class="section-content mb-4">
+                        <p>{{ section.content|raw }}</p>
+                    </div>
+                {% elseif section.type == 'code' %}
+                    <!-- Section de code -->
+                    <div class="section-code mb-4">
+                        <div class="card">
+                            <div class="card-header">
+                                Langage : <strong>{{ section.language }}</strong>
+                            </div>
+                            <div class="card-body bg-light">
+                                <pre><code class="language-{{ section.language|default('plaintext') }}">{{ section.content|e }}</code></pre>
+                            </div>
+                        </div>
+                    </div>
+                {% elseif section.type == 'media' %}
+                    <!-- Section de média -->
+                    {% if section.mediaType == 'image' %}
+                        <div class="section-media mb-4">
+                            <img src="{{ asset('uploads/' ~ section.mediaUrl) }}" alt="Image" class="img-fluid">
+                        </div>
+                    {% elseif section.mediaType == 'video' %}
+                        <div class="section-media mb-4">
+                            <video controls>
+                                <source src="{{ asset('uploads/' ~ section.mediaUrl) }}" type="video/mp4">
+                                Votre navigateur ne supporte pas les vidéos.
+                            </video>
+                        </div>
+                    {% else %}
+                        <div class="section-media mb-4 text-danger">
+                            <p>Média non supporté ou invalide.</p>
+                        </div>
+                    {% endif %}
+                {% endif %}
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <a href="{{ path('blog_index') }}" class="btn btn-secondary mt-3">Retour à la liste</a>
+</div>
+{% endblock %}
