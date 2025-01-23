@@ -1,66 +1,28 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}À propos{% endblock %}
+{% block title %}{{ 'title_about'|trans }}{% endblock %}
 
 {% block content %}
-<div class="container-fluid text-center jumbotron">
-    <h1>L'équipe</h1>
+<div class="container-fluid text-center jumbotron mt-6">
+    <h1>{{ 'about_walid'|trans }}</h1>
     <div class="page-subtitle">
-        <h4>Découvrez notre équipe, notre expertise, et ce que nous pouvons vous apporter</h4>
-        <a href="{{ path('front_contact') }}" target="_self" class="btn btn-primary btn-lg px-4 rounded-pill">Nous contacter</a>
+        <h4>{{ 'subtitle_about'|trans }}</h4>
+        <a href="{{ path('front_contact') }}" target="_self" class="btn btn-primary btn-lg px-4 rounded-pill">
+            {{ 'contact_me'|trans }}
+        </a>
     </div>
 </div>
-
-<!-- Pourquoi nous choisir -->
-<section class="container-fluid position-relative">
-    <div class="row h-100 align-items-center">
-        <!-- Image -->
-        <div class="col-lg-6 col-md-12 d-flex justify-content-center">
-            <img src="{{ asset('img/before.png') }}" loading="lazy" 
-                alt="ScriptzenIT - Agence web de confiance, spécialisée en solutions numériques sur mesure" 
-                class="img-fluid rounded shadow-lg"
-                width="60%"
-                >
-        </div>
-
-        <!-- Texte -->
-        <div class="col-lg-6 col-md-12 d-flex flex-column justify-content-center px-5">
-            <h2 class="display-4 fw-bold mb-4 mt-4">Pourquoi choisir ScriptZenIT ?</h2>
-            <p class="fs-5 mb-4">
-                Chez <strong>ScriptzenIT</strong>, nous nous engageons à transformer votre vision numérique en réalité. 
-                Depuis notre création en 2023, nous aidons les entreprises de toutes tailles à <strong>réaliser leurs objectifs digitaux</strong>, 
-                qu'il s'agisse de <strong>création de sites web professionnels</strong>, de développement 
-                d'<strong>applications web sur mesure</strong>, ou encore d'<strong>optimisation de leur présence en ligne</strong>.
-            </p>
-            <ul class="list-unstyled mb-4">
-                <li class="mb-3 d-flex align-items-start">
-                    <i class="bi bi-check-circle-fill text-primary me-3"></i>
-                    <span>Une approche personnalisée qui place vos besoins au centre de nos solutions.</span>
-                </li>
-                <li class="mb-3 d-flex align-items-start">
-                    <i class="bi bi-check-circle-fill text-primary me-3"></i>
-                    <span>Une expertise éprouvée pour dépasser vos attentes à chaque étape du projet.</span>
-                </li>
-                <li class="mb-3 d-flex align-items-start">
-                    <i class="bi bi-check-circle-fill text-primary me-3"></i>
-                    <span>Des solutions innovantes pour vous maintenir à l'avant-garde du numérique.</span>
-                </li>
-            </ul>
-            <a href="{{ url('app_login') }}" class="btn btn-info btn-lg rounded-pill mb-4">Connectez-vous maintenant</a>
-        </div>
-    </div>
-</section>
 
 <div class="container">
     {% for category, members in groupedMembers %}
         <div class="row mb-5">
             <h2 class="text-center my-4">
                 {% if category == 'salarie' %}
-                    Salariés de ScriptZenIT
+                    {{ 'current_collaborators'|trans }}
                 {% elseif category == 'ancien_stagiaire' %}
-                    Anciens Stagiaires
+                    {{ 'former_interns'|trans }}
                 {% elseif category == 'contributeur_partenaire' %}
-                    Contributeurs/Partenaires
+                    {{ 'partners_contributors'|trans }}
                 {% else %}
                     {{ category|capitalize }}
                 {% endif %}
@@ -78,7 +40,9 @@
                                 <h5 class="card-title">{{ member.firstname }} {{ member.lastname }}</h5>
                                 <h6 class="card-subtitle mb-2 text-muted">{{ member.function }}</h6>
                                 <p class="card-text">{{ member.description }}</p>
-                                <a href="mailto:{{ member.email }}" class="btn btn-primary">Contacter</a>
+                                <a href="mailto:{{ member.email }}" class="btn btn-primary">
+                                    {{ 'contact'|trans }}
+                                </a>
                             </div>
                         </div>
                     </div>

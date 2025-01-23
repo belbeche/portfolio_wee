@@ -11,6 +11,7 @@
             <tr>
                 <th>ID</th>
                 <th>Titre</th>
+                <th>Status</th>
                 <th>Actions</th>
             </tr>
         </thead>
@@ -19,11 +20,16 @@
             <tr>
                 <td>{{ post.id }}</td>
                 <td>{{ post.title }}</td>
+                <td>{{ post.status }}</td>
                 <td>
                     <a href="{{ path('admin_blog_edit', { id: post.id }) }}" class="btn btn-warning">Modifier</a>
                     <form action="{{ path('admin_blog_delete', { id: post.id }) }}" method="post" style="display:inline-block;">
                         <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ post.id) }}">
                         <button class="btn btn-danger" onclick="return confirm('Confirmer la suppression ?')">Supprimer</button>
+                    </form>
+                    <form method="post" action="{{ path('admin_blog_validate', { id: post.id }) }}" style="display:inline-block;">
+                        <input type="hidden" name="_token" value="{{ csrf_token('validate' ~ post.id) }}">
+                        <button type="submit" class="btn btn-success">Valider</button>
                     </form>
                 </td>
             </tr>

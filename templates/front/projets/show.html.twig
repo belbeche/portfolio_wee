@@ -9,9 +9,8 @@
 
 <!-- Portfolio Item Heading -->
 <h1 class="mt-6 my-4">{{ project.title }}
-    <small>Par {{ project.developer }}</small>
+    <small>{{ 'project.by'|trans }} {{ project.developer }}</small>
 </h1>
-
 
 <!-- Portfolio Item Row -->
 <div class="row">
@@ -21,20 +20,20 @@
         {% endfor %}
     </div>
     <div class="col-md-4">
-        <h3 class="my-3">Description du projet</h3>
+        <h3 class="my-3">{{ 'project.description_title'|trans }}</h3>
         <p>{{ project.description|nl2br }}</p>
-        <h3 class="my-3">Détails du projet</h3>
+        <h3 class="my-3">{{ 'project.details_title'|trans }}</h3>
         <ul>
-            <li><strong>Date de création :</strong> {{ project.createdAt|date('d/m/Y') }}</li>
-            <li><strong>Lien :</strong> 
+            <li><strong>{{ 'project.creation_date'|trans }}:</strong> {{ project.createdAt|date('d/m/Y') }}</li>
+            <li><strong>{{ 'project.link'|trans }}:</strong> 
                 <a href="{{ project.link }}" target="_blank" rel="noopener noreferrer">{{ project.title }}</a>
             </li>
-            <li><strong>Catégories :</strong> 
+            <li><strong>{{ 'project.categories'|trans }}:</strong> 
                 {% for category in project.categories %}
                     <a href="{{ url('front_project_by_category') }}" class="badge bg-primary text-light">{{ category.name }}</a>
                 {% endfor %}
             </li>
-            <li><strong>Client :</strong> 
+            <li><strong>{{ 'project.client'|trans }}:</strong> 
                 <strong>{{ project.client }}</strong>
             </li>
         </ul>
@@ -43,7 +42,7 @@
 <!-- /.row -->
 
 <!-- Related Projects Row -->
-<h3 class="my-4">Projets connexes</h3>
+<h3 class="my-4">{{ 'project.related_projects'|trans }}</h3>
 <div class="row">
     {% for relatedProject in relatedProjects %}
         <div class="col-md-3 col-sm-6 mb-4">

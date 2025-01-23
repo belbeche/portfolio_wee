@@ -1,83 +1,77 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Nos réalisations
-{% endblock %}
+{% block title %}{{ 'projects_title'|trans }}{% endblock %}
 
 {% block content %}
 
-	<div class="container-fluid text-center jumbotron mt-5">
-		<h1>Ce qu'on propose</h1>
-		<div class="page-subtitle">
-			<br>
-			<a href="#devis" class="btn btn-primary">Voir des exemples de solutions.</a>
-			<h4></h4>
-		</div>
+<div class="container-fluid text-center jumbotron mt-5">
+	<h1>{{ 'projects_heading'|trans }}</h1>
+	<div class="page-subtitle">
+		<br>
+		<a href="#devis" class="btn btn-primary">{{ 'projects_cta_button'|trans }}</a>
+		<h4></h4>
 	</div>
+</div>
 
-	<div id="main" class="site-main container">
-		<div id="main-content" class="single-page-content">
-			<div id="primary" class="content-area">
+<div id="main" class="site-main container">
+	<div id="main-content" class="single-page-content">
+		<div id="primary" class="content-area">
 
-				{% include "front/includes/project.html.twig" %}
+			{% include "front/includes/project.html.twig" %}
 
-				<h1 class="pb-4"></h1>
-				<div class="page-title" id="devis">
-					<h1>Envie d'avoir une visibilité sur le web ? </h1>
-				</div>
+			<h1 class="pb-4"></h1>
+			<div class="page-title" id="devis">
+				<h1>{{ 'projects_section_heading'|trans }}</h1>
+			</div>
 
-				<div class="container">
-					<div
-						class="row">
+			<div class="container">
+				<div class="row">
 
-						<!-- Rélisation d'un site d'agence -->
-						<div class="col-md-3 col-xs-12 mb-5 mt-2">
-							<div class="card">
-								<img src="{{ asset('img/quote/agency.svg') }}" alt="Realisation de site d'agence"/>
-								<div class="card-body">
-									<h5 class="card-title">Rélisation de site d'agence</h5>
-									<p class="card-text">Une réalisation sur mesure pour votre site d'agence, afin de garantir une présence permanente en ligne..</p>
-									<a href="{{ url('front_devis_new', {'type': 'site_vitrine'}) }}" class="btn btn-primary">Plateforme web</a>
-								</div>
+					<!-- Rélisation d'un site d'agence -->
+					<div class="col-md-3 col-xs-12 mb-5 mt-2">
+						<div class="card">
+							<img src="{{ asset('img/quote/agency.svg') }}" alt="{{ 'project_agency_alt'|trans }}"/>
+							<div class="card-body">
+								<h5 class="card-title">{{ 'project_agency_title'|trans }}</h5>
+								<p class="card-text">{{ 'project_agency_description'|trans }}</p>
 							</div>
 						</div>
-
-						<!-- Réalisation de site d'annonce immobilière -->
-						<div class="col-md-3 col-xs-12 mb-5 mt-2">
-							<div class="card">
-								<img src="{{ asset('img/quote/real_estate_or_travel.svg') }}" alt="Réalisation de site d'annonce immobilière"/>
-								<div class="card-body">
-									<h5 class="card-title">Réalisation de site d'annonce immobilière</h5>
-									<p class="card-text">Une réalisation sur mesure pour votre site d'annonce immobilière ou de voyage, afin de garantir une présence permanente en ligne..</p>
-									<a href="{{ url('front_devis_new', {'type': 'site_real_estate'}) }}" class="btn btn-primary">Real estate</a>
-								</div>
-							</div>
-						</div>
-
-						<!-- Rélisation de site eCommerce -->
-						<div class="col-md-3 col-xs-12 mb-5 mt-2">
-							<div class="card">
-								<img src="{{ asset('img/quote/Ecommerce.svg') }}" alt="Rélisation de site eCommerce"/>
-								<div class="card-body">
-									<h5 class="card-title">Rélisation de site eCommerce</h5>
-									<p class="card-text">Une réalisation sur mesure pour votre site de boutique en ligne..</p>
-									<a href="{{ url('front_devis_new', {'type': 'site_e-commerce'}) }}" class="btn btn-primary">E-commerce</a>
-								</div>
-							</div>
-						</div>
-
-						<!-- Réalisation de site portfolio -->
-						<div class="col-md-3 col-xs-12 mb-5 mt-2">
-							<div class="card">
-								<img src="{{ asset('img/quote/portfolio.svg') }}" alt="Réalisation de site portfolio"/>
-								<div class="card-body">
-									<h5 class="card-title">Réalisation de site portfolio</h5>
-									<p class="card-text">Une réalisation sur mesure pour votre site portfolio, afin de présenter vos meilleure créations et d'acquérir de nouveau client..</p>
-									<a href="{{ url('front_devis_new', {'type': 'site_portfolio'}) }}" class="btn btn-primary">Portfolio</a>
-								</div>
-							</div>
-						</div>
-
 					</div>
-				</div>
 
-			{% endblock %}
+					<!-- Réalisation de site d'annonce immobilière -->
+					<div class="col-md-3 col-xs-12 mb-5 mt-2">
+						<div class="card">
+							<img src="{{ asset('img/quote/real_estate_or_travel.svg') }}" alt="{{ 'project_real_estate_alt'|trans }}"/>
+							<div class="card-body">
+								<h5 class="card-title">{{ 'project_real_estate_title'|trans }}</h5>
+								<p class="card-text">{{ 'project_real_estate_description'|trans }}</p>
+							</div>
+						</div>
+					</div>
+
+					<!-- Rélisation de site eCommerce -->
+					<div class="col-md-3 col-xs-12 mb-5 mt-2">
+						<div class="card">
+							<img src="{{ asset('img/quote/Ecommerce.svg') }}" alt="{{ 'project_ecommerce_alt'|trans }}"/>
+							<div class="card-body">
+								<h5 class="card-title">{{ 'project_ecommerce_title'|trans }}</h5>
+								<p class="card-text">{{ 'project_ecommerce_description'|trans }}</p>
+							</div>
+						</div>
+					</div>
+
+					<!-- Réalisation de site portfolio -->
+					<div class="col-md-3 col-xs-12 mb-5 mt-2">
+						<div class="card">
+							<img src="{{ asset('img/quote/portfolio.svg') }}" alt="{{ 'project_portfolio_alt'|trans }}"/>
+							<div class="card-body">
+								<h5 class="card-title">{{ 'project_portfolio_title'|trans }}</h5>
+								<p class="card-text">{{ 'project_portfolio_description'|trans }}</p>
+							</div>
+						</div>
+					</div>
+
+				</div>
+			</div>
+
+{% endblock %}

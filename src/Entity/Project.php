@@ -5,8 +5,8 @@ namespace App\Entity;
 use App\Repository\ProjectRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * @ORM\Entity(repositoryClass=ProjectRepository::class)
@@ -21,26 +21,31 @@ class Project
     private $id;
 
     /**
+     * @Gedmo\Translatable
      * @ORM\Column(type="string", length=255)
      */
     private ?string $title;
 
     /**
+     * @Gedmo\Translatable
      * @ORM\Column(type="text")
      */
     private ?string $description;
 
     /**
+     * @Gedmo\Translatable
      * @ORM\Column(type="datetime")
      */
     private ?\DateTime $created_at;
 
     /**
+     * @Gedmo\Translatable
      * @ORM\Column(type="datetime")
      */
     private ?\DateTime $updated_at;
 
     /**
+     * @Gedmo\Translatable
      * @ORM\Column(type="string", length=255)
      */
     private ?string $category;
@@ -63,14 +68,26 @@ class Project
     private ?string $link;
 
     /**
+     * @Gedmo\Translatable
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private ?string $client;
 
     /**
+     * @Gedmo\Translatable
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private ?string $developer;
+
+    /**
+     * @Gedmo\Locale
+     */
+    private $locale;
+
+    /**
+     * @ORM\OneToMany(targetEntity="Gedmo\Translatable\Entity\Translation", mappedBy="object", cascade={"persist", "remove"})
+     */
+    private $translations;
 
     /**
      * @throws \Exception
@@ -80,6 +97,7 @@ class Project
         $this->images = new ArrayCollection();
         $this->created_at = new \DateTime('now', new \DateTimeZone('Europe/Paris'));
         $this->categories = new ArrayCollection();
+        $this->translations = new ArrayCollection();
     }
 
 
@@ -266,6 +284,46 @@ class Project
     public function setDeveloper(?string $developer): self
     {
         $this->developer = $developer;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of translations
+     */ 
+    public function getTranslations()
+    {
+        return $this->translations;
+    }
+
+    /**
+     * Set the value of translations
+     *
+     * @return  self
+     */ 
+    public function setTranslations($translations)
+    {
+        $this->translations = $translations;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of locale
+     */ 
+    public function getLocale()
+    {
+        return $this->locale;
+    }
+
+    /**
+     * Set the value of locale
+     *
+     * @return  self
+     */ 
+    public function setLocale($locale)
+    {
+        $this->locale = $locale;
 
         return $this;
     }

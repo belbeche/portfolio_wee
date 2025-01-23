@@ -11,6 +11,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 
@@ -33,6 +34,13 @@ class PostType extends AbstractType
                     'placeholder' => 'Texte principal du tutoriel',
                     'rows' => 10,
                 ],
+            ])
+            ->add('status', ChoiceType::class, [
+                'choices' => [
+                    'Brouillon' => 'draft',
+                    'Validé' => 'validated',
+                ],
+                'label' => 'Statut de l\'article',
             ])
             ->add('codeBlocks', CollectionType::class, [
                 'entry_type' => CodeBlockType::class,

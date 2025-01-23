@@ -2,12 +2,14 @@
 
 namespace App\Controller\Front;
 
-use App\Entity\Category;
 use App\Entity\Project;
+use App\Entity\Category;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Gedmo\Translatable\TranslatableListener;
 
 class ProjetsController extends AbstractController
 {
@@ -31,8 +33,10 @@ class ProjetsController extends AbstractController
     /**
      * @Route("/projet/realisation/{id}", name="front_project_show")
      */
-    public function show(EntityManagerInterface $entityManager, Project $project): Response
+    public function show(EntityManagerInterface $entityManager, Project $project,Request $request): Response
     {
+        $locale = $request->getLocale(); // Get the current locale (e.g., "en" or "fr")
+
         // Récupérer des projets connexes (même catégorie si possible)
         $relatedProjectsQuery = $entityManager->getRepository(Project::class)->createQueryBuilder('p')
             ->where('p.id != :currentProjectId')
@@ -63,6 +67,9 @@ class ProjetsController extends AbstractController
 
             $relatedProjects = array_merge($relatedProjects, $additionalProjects);
         }
+
+        // Set the desired locale for translations
+        $project->setLocale($locale);
 
         return $this->render('front/projets/show.html.twig', [
             'project' => $project,

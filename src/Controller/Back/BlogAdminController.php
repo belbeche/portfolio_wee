@@ -109,4 +109,14 @@ class BlogAdminController extends AbstractController
             }
         }
     }
+
+    #[Route('/validate/{id}', name: 'validate', methods: ['POST'])]
+    public function validate(Post $post): Response
+    {
+        $post->setStatus('validated');
+        $this->entityManager->flush();
+
+        $this->addFlash('success', 'Article validé avec succès.');
+        return $this->redirectToRoute('admin_blog_index');
+    }
 }

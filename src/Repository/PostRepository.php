@@ -32,6 +32,16 @@ class PostRepository extends ServiceEntityRepository
             ->getResult();
     }
 
+    public function findValidatedPosts()
+    {
+        return $this->createQueryBuilder('p')
+            ->andWhere('p.status = :status')
+            ->setParameter('status', 'validated')
+            ->orderBy('p.createdAt', 'DESC')
+            ->getQuery()
+            ->getResult();
+    }
+
 //    /**
 //     * @return Post[] Returns an array of Post objects
 //     */

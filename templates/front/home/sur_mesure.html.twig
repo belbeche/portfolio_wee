@@ -1,12 +1,12 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}ScriptZenIT - Applications sur mesure et solutions innovantes{% endblock %}
+{% block title %}{{ 'home_title'|trans }}{% endblock %}
 
 {% block content %}
 <div class="container mt-5">
-    <h1 class="text-center mb-4">Bienvenue chez ScriptZenIT</h1>
+    <h1 class="text-center mb-4">{{ 'home_heading'|trans }}</h1>
     <p class="lead text-center mb-5">
-        Transformez vos idées en solutions numériques puissantes avec nos applications sur mesure, automatisation de tâches et expertises en référencement naturel.
+        {{ 'home_intro'|trans }}
     </p>
 
     <div class="row text-center">
@@ -14,8 +14,8 @@
             <a href="{{ path('custom_app') }}" class="text-decoration-none">
                 <div class="card shadow-sm h-100">
                     <div class="card-body">
-                        <h4 class="card-title">Applications sur Mesure</h4>
-                        <p class="card-text">Des solutions personnalisées, parfaitement adaptées à vos besoins métier.</p>
+                        <h4 class="card-title">{{ 'custom_app_title'|trans }}</h4>
+                        <p class="card-text">{{ 'custom_app_desc'|trans }}</p>
                     </div>
                 </div>
             </a>
@@ -24,8 +24,8 @@
             <a href="{{ path('quote_generation') }}" class="text-decoration-none">
                 <div class="card shadow-sm h-100">
                     <div class="card-body">
-                        <h4 class="card-title">Création de Devis PDF</h4>
-                        <p class="card-text">Générez des devis professionnels pour une traçabilité optimale.</p>
+                        <h4 class="card-title">{{ 'quote_generation_title'|trans }}</h4>
+                        <p class="card-text">{{ 'quote_generation_desc'|trans }}</p>
                     </div>
                 </div>
             </a>
@@ -34,18 +34,18 @@
             <a href="{{ path('expertise_web') }}" class="text-decoration-none">
                 <div class="card shadow-sm h-100">
                     <div class="card-body">
-                        <h4 class="card-title">Automatisation de Tâches</h4>
-                        <p class="card-text">Optimisez votre temps avec des processus automatisés via des applications web.</p>
+                        <h4 class="card-title">{{ 'task_automation_title'|trans }}</h4>
+                        <p class="card-text">{{ 'task_automation_desc'|trans }}</p>
                     </div>
                 </div>
             </a>
         </div>
         <div class="col-md-3 mb-4">
-            <a href="{{ path('seo') }}" class="text-decoration-none">
+            <a href="#" class="text-decoration-none">
                 <div class="card shadow-sm h-100">
                     <div class="card-body">
-                        <h4 class="card-title">Référencement Naturel</h4>
-                        <p class="card-text">Boostez votre visibilité en ligne grâce à des stratégies SEO efficaces.</p>
+                        <h4 class="card-title">{{ 'seo_title'|trans }}</h4>
+                        <p class="card-text">{{ 'seo_desc'|trans }}</p>
                     </div>
                 </div>
             </a>

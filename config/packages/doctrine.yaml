@@ -15,6 +15,11 @@ doctrine:
                 type: annotation # Correct: utiliser "attribute" ou "annotation", mais pas une liste
                 prefix: 'App\Entity'
                 alias: App
+            GedmoTranslatable:
+                type: annotation
+                prefix: Gedmo\Translatable\Entity
+                dir: "%kernel.project_dir%/vendor/gedmo/doctrine-extensions/src/Translatable/Entity"
+                is_bundle: false
 
 when@test:
     doctrine:

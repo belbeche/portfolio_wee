@@ -1,23 +1,23 @@
 {% extends 'base.html.twig' %}
 
-{% block title %} Contact - ScriptZenIT {% endblock %}
+{% block title %}{{ 'contact_page_title'|trans }}{% endblock %}
 
 {% block content %}
 <script src="{{ asset('js/jquery-3.5.1.min.js') }}"></script>
 <div class="container">
     <div class="jumbotron text-center justify-content-center">
-        <!-- Carte Google Maps -->
+        <!-- Google Maps -->
         <div class="text-center justify-content-center">
-            <h3 class="fw-bold">Notre Localisation</h3>
+            <h3 class="fw-bold">{{ 'contact_location_title'|trans }}</h3>
             <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d43143.46604590581!2d3.878550477812114!3d47.480822380164234!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47ee04c9f96e6e4d%3A0x409ce34b30d6c10!2s89200%20Avallon!5e0!3m2!1sfr!2sfr!4v1735372967003!5m2!1sfr!2sfr" width="100%" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
-            <h4 class="font-weight-light">Construisons quelque chose d'exceptionnel ensemble !</h4>
+            <h4 class="font-weight-light">{{ 'contact_location_subtitle'|trans }}</h4>
             <a class="btn btn-primary" href="https://g.page/r/CSj9BKNjCGCBEAI/review">
-                <img src="{{ asset('img/rating.png') }}" alt="Évaluez-nous" style="width: 30px; height: auto; margin-right: 10px;">Évaluez-nous
+                <img src="{{ asset('img/rating.png') }}" alt="{{ 'contact_rating_alt'|trans }}" style="width: 30px; height: auto; margin-right: 10px;">{{ 'contact_rating_button'|trans }}
             </a>
         </div>
     </div>
     <div class="row">
-        <!-- Informations de contact -->
+        <!-- Contact Information -->
         <div class="col-md-4">
             <div id="info_list" class="info-list">
 
@@ -26,9 +26,9 @@
                         <i class="bi bi-telephone"></i>
                     </div>
                     <div class="ci-text">
-                        <h5 class="fw-bold">Téléphone</h5>
+                        <h5 class="fw-bold">{{ 'contact_phone_title'|trans }}</h5>
                         <p><a href="tel:0762972691">07 62 97 26 91</a></p>
-                        <small>Disponible pour toute demande.</small>
+                        <small>{{ 'contact_phone_subtext'|trans }}</small>
                     </div>
                 </div>
 
@@ -37,9 +37,9 @@
                         <i class="bi bi-geo-alt"></i>
                     </div>
                     <div class="ci-text">
-                        <h5 class="fw-bold">Adresse</h5>
-                        <p>Avallon, Yonne (89), France</p>
-                        <small>Nous travaillons sur des projets locaux et nationaux.</small>
+                        <h5 class="fw-bold">{{ 'contact_address_title'|trans }}</h5>
+                        <p>{{ 'contact_address'|trans }}</p>
+                        <small>{{ 'contact_address_subtext'|trans }}</small>
                     </div>
                 </div>
 
@@ -48,37 +48,37 @@
                         <i class="bi bi-envelope"></i>
                     </div>
                     <div class="ci-text">
-                        <h5 class="fw-bold">Email</h5>
+                        <h5 class="fw-bold">{{ 'contact_email_title'|trans }}</h5>
                         <p><a href="mailto:contact@scriptzenit.fr">contact@scriptzenit.fr</a></p>
-                        <small>Contactez-nous pour toute question ou proposition.</small>
+                        <small>{{ 'contact_email_subtext'|trans }}</small>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Formulaire de contact -->
+        <!-- Contact Form -->
         <div class="col-md-8">
             <div class="block-title mb-4">
-                <h2>Comment pouvons-nous vous aider ?</h2>
+                <h2>{{ 'contact_form_title'|trans }}</h2>
             </div>
 
             {{ form_start(form, {'action': path('front_contact'), 'attr': {'id': 'contact_form', 'class': 'needs-validation'}}) }}
 
             <div class="row">
                 <div class="col-md-6">
-                    {{ form_row(form.firstName, {'attr': {'class': 'form-control', 'placeholder': 'Prénom'}}) }}
-                    {{ form_row(form.lastName, {'attr': {'class': 'form-control', 'placeholder': 'Nom'}}) }}
-                    {{ form_row(form.email, {'attr': {'class': 'form-control', 'placeholder': 'Email'}}) }}
+                    {{ form_row(form.firstName, {'attr': {'class': 'form-control', 'placeholder': 'contact_form_first_name_placeholder'|trans }}) }}
+                    {{ form_row(form.lastName, {'attr': {'class': 'form-control', 'placeholder': 'contact_form_last_name_placeholder'|trans }}) }}
+                    {{ form_row(form.email, {'attr': {'class': 'form-control', 'placeholder': 'contact_form_email_placeholder'|trans }}) }}
                 </div>
                 <div class="col-md-6">
-                    {{ form_row(form.phone, {'attr': {'class': 'form-control', 'placeholder': 'Téléphone'}}) }}
+                    {{ form_row(form.phone, {'attr': {'class': 'form-control', 'placeholder': 'contact_form_phone_placeholder'|trans }}) }}
                     {{ form_row(form.service, {'attr': {'class': 'form-control'}}) }}
-                    {{ form_row(form.content, {'attr': {'class': 'form-control', 'placeholder': 'Votre demande...'}}) }}
+                    {{ form_row(form.content, {'attr': {'class': 'form-control', 'placeholder': 'contact_form_message_placeholder'|trans }}) }}
                 </div>
             </div>
 
             <div class="text-center mt-4">
-                <button type="submit" class="btn btn-primary btn-lg">Envoyer</button>
+                <button type="submit" class="btn btn-primary btn-lg">{{ 'contact_form_submit'|trans }}</button>
             </div>
 
             {{ form_end(form) }}
@@ -106,10 +106,10 @@
                 alert(result.message);
                 form.reset();
             } else {
-                alert('Des erreurs sont survenues. Veuillez vérifier votre formulaire.');
+                alert('{{ 'contact_form_error_message'|trans }}');
             }
         } catch (error) {
-            alert('Une erreur est survenue. Veuillez réessayer plus tard.');
+            alert('{{ 'contact_form_error_message'|trans }}');
         }
     });
 </script>

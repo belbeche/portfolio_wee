@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="{{ locale }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Demande de rappel - Confirmation</title>
+    <title>{{ 'email_subject'|trans }}</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -65,30 +65,30 @@
     <div class="email-container">
         <!-- Header -->
         <div class="email-header">
-        <img src="https://scriptzenit.fr/img/logo.png" alt="Logo ScriptZenIT" width="100%" height="100%">
-            <h2>Confirmation de votre demande de rappel</h2>
+            <img src="https://scriptzenit.fr/img/logo.png" alt="Logo ScriptZenIT" width="100%" height="100%">
+            <h2>{{ 'email_header'|trans }}</h2>
         </div>
 
         <!-- Body -->
         <div class="email-body">
-            <p>Bonjour {{ name }},</p>
-            <p>Nous avons bien reçu votre demande de rappel. Voici les informations que vous nous avez transmises :</p>
+            <p>{{ 'email_greeting'|trans({'%name%': name}) }}</p>
+            <p>{{ 'email_received_message'|trans }}</p>
             <ul>
-                <li><strong>Nom/Prénom :</strong> {{ name }}</li>
-                <li><strong>Numéro de téléphone :</strong> {{ phone }}</li>
-                <li><strong>Email :</strong> {{ user_email }}</li>
+                <li><strong>{{ 'email_label_name'|trans }}:</strong> {{ name }}</li>
+                <li><strong>{{ 'email_label_phone'|trans }}:</strong> {{ phone }}</li>
+                <li><strong>{{ 'email_label_email'|trans }}:</strong> {{ user_email }}</li>
             </ul>
-            <p>Notre équipe vous contactera dans les plus brefs délais. Un premier échange pourrait se faire par email pour mieux comprendre vos besoins.</p>
-            <p>Pour toute question urgente, n'hésitez pas à <a href="mailto:contact@scriptzenit.fr">nous contacter</a>.</p>
-            <h3>Important : Bonnes pratiques et conditions d’utilisation</h3>
-            <p>Nous vous rappelons que toute utilisation frauduleuse de nos services est strictement interdite et sera signalée aux autorités compétentes.</p>
-            <p>Veuillez consulter nos <a href="https://scriptzenit.fr/conditions-utilisations">conditions d’utilisation</a> pour plus d’informations.</p>
+            <p>{{ 'email_team_contact_message'|trans }}</p>
+            <p>{{ 'email_urgent_question'|trans({'%contact_email%': 'contact@scriptzenit.fr'})|raw }}</p>
+            <h3>{{ 'email_best_practices_title'|trans }}</h3>
+            <p>{{ 'email_best_practices_reminder'|trans }}</p>
+            <p>{{ 'email_terms_and_conditions'|trans({'%terms_url%': 'https://scriptzenit.fr/conditions-utilisations'})|raw }}</p>
         </div>
 
         <!-- Footer -->
         <div class="email-footer">
-            <p><strong>ScriptZenIT</strong> - Simplifiez votre digitalisation</p>
-            <p>Vous recevez cet email suite à une demande sur notre site. Si vous n’êtes pas à l’origine de cette demande, contactez-nous immédiatement.</p>
+            <p><strong>{{ 'email_footer_company'|trans }}</strong> - {{ 'email_footer_tagline'|trans }}</p>
+            <p>{{ 'email_footer_disclaimer'|trans }}</p>
         </div>
     </div>
 </body>

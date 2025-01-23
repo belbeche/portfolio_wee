@@ -17,7 +17,7 @@ class BlogController extends AbstractController
     public function index(PostRepository $postRepository, CategoryRepository $categoryRepository): Response
     {
         $category = null;
-        $posts = $postRepository->findAll(); // Tous les articles
+        $posts = $postRepository->findValidatedPosts();
         $categories = $categoryRepository->findAll(); // Toutes les catégories
 
         return $this->render('front/blog/index.html.twig', [
@@ -38,8 +38,8 @@ class BlogController extends AbstractController
         if (!$categoryEntity) {
             throw $this->createNotFoundException('La catégorie demandée est introuvable.');
         }
-
-        $posts = $postRepository->findBy(['category' => $categoryEntity]);
+        
+        $posts = $postRepository->findValidatedPosts(['category' => $categoryEntity]);
 
         return $this->render('front/blog/index.html.twig', [
             'categories' => $categoryRepository->findAll(),

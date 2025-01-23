@@ -56,6 +56,11 @@ class Post
      */
     private ?Category $category = null;
 
+    /**
+     * @ORM\Column(type="string", length=50)
+     */
+    private string $status = 'draft'; // Par défaut, "brouillon"
+
     public function __construct()
     {
         $this->sections = new ArrayCollection();
@@ -225,6 +230,18 @@ class Post
     public function setCategory(?Category $category): self
     {
         $this->category = $category;
+        return $this;
+    }
+
+    public function getStatus(): string
+    {
+        return $this->status;
+    }
+
+    public function setStatus(string $status): self
+    {
+        $this->status = $status;
+
         return $this;
     }
 }
