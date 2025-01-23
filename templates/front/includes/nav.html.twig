@@ -1,64 +1,116 @@
-<div>
-	<header id="header" style="margin-bottom: 3rem !important;margin-top: 3px;!important">
-		<nav class="navbar navbar-expand-lg fixed-top container text-dark mt-top-logo" style="background-color: #ffffff;">
-			<!-- Text Logo -->
-			<div class="logo">
-				<a href="{{ url('front_home') }}">
-					<img src="{{ asset('img/logo.png')}}" class="d-sm-none d-md-none d-lg-block" width="20%" height="30%" alt="Agence web à Avallon (89200)">
-				</a>
-				<a href="{{ url('front_home') }}">
-					<div class="logo-text d-md-block d-lg-none d-sm-block fw-bold" style="font-size: 1rem;">ScriptZenIT</div>
-				</a>
-			</div>
-			<!-- /Text Logo -->
-			<div class="burger" id="burger">
-				<span class="burger-line"></span>
-				<span class="burger-line"></span>
-				<span class="burger-line"></span>
-			</div>
-			<div class="menu" id="menu">
-				<ul class="menu-inner">
-					<li class="menu-item {{ app.request.get('_route') == 'front_home' ? 'active' : '' }}">
-						<a class="nav-link" href="{{ url('front_home') }}">Accueil</a>
-					</li>
+<style>
+    .libutton {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding: 7px;
+        text-align: center;
+        outline: none;
+        text-decoration: none !important;
+        color: #ffffff !important;
+        width: 200px;
+        height: 32px;
+        border-radius: 16px;
+        background-color: #0A66C2;
+        font-family: "SF Pro Text", Helvetica, sans-serif;
+        margin-top: 13px;
+    }
+    @media (max-width: 576px) {
+        .libutton {
+            margin-left: 12px;
+        }
+    }
+</style>
+<header id="header">
+    <nav class="navbar navbar-expand-lg fixed-top container-fluid text-white">
+        <!-- Logo -->
+        <div class="logo">
+            <a href="{{ url('front_home') }}">
+                <img src="{{ asset('img/logo.png') }}" class="d-sm-none d-md-none d-lg-block ml-5" width="250" alt="{{ 'logo_alt'|trans }}">
+            </a>
+            <a href="{{ url('front_home') }}">
+                <div class="text-white d-md-block d-lg-none d-sm-block fw-bold" style="font-size: 1rem;margin-left: 21px!important;">{{ 'site_name'|trans }}</div>
+            </a>
+        </div>
 
-					<li class="menu-item {{ app.request.get('_route') == 'front_about' ? 'active' : '' }}">
-						<a class="nav-link" href="{{ url('front_about') }}">A propos</a>
-					</li>
+        <!-- Burger Menu -->
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMenu" aria-controls="navbarMenu" aria-expanded="false" aria-label="{{ 'toggle_navigation'|trans }}">
+            <div class="list mt-3">
+                <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="white" class="bi bi-list" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5"/>
+                </svg>
+            </div>
+        </button>
 
-					<li class="menu-item {{ app.request.get('_route') == 'front_project' ? 'active' : '' }}">
-						<a class="nav-link" href="{{ url('front_project') }}">Nos réalisations</a>
-					</li>
-					<li class="menu-item {{ app.request.get('_route') == 'front_devis_new' ? 'active' : '' }}">
-						<a class="nav-link" href="{{ url('front_devis_new') }}">Faire une demande</a>
-					</li>
-					{% if not app.user %}
-						<li class="menu-item {{ app.request.get('_route') == 'app_register' ? 'active' : '' }}">
-							<a class="btn btn-success" href="{{ url('app_register') }}">S'inscrire</a>
-						</li>
-						<li class="menu-item {{ app.request.get('_route') == 'app_login' ? 'active' : '' }}">
-							<a class="btn btn-info" href="{{ url('app_login') }}">Connexion</a>
-						</li>
-					{% endif %}
-					{% if app.user %}
-						<li class="menu-item {{ app.request.get('_route') == 'front_profile' ? 'active' : '' }}">
-							<a class="btn btn-info" href="{{ url('front_assistance') }}">Profil</a>
-						</li>
-						<li class="menu-item {{ app.request.get('_route') == 'front_profile_project' ? 'active' : '' }}">
-							<a class="btn btn-outline-secondary" href="{{ url('front_profile_project') }}">Mes projets</a>
-						</li>
-						<li class="menu-item {{ app.request.get('_route') == 'app_logout' ? 'active' : '' }}">
-							<a class="btn btn-danger" href="{{ url('app_logout') }}">Déconnexion</a>
-						</li>
-					{% endif %}
-					{% if is_granted('ROLE_ADMIN') %}
-						<li class="menu-item {{ app.request.get('_route') == 'back_index' ? 'active' : '' }}">
-							<a class="btn btn-danger" href="{{ url('back_index') }}">Admin panel</a>
-						</li>
-					{% endif %}
-				</ul>
-			</div>
-			{#<button id="switch">Dark mode</button>#}
-		</nav>
-	</header>
-</div>
+        <!-- Menu -->
+        <div class="collapse navbar-collapse justify-content-end" id="navbarMenu">
+            <ul class="navbar-nav ms-auto menu_mobile">
+                <li class="nav-item {{ app.request.get('_route') == 'front_home' ? 'active' : '' }}">
+                    <a class="nav-link" href="{{ url('front_home') }}">{{ 'nav_home'|trans }}</a>
+                </li>
+                <li class="menu-item {{ app.request.get('_route') == 'front_project' ? 'active' : '' }}">
+                    <a class="nav-link" href="{{ url('front_project') }}">{{ 'nav_projects'|trans }}</a>
+                </li>
+                <li class="menu-item {{ app.request.get('_route') == 'blog_index' ? 'active' : '' }}">
+                    <a class="nav-link" href="{{ url('blog_index') }}">{{ 'nav_blog'|trans }}</a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="servicesDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        {{ 'nav_services'|trans }}
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="servicesDropdown">
+                        <li><a class="dropdown-item text-black" href="{{ path('expertise_web') }}">{{ 'service_web_creation'|trans }}</a></li>
+                        <li><a class="dropdown-item text-black" href="{{ path('custom_app') }}">{{ 'service_custom_app'|trans }}</a></li>
+                        <li><a class="dropdown-item text-black" href="{{ path('quote_generation') }}">{{ 'service_quote_generation'|trans }}</a></li>
+                        <li><a class="dropdown-item text-black" href="{{ path('task_automation') }}">{{ 'service_task_automation'|trans }}</a></li>
+                    </ul>
+                </li>
+                {% if not app.user %}
+                {# <div class="user">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            {{ 'nav_client_area'|trans }}
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li class="menu-item {{ app.request.get('_route') == 'app_register' ? 'active' : '' }}">
+                                <a class="dropdown-item text-black" href="{{ url('app_register') }}">{{ 'nav_register'|trans }}</a>
+                            </li>
+                            <li class="menu-item {{ app.request.get('_route') == 'app_login' ? 'active' : '' }}">
+                                <a class="dropdown-item text-black" href="{{ url('app_login') }}">{{ 'nav_login'|trans }}</a>
+                            </li>
+                        </ul>
+                    </li>
+                </div> #}
+                {% endif %}
+                {% if is_granted('ROLE_ADMIN') %}
+                    <li class="nav-item {{ app.request.get('_route') == 'back_index' ? 'active' : '' }}">
+                        <a class="nav-link" href="{{ url('back_index') }}">{{ 'nav_admin_panel'|trans }}</a>
+                    </li>
+                {% endif %}
+                {% if app.user %}
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            {{ 'nav_account'|trans }}
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li class="menu-item {{ app.request.get('_route') == 'front_assistance' ? 'active' : '' }}">
+                                <a class="dropdown-item text-black" href="{{ url('front_assistance') }}">{{ 'nav_profile'|trans }}</a>
+                            </li>
+                            <li class="menu-item {{ app.request.get('_route') == 'front_profile_project' ? 'active' : '' }}">
+                                <a class="dropdown-item text-black" href="{{ url('front_profile_project') }}">{{ 'nav_my_projects'|trans }}</a>
+                            </li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li class="menu-item {{ app.request.get('_route') == 'app_logout' ? 'active' : '' }}">
+                                <a class="btn btn-outline-danger dropdown-item text-black" href="{{ url('app_logout') }}">{{ 'nav_logout'|trans }}</a>
+                            </li>
+                        </ul>
+                    </li>
+                {% endif %}
+                <li class="menu-item {{ app.request.get('_route') == 'front_contact' ? 'active' : '' }}">
+                    <a class="nav-link" href="{{ url('front_contact') }}">{{ 'nav_contact'|trans }}</a>
+                </li>
+                <a class="libutton" href="https://www.linkedin.com/company/scriptzenit/" target="_blank">{{ 'nav_follow_linkedin'|trans }}</a>
+            </ul>
+        </div>
+    </nav>
+</header>

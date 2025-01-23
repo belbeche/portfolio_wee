@@ -32,17 +32,21 @@ class DevisType extends AbstractType
             ->add('type_de_site_web', ChoiceType::class, [
                 'label' => false,
                 'choices' => [
-                    'Site vitrine (Présentation de l\'entreprise)' => 'site_vitrine',
-                    'Réalisation de site d\'annonce immobilière' => 'site_real_estate',
-                    'E-Commerce (Vente en ligne)' => 'site_e-commerce',
-                    'Blog professionnel' => 'site_blog',
-                    'Portfolio (pour artistes, designers, etc.)' => 'site_portfolio',
-                    'Forum communautaire' => 'site_forum',
-                    'Site d\'information ou magazine en ligne' => 'site_info_magazine',
-                    'Application Web et Mobile (Cross-plateforme)' => 'application_cross_plateforme',
-                    'Système de Gestion de Contenu (CMS)' => 'systeme_gestion_contenu',
-                    'Intranet d\'entreprise' => 'intranet',
-                    'Application spécifique (Décrivez vos besoins)' => 'autre'
+                    'Sites Web' => [
+                        'Site vitrine (Présentation de l\'entreprise)' => 'site_vitrine',
+                        'Réalisation de site d\'annonce immobilière' => 'site_real_estate',
+                        'E-Commerce (Vente en ligne)' => 'site_e-commerce',
+                        'Blog professionnel' => 'site_blog',
+                        'Portfolio (Artistes, designers, etc.)' => 'site_portfolio',
+                        'Forum communautaire' => 'site_forum',
+                        'Site d\'information ou magazine en ligne' => 'site_info_magazine',
+                    ],
+                    'Applications et Plateformes' => [
+                        'Application Web et Mobile (Cross-plateforme)' => 'application_cross_plateforme',
+                        'Système de Gestion de Contenu (CMS)' => 'systeme_gestion_contenu',
+                        'Intranet d\'entreprise' => 'intranet',
+                        'Application spécifique (Décrivez vos besoins)' => 'autre',
+                    ],
                 ],
                 'attr' => [
                     'class' => 'devisForm selectpicker',

@@ -1,0 +1,41 @@
+{% extends 'base_back.html.twig' %}
+
+{% block title %}Membres{% endblock %}
+
+{% block content %}
+    <div class="container-fluid">
+        <h1>Liste des membres</h1>
+
+        <a href="{{ path('back_member_new') }}">Ajouter un nouveau membre</a>
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Prénom</th>
+                        <th>Nom</th>
+                        <th>Fonction</th>
+                        <th>Email</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for member in members %}
+                        <tr>
+                            <td>{{ member.id }}</td>
+                            <td>{{ member.firstname }}</td>
+                            <td>{{ member.lastname }}</td>
+                            <td>{{ member.function }}</td>
+                            <td>{{ member.email }}</td>
+                            <td>
+                                {# <a href="{{ path('back_member_show', {id: member.id}) }}">Afficher</a> #}
+                                <a href="{{ path('back_member_edit', {id: member.id}) }}">Modifier</a>
+                                <a href="{{ path('back_member_delete', {id: member.id}) }}">Supprimer</a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}

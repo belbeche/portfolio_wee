@@ -1,82 +1,80 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Inscription
-{% endblock %}
+{% block title %}{{ 'register_title'|trans }}{% endblock %}
 
 {% block content %}
 
-	{% if app.user %}
+    {% if app.user %}
 
-		<div class="px-4 pt-5 my-5 text-center border-bottom">
-			<h1 class="display-4 fw-bold text-body-emphasis">Oups, vous êtes déjà connecté !</h1>
-			<div class="col-lg-6 mx-auto">
-			<p class="lead mb-4">En tant que {{ app.user.userIdentifier }},
-			<div class="d-grid gap-2 d-sm-flex justify-content-sm-center mb-5">
-				<a href="{{ path('app_logout') }}" class="btn btn-primary btn-lg px-4 me-sm-3">Déconnexion</a>
-				<a href="{{ path('front_project') }}" class="btn btn-primary btn-lg px-4 me-sm-3">Voir nos réalisations</a>
-			</div>
-			</div>
-			<div class="overflow-hidden" style="max-height: 30vh;">
-			</div>
-		</div>
+        <div class="px-4 pt-5 my-5 text-center border-bottom">
+            <h1 class="display-4 fw-bold text-body-emphasis">{{ 'already_logged_in_title'|trans }}</h1>
+            <div class="col-lg-6 mx-auto">
+                <p class="lead mb-4">{{ 'already_logged_in_message'|trans({'%user%': app.user.userIdentifier}) }}</p>
+                <div class="d-grid gap-2 d-sm-flex justify-content-sm-center mb-5">
+                    <a href="{{ path('app_logout') }}" class="btn btn-primary btn-lg px-4 me-sm-3">{{ 'logout_button'|trans }}</a>
+                    <a href="{{ path('front_project') }}" class="btn btn-primary btn-lg px-4 me-sm-3">{{ 'view_projects_button'|trans }}</a>
+                </div>
+            </div>
+            <div class="overflow-hidden" style="max-height: 30vh;">
+            </div>
+        </div>
 
-	{% else %}
+    {% else %}
 
-	<div class="container col-xl-10 col-xxl-8 px-4 py-5">
-		<div class="row align-items-center g-lg-5 py-5">
-			<div class="col-lg-7 text-center text-lg-start">
-				<h1 class="display-4 fw-bold lh-1 mb-3">Inscrivez-vous</h1>
-				<p>Afin de suivre la progression de votre demande</p>
-				<div class="login">
-					<h6>Vous êtes membre ?</h6>
-					<p>Connectez-vous-en suivant ce lien <a href="{{ url('app_login') }}">Je me connecte</a>.</p>
-					<img src="{{ asset('img/register.png') }}" alt="Inscription ScriptZenIT">
-				</div>
-			</div>
-			<div class="col-md-10 mx-auto col-lg-5">
-				{{ form_start(formRegister, {attr: {'class' : 'p-4 px-5 border rounded-3 no-validate'}}) }}
-					<div>
-						<label for="nom" class="sr-only">Civilité</label>
-						{{ form_row(formRegister.civility) }}
-						{{ form_errors(formRegister.civility) }}
-					</div>
-					<div>
-						<label for="user_nom" class="sr-only">Nom</label>
-						{{ form_row(formRegister.nom) }}
-						{{ form_errors(formRegister.nom) }}
-					</div>
-					<div>
-						<label for="user_prenom" class="sr-only">Prenom</label>
-						{{ form_row(formRegister.prenom) }}
-						{{ form_errors(formRegister.prenom) }}
-					</div>
-					<div>
-						<label for="user_email" class="sr-only">Identifiant de connexion</label>
-						{{ form_row(formRegister.email) }}
-					</div>
-					<div>
-						{{ form_row(formRegister.password.first) }}
-						{{ form_errors(formRegister.password.first) }}
-					</div>
-					<div>
-						{{ form_row(formRegister.password.second) }}
-						{{ form_errors(formRegister.password.second) }}
-					</div>
-					<div>
-						{{ form_row(formRegister.checked) }}
-						{{ form_errors(formRegister.checked) }}
-					</div>
-					<p>La sécurité de vos données est notre priorité absolue, et nos applications sont entièrement conformes aux normes de la
-					<a href="https://www.cnil.fr/fr/guide-rgpd-du-developpeur">CNIL</a>. Vous avez la possibilité de supprimer vos données instantanément depuis votre espace personnel.</p>
-					<div class="container">
-						<button type="submit" class="btn btn-primary">Valider</button>
-					</div>
-				{{ form_end(formRegister) }}
-			</div>
-		</div>
-	</div>
+        <div class="container col-xl-10 col-xxl-8 px-4 py-5">
+            <div class="row align-items-center g-lg-5 py-5">
+                <div class="col-lg-7 text-center text-lg-start">
+                    <h1 class="display-4 fw-bold lh-1 mb-3">{{ 'register_form_heading'|trans }}</h1>
+                    <p>{{ 'register_form_subheading'|trans }}</p>
+                    <div class="login">
+                        <h6>{{ 'login_question'|trans }}</h6>
+                        <p>{{ 'login_redirect_text'|trans }} <a href="{{ url('app_login') }}">{{ 'login_link_text'|trans }}</a>.</p>
+                        <img src="{{ asset('img/register.png') }}" alt="{{ 'register_image_alt'|trans }}">
+                    </div>
+                </div>
+                <div class="col-md-10 mx-auto col-lg-5">
+                    {{ form_start(formRegister, {attr: {'class' : 'p-4 px-5 border rounded-3 no-validate'}}) }}
+                        <div>
+                            <label for="nom">{{ 'form_civility_label'|trans }}</label>
+                            {{ form_row(formRegister.civility) }}
+                            {{ form_errors(formRegister.civility) }}
+                        </div>
+                        <div>
+                            <label for="user_nom">{{ 'form_nom_label'|trans }}</label>
+                            {{ form_row(formRegister.nom) }}
+                            {{ form_errors(formRegister.nom) }}
+                        </div>
+                        <div>
+                            <label for="user_prenom">{{ 'form_prenom_label'|trans }}</label>
+                            {{ form_row(formRegister.prenom) }}
+                            {{ form_errors(formRegister.prenom) }}
+                        </div>
+                        <div>
+                            <label for="user_email">{{ 'form_email_label'|trans }}</label>
+                            {{ form_row(formRegister.email) }}
+                        </div>
+                        <div>
+                            {{ form_row(formRegister.password.first) }}
+                            {{ form_errors(formRegister.password.first) }}
+                        </div>
+                        <div>
+                            {{ form_row(formRegister.password.second) }}
+                            {{ form_errors(formRegister.password.second) }}
+                        </div>
+                        <div>
+                            {{ form_row(formRegister.checked) }}
+                            {{ form_errors(formRegister.checked) }}
+                        </div>
+                        <p>{{ 'data_security_message'|trans }}
+                        <p><a href="https://www.cnil.fr/fr/guide-rgpd-du-developpeur" class="text-blue">{{ 'cnil_compliance_link_text'|trans }}</a>. {{ 'data_deletion_message'|trans }}</p>
+                        <div class="container">
+                            <button type="submit" class="btn btn-primary">{{ 'submit_button_text'|trans }}</button>
+                        </div>
+                    {{ form_end(formRegister) }}
+                </div>
+            </div>
+        </div>
 
-	{% endif %}
+    {% endif %}
 
-	
 {% endblock %}

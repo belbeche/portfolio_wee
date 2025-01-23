@@ -1,0 +1,80 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'quote_generation_title'|trans }}{% endblock %}
+
+{% block content %}
+<div class="container mt-6">
+    <h1 class="mb-5 text-center">{{ 'quote_generation_heading'|trans }}</h1>
+    <p class="lead text-center mb-5">
+        {{ 'quote_generation_intro'|trans }}
+    </p>
+    
+    <!-- Présentation -->
+    <div class="row mb-5">
+        <div class="col-md-6">
+            <h3>{{ 'quote_benefits_title'|trans }}</h3>
+            <ul>
+                <li><strong>{{ 'quote_benefits_time'|trans }}</strong> {{ 'quote_benefits_time_desc'|trans }}</li>
+                <li><strong>{{ 'quote_benefits_accuracy'|trans }}</strong> {{ 'quote_benefits_accuracy_desc'|trans }}</li>
+                <li><strong>{{ 'quote_benefits_customization'|trans }}</strong> {{ 'quote_benefits_customization_desc'|trans }}</li>
+                <li><strong>{{ 'quote_benefits_traceability'|trans }}</strong> {{ 'quote_benefits_traceability_desc'|trans }}</li>
+            </ul>
+        </div>
+        <div class="col-md-6">
+            <img src="{{ asset('img/quote-generation.jpg') }}" alt="{{ 'quote_image_alt'|trans }}" class="img-fluid shadow-sm rounded">
+        </div>
+    </div>
+
+    <!-- Fonctionnalités -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <h2 class="mb-4 text-center">{{ 'features_title'|trans }}</h2>
+        </div>
+        <div class="col-md-6">
+            <h4 class="text-primary">{{ 'feature_1_title'|trans }}</h4>
+            <p>{{ 'feature_1_desc'|trans }}</p>
+        </div>
+        <div class="col-md-6">
+            <h4 class="text-primary">{{ 'feature_2_title'|trans }}</h4>
+            <p>{{ 'feature_2_desc'|trans }}</p>
+        </div>
+        <div class="col-md-6 mt-4">
+            <h4 class="text-primary">{{ 'feature_3_title'|trans }}</h4>
+            <p>{{ 'feature_3_desc'|trans }}</p>
+        </div>
+        <div class="col-md-6 mt-4">
+            <h4 class="text-primary">{{ 'feature_4_title'|trans }}</h4>
+            <p>{{ 'feature_4_desc'|trans }}</p>
+        </div>
+    </div>
+
+    <!-- Avantages -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <h2 class="mb-4 text-center">{{ 'advantage_1_title_generation'|trans }}</h2>
+        </div>
+        <div class="col-md-4 text-center">
+            <i class="fas fa-clock fa-3x text-primary mb-3"></i>
+            <h5>{{ 'advantage_1_title'|trans }}</h5>
+            <p>{{ 'advantage_1_desc_generation'|trans }}</p>
+        </div>
+        <div class="col-md-4 text-center">
+            <i class="fas fa-check-circle fa-3x text-primary mb-3"></i>
+            <h5>{{ 'advantage_2_title_generation'|trans }}</h5>
+            <p>{{ 'advantage_2_desc'|trans }}</p>
+        </div>
+        <div class="col-md-4 text-center">
+            <i class="fas fa-user-shield fa-3x text-primary mb-3"></i>
+            <h5>{{ 'advantage_3_title'|trans }}</h5>
+            <p>{{ 'advantage_3_desc'|trans }}</p>
+        </div>
+    </div>
+
+    <!-- Appel à action -->
+    <div class="text-center mt-5">
+        <h3 class="mb-4">{{ 'cta_heading'|trans }}</h3>
+        <p>{{ 'cta_description'|trans }}</p>
+        <a href="{{ path('front_contact') }}" class="btn btn-primary btn-lg">{{ 'cta_button'|trans }}</a>
+    </div>
+</div>
+{% endblock %}

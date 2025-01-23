@@ -2,9 +2,14 @@
 
 {% block content %}
 
-    <script src="https://cdn.ckeditor.com/ckeditor5/36.0.1/classic/ckeditor.js"></script>
-
-    <div class="container-fluid text-center jumbotron">
+    <div class="container-fluid text-center jumbotron mt-7">
+        <div class="container">
+            {% for type, messages in app.flashes %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ type }}">{{ message }}</div>
+                {% endfor %}
+            {% endfor %}
+        </div>
         <h1>Support Technique</h1>
         <div class="page-subtitle">
             <br>
@@ -20,13 +25,13 @@
         <div class="container">
 
             {% include 'front/includes/_Subject_form.html.twig' %}
-            {% if app.request.attributes.get('_route') == 'front_Subjects_new' and Subject.images is not empty %}
-                {% for image in Subject.images %}
+            {% if app.request.attributes.get('_route') == 'front_subjects_new' and subject.images is not empty %}
+                {% for image in subject.images %}
                     <div>
-                        <img src="{{ asset('/uploads/subject'~image.name) }}" alt="{{ Subject.name }}" width="150">
+                        <img src="{{ asset('/uploads/subject'~image.name) }}" alt="{{ subject.name }}" width="150">
 
                         {# We add a link to delete an image (will be managed in Ajax in images.js) #}
-                        <a href="{{ path('back_Subjects_remove_image', {id: image.id})}}" data-delete data-token="{{ csrf_token('delete' ~ image.id )}}">
+                        <a href="{{ path('back_subjects_remove_image', {id: image.id})}}" data-delete data-token="{{ csrf_token('delete' ~ image.id )}}">
                             <i class="bi bi-file-earmark-x"></i>
                             Supprimer
                         </a>
@@ -37,15 +42,4 @@
 
         </div>
     </div>
-
-    <script>
-        ClassicEditor
-            .create( document.querySelector( '#contenu' ) )
-            .then( editor => {
-                console.log( 'Editor was initialized', editor );
-            } )
-            .catch( error => {
-                console.error( error );
-            } );
-    </script>
 {% endblock %}

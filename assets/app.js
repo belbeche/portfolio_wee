@@ -6,15 +6,26 @@
  */
 
 // any CSS you import will output into a single css file (app.css in this case)
-
-import './styles/app.css';
+import './styles/main.css';
 import './styles/normalize.css';
-/*import './styles/bootstrap.min.css';*/
-import './styles/owl.carousel.css';
+import './styles/bootstrap.min.css';
 import './styles/magnific-popup.css';
 import './styles/email.css';
 import './styles/pixel.scss';
-import './styles/main.css';
+import './styles/about.css';
+import './styles/form_call_back.css';
+// import './styles/new.css';
+import './styles/processus.css';
+import './styles/services.css';
+import './styles/animations.css';
+import './styles/email.css';
+import './styles/font-awesome.css';
+import './styles/magnific-popup.css';
+import './styles/normalize.css';
+import './styles/nucleo-icons.css';
+import './styles/perfect-scrollbar.css';
+import './styles/services.css';
+import './styles/app.css';
 
 // start the Stimulus application
 import './bootstrap';

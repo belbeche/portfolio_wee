@@ -22,66 +22,13 @@ use Symfony\Component\Routing\Annotation\Route;
 use function Amp\Promise\all;
 
 use App\Form\EditProfileType;
-use App\Form\User\Type\UserFormType;
+use App\Form\User\Type\MemberFormType;
 use phpDocumentor\Reflection\Types\Mixed_;
 
 
 
 class FrontController extends AbstractController
 {
-    /**
-     * @Route("/support", name="front_support")
-     */
-    public function home(EntityManagerInterface $entityManager, Request $request, PaginatorInterface $paginator, SubjectRepository $SubjectRepository)
-    {
-
-        $data = $entityManager->getRepository(Subject::class)->findBy(['isPublished' => true], ['id' => 'desc']);
-
-        $users = $entityManager->getRepository(User::class)->findAll();
-
-        $Subjects = $paginator->paginate(
-            $data,
-            $request->query->getInt('page', 1),
-            4
-        );
-
-        $categories = $entityManager->getRepository(Category::class)->findAll();
-
-        /*$Subjects = $SubjectRepository->findSearch($search,$paginator);*/
-
-        /*if($request->isMethod('POST'))
-        {
-            if($formSearch->isSubmitted() && $formSearch->isValid())
-            {
-                $entityManager->persist($users);
-                $entityManager->persist($search);
-                $entityManager->flush();
-
-                $this->addFlash('success', 'Merci de votre inscription ! Vous serez informé sous peu de nos dernières actualités.');
-                return $this->redirectToRoute('front_home');
-            }
-        }*/
-
-        // session_start();
-
-        // dd(unserialize($_SESSION['_sf2_attributes']['_security_main']));
-
-        return $this->render('front/subject/index.html.twig', [
-            'Subjects' => $Subjects,
-            'categories' => $categories,
-            'users' => $users
-        ]);
-    }
-
-    /**
-     * @Route("/contact", name="front_contact")
-     * @return Response
-     */
-    public function contact()
-    {
-        return $this->render('front/contact/contact.html.twig');
-    }
-
     /**
      * @Route("/rechercher", name="front_search")
      */
@@ -209,30 +156,6 @@ class FrontController extends AbstractController
                 $this->getParameter('api_resource_url').$this->getUser()->getUserIdentifier(),
                 $this->getParameter('api_resource_token')
             )
-        ]);
-    }
-
-    /**
-     * @Route("/utilisateur/sujet/{id}", name="front_user_subject")
-     * @param EntityManagerInterface $entityManager
-     * @return Response
-     */
-    public function mySubject(EntityManagerInterface $entityManager, Request $request, PaginatorInterface $paginator)
-    {
-
-        $data = $entityManager->getRepository(Subject::class)->findBySubject();
-
-        $Subjects = $paginator->paginate(
-            $data,
-            $request->query->getInt('page', 1),
-            4
-        );
-
-        $categories = $entityManager->getRepository(Category::class)->findAll();
-
-        return $this->render('front/profil/profil_subject.html.twig', [
-            'Subjects' => $Subjects,
-            'categories' => $categories
         ]);
     }
 

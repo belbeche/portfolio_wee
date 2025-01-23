@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Devis</title>
+    <style>
+        body { font-family: Arial, sans-serif; line-height: 1.6; }
+        h1 { color: #333; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+    </style>
+</head>
+<body>
+    <h1>Devis #{{ devis.id }}</h1>
+    <p><strong>Email :</strong> {{ devis.email }}</p>
+    <p><strong>Type de site :</strong> {{ devis.type_de_site_web }}</p>
+    <p><strong>Attentes en design :</strong> {{ devis.attentes_design_web|join(', ') }}</p>
+    <p><strong>Description :</strong> {{ devis.description_projet }}</p>
+</body>
+</html>

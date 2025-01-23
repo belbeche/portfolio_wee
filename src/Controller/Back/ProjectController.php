@@ -79,9 +79,16 @@ class ProjectController extends AbstractController
 
         $project = $entityManager->getRepository(Project::class)->find($id);
 
+        // Exemple pour récupérer des projets connexes
+        $relatedProjects = $entityManager->getRepository(Project::class)->findBy(
+            ['categories' => $project->getCategories()->toArray()],
+            null,
+            4
+        );
 
         return $this->render('back/project/show.html.twig', [
             'project' => $project,
+            'relatedProjects' => $relatedProjects,
         ]);
     }
 

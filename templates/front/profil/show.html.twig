@@ -16,7 +16,8 @@
                         <div>
                             <h2 class="h1 border-bottom border-dark border-width-4" style="font-weight: 800;color:white;">Profil de {{ app.user.prenom }}</h2>
                             <p class="mb-0 text-white-50">Rôle du forum : <strong>{% for role in app.user.roles %}{{ role }}{% if not loop.last %}, {% endif %}{% endfor %}</strong></p>
-                            <a href="{{ url('front_Subjects_new') }}" class="btn btn-secondary">Écrire au support</a>
+                            <a href="{{ url('front_subjects_new') }}" class="btn btn-secondary">Écrire au support</a>
+                            <a href="{{ url('front_subject_list') }}" class="btn btn-primary">Voir tous les sujets</a>
                         </div>
                     </div>
                 </div>
@@ -40,7 +41,7 @@
                 <div class="block-information-user">
                     <ul class="list-unstyled">
                         <li class="py-2 text-larger">Rôle du forum: <strong>{% for role in app.user.roles %}{{ role }}{% if not loop.last %}, {% endif %}{% endfor %}</strong></li>
-                        <li class="py-2 text-larger">Sujets abordés: <strong>{{ app.user.Subjects|length }}</strong></li>
+                        <li class="py-2 text-larger">Sujets abordés: <strong>{{ app.user.subject|length }}</strong></li>
                         <li class="py-2 text-larger">Réponses créées: <strong>{{ app.user.comments|length }}</strong></li>
                         <li class="py-2 text-larger">Mes favoris: <strong>{{ app.user.likes|length }}</strong></li>
                         <li class="py-2 text-larger">Sujets fermées: <strong>0</strong></li>

@@ -3,7 +3,7 @@
 namespace App\Entity;
 
 use DateTime;
-use DateTimeImmutable;
+use Doctrine\DBAL\Types\Types;
 use Symfony\Component\Uid\Uuid;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\UserRepository;
@@ -113,7 +113,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @ORM\OneToMany(targetEntity=Subject::class, mappedBy="user", orphanRemoval=true)
      */
-    private ?Collection $Subjects;
+    private ?Collection $Subject;
 
     /**
      * @throws \Exception
@@ -126,7 +126,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->avatar = 'support0.svg';
         $this->roles = ['ROLE_USER'];
 
-        $this->Subjects = new ArrayCollection();
+        $this->Subject = new ArrayCollection();
         $this->comments = new ArrayCollection();
         $this->likes = new ArrayCollection();
         $this->date = new \DateTime('now', new \DateTimeZone('Europe/Paris'));
@@ -138,7 +138,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     // public function generateSubjectIds(): void
     // {
-    //     foreach ($this->Subjects as $Subject) {
+    //     foreach ($this->Subject as $Subject) {
     //         // Génération de l'UUID et affectation à l'Subject
     //         $this->id
     //     }
@@ -492,29 +492,25 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @return ArrayCollection
      */
-    public function getSubjects(): Collection
+    public function getSubject(): Collection
     {
-        return $this->Subjects;
+        return $this->Subject;
     }
-
-    /**
-     * @param ArrayCollection $Subjects
-     * @return Collection
-     */
-    public function setSubjects(ArrayCollection $Subjects): Collection
+    
+    public function setSubject(ArrayCollection $Subject): Collection
     {
-        $this->Subjects = $Subjects;
+        $this->Subject = $Subject;
         return $this;
     }
 
-    public function addSubject(Subject $Subject): User
+    public function addSubject(Subject $Subject): self
     {
-        $this->Subjects[] = $Subject;
+        $this->Subject[] = $Subject;
     }
 
     public function removeSubject(Subject $Subject)
     {
-        $this->Subjects->removeElement($Subject);
+        $this->Subject->removeElement($Subject);
     }
     public function getDate(): ?\DateTimeInterface
     {
@@ -543,6 +539,33 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setSentMessages(ArrayCollection $sentMessages): User
     {
         $this->sentMessages = $sentMessages;
+        return $this;
+    }
+
+    public function isIsVerified(): ?bool
+    {
+        return $this->isVerified;
+    }
+
+    public function addSentMessage(Ticket $sentMessage): static
+    {
+        if (!$this->sentMessages->contains($sentMessage)) {
+            $this->sentMessages->add($sentMessage);
+            $sentMessage->setSender($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSentMessage(Ticket $sentMessage): static
+    {
+        if ($this->sentMessages->removeElement($sentMessage)) {
+            // set the owning side to null (unless already changed)
+            if ($sentMessage->getSender() === $this) {
+                $sentMessage->setSender(null);
+            }
+        }
+
         return $this;
     }
 }

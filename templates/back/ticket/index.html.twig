@@ -24,7 +24,9 @@
                         <td>{{ message.id }}</td>
                         <td>{{ message.sender }}</td>
                         <td>{{ message.devis.typeDeSiteWeb }}</td>
-                        <td>{{ message.devis.attentesDesignWeb }}</td>
+                        {% for devis_message in message.devis %}
+                            <td>{{ message.devis.attentesDesignWeb }}</td>
+                        {% endfor %}
                         <td>{{ message.content }}</td>
                         <td>{{ message.createdAt|date('Y-m-d H:i:s') }}</td>
                         <td>{{ message.status }}</td>

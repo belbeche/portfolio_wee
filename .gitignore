@@ -15,6 +15,7 @@ webpack.config.js
 /.idea/
 /public/build
 /public/image_project
+/public/uploads/prospects/*
 
 
 

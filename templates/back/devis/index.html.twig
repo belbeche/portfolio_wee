@@ -32,7 +32,11 @@
                         {% if devis.attentesDesignWeb is not empty %}
                             <ul>
                                 {% for attente in devis.attentesDesignWeb %}
-                                    <li>{{ attente }}</li>
+                                    <li>
+									{% for list in devis.attentesDesignWeb %}
+										{{ list.label }}
+									{% endfor %}
+									</li>
                                 {% endfor %}
                             </ul>
                         {% else %}
@@ -43,6 +47,11 @@
                     <td>{{ devis.createdAt|date('Y-m-d H:i:s') }}</td>
                     <td>{{ devis.statut }}</td>
                     <td>
+                        <div class="mt-3">
+                            <a href="{{ path('back_devis_reply', {'id': devis.id}) }}" class="btn btn-primary">
+                                Répondre au Devis
+                            </a>
+                        </div>
                         <a href="{{ path('back_devis_show', {'id': devis.id}) }}">Voir</a>
                         <a href="{{ path('back_devis_edit', {'id': devis.id}) }}">Modifier</a>
                         <form action="{{ path('back_devis_delete', {'id': devis.id}) }}" method="post" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce devis ?');">

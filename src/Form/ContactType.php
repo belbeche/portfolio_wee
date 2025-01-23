@@ -17,35 +17,55 @@ class ContactType extends AbstractType
     {
         $builder
             ->add('firstName', TextType::class, [
-                'label' => 'Prénom'
+                'label' => 'contact_form.first_name_label', // Translation key
+                'required' => false,
+                'attr' => [
+                    'placeholder' => 'contact_form.first_name_placeholder', // Translation key
+                ],
             ])
             ->add('lastName', TextType::class, [
-                'label' => 'Nom'
+                'label' => 'contact_form.last_name_label', // Translation key
+                'required' => false,
+                'attr' => [
+                    'placeholder' => 'contact_form.last_name_placeholder', // Translation key
+                ],
             ])
             ->add('email', EmailType::class, [
-                'label' => 'Adresse email'
+                'label' => 'contact_form.email_label', // Translation key
+                'required' => false,
+                'attr' => [
+                    'placeholder' => 'contact_form.email_placeholder', // Translation key
+                ],
             ])
             ->add('phone', TextType::class, [
-                'label' => 'Téléphone'
+                'label' => 'contact_form.phone_label', // Translation key
+                'required' => false,
+                'attr' => [
+                    'placeholder' => 'contact_form.phone_placeholder', // Translation key
+                ],
             ])
             ->add('service', ChoiceType::class, [
                 'choices' => [
-                    'Développement Web Front-End (HTML, CSS, Javascript)' => 'frontend',
-                    'Développement Web Back-End (PHP, Node, Django)' => 'backend',
-                    'Développement d\'applications mobiles' => 'mobile',
-                    'Conception UI/UX' => 'design',
-                    'SEO et optimisation' => 'seo',
-                    'Maintenance et support' => 'support',
-                    'Hébergement et déploiement' => 'hosting',
-                    'Autres' => 'other'
+                    'contact_form.service.frontend' => 'frontend',
+                    'contact_form.service.backend' => 'backend',
+                    'contact_form.service.mobile' => 'mobile',
+                    'contact_form.service.design' => 'design',
+                    'contact_form.service.seo' => 'seo',
+                    'contact_form.service.support' => 'support',
+                    'contact_form.service.hosting' => 'hosting',
+                    'contact_form.service.other' => 'other',
                 ],
-                'label' => 'Objet de la demande',
-                'placeholder' => 'Cliquer pour choisir',
+                'label' => 'contact_form.service_label', // Translation key
+                'placeholder' => 'contact_form.service_placeholder', // Translation key
+                'required' => false,
             ])
             ->add('content', TextareaType::class, [
-                'label' => 'Message'
-            ])
-        ;
+                'label' => 'contact_form.message_label', // Translation key
+                'required' => false,
+                'attr' => [
+                    'placeholder' => 'contact_form.message_placeholder', // Translation key
+                ],
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

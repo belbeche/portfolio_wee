@@ -1,0 +1,34 @@
+{% extends 'base_back.html.twig' %}
+
+{% block title %}Hello ContactShowController!{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>Message reçu</h1>
+    <table class="table-responsive">
+        <thead>
+            <tr>
+                <th>Prénom</th>
+                <th>Nom</th>
+                <th>Email</th>
+                <th>Téléphone</th>
+                <th>Service</th>
+                <th>Message</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for contact in contactInfo %}
+                <tr>
+                    <td>{{ contact.firstName }}</td>
+                    <td>{{ contact.lastName }}</td>
+                    <td>{{ contact.email }}</td>
+                    <td>{{ contact.phone ?? 'Non renseigné' }}</td>
+                    <td>{{ contact.service }}</td>
+                    <td>{{ contact.content }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% endblock %}

@@ -1,0 +1,12 @@
+{% extends 'base_back.html.twig' %}
+
+{% block content %}
+    <h1>Répondre au Devis</h1>
+    {{ form_start(form) }}
+        {{ form_row(form.email) }}
+        {{ form_row(form.response) }}
+        {{ form_row(form.prix) }}
+
+        <button type="submit" class="btn btn-success">Envoyer la Réponse</button>
+    {{ form_end(form) }}
+{% endblock %}

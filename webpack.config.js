@@ -67,7 +67,9 @@ Encore
     .enablePostCssLoader()
 
     // enables Sass/SCSS support
-    .enableSassLoader()
+    .enableSassLoader((options) => {
+        options.implementation = require('sass'); // Utilise Dart Sass
+    })
 
     // uncomment if you use TypeScript
     //.enableTypeScriptLoader()

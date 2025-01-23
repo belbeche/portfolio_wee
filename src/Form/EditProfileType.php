@@ -75,9 +75,6 @@ class EditProfileType extends AbstractType
                 'first_options' => [
                     'attr' => ['autocomplete' => 'new-password'],
                     'constraints' => [
-                        new NotBlank([
-                            'message' => 'Veuillez saisir un mot de passe',
-                        ]),
                         new Length([
                             'min' => 6,
                             'minMessage' => 'Votre mot de passe doit comporter au moins {{ limit }} caractères',

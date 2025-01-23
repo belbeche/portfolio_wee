@@ -2,30 +2,30 @@
 
 {% block content %}
     <div class="container mt-4">
-        <h1>Modifier l'Subject ou publier l'Subject {{ Subject.title }}</h1>
+        <h1>Modifier le sujet ou publier le sujet {{ subject.title }}</h1>
 
-        <a href="{{ url('back_Subjects_publish', {title: Subject.title}) }}" class="btn btn-success">
+        <a href="{{ url('back_subjects_publish', {title: subject.title}) }}" class="btn btn-success">
             <i class="bi bi-send-plus-fill"></i>
-            Publier l'Subject !
+            Publier le sujet !
         </a>
 
-        <a href="{{ url('back_Subjects_remove', {title: Subject.title}) }}" class="btn btn-danger">
+        <a href="{{ url('back_subjects_remove', {title: subject.title}) }}" class="btn btn-danger">
             <i class="bi bi-file-earmark-minus"></i>
-            Supprimer l'Subject !
+            Supprimer le sujet !
         </a>
 
         <hr>
 
-        {% if app.request.attributes.get('_route') == 'back_Subjects_edit' %}
+        {% if app.request.attributes.get('_route') == 'back_subjects_edit' %}
 
             <h2>Gestion des images</h2>
-            {#{% for image in Subject.images %}
+            {#{% for image in subject.images %}
                 <div>
                     <img src="{{ asset('/uploads/'~image.name) }}" alt="{{ image.name }}" width="150">
 
                      We add a link to delete an image (will be managed in Ajax in images.js)
 
-                    <a href="{{ path('back_Subjects_remove_image', {name: image.name})}}" data-delete data-token="{{ csrf_token('delete' ~image.name )}}">
+                    <a href="{{ path('back_subjects_remove_image', {name: image.name})}}" data-delete data-token="{{ csrf_token('delete' ~image.name )}}">
                         <i class="bi bi-file-earmark-x"></i>
                         Supprimer
                     </a>
@@ -34,6 +34,6 @@
             {% endfor %}#}
         {% endif %}
         <br>
-        {% include 'back/includes/_Subject_form.html.twig' %}
+        {% include 'back/includes/_subject_form.html.twig' %}
     </div>
 {% endblock %}

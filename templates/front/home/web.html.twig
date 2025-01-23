@@ -1,0 +1,78 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'web_development_title'|trans }}{% endblock %}
+
+{% block content %}
+<div class="container mt-6">
+    <h1 class="mb-5 text-center">{{ 'web_development_heading'|trans }}</h1>
+    <p class="lead text-center mb-5">{{ 'web_development_intro'|trans }}</p>
+    
+    <!-- Section présentation -->
+    <div class="row mb-5">
+        <div class="col-md-6">
+            <h3>{{ 'why_invest_title'|trans }}</h3>
+            <ul>
+                <li><strong>{{ 'why_invest_visibility'|trans }}</strong> {{ 'why_invest_visibility_desc'|trans }}</li>
+                <li><strong>{{ 'why_invest_clients'|trans }}</strong> {{ 'why_invest_clients_desc'|trans }}</li>
+                <li><strong>{{ 'why_invest_credibility'|trans }}</strong> {{ 'why_invest_credibility_desc'|trans }}</li>
+                <li><strong>{{ 'why_invest_availability'|trans }}</strong> {{ 'why_invest_availability_desc'|trans }}</li>
+            </ul>
+        </div>
+        <div class="col-md-6">
+            <img src="{{ asset('img/agency.jpg') }}" alt="{{ 'web_development_image_alt'|trans }}" class="img-fluid shadow-sm rounded">
+        </div>
+    </div>
+
+    <!-- Services -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <h2 class="mb-4 text-center">{{ 'services_title'|trans }}</h2>
+        </div>
+        <div class="col-md-6">
+            <h4 class="text-primary">{{ 'service_1_title'|trans }}</h4>
+            <p>{{ 'service_1_desc'|trans }}</p>
+        </div>
+        <div class="col-md-6">
+            <h4 class="text-primary">{{ 'service_2_title'|trans }}</h4>
+            <p>{{ 'service_2_desc'|trans }}</p>
+        </div>
+        <div class="col-md-6 mt-4">
+            <h4 class="text-primary">{{ 'service_3_title'|trans }}</h4>
+            <p>{{ 'service_3_desc'|trans }}</p>
+        </div>
+        <div class="col-md-6 mt-4">
+            <h4 class="text-primary">{{ 'service_4_title'|trans }}</h4>
+            <p>{{ 'service_4_desc'|trans }}</p>
+        </div>
+    </div>
+
+    <!-- Avantages -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <h2 class="mb-4 text-center">{{ 'advantages_title'|trans }}</h2>
+        </div>
+        <div class="col-md-4 text-center">
+            <i class="fas fa-paint-brush fa-3x text-primary mb-3"></i>
+            <h5>{{ 'advantage_1_title'|trans }}</h5>
+            <p>{{ 'advantage_1_desc'|trans }}</p>
+        </div>
+        <div class="col-md-4 text-center">
+            <i class="fas fa-rocket fa-3x text-primary mb-3"></i>
+            <h5>{{ 'advantage_2_title'|trans }}</h5>
+            <p>{{ 'advantage_2_desc'|trans }}</p>
+        </div>
+        <div class="col-md-4 text-center">
+            <i class="fas fa-tools fa-3x text-primary mb-3"></i>
+            <h5>{{ 'advantage_3_title'|trans }}</h5>
+            <p>{{ 'advantage_3_desc'|trans }}</p>
+        </div>
+    </div>
+
+    <!-- Appel à action -->
+    <div class="text-center mt-5">
+        <h3 class="mb-4">{{ 'cta_heading'|trans }}</h3>
+        <p>{{ 'cta_description'|trans }}</p>
+        <a href="{{ path('front_contact') }}" class="btn btn-primary btn-lg">{{ 'cta_button'|trans }}</a>
+    </div>
+</div>
+{% endblock %}

@@ -2,33 +2,29 @@
 
 namespace App\Controller\Front;
 
-use App\Entity\Subject;
-use App\Entity\Category;
 use App\Entity\User;
 use App\Entity\Devis;
+use App\Entity\Ticket;
 use App\Entity\Message;
-use App\Form\DevisType;
 use App\Form\MessageType;
+use App\Repository\DevisRepository;
+use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Knp\Component\Pager\PaginatorInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
-use Symfony\Component\Form\Exception\LogicException;
-use Symfony\Component\HttpFoundation\File\Exception\FileException;
-use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
-use Symfony\Component\Mailer\MailerInterface;
-use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Form\Exception\LogicException;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
+use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 
 class MessageController extends AbstractController
 {
-
     /**
      * @Route("/profil/assistance", name="front_assistance")
      */
@@ -36,165 +32,300 @@ class MessageController extends AbstractController
     {
         $currentUser = $this->getUser();
 
-        // Récupérer l'utilisateur actuellement connecté (l'expéditeur du message)
-        $email = $currentUser->getUserIdentifier();
+        if (!$currentUser) {
+            return $this->redirectToRoute('app_login');
+        }
 
-        // Récupérer tous les devis associés à l'utilisateur actuellement connecté
-        $devisList = $entityManager->getRepository(Devis::class)->findBy(['email' => $email]);
+        $devisList = $entityManager->getRepository(Devis::class)->findBy(['user' => $currentUser]);
 
-        // Vérifier s'il y a des devis trouvés
         if (empty($devisList)) {
-            // Rediriger vers une page d'erreur ou afficher un message approprié
             return $this->redirectToRoute('front_devis_new');
         }
 
         return $this->render('front/ticket/home.html.twig', [
-            'devisList' => $devisList
+            'devisList' => $devisList,
         ]);
     }
 
     /**
-     * @Route("/devis/nouveau-ticket/{id}", name="send_message", methods={"GET","POST"})
-     * @IsGranted("ROLE_USER")
-     * @throws LogicException|\Symfony\Component\Mime\Exception\LogicException
-     */
-    public function sendMessage(Request $request, EntityManagerInterface $entityManager, MailerInterface $mailer,$id): Response
-    {
-        // Récupérer l'utilisateur à partir de son ID
-        $user = $entityManager->getRepository(User::class)->find($id);
+    * @Route("/aide/nouveau-ticket", name="send_message", methods={"GET", "POST"})
+    * @IsGranted("ROLE_USER")
+    */
+    public function sendMessage(
+        Request $request,
+        EntityManagerInterface $entityManager,
+        MailerInterface $mailer,
+        DevisRepository $devisRepository
+    ): Response {
+        // Récupérer l'utilisateur actuellement connecté
+        $user = $entityManager->getRepository(User::class)->findOneBy(['email' => $this->getUser()->getUserIdentifier()]);
 
-        // L'utilisateur a déjà des devis, nous afficherons le formulaire pour remplir le ticket avec la sélection de devis
+        if (!$user instanceof User) {
+            throw $this->createNotFoundException('Utilisateur introuvable.');
+        }
+
+        // Récupérer les devis de l'utilisateur connecté
+        $userDevis = $devisRepository->findBy(['user' => $user]);
+
+        if (!$userDevis) {
+            $this->addFlash('warning', 'Aucun devis associé à cet utilisateur. Veuillez créer un devis.');
+            return $this->redirectToRoute('front_devis_new');
+        }
+
+        // Créer un nouveau message
         $message = new Message();
 
-        // Récupérer les devis associés à l'email de l'utilisateur
-        $devisList = $entityManager->getRepository(Devis::class)->findOneBy(['user' => $user]);
-
-        $form = $this->createForm(MessageType::class, $message);
-
+        // Créer le formulaire
+        $form = $this->createForm(MessageType::class, $message, [
+            'current_user' => $user,  // L'utilisateur connecté
+            'devisList' => $userDevis, // Liste des devis récupérés pour l'utilisateur
+        ]);               
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            if ($devisList === 'new') {
-                // L'utilisateur veut créer un nouveau devis
-                return $this->redirectToRoute('front_devis_new'); // Rediriger vers la page de création de devis
-            } else {
-                // L'utilisateur a choisi un devis existant
-                $devis = $devisList;
+            // Récupérer les données du formulaire
+            $receiverEmail = $form->get('receiver')->getData();
+            $receiver = $entityManager->getRepository(User::class)->findOneBy(['email' => $receiverEmail]);
+
+            if (!$receiver instanceof User) {
+                $this->addFlash('error', 'Destinataire invalide.');
+                return $this->redirectToRoute('send_message');
             }
 
+            // Créer un nouveau ticket
+            $ticket = new Ticket();
+            $ticket
+                ->setSender($user)
+                ->setReceiver($receiver)
+                ->setStatus($form->get('status')->getData())
+                ->setDevis($form->get('devis')->getData())
+                ->setContent($form->get('content')->getData())
+                ->setPriority($form->get('priority')->getData());
+
+            $entityManager->persist($ticket);
+
+            // Associer le ticket au message
             $message
-                // Associer le devis au message
-                ->setDevis($devis)
-            ;
+                ->setSender($user)
+                ->setReceiver($receiverEmail)
+                ->setDevis($form->get('devis')->getData())
+                ->setContent($form->get('content')->getData())
+                ->setTicket($ticket)
+                ->setStatus('en_attente');
 
-            // Définition du statut du ticket
-            $message->setStatus('en_attente');
-            $message->setReceiver($user);
-
-            $this->extracted($form, $message);
-
-            // Persistez l'objet Message dans la base de données
             $entityManager->persist($message);
             $entityManager->flush();
 
+            // Envoi de l'email
             $email = (new TemplatedEmail())
-                ->from($message->getSender())
-                ->to($devis->getEmail())
-                ->subject('Demande assistance , ScriptZenIT')
+                ->from('contact@scriptzenit.fr')
+                ->to($receiverEmail)
                 ->bcc('wbelbeche.s@gmail.com')
+                ->subject('Demande assistance - ScriptZenIT')
                 ->context([
                     'email_address' => $user->getEmail(),
-                    'service' => $message->getReceiver(),
-                    'subject' => $message->getDevis(),
-                    'message' => $message->getContent(),
-                    'status' => $message->getStatus(),
+                    'service' => $receiverEmail,
+                    'subject' => $form->get('devis')->getData()->getTypeDeSiteWeb(),
+                    'message' => $form->get('content')->getData(),
+                    'status' => $form->get('status')->getData(),
                 ])
                 ->htmlTemplate('front/ticket/email.html.twig');
 
             $mailer->send($email);
 
-            $this->addFlash('info', 'Votre ticket à bien été crée, vérifiez votre adresse email');
+            $this->addFlash('success', 'Votre ticket a été créé. Vérifiez votre email pour plus d\'informations.');
 
-            return $this->redirectToRoute('front_show_ticket', [
-                'id' => $message->getId()
+            return $this->redirectToRoute('front_ticket_details', [
+                'id' => $ticket->getId(),
             ]);
         }
 
-        return $this->render('front/ticket/create_message.html.twig',[
-                'form' => $form->createView(),
-                'devisList' => $devisList, // Transmettez la liste des devis au template
-            ]
-        );
-    }
-
-    /**
-     * @Route("/voir-ticket/{id}", name="front_show_ticket", methods={"GET"})
-     */
-    public function show(EntityManagerInterface $entityManager, $id,Request $request)
-    {
-        // Récupérer l'utilisateur actuellement connecté (l'expéditeur du message)
-        $currentUser = $this->getUser();
-
-        // Récupérer l'utilisateur actuellement connecté (l'expéditeur du message)
-        $email = $currentUser->getUserIdentifier();
-
-        // Récupérer les tickets envoyés par l'utilisateur et les ordonner par date de création décroissante
-        $tickets = $entityManager->getRepository(Message::class)->findBy(
-            ['receiver' => $this->getUser()],
-            ['createdAt' => 'DESC']  // Ceci ordonne les tickets par date de création décroissante
-        );
-
-        // Récupérer le devis associé à l'utilisateur actuellement connecté
-        $devis = $entityManager->getRepository(Devis::class)->findBy(['email' => $email]);
-
-        return $this->render('front/ticket/index.html.twig', [
-            'tickets' => $tickets,
-            'devis' => $devis
+        return $this->render('front/ticket/create_message.html.twig', [
+            'form' => $form->createView(),
+            'devisList' => $userDevis,
         ]);
     }
 
     /**
-     * @Route("/repondre-ticket/{id}", name="respond_to_ticket", methods={"GET","POST"})
-     * @throws TransportExceptionInterface
-     */
-    public function respondToTicket(Request $request, EntityManagerInterface $entityManager, MailerInterface $mailer, Message $originalMessage): Response
+    * @Route("/voir-tickets/aide", name="front_show_ticket", methods={"GET"})
+    * @IsGranted("ROLE_USER")
+    */
+    public function showAllTickets(EntityManagerInterface $entityManager): Response
     {
-        // Récupérer l'utilisateur actuellement connecté (l'expéditeur du message)
         $currentUser = $this->getUser();
 
-        // Assurez-vous que l'utilisateur est connecté avant de continuer
+        // Vérifie que l'utilisateur est connecté
         if (!$currentUser) {
-            // Gérer l'absence d'utilisateur connecté (rediriger vers la page de connexion)
             return $this->redirectToRoute('app_login');
         }
 
-        $email = $currentUser->getEmail();
+        // Récupérer l'utilisateur actuellement connecté
+        $user = $entityManager->getRepository(User::class)->findOneBy(['email' => $this->getUser()->getUserIdentifier()]);
 
+        if (!$user instanceof User) {
+            throw $this->createNotFoundException('Utilisateur introuvable.');
+        }
+
+        // Récupérer les devis de l'utilisateur connecté
+        $userDevis = $entityManager->getRepository(Devis::class)->findBy(['user' => $currentUser]);
+        
+        // Si le devis n'existe pas ou n'appartient pas à l'utilisateur, rediriger
+        if (!$userDevis) {
+            $this->addFlash('error', 'Devis non trouvé ou vous n\'avez pas accès à ce devis.');
+            return $this->redirectToRoute('front_assistance');
+        }
+
+        // Récupère les tickets associés à ce devis
+        $tickets = $entityManager->getRepository(Message::class)->findBy(['devis' => $userDevis[0]]);
+
+        // Rend la vue avec les tickets et le devis
+        return $this->render('front/ticket/index.html.twig', [
+            'tickets' => $tickets,
+        ]);
+    }
+
+    /**
+     * @Route("/ticket/details/{id}", name="front_ticket_details", methods={"GET", "POST"})
+     * @IsGranted("ROLE_USER")
+     */
+    public function ticketDetails(
+        Request $request,
+        EntityManagerInterface $entityManager,
+        string $id,
+        DevisRepository $devisRepository
+    ): Response {
+        $currentUser = $this->getUser();
+
+        // Vérifie que l'utilisateur est connecté
+        if (!$currentUser) {
+            return $this->redirectToRoute('app_login');
+        }
+
+        // Récupérer l'utilisateur actuellement connecté
+        $user = $entityManager->getRepository(User::class)->findOneBy(['email' => $this->getUser()->getUserIdentifier()]);
+
+        if (!$user instanceof User) {
+            throw $this->createNotFoundException('Utilisateur introuvable.');
+        }
+
+        // Recuperer le ticket de l'utilisateur
+        $ticket = $entityManager->getRepository(Ticket::class)->findOneBy(['sender' => $user]);
+
+        // Recuperer le ticket
+
+        $ticketUser = $entityManager->getRepository(Ticket::class)->find($id);
+
+        // Vérifier que le ticket existe et appartient à l'utilisateur
+        if (!$ticket) {
+            $this->addFlash('error', 'Ticket non trouvé ou vous n\'avez pas accès à ce ticket.');
+            return $this->redirectToRoute('front_show_ticket');
+        }
+
+        // Récupérer les devis de l'utilisateur connecté
+        $userDevis = $devisRepository->findBy(['user' => $user]);
+
+        if (!$userDevis) {
+            $this->addFlash('warning', 'Aucun devis associé à cet utilisateur. Veuillez créer un devis.');
+            return $this->redirectToRoute('front_devis_new');
+        }
+
+        // Préparer le formulaire de réponse
         $responseMessage = new Message();
-        $responseMessage->setSender($originalMessage->getSender());
-        $responseMessage->setReceiver($this->getUser());
+        $responseMessage->setSender($currentUser); // Associe l'utilisateur connecté
+        $responseMessage->setCreatedAt(new \DateTime());
+        $responseMessage->setTicket($ticketUser); // Associe le ticket
 
-        $form = $this->createForm(MessageType::class, $responseMessage, [
-            'attr' => [
-                'current_user' => $email,
-            ],
+        $responseForm = $this->createForm(MessageType::class, $responseMessage, [
+            'current_user' => $currentUser,
+            'devisList' => $userDevis, // Liste des devis récupérés pour l'utilisateur
         ]);
 
-        $form->handleRequest($request);
+        $responseForm->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-
-            $responseMessage->setStatus('en_attente');
-            $this->extracted($form, $responseMessage);
-            $responseMessage->setDevis($originalMessage->getDevis());
-
+        if ($responseForm->isSubmitted() && $responseForm->isValid()) {
             $entityManager->persist($responseMessage);
             $entityManager->flush();
 
+            $this->addFlash('success', 'Votre réponse a été envoyée avec succès.');
+
+            return $this->redirectToRoute('front_ticket_details', [
+                'id' => $ticket->getId(),
+            ]);
+        }
+
+        return $this->render('front/ticket/details.html.twig', [
+            'ticket' => $ticket,
+            'responseForm' => $responseForm->createView(),
+            'ticketUser' => $ticketUser,
+        ]);
+    }
+
+    /**
+    * @Route("/repondre-ticket/{id}", name="respond_to_ticket", methods={"GET", "POST"})
+    * @IsGranted("ROLE_USER")
+    */
+    public function respondToTicket(
+        Request $request,
+        EntityManagerInterface $entityManager,
+        MailerInterface $mailer,
+        Message $originalMessage,
+        DevisRepository $devisRepository
+    ): Response {
+        $currentUser = $this->getUser();
+        dump($originalMessage);
+        if (!$currentUser) {
+            return $this->redirectToRoute('app_login');
+        }
+
+        // Vérifier que le message d'origine a un ticket associé
+        $ticket = $originalMessage->getTicket();
+
+        if (!$ticket) {
+            $this->addFlash('error', 'Le ticket associé au message original est introuvable.');
+            return $this->redirectToRoute('front_show_ticket');
+        }
+
+        // Récupérer l'utilisateur actuellement connecté
+        $user = $entityManager->getRepository(User::class)->findOneBy(['email' => $this->getUser()->getUserIdentifier()]);
+
+        if (!$user instanceof User) {
+            throw $this->createNotFoundException('Utilisateur introuvable.');
+        }
+
+        // Récupérer les devis de l'utilisateur connecté
+        $userDevis = $devisRepository->findBy(['user' => $user]);
+
+        if (!$userDevis) {
+            $this->addFlash('warning', 'Aucun devis associé à cet utilisateur. Veuillez créer un devis.');
+            return $this->redirectToRoute('front_devis_new');
+        }
+
+        // Créer un nouveau message pour la réponse
+        $responseMessage = new Message();
+        $responseMessage
+            ->setSender($currentUser)
+            ->setReceiver($originalMessage->getSender())
+            ->setStatus('en_attente')
+            ->setDevis($originalMessage->getDevis())
+            ->setTicket($ticket); // Associer le ticket
+
+        // Créer le formulaire
+        $form = $this->createForm(MessageType::class, $responseMessage, [
+            'current_user' => $currentUser,
+            'devisList' => $userDevis, // Liste des devis récupérés pour l'utilisateur
+        ]);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            // Enregistrer le message de réponse
+            $entityManager->persist($responseMessage);
+            $entityManager->flush();
+
+            // Envoi de l'email
             $email = (new TemplatedEmail())
-                ->from($originalMessage->getSender())
-                ->to($currentUser->getUserIdentifier())
-                ->subject('Réponse à votre demande, Devis , ScriptZenIT')
+                ->from('contact@scriptzenit.fr')
+                ->to($originalMessage->getSender()->getEmail())
+                ->subject('Réponse à votre demande, Devis, ScriptZenIT')
                 ->bcc('wbelbeche.s@gmail.com')
                 ->context([
                     'email_address' => $currentUser->getUserIdentifier(),
@@ -209,43 +340,66 @@ class MessageController extends AbstractController
             $this->addFlash('info', 'Votre réponse a bien été envoyée.');
 
             return $this->redirectToRoute('front_show_ticket', [
-                'id' => $originalMessage->getId()
+                'id' => $ticket->getId(),
             ]);
         }
 
         return $this->render('front/ticket/respond_to_ticket.html.twig', [
             'form' => $form->createView(),
             'originalMessage' => $originalMessage,
+            'user' => $user
         ]);
     }
 
     /**
-     * @Route("/ticket/supprimer/{id}", name="front_delete_ticket", methods={"POST"})
-     */
-    public function remove(EntityManagerInterface $entityManager, Message $ticket, Request $request, Filesystem $filesystem): RedirectResponse
-    {
-            // Récupérer le chemin du fichier associé au ticket
-            $attachmentPath = $this->getParameter('uploads_directory');
+    * @Route("/ticket/supprimer/{id}", name="front_delete_ticket", methods={"POST"})
+    * @IsGranted("ROLE_USER")
+    */
+    public function remove(
+        EntityManagerInterface $entityManager,
+        Request $request,
+        string $id,
+        Message $originalMessage
+    ): RedirectResponse {
+        $currentUser = $this->getUser();
 
-            // Supprimer le fichier si il existe
-            if ($filesystem->exists($attachmentPath)) {
-                $filesystem->remove($attachmentPath);
-            }
+        // Vérifie que l'utilisateur est connecté
+        if (!$currentUser) {
+            return $this->redirectToRoute('app_login');
+        }
 
-            $entityManager->remove($ticket);
-            $entityManager->flush();
+        // Vérifier que le message d'origine a un ticket associé
+        $ticket = $originalMessage->getTicket();
+        if (!$ticket) {
+            $this->addFlash('error', 'Le ticket associé au message original est introuvable.');
+            return $this->redirectToRoute('front_show_ticket');
+        }
 
-        return $this->redirectToRoute('front_show_ticket', [
-            'id' => $ticket->getDevis()
-        ]);
+        // Valide le token CSRF
+        if (!$this->isCsrfTokenValid('delete' . $id, $request->request->get('_token'))) {
+            $this->addFlash('error', 'Échec de la validation du token CSRF. Ticket non supprimé.');
+            return $this->redirectToRoute('front_show_ticket', [
+                'id' => $ticket->getId(),
+            ]);
+        }
+
+        // Supprime les messages associés au ticket
+        foreach ($ticket->getMessages() as $message) {
+            $entityManager->remove($message);
+        }
+
+        // Supprime le ticket
+        $entityManager->remove($ticket);
+        $entityManager->flush();
+
+        $this->addFlash('success', 'Le ticket et ses messages ont été supprimés avec succès.');
+
+        return $this->redirectToRoute('front_show_ticket');
     }
 
-    /**
-     * @param \Symfony\Component\Form\FormInterface $form
-     * @param Message $responseMessage
-     * @return void
-     */
-    public function extracted(\Symfony\Component\Form\FormInterface $form, Message $responseMessage): void
+
+
+    private function extracted(\Symfony\Component\Form\FormInterface $form, Message $responseMessage): void
     {
         $attachmentFile = $form->get('attachment')->getData();
 
@@ -260,7 +414,8 @@ class MessageController extends AbstractController
                     $newFilename
                 );
             } catch (FileException $e) {
-                echo 'une erreur s\'est produite lors du chargement du fichier';
+                // Log the error or handle it accordingly
+                echo 'Une erreur s\'est produite lors du chargement du fichier';
             }
 
             $responseMessage->setAttachment($newFilename);

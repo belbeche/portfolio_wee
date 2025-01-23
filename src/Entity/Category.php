@@ -6,6 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use App\Repository\CategoryRepository;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * @ORM\Entity(repositoryClass=CategoryRepository::class)
@@ -20,6 +21,7 @@ class Category
     private $id;
 
     /**
+     * @Gedmo\Translatable
      * @ORM\Column(type="string", length=255)
      */
     private $name;
@@ -36,9 +38,22 @@ class Category
      */
     private $Subjects;
 
+    /**
+     * @Gedmo\Translatable
+     * @ORM\Column(type="string", length=255)
+     */
+    private ?string $slug = null;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Post", mappedBy="category")
+     */
+    private Collection $posts;
+
     public function __construct()
     {
         $this->projects = new ArrayCollection();
+        $this->Subjects = new ArrayCollection();
+        $this->posts = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -83,5 +98,48 @@ class Category
         }
 
         return $this;
+    }
+
+    /**
+     * @return Collection<int, Subject>
+     */
+    public function getSubjects(): Collection
+    {
+        return $this->Subjects;
+    }
+
+    public function addSubject(Subject $subject): static
+    {
+        if (!$this->Subjects->contains($subject)) {
+            $this->Subjects->add($subject);
+            $subject->addCategory($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSubject(Subject $subject): static
+    {
+        if ($this->Subjects->removeElement($subject)) {
+            $subject->removeCategory($this);
+        }
+
+        return $this;
+    }
+
+    public function getSlug(): ?string
+    {
+        return $this->slug;
+    }
+
+    public function setSlug(string $slug): self
+    {
+        $this->slug = $slug;
+        return $this;
+    }
+
+    public function getPosts(): Collection
+    {
+        return $this->posts;
     }
 }

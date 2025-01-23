@@ -1,0 +1,63 @@
+{% extends 'base_back.html.twig' %}
+
+{% block content %}
+	<div class="container mt-4">
+
+		{% for type, messages in app.flashes %}
+			{% for message in messages %}
+				<div class="alert alert-{{ type }}">{{ message }}</div>
+			{% endfor %}
+		{% endfor %}
+
+		<div class="row mt-4">
+			<h2 class="col">Utilisateurs</h2>
+			<div class="col-12">
+				<div class="table-responsive w-100 d-block d-md-table">
+					<table class="table">
+						<thead class="thead-dark">
+							<tr>
+								<th scope="col">#</th>
+								<th scope="col">Adresse Email</th>
+								<th scope="col">Username</th>
+								<th scope="col">Roles</th>
+								<th scope="col" style="max-width: 50px; text-align: center">Actions</th>
+							</tr>
+						</thead>
+						<tbody>
+							{% set i = 1 %}
+							{% for user in users %}
+								<tr>
+									<th scope="row">{{ i }}</th>
+									<td>
+										<a href="mailto:{{ user.email }}">{{ user.email }}</td>
+									</td>
+									<td>{{ user.username }}</td>
+									<td>
+										{% for role in user.getRoles %}
+											<small class="badge badge-warning">
+												{{ role }}
+											</small>
+										{% endfor %}
+									</td>
+									<td class="text-center">
+										<a href="{{ url('back_users_edit', {username: user.username}) }}" class="text-success">
+											<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewbox="0 0 24 24" stroke="currentColor" width="18">
+												<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+											</svg>
+										</a>
+										<a href="" class="text-danger" onclick="alert('L\'utilisateur est en cours de supprésion !'">
+											<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewbox="0 0 24 24" stroke="currentColor" width="18">
+												<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"/>
+											</svg>
+										</a>
+									</td>
+								</tr>
+								{% set i = i+1 %}
+							{% endfor %}
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock %}

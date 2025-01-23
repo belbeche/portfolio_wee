@@ -4,7 +4,13 @@
 {% endblock %}
 
 {% block content %}
-
+	<div class="container mt-6">
+		{% for type, messages in app.flashes %}
+			{% for message in messages %}
+				<div class="alert alert-{{ type }}">{{ message }}</div>
+			{% endfor %}
+		{% endfor %}
+	</div>
 	<div class="container">
 		{% if devisList is not empty %}
 			<h1>Créer un ticket</h1>
@@ -23,14 +29,13 @@
 				{{ form_errors(form.status) }}
 			</div>
 			<div>
-				{{ form_row(form.sender)}}
-				{{ form_errors(form.sender) }}
+				{{ form_row(form.receiver)}}
+				{{ form_errors(form.receiver) }}
 			</div>
 			<div>
 				{{ form_row(form.devis) }}
 				{{ form_errors(form.devis) }}
 			</div>
-
 			<div>
 				{{ form_row(form.attachment) }}
 				{{ form_errors(form.attachment) }}

@@ -1,0 +1,24 @@
+{% extends 'base_back.html.twig' %}
+
+{% block title %}Nouveau member
+{% endblock %}
+
+{% block content %}
+	<div class="container">
+		<h1>Nouveau member</h1>
+
+		{{ form_start(form) }}
+		{{ form_row(form.firstname) }}
+		{{ form_row(form.lastname) }}
+		{{ form_row(form.function) }}
+		{{ form_row(form.description) }}
+		{{ form_row(form.avatar) }}
+		{{ form_row(form.email) }}
+		{{ form_row(form.category) }}
+		<button type="submit">Créer</button>
+		{{ form_end(form) }}
+
+		<a href="{{ path('back_member_index') }}">Retour</a>
+	</div>
+
+{% endblock %}

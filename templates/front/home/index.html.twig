@@ -1,508 +1,258 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}
-	Bienvenue chez ScriptzenIT !
-{% endblock %}
+{% block title %}{{ 'portfolio_title'|trans }}{% endblock %}
 
 {% block content %}
-	<div class="container">
-		{% for type, messages in app.flashes %}
-			{% for message in messages %}
-				<div class="alert alert-{{ type }}">{{ message }}</div>
-			{% endfor %}
-		{% endfor %}
-	</div>
 
+<style>
+    .select2-container .select2-selection--single {
+        height: calc(2.5em + 2px);
+        line-height: 41px!important;
+        margin-left: 2px;
+        padding-top: 2px;
+    }
+    .select2-container .select2-selection__arrow {
+        height: calc(2.5em + 2px);
+    }
+</style>
 
-	<!-- Hero 4 - Bootstrap Brain Component -->
-	<section class="bg-primary">
-		<div class="container-fluid overflow-hidden">
-			<div class="row">
-				<div class="col-12 col-md-12 order-1 order-md-0 align-self-md-end">
-					<div class="row py-3 py-sm-5 py-xl-9 mt-md-5 justify-content-sm-center">
-						<div class="col-12 col-sm-10">
-							<h2 class="display-2 fw-bolder mb-4 text-white">Agence Web dans la Nièvre</h2>
-							<div class="row">
-								<div class="col-md-6 col-xxl-6">
-									<p class="fs-5 mb-5 text-white">En optant pour nos services sur notre plateforme, vous bénéficierez d'un ensemble d'outils de gestion de serveur pour superviser efficacement vos applications en temps réel. Vous aurez également la possibilité de télécharger votre demande dans un format PDF pour une consultation pratique.</p>
-								</div>
-								<div class="col-md-6 col-xxl-6">
-									<p class="fs-5 mb-5 text-white">Chez ScriptzenIT, notre expertise en développement web ne se limite pas à la conception d'un site professionnel et séduisant. Nous nous engageons à vous accompagner au-delà de cette première phase, afin de garantir l'excellence de votre projet. Découvrez nos réalisations pour vous inspirer davantage vers la concrétisation de vos ambitions.</p>
-								</div>
-								<div class="d-grid gap-2 d-sm-flex">
-									<a href="{{ url('front_devis_new') }}" class="btn btn-warning bsb-btn-2xl rounded-pill">Réaliser votre demande maintenant</a>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</section>
+<style>
+    #language-selector {
+        display: flex;
+        flex-direction: row;
+        height: 100vh;
+        width: 100%;
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 9999;
+    }
+    .language-option {
+        text-align: center;
+        transition: transform 0.3s ease, background-color 0.3s ease;
+    }
+    .language-option:hover {
+        transform: scale(1.05);
+        background-color: #0056b3 !important;
+    }
+    .language-option h1 {
+        font-size: 4rem;
+    }
+</style>
 
-	{#<main>
-		<div class="px-4 pt-5 my-5 text-center border-bottom bg-home-image" style="height: 100vh;">
-			<h1 class="display-4 fw-bold text-body-emphasis text-white"></h1>
-			<div class="col-lg-6 mx-auto">
-				<p class="text-white rounded"></p>
-				<div class="d-grid gap-2 d-sm-flex justify-content-sm-center mb-5">
-					<a href="{{ url('front_project') }}" class="btn btn-darken btn-primary">
-						Voir nos réalisations<i class="bx bx-right-arrow-alt"></i>
-					</a>
-				</div>
-			</div>
-			<div class="overflow-hidden" style="max-height: 30vh;">
-				<div class="container px-5">
-					<img src="{{ asset('img/devis.png') }}" class="img-fluid border rounded-3 shadow-lg mb-4" alt="Example image" loading="lazy">
-				</div>
-			</div>
-		</div>
-	</main>#}
+<!-- Language Selector Fullscreen -->
+<div id="language-selector" class="d-flex vh-100">
+    <!-- Français -->
+    <div class="language-option bg-primary text-white d-flex flex-column justify-content-center align-items-center w-50">
+        <h1 class="display-4 fw-bold">Français</h1>
+        <button data-locale="fr" class="btn btn-light btn-lg mt-4 select-language">Choisir</button>
+    </div>
+    <!-- Anglais -->
+    <div class="language-option bg-secondary text-white d-flex flex-column justify-content-center align-items-center w-50">
+        <h1 class="display-4 fw-bold">English</h1>
+        <button data-locale="en" class="btn btn-light btn-lg mt-4 select-language">Choose</button>
+    </div>
+</div>
 
-	{# Section d'en-tête #}
-	{#<section id="slider" class="slider-element bg-home-image" style="color: var(--bs-card-img-overlay-padding) !important;height: 100vh;">
-		<div class="container">
-			<div class="row align-items-md-end">
-				<div class="col-lg-5 align-self-center flex-column">
-					<div class="col-12 col-md-12 col-lg-12 rounded pt-5 block_information_home border-circle">
-						<h1 class="display-2 text-center text-white"><strong>Agence Web dans la Nièvre</strong></h1>
-						<p class="mb-4 text-justify text-white px-5">
-							Avec notre expertise en développement Web, nous vous accompagnons dans la création d'un site professionnel et attractif. Mais chez ScriptzenIT, nous savons que l'excellence va au-delà de la première étape.
-						</p>
-					</div>
-				</div>
-				<div class="col-lg-7 dotted-bg man_mobile" style="position: absolute;bottom: 0;right: 0;">
-					<img src="{{ asset('img/man.png') }}" alt="Client" class="d-flex align-self-end mt-5 z-1 mx-auto w-75">
-				</div>
-			</div>
-		</div>
-	</section>#}
-	{# Fin de la section d'en-tête #}
+<script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js" defer></script>
 
-	<!-- Pourquoi nous choisir -->
-	<section class="py-3 py-md-5">
-		<div class="container">
-			<div class="row gy-3 gy-md-4 gy-lg-0 align-items-lg-center">
-				<div class="col-12 col-lg-6">
-					<img class="img-fluid rounded" loading="lazy" src="{{ asset('img/before.png') }}" alt="Pourquoi nous choisir">
-				</div>
-				<div class="col-12 col-lg-6">
-					<div class="row justify-content-xl-center">
-						<div class="col-12 col-xl-10">
-							<h2 class="mb-3">Faites confiance à ScriptzenIT !</h2>
-							<p class="lead text-justify">Fondée en 2023, ScriptzenIT fait son entrée dans le domaine numérique en redéfinissant les frontières de l'innovation et de l'excellence. Portée par une vision avant-gardiste, notre entreprise s'engage à remodeler le monde numérique.</p>
-							<p class="lead text-justify">Chez ScriptzenIT, nous plaçons nos clients au cœur de notre approche. Nous collaborons avec des entreprises de toutes tailles et de tous secteurs pour concevoir des stratégies sur mesure répondant précisément à leurs besoins et objectifs spécifiques.</p>
-							<div class="d-flex align-items-center mb-3">
-								<div class="me-3 text-primary">
-									<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="currentColor" class="bi bi-check-circle-fill" viewBox="0 0 16 16">
-										<path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z" />
-									</svg>
-								</div>
-								<div>
-									<p class="fs-5 m-0">Notre approche est centrée sur vous, nos chers clients.</p>
-								</div>
-							</div>
-							<div class="d-flex align-items-center mb-3">
-								<div class="me-3 text-primary">
-									<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="currentColor" class="bi bi-check-circle-fill" viewBox="0 0 16 16">
-										<path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z" />
-									</svg>
-								</div>
-								<div>
-									<p class="fs-5 m-0">Nous nous engageons à dépasser vos attentes à chaque étape de notre collaboration.</p>
-								</div>
-							</div>
-							<a href="{{ url('app_login') }}" class="btn bsb-btn-xl btn-outline-primary rounded-pill">Connectez-vous maintenant</a>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</section>
-	<!-- Fin de Pourquoi nous choisir -->
+<!-- Hero Section -->
+<section id="hero" class="container-fluid text-white position-relative bg-primary" style="min-height: 100vh; background-attachment: fixed;">
+    <!-- Particles Background -->
+    <div id="particles-js" class="position-absolute w-100 h-100"></div>
 
-	<!-- Processus -->
-	<h1 class="display-4 fw-bold text-center">Notre Processus</h1>
+    <!-- Content -->
+    <div class="d-flex align-items-center position-relative header_intro">
+        <div class="row w-100 mx-0 align-items-center">
+            <div class="container">
+                {% for type, messages in app.flashes %}
+                    {% for message in messages %}
+                        <div class="alert alert-{{ type }}">{{ message }}</div>
+                    {% endfor %}
+                {% endfor %}
+            </div>
+            <!-- Texte et boutons -->
+            <div class="col-lg-7 col-md-12 d-flex flex-column justify-content-center px-4 px-md-5 text-center text-lg-start mb-4 mb-lg-0 intro_mobile">
+                <h1 class="display-4 fw-bold mb-4">{{ 'hero_title'|trans }}</h1>
+                <p class="fs-5 mb-4 text-white">{{ 'hero_subtitle_1'|trans }}</p>
+                <p class="fs-5 mb-4 text-white">{{ 'hero_subtitle_2'|trans }}</p>
+                <div class="d-flex flex-column flex-md-row gap-3 justify-content-center button_intro">
+                    <a href="https://calendly.com/walid_belbeche/expertise-offerte" class="btn btn-warning">{{ 'hero_button_schedule'|trans }}</a>
+                    <a href="{{ url('front_contact') }}" class="btn btn-outline-light">{{ 'hero_button_contact'|trans }}</a>
+                </div>
+            </div>
 
-	{# Services de l'Agence #}
-	<section>
-		<div class="container">
-			<ul class="process">
-				<li class="process__item">
-                    <span class="process__number">
-                        <i class="fas fa-lightbulb"></i>
-                    </span>
-					<span class="process__title">Analyse & Stratégie</span>
-					<span class="process__subtitle text-justify">Nous analysons vos problèmes et développons une stratégie sur mesure pour répondre à vos besoins spécifiques.</span>
-				</li>
-				<li class="process__item">
-                    <span class="process__number">
-                        <i class="fas fa-pen-nib"></i>
-                    </span>
-					<span class="process__title">Conception & Design</span>
-					<span class="process__subtitle text-justify">Nous créons des designs uniques et attrayants qui reflètent votre marque et captivent votre public cible.</span>
-				</li>
-				<li class="process__item">
-                    <span class="process__number">
-                        <i class="fas fa-laptop-code"></i>
-                    </span>
-					<span class="process__title">Développement & Intégration</span>
-					<span class="process__subtitle text-justify">Notre équipe de développeurs talentueux transforme les designs en sites Web interactifs et fonctionnels.</span>
-				</li>
-				<li class="process__item">
-                    <span class="process__number">
-                        <i class="fas fa-rocket"></i>
-                    </span>
-					<span class="process__title">Lancement & Support</span>
-					<span class="process__subtitle text-justify">Nous assurons un lancement en douceur et offrons un support continu pour garantir la performance et la sécurité de votre site Web.</span>
-				</li>
-			</ul>
-		</div>
-	</section>
-	<!-- Fin du Processus -->
+            <div class="col-lg-5 col-md-12 d-flex justify-content-center mt-4 mb-4 mt-lg-0">
+                <div class="rounded shadow-lg bg-light p-4" style="width: 100%; max-width: 400px;">
+                    {% if app.request.query.get('submitted') %}
+                        <div id="successMessage" class="alert alert-success text-center">
+                            {{ 'form_success_message'|trans }}
+                        </div>
+                    {% else %}
+                        <div id="callbackForm">
+                            {{ form_start(form, {'attr': {'class': 'needs-validation'}, 'method': 'POST'}) }}
+                                <div class="form-floating mb-3">
+                                    {{ form_row(form.name, {'attr': {'class': 'form-control', 'id': 'name', 'placeholder': 'form_name_placeholder'|trans}}) }}
+                                    {{ form_errors(form.name) }}
+                                </div>
+                                <div class="form-floating mb-3">
+                                    {{ form_row(form.phonePrefix, {'attr': {'class': 'select2', 'id': 'phonePrefix'}}) }}
+                                    {{ form_errors(form.phonePrefix) }}
+                                </div>
+                                <div class="form-floating mb-3">
+                                    {{ form_row(form.phone, {'attr': {'class': 'form-control', 'id': 'phone', 'placeholder': 'form_phone_placeholder'|trans}}) }}
+                                    {{ form_errors(form.phone) }}
+                                </div>
+                                <div class="form-floating mb-3">
+                                    {{ form_row(form.email, {'attr': {'class': 'form-control', 'id': 'email', 'placeholder': 'form_email_placeholder'|trans}}) }}
+                                    {{ form_errors(form.email) }}
+                                </div>
+                                <button type="submit" id="submitButton" class="btn btn-primary w-100">
+                                    {{ 'form_submit_button'|trans }}
+                                </button>
+                            {{ form_end(form) }}
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
 
-	<!-- Réalisations -->
-	<section class="pb-5">
-		<div class="container">
-			<div class="row">
-				<div class="col-12 text-center">
-					<h2 class="font-weight-bold">Nos Réalisations</h2>
-					<p class="lead text-muted">Découvrez quelques-unes de nos réalisations les plus récentes.</p>
-				</div>
-			</div>
-			<div class="row justify-content-center">
-				<div id="content" class="container page-content site-content single-post" role="main">
-					<div class="row">
-						<div class="col-xs-12 col-sm-12">
-							<!-- Portfolio Content -->
-							<div id="portfolio_content_q" class="portfolio-content">
-								<ul class="portfolio-filters">
-									<li>
-										<a class="filter btn btn-sm btn-link" data-group="toutes_categories">Toutes les catégories</a>
-									</li>
-									<li>
-										<a class="filter btn btn-sm btn-link" data-group="détaillé">Projets Détaillés</a>
-									</li>
-									<li>
-										<a class="filter btn btn-sm btn-link" data-group="lien-direct">Liens fonctionnels</a>
-									</li>
-									<li>
-										<a class="filter btn btn-sm btn-link" data-group="prototype">Prototype</a>
-									</li>
-								</ul>
+<!-- Pourquoi me choisir -->
+<section class="container-fluid position-relative mt-6">
+    <div class="row h-100 align-items-center">
+        <!-- Image -->
+        <div class="col-lg-6 col-md-12 d-flex justify-content-center">
+            <img src="{{ asset('img/moi2.jpg') }}" loading="lazy" 
+                alt="Walid BELBECHE - Expert Symfony et solutions numériques sur mesure" 
+                class="img-fluid rounded shadow-lg"
+                width="60%">
+        </div>
+        <div class="col-lg-6 col-md-12 d-flex flex-column justify-content-center px-5">
+            <h2 class="display-4 fw-bold mb-4 mt-4">{{ 'why_work_with_me_title'|trans }}</h2>
+            <p class="fs-5 mb-4">{{ 'about_me_text'|trans }}</p>
+            <ul class="list-unstyled mb-4">
+                <li class="mb-3 d-flex align-items-start">
+                    <i class="bi bi-check-circle-fill text-primary me-3"></i>
+                    <span>{{ 'personalized_support'|trans }}</span>
+                </li>
+                <li class="mb-3 d-flex align-items-start">
+                    <i class="bi bi-check-circle-fill text-primary me-3"></i>
+                    <span>{{ 'deep_expertise'|trans }}</span>
+                </li>
+                <li class="mb-3 d-flex align-items-start">
+                    <i class="bi bi-check-circle-fill text-primary me-3"></i>
+                    <span>{{ 'long_term_commitment'|trans }}</span>
+                </li>
+            </ul>
+            <a href="https://calendly.com/walid_belbeche/expertise-offerte" class="btn btn-info btn-lg rounded-pill mb-4">{{ 'button_schedule'|trans }}</a>
+        </div>
+    </div>
+</section>
 
-								<!-- Portfolio Grid -->
-								<div class="portfolio-grid four-columns shuffle">
-									{% for project in projects %}
-										{% set dataGroups = ['toutes_categories'] %}
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        particlesJS("particles-js", {
+            "particles": {
+                "number": { "value": 50, "density": { "enable": true, "value_area": 800 } },
+                "color": { "value": "#ffffff" },
+                "shape": { "type": "circle" },
+                "opacity": { "value": 0.5 },
+                "size": { "value": 3 },
+                "line_linked": { "enable": true, "distance": 150, "color": "#ffffff", "opacity": 0.4, "width": 1 },
+                "move": { "enable": true, "speed": 2 }
+            },
+            "interactivity": { "detect_on": "canvas", "events": { "onhover": { "enable": true, "mode": "grab" }, "onclick": { "enable": true, "mode": "push" } }, "modes": { "grab": { "distance": 140, "line_linked": { "opacity": 1 } } } },
+            "retina_detect": true
+        });
+    });
+</script>
 
-										{% if 'détaillé' in project.category %}
-											{% set dataGroups = dataGroups|merge(['détaillé']) %}
-										{% endif %}
-										{% if 'lien-direct' in project.category %}
-											{% set dataGroups = dataGroups|merge(['lien-direct']) %}
-										{% endif %}
-										{% if 'prototype' in project.category %}
-											{% set dataGroups = dataGroups|merge(['prototype']) %}
-										{% endif %}
+<!-- Skills and Technologies Section -->
+<section class="container mt-5">
+    <h2 class="text-center display-4 fw-bold mb-5">{{ 'skills_title'|trans }}</h2>
+    <div class="row">
+        {% set tools = [
+            { 'img': 'spec-4.png', 'name': 'Symfony' },
+            { 'img': 'spec-1.png', 'name': 'PHP' },
+            { 'img': 'spec-18.svg', 'name': 'PHP Storm' },
+            { 'img': 'spec-20.png', 'name': 'Docker' },
+            { 'img': 'spec-14.png', 'name': 'React' },
+            { 'img': 'spec-5.svg', 'name': 'VueJS' },
+            { 'img': 'spec-10.png', 'name': 'Next.js' },
+            { 'img': 'spec-7.png', 'name': 'SaaS' },
+            { 'img': 'spec-12.png', 'name': 'Node.js' }
+        ] %}
+        {% for tool in tools %}
+            <div class="col-xs-12 col-sm-3">
+                <div class="lm-info-block gray-default text-center">
+                    <img src="{{ asset('img/clients/' ~ tool.img) }}" loading="lazy" alt="{{ tool.name }}" class="img-fluid">
+                    <h4>{{ tool.name }}</h4>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</section>
 
-										<figure class="item standard" data-groups='["{{ dataGroups|join('", "') }}"]'>
-											<div class="portfolio-item-img">
-												{% for image in project.images %}
-													<img src="{{ asset('image_project/'~image.name) }}" alt="{{ image.name }}"/>
-												{% endfor %}
-												<a href="{{ url('front_project_show', {id: project.id}) }}"></a>
-											</div>
+<div class="divider"></div>
 
-											<i class="far fa-file-alt"></i>
-											{# <h4 class="name">{{ project.title }}</h4> #}
-											<span class="category">{{ project.category|join(', ')|title }}</span>
-										</figure>
-									{% endfor %}
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</section>
-	<!-- Fin des Réalisations -->
+<!-- Projects Section -->
+<section class="container">
+    <h2 class="text-center display-4 fw-bold mb-5">{{ 'recent_projects_title'|trans }}</h2>
+    <div class="row">
+        {% for project in projects %}
+            <div class="col-md-4 mb-4">
+                <div class="card shadow">
+                    {% for image in project.images %}
+                        <img src="{{ asset('image_project/' ~ image.name) }}" loading="lazy" alt="{{ image.name }}">
+                    {% endfor %}
+                    <div class="card-body">
+                        <h5 class="card-title">{{ project.title }}</h5>
+                        <a href="{{ url('front_project_show', {id: project.id}) }}" class="btn btn-primary">{{ 'view_more'|trans }}</a>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</section>
 
-	{# Section Project  #}
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const languageButtons = document.querySelectorAll('.select-language');
 
-	<section>
-		<div class="container-fluid">
-			<div class="row align-items-center bg-black justify-content-center px-5 text-white 100-vh">
-				<div class="col-md-4 mt-3">
-					<h1>BESOIN D'ÉCLAIRAGE ?</h1>
-					<p class="text-white text-justify">Transformez les défis techniques en opportunités. Lorsque vous êtes confronté à des problèmes techniques, vous faites face à des occasions de grandir et d'apprendre, discutons-en !</p>
-					<a href="https://calendly.com/walid_belbeche/expertise-offerte" class="text-warning">Réserver un appel de découverte</a>
-				</div>
-				<div class="col-md-8 pt-5 pb-5">
-					<img src="{{ asset('img/home_section.webp') }}" alt="agence web dans la Nièvre (58)" height="100%">
-				</div>
-			</div>
-		</div>
-	</section>
+        languageButtons.forEach(button => {
+            button.addEventListener('click', function () {
+                const locale = this.getAttribute('data-locale');
 
-	<br>
+                // Send AJAX request to change locale
+                fetch(`/change-locale/${locale}`, {
+                    method: 'GET',
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest'
+                    }
+                })
+                .then(response => {
+                    if (response.ok) {
+                        // Hide the language selector after successful locale change
+                        const selector = document.getElementById('language-selector');
+                        selector.style.transition = 'opacity 0.5s ease';
+                        selector.style.opacity = '0';
+                        setTimeout(() => selector.remove(), 500); // Remove the selector after fade-out
+                    } else {
+                        console.error('Failed to change language');
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+            });
+        });
 
-	{# Technologie et outils #}
-	<div class="container">
-		<div class="row">
-			<div class="col-xs-12 col-sm-12">
-				<div class="block-title">
-					<h2>Outils et technologies</h2>
-				</div>
-			</div>
-		</div>
-		<div class="row" id="specs">
-			<div class="col-xs-12 col-sm-3 vh-30">
-				<div class="lm-info-block gray-default">
-					<img src="./img/clients/spec-1.png" alt="PHP">
-					<h4>PHP</h4>
-				</div>
-			</div>
-
-			<div class="col-xs-12 col-sm-3 vh-30">
-				<div class="lm-info-block gray-default">
-					<img src="./img/clients/spec-2.png" alt="HTML 5 / CSS 3">
-					<h4>HTML 5 / CSS 3</h4>
-				</div>
-			</div>
-
-			<div class=" col-xs-12 col-sm-3 vh-30">
-				<div class="lm-info-block gray-default">
-					<img src="./img/clients/spec-3.png" alt="Git">
-					<h4>Git + SSH</h4>
-				</div>
-			</div>
-
-			<div class=" col-xs-12 col-sm-3 vh-30">
-				<div class="lm-info-block gray-default">
-					<img src="./img/clients/spec-4.png" alt="Symfony">
-					<h4>Symfony</h4>
-				</div>
-			</div>
-			<div class="col-xs-12 col-sm-3 vh-30">
-				<div class="lm-info-block gray-default">
-					<img src="./img/clients/spec-5.svg" alt="React">
-					<h4>React / VueJs</h4>
-				</div>
-			</div>
-			<div class="col-xs-12 col-sm-3 vh-30">
-				<div class="lm-info-block gray-default">
-					<img src="./img/clients/spec-7.png" alt="Sass">
-					<h4>SaaS</h4>
-				</div>
-			</div>
-			<div class="col-xs-12 col-sm-3 vh-30">
-				<div class="lm-info-block gray-default">
-					<img src="./img/clients/spec-8.svg" alt="Json web token(JWT)" class="text-center">
-					<h4>Json web token</h4>
-				</div>
-			</div>
-			<div class="col-xs-12 col-sm-3 vh-30">
-				<div class="lm-info-block gray-default">
-					<img src="./img/clients/spec-9.png" alt="Axios / Ajax" class="text-center">
-					<h4>Axios/Ajax</h4>
-				</div>
-			</div>
-		</div>
-	</div>
-	{# ./ Technologie et outils #}
-
-	<!-- Pricing -->
-	<div class="container">
-		<div class="row">
-			<div class=" col-xs-12 col-sm-12 ">
-				<div class="block-title">
-					<h2>Un large choix vous est proposé</h2>
-					<p>Pour professional, Artisans, jeune entreprise</p>
-				</div>
-			</div>
-
-		</div>
-
-		<div class="row">
-			<div class="col-xs-12 col-sm-12 ">
-				<div class="fw-pricing clearfix row">
-
-					<div class="fw-package-wrap col-md-4 ">
-						<div class="fw-package">
-							<div class="fw-heading-row">
-								<span class="text-uppercase">Expertise Offerte</span>
-							</div>
-
-							<div class="fw-pricing-row">
-								<span>Un échange convivial avec des réponses</span>
-							</div>
-
-							<div class="fw-button-row">
-								<a href="https://calendly.com/walid_belbeche/expertise-offerte" target="_self" class="btn btn-primary">Réserver</a>
-
-							</div>
-
-							<div class="fw-default-row text-justify">Vous souhaitez être accompagné dans le développement de votre solution numérique ? Discutons ensemble de vos besoins</div>
-						</div>
-					</div>
-
-					<div class="fw-package-wrap col-md-4 ">
-						<div class="fw-package">
-							<div class="fw-heading-row">
-								<span class="text-uppercase">Développement entreprise</span>
-							</div>
-
-							<div class="fw-pricing-row">
-								<span>Un prix compétitif avec des fonctionnalités de bases</span>
-							</div>
-
-							<div class="fw-button-row">
-								<a href="{{ url('front_devis_new', {'type': 'site_vitrine'}) }}" target="_self" class="btn btn-primary">Personnaliser</a>
-
-							</div>
-
-							<div class="fw-default-row text-justify">Vous êtes une marque souhaitant donner un coup de neuf à son site
-								web ou une entreprise souhaitant redynamiser sa présence sur le web ? Optez pour une
-								création d'application / site web sur mesure, dynamique et novateur. A votre image.
-							</div>
-						</div>
-					</div>
-
-					<div class="fw-package-wrap col-md-4">
-						<div class="fw-package pt-5">
-							<div class="fw-heading-row">
-								<span>DÉVELOPPEMENT SUR MESURE</span>
-							</div>
-
-							<div class="fw-pricing-row">
-								<span>Pour un besoin spécifique</span>
-							</div>
-
-							<div class="fw-button-row">
-								<a href="{{ url('front_devis_new', {'type': 'cross_plateforme'}) }}" target="_self" class="btn btn-primary">Personnaliser</a>
-
-							</div>
-
-							<div class="fw-default-row text-justify">Vous souhaitez aller un peu plus loin en ajoutant des fonctionnalités bien précises pour votre nouveau site internet ? Discutons ensemble de votre développement web sur mesure !
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-			<!-- /Pricing -->
-		</div>
-
-		<div class="row">
-			<div class="col-xs-12 col-sm-12">
-				<div class="p-20"></div>
-
-				<!-- Testimonials -->
-				<div class="block-title">
-					<h2>Ils en parlent mieux que nous</h2>
-				</div>
-
-				<div id="testimonials_1" class="testimonials owl-carousel" data-mobile-items="1" data-tablet-items="2" data-items="2">
-					<!-- Testimonial 1 -->
-					<div class="testimonial-item">
-						<!-- Testimonial Content -->
-						<div class="testimonial-content">
-							<!-- Picture -->
-							<div class="testimonial-picture">
-								<img src="{{ asset('img/sunday.png') }}" alt="Alain Tixier"/>
-							</div>
-							<!-- /Picture -->
-
-							<!-- Testimonial Text -->
-							<div class="testimonial-text">
-								<p>La Nièvre c’est loin, mais heureusement il y a internet pour bosser !</p>
-							</div>
-							<!-- /Testimonial Text -->
-
-							<!-- Testimonial author information -->
-							<div class="testimonial-author-info">
-								<h5 class="testimonial-author">Alain Tixier</h5>
-								<p class="testimonial-firm">CEO SPIN OFF</p>
-							</div>
-							<!-- /Testimonial author information -->
-
-							<div class="testimonial-icon">
-								<i class="fa fa-quote-left"></i>
-							</div>
-
-							<div class="testimonial-icon-big">
-								<i class="fa fa-quote-right"></i>
-							</div>
-						</div>
-						<!-- /Testimonial Content -->
-					</div>
-					<!-- End of Testimonial 1 -->
-
-					<!-- Testimonial 2 -->
-					<div class="testimonial-item">
-						<!-- Testimonial Content -->
-						<div class="testimonial-content">
-							<!-- Picture -->
-							<div class="testimonial-picture">
-								<img src="{{ asset('img/plomber.png') }}" alt="Pascal Stier"/>
-							</div>
-							<!-- /Picture -->
-
-							<!-- Testimonial Text -->
-							<div class="testimonial-text">
-								<p>très bonne prestation .je recommande. demandez lui ce qui vous intéresse il va vous le réaliser.</p>
-							</div>
-							<!-- /Testimonial Text -->
-
-							<!-- Testimonial author information -->
-							<div class="testimonial-author-info">
-								<h5 class="testimonial-author">Pascal Stier</h5>
-								<p class="testimonial-firm">Dirigeant Entreprise STIER</p>
-							</div>
-							<!-- /Testimonial author information -->
-
-							<div class="testimonial-icon">
-								<i class="fa fa-quote-left"></i>
-							</div>
-
-							<div class="testimonial-icon-big">
-								<i class="fa fa-quote-right"></i>
-							</div>
-						</div>
-						<!-- /Testimonial Content -->
-					</div>
-					<!-- End of Testimonial 2 -->
-				</div>
-				<!-- /Testimonials -->
-
-				<div class="p-40"></div>
-
-				<div class="text-white bg-tertiary text-center pt-5 pb-5" id="agence">
-					<h1 class="display-5 fw-bold lh-1 mb-3 text-center">Soyez Zen, On s'occupe de tout !</h1>
-					<p class="fw-bold mb-3 text-center lead text-white px-5 text-justify">Transitionnez de la planification au site grâce à ScriptZenIT, le créateur de sites Web destiné aux professionnels et aux artisans.</p>
-					<div class="ask">
-						<a href="{{ url('front_devis_new') }}" class="btn btn-black mr-3 animate-up-2 inline-block text-white">Démarrer ma demande
-							<span class="ml-2">
-									<span class="fas fa-arrow-right"></span>
-								</span>
-						</a>
-					</div>
-				</div>
-			</div>
-		</div>
-
-		<div class="thank-you">
-			<h2>Merci d'avoir visité notre site !</h2>
-			<p>Nous apprécions votre visite. Si vous avez des questions, des commentaires ou avez besoin de plus d'informations, n'hésitez pas à nous contacter.</p>
-			<a href="{{ url('front_contact') }}" class="btn btn-primary">Nous contacter</a>
-			<!-- Avis Google -->
-			<div class="text-center">
-				<a class="nav-link" href="https://g.page/r/CSj9BKNjCGCBEAI/review">
-					<img src="{{ asset('img/rating.png')}}" class="mx-auto bg-transparant" alt="évaluez-nous" width="10%" height="10%">Évaluez-nous
-				</a>
-			</div>
-		</div>
-	</div>
+        // Automatically hide the selector if the locale is already set
+        const currentLocale = '{{ app.request.locale }}';
+        if (currentLocale === 'fr' || currentLocale === 'en') {
+            document.getElementById('language-selector').style.display = 'none';
+        }
+    });
+</script>
 
 {% endblock %}

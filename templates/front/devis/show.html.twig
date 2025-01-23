@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="fr">
 <head>
     <meta charset="utf-8" />
     <title>Ma demande PDF</title>
@@ -60,7 +60,7 @@
             font-weight: bold;
         }
 
-        .invoice-box table tr.item td {
+        .invoice-box table tr.item td{
             border-bottom: 1px solid #eee;
         }
 
@@ -73,101 +73,86 @@
             font-weight: bold;
         }
 
+        .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: top;
+            margin-bottom: 20px;
+        }
+
+        .logo {
+            width: 100%;
+            max-width: 300px;
+        }
+
         @media only screen and (max-width: 600px) {
-            .invoice-box table tr.top table td {
-                width: 100%;
-                display: block;
-                text-align: center;
+            .container {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .logo {
+                margin-bottom: 20px;
             }
 
             .invoice-box table tr.information table td {
-                width: 100%;
-                display: block;
                 text-align: center;
             }
-        }
-        .txt-center-title{
-            text-align: center;
-        }
-        .container {
-        display: flex;
-        justify-content: space-between;
-        }
-        .row {
-            display: flex;
-            flex-wrap: wrap;
-            width: 100%;
-        }
-        .col-md-6 {
-            flex: 0 0 48%; /* Pour répartir les colonnes sur 48% de l'espace disponible */
         }
     </style>
 </head>
 <body>
-    <div class="invoice-box container">
+    <div class="invoice-box">
         <div class="container">
-
-            <div class="container" style="position: absolute;right: 30px;">
-                <div class="row">
-                    <img src="https://scriptzenit.fr/img/logo.png" style="width: 100%; max-width: 300px;"  alt="ScriptZenIT logo"/>
-                </div>
-                <div class="row">
-                    Numéro de devis : {{ devis.id }}<br />
-                    Date de création : {{ devis.createdAt|date('d/m/Y') }} à {{ devis.createdAt|date('H:i') }}<br />
-                    Statut de la demande : <strong>{{ devis.statut }}</strong>
-                </div>
+            <div style="display: flex; justify-content: center; align-items: center;">
+                <img src="{{ asset('img/logo.png') }}" alt="ScriptZenIT Logo" style="width: 100%; max-width: 300px;">
             </div>
-
-            <div class="container d-flex">
-                <span>Émetteur</span><br>
-                Société : ScriptZenIT <br>
-                Votre contact : Walid BELBECHE <br>
-                Adresse : Avallon <br>
-                Numéro d'entreprise : 848 967 816 <br>
-                Numéro de TVA : FR68848967816 <br>
-                Numéro de téléphone : 0762972691 <br>
-                Adresse email : contact@scriptzenit.fr <br>
-                Site internet : https://scriptzenit.fr
+            <div>
+                <h1>Mon devis</h1>
+                <h3>Bonjour {{ app.user.civility }} {{ app.user.nom }} {{ app.user.prenom }},</h3>
+                <p>Ceci est votre devis en format papier accessible sur votre espace ScriptZenIT.fr</p>
             </div>
-
-
-            <div class="container">
-                <h1 class="txt-center-title">Mon devis</h1>
-                <h3>Bonjour {{ app.user.civility }}. {{ app.user.nom }} {{ app.user.prenom }},</h3>
-                <p>Ceci est votre devis en format papier accessible sur votre espace ScriptZenIT.fr </p>
-                <p>Votre souhait concernant votre besoin de {{ devis.typeDeSiteWeb }} crée le {{ devis.createdAt|date('d/m/Y') }} à {{ devis.createdAt|date('H:i') }}.</p>
-                <p>A bien était pris en compte</p>
-                <hr>
-                <br>
-                <h3>Assistance</h3>
-                <p>Consulter toutes explications sur les types de sites web et les choix de design sur <a href="https://scriptzenit.fr/devis-en-ligne">scriptzenit.fr</a> <strong>menu principal</strong> "Faire une demande"</p>
-                <p>Merci de votre confiance, à bientôt.</p>
-                <hr>
-                <h3>Vos préférences</h3>
-                Type de site web: {{ devis.typeDeSiteWeb }}<br />
-                Attentes design:
-                {% for attente in devis.attentesDesignWeb %}
-                    {{ attente.label }}
-                {% endfor %}<br />
-                Nom: <strong>{{ app.user.nom }}</strong><br />
-                Prénom: {{ app.user.prenom }}<br />
-                Email: {{ devis.email }}
-            </div>
-            <table cellpadding="0" cellspacing="0">
-                <tr class="heading">
-                    <td>Description</td>
-                    <td></td>
-                </tr>
-                <tr class="item">
-                    <td colspan="2">{{ devis.descriptionProjet | nl2br }}</td>
-                </tr>
-
-                <tr class="total">
-                    <td>Prix prestation</td>
-                    <td>Total: {{ devis.prix }} €</td>
-                </tr>
-            </table>
         </div>
+
+        <table>
+            <tr class="information">
+                <td colspan="2">
+                    <table>
+                        <tr>
+                            <td>
+                                Entreprise : ScriptZenIT<br>
+                                Votre contact : Walid BELBECHE<br>
+                                Adresse : Avallon<br>
+                                Numéro d'entreprise : 848 967 816<br>
+                                Numéro de TVA : FR68848967816<br>
+                                Numéro de téléphone : 0762972691<br>
+                                Adresse email : contact@scriptzenit.fr<br>
+                                Site internet : https://scriptzenit.fr
+                            </td>
+                            <td>
+                                Numéro de devis : {{ devis.id }}<br>
+                                Date de création : {{ devis.createdAt|date('d/m/Y') }} à {{ devis.createdAt|date('H:i') }}<br>
+                                Statut de la demande : <strong>{{ devis.statut }}</strong>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+
+            <tr class="heading">
+                <td>Description</td>
+                <td>Prix</td>
+            </tr>
+            <tr class="item">
+                <td>{{ devis.descriptionProjet }}</td>
+                <td>{{ devis.prix }} €</td>
+            </tr>
+        </table>
+        
+        <hr>
+        <h3>Assistance</h3>
+        <p>Consultez toutes les explications sur les types de sites web et les choix de design sur <a href="https://scriptzenit.fr/devis-en-ligne">scriptzenit.fr</a> dans le "menu principal" sous "Faire une demande".</p>
+        <p>Merci de votre confiance, à bientôt.</p>
     </div>
 </body>
 </html>

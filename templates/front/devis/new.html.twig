@@ -6,6 +6,8 @@
 {% block content %}
 
 	<script src="https://cdn.jsdelivr.net/npm/simple-parallax-js@5.6.1/dist/simpleParallax.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
 
 	<script>
 		var image = document.getElementsByClassName('thumbnail');
@@ -24,85 +26,91 @@
 		</div>
 	</div>
 
-	<img src="{{ asset('img/keep_it_simple.png') }}" alt="Création de demande en ligne ScriptZenIT, solution digital sur mesure" class="thumbnail">
+	<div class="container">
+    <img src="{{ asset('img/debut-667ec7b7cd006.jpg') }}" alt="Création site internet ScriptZenIT, solution digital sur mesure" class="img-fluid">
+  </div>
 	<div class="b-example-divider"></div>
 	<section class="container text-center">
 		<p class="lead mb-5">
 			Remplissez le formulaire ci-dessous pour détailler vos besoins. Une fois votre demande de devis soumise,
 			vous pourrez suivre son avancement en temps réel grâce à notre onglet <a href="{{ path('front_assistance') }}">Assistance</a>.
-			Je suis là pour vous accompagner à chaque étape.
+			Nous sommes là pour vous accompagner à chaque étape.
 		</p>
 
-		<div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
-			<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#combinedModal">
-				Voir explications
-			</button>
-		</div>
+        <!-- Bouton pour ouvrir la modal -->
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#combinedModal">
+          Voir les détails sur les types de sites et de design
+        </button>
 
-		<!-- La Modal -->
-		<div class="modal fade" id="combinedModal" tabindex="-1" role="dialog" aria-labelledby="combinedModalLabel" aria-hidden="true">
-			<div class="modal-dialog" role="document">
-				<div class="modal-content">
-					<div class="modal-header">
-						<h5 class="modal-title" id="combinedModalLabel">Explications sur les Types de Sites Web et les Choix de Design</h5>
-						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-							<span aria-hidden="true">&times;</span>
-						</button>
-					</div>
-					<div class="modal-body">
-						<!-- Explications pour les Types de Sites Web -->
-						<h5>Types de Sites Web:</h5>
-						<p><strong>Site vitrine:</strong> Idéal pour les entreprises qui veulent présenter leurs produits ou services, mais sans vendre en ligne.</p>
-						<p><strong>E-Commerce:</strong> Pour les entreprises qui veulent vendre des produits ou des services en ligne.</p>
-						<p><strong>Blog professionnel:</strong> Pour les entreprises ou les individus qui souhaitent partager des Subjects, des actualités et des informations pertinentes.</p>
-						<p><strong>Portfolio:</strong> Idéal pour les artistes, photographes, designers, etc., qui souhaitent montrer leur travail.</p>
-						<p><strong>Forum communautaire:</strong> Pour créer une communauté en ligne centrée autour d'un sujet ou d'un intérêt commun.</p>
-						<p><strong>Site d'information ou magazine en ligne:</strong> Pour les entreprises de médias ou les individus qui partagent des actualités et des Subjects fréquemment.</p>
-						<p><strong>Application Web et Mobile (Cross-plateforme):</strong> Des applications qui fonctionnent à la fois sur le web et les mobiles.</p>
-						<p><strong>Système de Gestion de Contenu (CMS):</strong> Pour les entreprises qui ont besoin d'un système robuste pour gérer beaucoup de contenu.</p>
-						<p><strong>Intranet d'entreprise:</strong> Pour les besoins internes de l'entreprise, comme la gestion des ressources humaines, des projets, etc.</p>
-						<p><strong>Application spécifique:</strong> Pour des besoins très spécifiques qui ne rentrent pas dans les catégories précédentes. Le client peut décrire ses besoins en détail.</p>
+        <!-- La Modal -->
+        <div class="modal fade" id="combinedModal" tabindex="-1" aria-labelledby="combinedModalLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <!-- En-tête de la modal -->
+              <div class="modal-header">
+                <h5 class="modal-title" id="combinedModalLabel">Explications sur les Types de Sites Web et les Choix de Design</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+              </div>
 
-						<h5>Explications pour les choix de design:</h5>
-						<h6>Design standard :</h6>
-						<p>Un design simple et efficace qui suit les meilleures pratiques du secteur.</p>
+              <!-- Contenu de la modal -->
+              <div class="modal-body">
+                <!-- Explications pour les Types de Sites Web -->
+                <h5>Types de Sites Web:</h5>
+                <p><strong>Site vitrine:</strong> Idéal pour les entreprises qui veulent présenter leurs produits ou services, mais sans vendre en ligne.</p>
+                <p><strong>E-Commerce:</strong> Pour les entreprises qui veulent vendre des produits ou des services en ligne.</p>
+                <p><strong>Blog professionnel:</strong> Pour les entreprises ou les individus qui souhaitent partager des sujets, des actualités et des informations pertinentes.</p>
+                <p><strong>Portfolio:</strong> Idéal pour les artistes, photographes, designers, etc., qui souhaitent montrer leur travail.</p>
+                <p><strong>Forum communautaire:</strong> Pour créer une communauté en ligne centrée autour d'un sujet ou d'un intérêt commun.</p>
+                <p><strong>Site d'information ou magazine en ligne:</strong> Pour les entreprises de médias ou les individus qui partagent des actualités et des sujets fréquemment.</p>
+                <p><strong>Application Web et Mobile (Cross-plateforme):</strong> Des applications qui fonctionnent à la fois sur le web et les mobiles.</p>
+                <p><strong>Système de Gestion de Contenu (CMS):</strong> Pour les entreprises qui ont besoin d'un système robuste pour gérer beaucoup de contenu.</p>
+                <p><strong>Intranet d'entreprise:</strong> Pour les besoins internes de l'entreprise, comme la gestion des ressources humaines, des projets, etc.</p>
+                <p><strong>Application spécifique:</strong> Pour des besoins très spécifiques qui ne rentrent pas dans les catégories précédentes. Le client peut décrire ses besoins en détail.</p>
 
-						<h6>Avec vos propres maquettes :</h6>
-						<p>Si vous avez déjà conçu des maquettes ou des wireframes, cette option est pour vous.</p>
+                <h5>Explications pour les choix de design:</h5>
+                <h6>Design standard :</h6>
+                <p>Un design simple et efficace qui suit les meilleures pratiques du secteur.</p>
 
-						<h6>Design avancé :</h6>
-						<p>Un design entièrement personnalisé avec des fonctionnalités et des interactions complexes.</p>
+                <h6>Avec vos propres maquettes :</h6>
+                <p>Si vous avez déjà conçu des maquettes ou des wireframes, cette option est pour vous.</p>
 
-						<h6>Design orienté vers le mobile :</h6>
-						<p>Un design qui priorise l'expérience utilisateur sur les appareils mobiles.</p>
+                <h6>Design avancé :</h6>
+                <p>Un design entièrement personnalisé avec des fonctionnalités et des interactions complexes.</p>
 
-						<h6>Design animé ou interactif :</h6>
-						<p>Inclut des animations et des interactions utilisateur pour un site plus dynamique.</p>
+                <h6>Design orienté vers le mobile :</h6>
+                <p>Un design qui priorise l'expérience utilisateur sur les appareils mobiles.</p>
 
-						<h6>Thème sombre :</h6>
-						<p>Utilisation d'un thème de couleurs sombres pour réduire la fatigue oculaire et économiser de l'énergie sur les écrans OLED.</p>
+                <h6>Design animé ou interactif :</h6>
+                <p>Inclut des animations et des interactions utilisateur pour un site plus dynamique.</p>
 
-						<h6>Thème clair :</h6>
-						<p>Utilisation d'un thème de couleurs clairs pour améliorer la lisibilité et l'attrait visuel.</p>
+                <h6>Thème sombre :</h6>
+                <p>Utilisation d'un thème de couleurs sombres pour réduire la fatigue oculaire et économiser de l'énergie sur les écrans OLED.</p>
 
-						<h6>Design axé sur l’accessibilité :</h6>
-						<p>Un design qui est optimisé pour l'accessibilité, conformément aux directives WCAG.</p>
+                <h6>Thème clair :</h6>
+                <p>Utilisation d'un thème de couleurs clairs pour améliorer la lisibilité et l'attrait visuel.</p>
 
-						<h6>Design minimaliste :</h6>
-						<p>Un design simple avec peu de couleurs et d'éléments, axé sur la facilité d'utilisation.</p>
+                <h6>Design axé sur l’accessibilité :</h6>
+                <p>Un design qui est optimisé pour l'accessibilité, conformément aux directives WCAG.</p>
 
-						<h6>Branding complet inclus :</h6>
-						<p>Inclut la création d'un logo, la sélection de couleurs de marque et d'autres éléments de branding.</p>
+                <h6>Design minimaliste :</h6>
+                <p>Un design simple avec peu de couleurs et d'éléments, axé sur la facilité d'utilisation.</p>
 
-						<h6>Personnalisation avancée :</h6>
-						<p>Offre une grande flexibilité dans la personnalisation du design, y compris des options avancées comme des micro-interactions, etc.</p>
-					</div>
-					<div class="modal-footer">
-						<button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
-					</div>
-				</div>
-			</div>
-		</div>
+                <h6>Branding complet inclus :</h6>
+                <p>Inclut la création d'un logo, la sélection de couleurs de marque et d'autres éléments de branding.</p>
+
+                <h6>Personnalisation avancée :</h6>
+                <p>Offre une grande flexibilité dans la personnalisation du design, y compris des options avancées comme des micro-interactions, etc.</p>
+              </div>
+
+              <!-- Pied de page de la modal -->
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
 		<!-- Début du formulaire -->
 		<div class="px-4">
 			<div class="col-lg-12 mx-auto padding-top-xxl">
@@ -123,17 +131,62 @@
 				{{ form_row(formDevis.type_de_site_web)}}
 				{{ form_errors(formDevis.type_de_site_web)}}
 
-				<label for="">Quelles sont vos attentes concernant le design ?</label>
-				{{ form_row(formDevis.attentes_design_web)}}
-				{{ form_errors(formDevis.attentes_design_web)}}
+        <div class="container my-4">
+          <label class="form-label">Quelles sont vos attentes concernant le design ?</label>
 
-				<label for="">Parlez moi un peu plus de votre projet !</label>
-				{{ form_row(formDevis.description_projet)}}
-				{{ form_errors(formDevis.description_projet)}}
+            <!-- Container pour les options -->
+            <div class="d-flex flex-nowrap justify-content-start align-items-center scroll-container">
+                {% for option in formDevis.attentes_design_web %}
+                    <div class="card mx-2 p-3 shadow-sm option-card">
+                        <div class="card-body text-center">
+                            <label class="form-check-label d-flex flex-column align-items-center">
+                                {{ form_widget(option, {'attr': {'class': 'form-check-input'}}) }}
+                                <span class="mt-3">{{ option.vars.label }}</span>
+                            </label>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+            <div class="form-text text-muted mt-3">Vous pouvez sélectionner une ou plusieurs attentes en défilant ou cliquant.</div>
+            {{ form_errors(formDevis.attentes_design_web) }}
+        </div>
+
+        <label for="">Parlez-nous un peu plus de votre projet !</label>
+        {{ form_row(formDevis.description_projet)}}
+        {{ form_errors(formDevis.description_projet)}}
 
 				<button type="submit">Valider</button>
 				{{ form_end(formDevis) }}
 			</div>
 		</div>
 	</section>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const optionCards = document.querySelectorAll('.option-card input');
+
+        // Ajout des classes sur la sélection
+        optionCards.forEach(input => {
+            const card = input.closest('.option-card');
+            input.addEventListener('change', () => {
+                if (input.checked) {
+                    card.classList.add('border-primary', 'bg-light');
+                } else {
+                    card.classList.remove('border-primary', 'bg-light');
+                }
+            });
+        });
+
+        // Défilement fluide pour le conteneur
+        const scrollContainer = document.querySelector('.scroll-container');
+        if (scrollContainer) {
+            scrollContainer.addEventListener('wheel', (e) => {
+                e.preventDefault();
+                scrollContainer.scrollLeft += e.deltaY;
+            });
+        }
+    });
+</script>
+
+
 {% endblock %}

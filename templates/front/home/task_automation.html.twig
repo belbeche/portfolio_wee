@@ -1,0 +1,80 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'task_automation_title'|trans }}{% endblock %}
+
+{% block content %}
+<div class="container mt-6">
+    <h1 class="mb-5 text-center">{{ 'task_automation_heading'|trans }}</h1>
+    <p class="lead text-center mb-5">
+        {{ 'task_automation_intro'|trans }}
+    </p>
+    
+    <!-- Présentation -->
+    <div class="row mb-5">
+        <div class="col-md-6">
+            <h3>{{ 'why_automate_title'|trans }}</h3>
+            <ul>
+                <li><strong>{{ 'why_automate_time'|trans }}</strong> {{ 'why_automate_time_desc'|trans }}</li>
+                <li><strong>{{ 'why_automate_errors'|trans }}</strong> {{ 'why_automate_errors_desc'|trans }}</li>
+                <li><strong>{{ 'why_automate_productivity'|trans }}</strong> {{ 'why_automate_productivity_desc'|trans }}</li>
+                <li><strong>{{ 'why_automate_adaptability'|trans }}</strong> {{ 'why_automate_adaptability_desc'|trans }}</li>
+            </ul>
+        </div>
+        <div class="col-md-6">
+            <img src="{{ asset('img/task-automation.png') }}" alt="{{ 'task_automation_image_alt'|trans }}" class="img-fluid shadow-sm rounded">
+        </div>
+    </div>
+
+    <!-- Cas d'usage -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <h2 class="mb-4 text-center">{{ 'use_cases_title'|trans }}</h2>
+        </div>
+        <div class="col-md-6">
+            <h4 class="text-primary">{{ 'use_case_1_title'|trans }}</h4>
+            <p>{{ 'use_case_1_desc'|trans }}</p>
+        </div>
+        <div class="col-md-6">
+            <h4 class="text-primary">{{ 'use_case_2_title'|trans }}</h4>
+            <p>{{ 'use_case_2_desc'|trans }}</p>
+        </div>
+        <div class="col-md-6 mt-4">
+            <h4 class="text-primary">{{ 'use_case_3_title'|trans }}</h4>
+            <p>{{ 'use_case_3_desc'|trans }}</p>
+        </div>
+        <div class="col-md-6 mt-4">
+            <h4 class="text-primary">{{ 'use_case_4_title'|trans }}</h4>
+            <p>{{ 'use_case_4_desc'|trans }}</p>
+        </div>
+    </div>
+
+    <!-- Avantages -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <h2 class="mb-4 text-center">{{ 'advantages_title'|trans }}</h2>
+        </div>
+        <div class="col-md-4 text-center">
+            <i class="fas fa-cogs fa-3x text-primary mb-3"></i>
+            <h5>{{ 'advantage_1_title'|trans }}</h5>
+            <p>{{ 'advantage_1_desc'|trans }}</p>
+        </div>
+        <div class="col-md-4 text-center">
+            <i class="fas fa-chart-line fa-3x text-primary mb-3"></i>
+            <h5>{{ 'advantage_2_title'|trans }}</h5>
+            <p>{{ 'advantage_2_desc'|trans }}</p>
+        </div>
+        <div class="col-md-4 text-center">
+            <i class="fas fa-user-friends fa-3x text-primary mb-3"></i>
+            <h5>{{ 'advantage_3_title'|trans }}</h5>
+            <p>{{ 'advantage_3_desc'|trans }}</p>
+        </div>
+    </div>
+
+    <!-- Appel à action -->
+    <div class="text-center mt-5">
+        <h3 class="mb-4">{{ 'cta_heading'|trans }}</h3>
+        <p>{{ 'cta_description'|trans }}</p>
+        <a href="{{ path('front_contact') }}" class="btn btn-primary btn-lg">{{ 'cta_button'|trans }}</a>
+    </div>
+</div>
+{% endblock %}

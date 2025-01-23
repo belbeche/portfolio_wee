@@ -1,0 +1,32 @@
+<div class="comment">
+    <div>
+        <strong>{{ comment.user.username }}</strong> - 
+        <small>{{ comment.createdAt|date('d/m/Y H:i') }}</small>
+        <p>{{ comment.content }}</p>
+    </div>
+
+    <!-- Formulaire de réponse -->
+    {% if app.user %}
+        {# <button type="button" class="reply-button btn btn-secondary btn-sm" data-comment-id="{{ comment.id }}">
+            Répondre
+        </button> #}
+
+        <div id="reply-form-{{ comment.id }}" class="reply-form">
+            {{ form_start(replyForms[comment.id]) }}
+            <div class="mb-3">
+                {{ form_widget(replyForms[comment.id].content, {'attr': {'class': 'form-control', 'placeholder': 'Votre réponse...'}}) }}
+            </div>
+            <button type="submit" class="btn btn-primary btn-sm">Envoyer</button>
+            {{ form_end(replyForms[comment.id]) }}
+        </div>
+    {% endif %}
+
+    <!-- Réponses imbriquées -->
+    {% if comment.replies|length > 0 %}
+        <div class="replies">
+            {% for reply in comment.replies %}
+                {% include 'front/subject/_comment.html.twig' with { 'comment': reply, 'replyForms': replyForms } only %}
+            {% endfor %}
+        </div>
+    {% endif %}
+</div>

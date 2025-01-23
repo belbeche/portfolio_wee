@@ -1,11 +1,14 @@
 <?php
 namespace App\Entity;
 
+use Doctrine\DBAL\Types\Types;
+use Symfony\Component\Uid\Uuid;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\ContactRepository;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * @ORM\Entity(repositoryClass="App\Repository\ContactRepository", repositoryClass=ContactRepository::class)
+ * @ORM\Entity(repositoryClass=ContactRepository::class)
  */
 class Contact
 {
@@ -20,154 +23,190 @@ class Contact
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private mixed $firstName;
+    private ?String $firstName;
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private mixed $lastName;
+    private ?string $lastName;
     /**
      * @ORM\Column(type="string", length=180)
      */
-    private mixed $email;
+    private ?string $email;
     /**
-     * @Assert\Positive
+     * @ORM\Column(type="string", length=255)
      */
-    private mixed $phone;
+    private string $phone;
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private mixed $service;
+    private ?string $service;
 
     /**
      * @ORM\Column(type="text")
      * @Assert\NotBlank
      */
-    private mixed $content;
+    private $content;
 
     /**
+     * Get the value of id
+     *
      * @return mixed
      */
-    public function getId()
+    public function getId(): mixed
     {
         return $this->id;
     }
 
     /**
+     * Set the value of id
+     *
      * @param mixed $id
-     * @return Contact
+     *
+     * @return self
      */
-    public function setId($id)
+    public function setId(mixed $id): self
     {
         $this->id = $id;
+
         return $this;
     }
 
     /**
-     * @return mixed
+     * Get the value of firstName
+     *
+     * @return ?String
      */
-    public function getFirstName(): mixed
+    public function getFirstName(): ?String
     {
         return $this->firstName;
     }
 
     /**
-     * @param mixed $firstName
-     * @return Contact
+     * Set the value of firstName
+     *
+     * @param ?String $firstName
+     *
+     * @return self
      */
-    public function setFirstName($firstName): static
+    public function setFirstName(?String $firstName): self
     {
         $this->firstName = $firstName;
+
         return $this;
     }
 
     /**
-     * @return mixed
+     * Get the value of lastName
+     *
+     * @return ?string
      */
-    public function getLastName(): mixed
+    public function getLastName(): ?string
     {
         return $this->lastName;
     }
 
     /**
-     * @param mixed $lastName
-     * @return Contact
+     * Set the value of lastName
+     *
+     * @param ?string $lastName
+     *
+     * @return self
      */
-    public function setLastName($lastName): static
+    public function setLastName(?string $lastName): self
     {
         $this->lastName = $lastName;
+
         return $this;
     }
 
     /**
-     * @return mixed
+     * Get the value of email
+     *
+     * @return ?string
      */
-    public function getEmail(): mixed
+    public function getEmail(): ?string
     {
         return $this->email;
     }
 
     /**
-     * @param mixed $email
-     * @return Contact
+     * Set the value of email
+     *
+     * @param ?string $email
+     *
+     * @return self
      */
-    public function setEmail($email): static
+    public function setEmail(?string $email): self
     {
         $this->email = $email;
+
         return $this;
     }
 
     /**
-     * @return mixed
+     * Get the value of phone
+     *
+     * @return string
      */
-    public function getPhone(): mixed
+    public function getPhone(): string
     {
         return $this->phone;
     }
 
     /**
-     * @param mixed $phone
-     * @return Contact
+     * Set the value of phone
+     *
+     * @param string $phone
+     *
+     * @return self
      */
-    public function setPhone($phone): static
+    public function setPhone(string $phone): self
     {
         $this->phone = $phone;
+
         return $this;
     }
 
     /**
-     * @return mixed
+     * Get the value of service
+     *
+     * @return ?string
      */
-    public function getService(): mixed
+    public function getService(): ?string
     {
         return $this->service;
     }
 
     /**
-     * @param mixed $service
-     * @return Contact
+     * Set the value of service
+     *
+     * @param ?string $service
+     *
+     * @return self
      */
-    public function setService($service): static
+    public function setService(?string $service): self
     {
         $this->service = $service;
+
         return $this;
     }
 
     /**
-     * @return mixed
+     * Get the value of content
      */
-    public function getContent(): mixed
+    public function getContent()
     {
         return $this->content;
     }
 
     /**
-     * @param mixed $content
-     * @return Contact
+     * Set the value of content
      */
-    public function setContent(mixed $content): Contact
+    public function setContent($content): self
     {
         $this->content = $content;
+
         return $this;
     }
 }

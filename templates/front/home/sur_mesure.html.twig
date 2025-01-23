@@ -1,0 +1,55 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'home_title'|trans }}{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1 class="text-center mb-4">{{ 'home_heading'|trans }}</h1>
+    <p class="lead text-center mb-5">
+        {{ 'home_intro'|trans }}
+    </p>
+
+    <div class="row text-center">
+        <div class="col-md-3 mb-4">
+            <a href="{{ path('custom_app') }}" class="text-decoration-none">
+                <div class="card shadow-sm h-100">
+                    <div class="card-body">
+                        <h4 class="card-title">{{ 'custom_app_title'|trans }}</h4>
+                        <p class="card-text">{{ 'custom_app_desc'|trans }}</p>
+                    </div>
+                </div>
+            </a>
+        </div>
+        <div class="col-md-3 mb-4">
+            <a href="{{ path('quote_generation') }}" class="text-decoration-none">
+                <div class="card shadow-sm h-100">
+                    <div class="card-body">
+                        <h4 class="card-title">{{ 'quote_generation_title'|trans }}</h4>
+                        <p class="card-text">{{ 'quote_generation_desc'|trans }}</p>
+                    </div>
+                </div>
+            </a>
+        </div>
+        <div class="col-md-3 mb-4">
+            <a href="{{ path('expertise_web') }}" class="text-decoration-none">
+                <div class="card shadow-sm h-100">
+                    <div class="card-body">
+                        <h4 class="card-title">{{ 'task_automation_title'|trans }}</h4>
+                        <p class="card-text">{{ 'task_automation_desc'|trans }}</p>
+                    </div>
+                </div>
+            </a>
+        </div>
+        <div class="col-md-3 mb-4">
+            <a href="#" class="text-decoration-none">
+                <div class="card shadow-sm h-100">
+                    <div class="card-body">
+                        <h4 class="card-title">{{ 'seo_title'|trans }}</h4>
+                        <p class="card-text">{{ 'seo_desc'|trans }}</p>
+                    </div>
+                </div>
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

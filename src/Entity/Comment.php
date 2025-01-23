@@ -2,10 +2,11 @@
 
 namespace App\Entity;
 
-use App\Repository\CommentRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Validator\Constraints as Assert;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use App\Repository\CommentRepository;
 
 /**
  * @ORM\Entity(repositoryClass=CommentRepository::class)
@@ -19,40 +20,56 @@ class Comment
      */
     private $id;
 
+    // Le contenu du commentaire
     /**
-     * @ORM\Column(type="text", nullable=true)
-     * @Assert\NotBlank
-     */
+    * @ORM\Column(type="text")
+    */
     private $content;
 
+    // Date de création du commentaire
     /**
-     * @ORM\ManyToOne(targetEntity=Subject::class, inversedBy="commentaires")
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private $Subject;
+    * @ORM\Column(type="datetime")
+    */
+    private $createdAt;
 
     /**
-     * @ORM\Column(type="boolean", nullable=true)
+     * @ORM\Column(type="boolean")
      */
     private $active;
 
     /**
-     * @ORM\ManyToOne(User::class, inversedBy="comments")
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="comments")
      * @ORM\JoinColumn(nullable=false)
      */
     private $user;
 
+    // Le sujet auquel appartient le commentaire
     /**
-     * @ORM\Column(type="datetime")
+    * @ORM\ManyToOne(targetEntity="App\Entity\Subject", inversedBy="comments")
+    * @ORM\JoinColumn(name="subject_id", referencedColumnName="id")
+    */
+    private $subject;
+    
+    // Le parent du commentaire (pour les réponses)
+    /**
+    * @ORM\ManyToOne(targetEntity="App\Entity\Comment", inversedBy="replies")
+    * @ORM\JoinColumn(name="parent_id", referencedColumnName="id", nullable=true)
+    */
+    private $parent;
+
+
+    // Réponses liées à ce commentaire
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Comment", mappedBy="parent")
      */
-    private $createdAt;
+    private $replies;
 
     public function __construct()
     {
+        $this->createdAt = new \DateTime();
         $this->active = true;
-        $this->createdAt = new \DateTime("NOW");
+        $this->replies = new ArrayCollection();
     }
-
 
     public function getId(): ?int
     {
@@ -64,52 +81,9 @@ class Comment
         return $this->content;
     }
 
-    public function setContent(?string $content): self
+    public function setContent(string $content): self
     {
         $this->content = $content;
-
-        return $this;
-    }
-
-    public function getSubject(): ?Subject
-    {
-        return $this->Subject;
-    }
-
-    public function setSubject(?Subject $Subject): self
-    {
-        $this->Subject = $Subject;
-
-        return $this;
-    }
-
-    public function isActive(): ?bool
-    {
-        return $this->active;
-    }
-
-    public function setActive(?bool $active): self
-    {
-        $this->active = $active;
-
-        return $this;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getUser()
-    {
-        return $this->user;
-    }
-
-    /**
-     * @param mixed $user
-     * @return Comment
-     */
-    public function setUser($user)
-    {
-        $this->user = $user;
         return $this;
     }
 
@@ -121,6 +95,77 @@ class Comment
     public function setCreatedAt(\DateTimeInterface $createdAt): self
     {
         $this->createdAt = $createdAt;
+        return $this;
+    }
+
+    public function isActive(): ?bool
+    {
+        return $this->active;
+    }
+
+    public function setActive(bool $active): self
+    {
+        $this->active = $active;
+        return $this;
+    }
+
+    public function getSubject(): ?Subject
+    {
+        return $this->subject;
+    }
+
+    public function setSubject(?Subject $subject): self
+    {
+        $this->subject = $subject;
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): self
+    {
+        $this->user = $user;
+        return $this;
+    }
+
+    public function getParent(): ?self
+    {
+        return $this->parent;
+    }
+
+    public function setParent(?self $parent): self
+    {
+        $this->parent = $parent;
+        return $this;
+    }
+
+    public function getReplies(): Collection
+    {
+        return $this->replies;
+    }
+
+    public function addReply(self $reply): self
+    {
+        if (!$this->replies->contains($reply)) {
+            $this->replies[] = $reply;
+            $reply->setParent($this);
+        }
+
+        return $this;
+    }
+
+    public function removeReply(self $reply): self
+    {
+        if ($this->replies->contains($reply)) {
+            $this->replies->removeElement($reply);
+            // set the owning side to null (unless already changed)
+            if ($reply->getParent() === $this) {
+                $reply->setParent(null);
+            }
+        }
 
         return $this;
     }

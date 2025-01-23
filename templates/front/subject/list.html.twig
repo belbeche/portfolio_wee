@@ -1,0 +1,48 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Sujets de Support{% endblock %}
+
+{% block content %}
+<section id="content">
+    <div class="content-wrap">
+        <div class="container mw-md">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1 class="h2 fw-bold">Centre de Support</h1>
+                <a href="{{ path('front_subjects_new') }}" class="btn btn-primary">Créer un Nouveau Sujet</a>
+            </div>
+
+            {% if subjects is not empty %}
+                <div class="card shadow-sm">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="mb-0">Sujets Récents</h5>
+                    </div>
+                    <div class="list-group list-group-flush">
+                        {% for subject in subjects %}
+                            <a href="{{ path('front_subject_show', {'subjectId': subject.id}) }}" 
+                               class="list-group-item list-group-item-action d-flex justify-content-between align-items-start">
+                                <div class="me-3">
+                                    <h5 class="mb-1">{{ subject.title }}</h5>
+                                    <p class="mb-1 text-muted small">
+                                        Posté par <strong>{{ subject.user.username }}</strong> 
+                                        - le {{ subject.createdAt|format_datetime('short', 'short', locale='fr') }}
+                                    </p>
+                                </div>
+                                <span class="badge bg-secondary rounded-pill">
+                                    {{ subject.comments|length }} Réponse(s)
+                                </span>
+                            </a>
+                        {% endfor %}
+                    </div>
+                </div>
+            {% else %}
+                <div class="alert mt-4" role="alert">
+                    <h4 class="alert-heading">Aucun sujet trouvé</h4>
+                    <p>Il n'y a actuellement aucun sujet dans le centre de support. Vous pouvez être le premier à en créer un !</p>
+                    <hr>
+                    <a href="{{ path('front_subjects_new') }}" class="btn btn-outline-primary">Créer un Sujet</a>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</section>
+{% endblock %}

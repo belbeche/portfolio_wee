@@ -14,17 +14,9 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
-
-// the "name" and "description" arguments of AsCommand replace the
-// static $defaultName and $defaultDescription properties
-
-
 class CreateAdministratorCommand extends Command
 {
-
-    // the name of the command (the part after "bin/console")
     protected static $defaultName = 'app:create-admin';
-    // the command description shown when running "php bin/console list"
     protected static $defaultDescription = 'Create a new Admin user.';
 
     private UserPasswordHasherInterface $hasher;
@@ -33,7 +25,6 @@ class CreateAdministratorCommand extends Command
 
     public function __construct(UserPasswordHasherInterface $hasher, UserRepository $userRepository, EntityManagerInterface $entityManager)
     {
-
         $this->hasher = $hasher;
         $this->userRepository = $userRepository;
         $this->entityManager = $entityManager;
@@ -41,14 +32,11 @@ class CreateAdministratorCommand extends Command
         parent::__construct();
     }
 
-    /**
-     * Definition des argument a entrer dans la commande
-     */
     protected function configure(): void
     {
         $this
-            ->addArgument('nom', InputArgument::OPTIONAL, 'nom')
-            ->addArgument('prenom', InputArgument::OPTIONAL, 'Le prenom de l\'utilisateur')
+            ->addArgument('nom', InputArgument::OPTIONAL, 'Le nom de l\'utilisateur')
+            ->addArgument('prenom', InputArgument::OPTIONAL, 'Le prénom de l\'utilisateur')
             ->addArgument('email', InputArgument::OPTIONAL, 'L\'email de l\'utilisateur')
             ->addArgument('password', InputArgument::OPTIONAL, 'Le mot de passe de l\'utilisateur en clair');
     }
@@ -58,15 +46,6 @@ class CreateAdministratorCommand extends Command
         $helper = $this->getHelper('question');
         $io = new SymfonyStyle($input, $output);
 
-
-        //* ========================================================
-        //* ========================================================
-
-        //? >> Interaction, question et recuperation de la reponse
-
-        //* ========================================================
-        //todo Ajouter des contrainte sur la saisi du mot de passe
-
         $nom = $input->getArgument('nom');
         if (!$nom) {
             $question = new Question('Quel est le nom de l\'administrateur :  ');
@@ -75,7 +54,7 @@ class CreateAdministratorCommand extends Command
 
         $prenom = $input->getArgument('prenom');
         if (!$prenom) {
-            $question = new Question('Quel est le prenom de l\'administrateur :  ');
+            $question = new Question('Quel est le prénom de l\'administrateur :  ');
             $prenom = $helper->ask($input, $output, $question);
         }
 
@@ -85,31 +64,35 @@ class CreateAdministratorCommand extends Command
             $email = $helper->ask($input, $output, $question);
         }
 
+        // Vérification que l'email n'existe pas déjà
+        if ($this->userRepository->findOneBy(['email' => $email])) {
+            $io->error('Un utilisateur avec cet email existe déjà.');
+            return Command::FAILURE;
+        }
+
         $plainPassword = $input->getArgument('password');
         if (!$plainPassword) {
             $question = new Question('Quel est le mot de passe de l\'administrateur :  ');
             $plainPassword = $helper->ask($input, $output, $question);
         }
 
-        // Enregistrement en BDD
-
-        $user = (new User());
+        // Création et enregistrement de l'utilisateur
+        $user = new User();
         $user
             ->setNom($nom)
             ->setPrenom($prenom)
             ->setEmail($email)
-            ->setPassword($this->hasher->hashpassword(
+            ->setUser($user)
+            ->setPassword($this->hasher->hashPassword(
                 $user,
                 $plainPassword
             ))
             ->setRoles(['ROLE_USER', 'ROLE_ADMIN'])
-            ->setIsVerified('1');
+            ->setIsVerified(true); // Utiliser un booléen ici
 
         $this->userRepository->save($user, true);
 
-
-
-        $io->success('Nouvelle Administrateur créer !');
+        $io->success('Nouvel administrateur créé !');
 
         return Command::SUCCESS;
     }

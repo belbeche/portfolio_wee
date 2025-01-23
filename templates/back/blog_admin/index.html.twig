@@ -1,0 +1,40 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Gestion des Articles{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1>Gestion des Articles</h1>
+    <a href="{{ path('admin_blog_create') }}" class="btn btn-primary">Créer un nouvel article</a>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Titre</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for post in posts %}
+            <tr>
+                <td>{{ post.id }}</td>
+                <td>{{ post.title }}</td>
+                <td>{{ post.status }}</td>
+                <td>
+                    <a href="{{ path('admin_blog_edit', { id: post.id }) }}" class="btn btn-warning">Modifier</a>
+                    <form action="{{ path('admin_blog_delete', { id: post.id }) }}" method="post" style="display:inline-block;">
+                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ post.id) }}">
+                        <button class="btn btn-danger" onclick="return confirm('Confirmer la suppression ?')">Supprimer</button>
+                    </form>
+                    <form method="post" action="{{ path('admin_blog_validate', { id: post.id }) }}" style="display:inline-block;">
+                        <input type="hidden" name="_token" value="{{ csrf_token('validate' ~ post.id) }}">
+                        <button type="submit" class="btn btn-success">Valider</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

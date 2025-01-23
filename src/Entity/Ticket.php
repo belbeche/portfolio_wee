@@ -2,11 +2,14 @@
 
 namespace App\Entity;
 use Doctrine\DBAL\Types\Types;
-use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Uid\Uuid;
+use Doctrine\ORM\Mapping as ORM;
+use App\Repository\TicketRepository;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
- * @ORM\Entity()
+ * @ORM\Entity(repositoryClass=TicketRepository::class)
  */
 class Ticket
 {
@@ -61,11 +64,22 @@ class Ticket
     private $receiver;
 
     /**
+    * @ORM\OneToMany(targetEntity=Message::class, mappedBy="ticket", cascade={"persist", "remove"})
+    */
+    private Collection $messages;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Image::class, mappedBy="ticket", cascade={"persist", "remove"})
+     */
+    private Collection $attachments;
+
+    /**
      * @throws \Exception
      */
     public function __construct(){
-        $this->createdAt = new \DateTimeImmutable('now', new \DateTimeZone('Europe/Paris'));
-        $this->updatedAt = new \DateTimeImmutable('now', new \DateTimeZone('Europe/Paris'));
+        $this->messages = new ArrayCollection();
+        $this->createdAt = new \Datetime('now', new \DateTimeZone('Europe/Paris'));
+        $this->updatedAt = new \Datetime('now', new \DateTimeZone('Europe/Paris'));
     }
 
     public function getId(): ?Uuid
@@ -161,18 +175,18 @@ class Ticket
     }
 
     /**
-     * @return \DateTimeImmutable
+     * @return \DateTime
      */
-    public function getCreatedAt(): \DateTimeImmutable
+    public function getCreatedAt(): \DateTime
     {
         return $this->createdAt;
     }
 
     /**
-     * @param \DateTimeImmutable $createdAt
+     * @param \DateTime $createdAt
      * @return Ticket
      */
-    public function setCreatedAt(\DateTimeImmutable $createdAt): Ticket
+    public function setCreatedAt(\DateTime $createdAt): Ticket
     {
         $this->createdAt = $createdAt;
         return $this;
@@ -181,7 +195,7 @@ class Ticket
     /**
      * @return mixed
      */
-    public function getUpdatedAt(): ?\DateTimeImmutable
+    public function getUpdatedAt(): ?\DateTime
     {
         return $this->updatedAt;
     }
@@ -211,6 +225,47 @@ class Ticket
     public function setSender($sender):self
     {
         $this->sender = $sender;
+        return $this;
+    }
+    public function getMessages(): Collection {
+        return $this->messages;
+    }
+    
+    public function addMessage(Message $message): self {
+        if (!$this->messages->contains($message)) {
+            $this->messages[] = $message;
+            $message->setTicket($this);
+        }
+        return $this;
+    }
+    
+    public function removeMessage(Message $message): self {
+        if ($this->messages->removeElement($message)) {
+            if ($message->getTicket() === $this) {
+                $message->setTicket(null);
+            }
+        }
+        return $this;
+    }
+
+    public function getAttachments(): Collection {
+        return $this->attachments;
+    }
+
+    public function addAttachment(Image $attachment): self {
+        if (!$this->attachments->contains($attachment)) {
+            $this->attachments[] = $attachment;
+            $attachment->setTickets($this);
+        }
+        return $this;
+    }
+
+    public function removeAttachment(Image $attachment): self {
+        if ($this->attachments->removeElement($attachment)) {
+            if ($attachment->getTickets() === $this) {
+                $attachment->setTickets(null);
+            }
+        }
         return $this;
     }
 }

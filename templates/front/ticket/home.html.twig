@@ -4,25 +4,28 @@
 {% endblock %}
 
 {% block content %}
-	<div class="container">
-		{% for type, messages in app.flashes %}
-			{% for message in messages %}
-				<div class="alert alert-{{ type }}">{{ message }}</div>
+	<div class="container mb-4 main-container mt-7">
+		<div class="container">
+			{% for type, messages in app.flashes %}
+				{% for message in messages %}
+					<div class="alert alert-{{ type }}">{{ message }}</div>
+				{% endfor %}
 			{% endfor %}
-		{% endfor %}
-	</div>
-	<div class="container mb-4 main-container"  style="margin-top: 4rem !important;">
+		</div>
 		<div class="row">
 			<div class="col-lg-3">
 				<h3>Mes devis</h3>
-				<a href="{{ url('front_support') }}" class="btn btn-outline-success">Centre d'Assistance</a>
+				<a href="{{ url('front_subject_list') }}" class="btn btn-outline-success">Centre d'Assistance</a>
 				<a href="{{ url('front_edit_profile', {id: app.user.id }) }}" class="btn btn-primary mt-2" style="border-radius: 10px;">Modifier mon profil</a>
 				<!-- Account Sidebar-->
 				<div class="wizard">
 					<nav class="list-group list-group-flush">
 						<span class="list-group-item"><i class="fa fa-user text-muted"></i><i class="bi bi-person-circle"></i> {{ app.user.email }}</span>
-						<a class="list-group-item btn" href="{{ path('send_message', {id: app.user.id}) }}">
+						<a class="list-group-item btn" href="{{ path('send_message') }}">
 							Ouvrir un ticket
+						</a>
+						<a class="list-group-item btn" href="{{ path('front_show_ticket') }}">
+							Voir touts mes tickets
 						</a>
 						<a class="list-group-item" href="{{ path('front_devis_new') }}">
 							<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-folder-plus" viewBox="0 0 16 16">

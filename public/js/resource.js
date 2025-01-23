@@ -7,6 +7,7 @@
         await axios.get('/api/resources')
             .then(response => {
                 const resources = response.data.resources
+                console.log(resources);
 
                 for (let resource of resources) {
                     resourcesDiv.innerHTML += renderResources(resource)

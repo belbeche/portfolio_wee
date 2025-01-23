@@ -6,7 +6,7 @@
 
     <!-- Page Title
          ============================================= -->
-    <section class="page-title bg-primary border-bottom-0">
+    <section class="page-title bg-primary border-bottom-0 mt-7">
         <div class="container">
             <div class="page-title-row">
 
@@ -16,7 +16,7 @@
                         <div>
                             <h2 class="h1 border-bottom border-dark border-width-4" style="font-weight: 800;color:white;">Profil de {{ app.user.prenom }}</h2>
                             <p class="mb-0 text-white-50">Rôle du forum : <strong>{% for role in app.user.roles %}{{ role }}{% if not loop.last %}, {% endif %}{% endfor %}</strong></p>
-                            <a href="{{ url('front_Subjects_new') }}" class="btn btn-secondary">Écrire au support</a>
+                            <a href="{{ url('front_subjects_new') }}" class="btn btn-secondary">Écrire au support</a>
                         </div>
                     </div>
                 </div>

@@ -1,0 +1,14 @@
+{% extends 'base_back.html.twig' %}
+
+{% block title %}Modifier le Prospect{% endblock %}
+
+{% block content %}
+
+<h1>Modifier le Prospect</h1>
+{{ form_start(form) }}
+{{ form_widget(form) }}
+<button type="submit" class="btn btn-primary">Mettre à jour</button>
+{{ form_end(form) }}
+
+<a href="{{ path('back_prospect_index') }}">Retour</a>
+{% endblock %}

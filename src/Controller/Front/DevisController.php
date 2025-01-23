@@ -6,14 +6,10 @@ use App\Entity\Devis;
 use App\Entity\User;
 use App\Form\DevisType;
 use App\Form\UserPasswordType;
-use App\Form\UserType;
-use Doctrine\DBAL\Driver\PDO\Exception;
 use Doctrine\ORM\EntityManagerInterface;
-use Knp\Snappy\Pdf;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Mime\Address;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -27,68 +23,95 @@ use Mpdf\Mpdf;
 class DevisController extends AbstractController
 {
     /**
-     * @Route("/devis-en-ligne", name="front_devis_new")
-     */
+    * @Route("/devis-en-ligne", name="front_devis_new")
+    */
     public function new(Request $request, EntityManagerInterface $entityManager, MailerInterface $mailer, Security $security): Response
     {
-
         $devis = new Devis();
 
-        // Créer le formulaire de devis en utilisant l'e-mail récupéré ou laisser l'e-mail vide
+        // Créer le formulaire de devis
         $form = $this->createForm(DevisType::class, $devis);
-
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            // Utilisation du Voter ici
+            // Accès restreint aux utilisateurs autorisés
             $this->denyAccessUnlessGranted('CREATE', $devis);
 
-            $devis->setStatut('en_attente'); // Mettez à jour le statut si nécessaire
-            $devis->setPrix('0'); // prix à 0 au moment de la création
+            // Définir le statut et le prix initial du devis
+            $devis->setStatut('en_attente');
+            $devis->setPrix(0);
 
-            if($this->getUser()){
-                // Récupérer l'utilisateur actuellement authentifié s'il existe
-                $user = $security->getUser();
+            // Vérifier l'utilisateur connecté
+            $user = $security->getUser();
+            if ($user instanceof UserInterface) {
                 $devis->setEmailFromUser($user);
 
-                // Vérifier si l'utilisateur est authentifié et s'il a un e-mail
-                if ($user instanceof UserInterface && $user->getUserIdentifier()) {
-                    // Utilisateur déjà inscrit, utiliser son e-mail
+                if ($user->getUserIdentifier()) {
                     $devis->setEmail($user->getUserIdentifier());
                     $devis->setUser($user);
                 }
             }
 
-            $entityManager->persist($devis);
-            $entityManager->flush();
+            try {
+                $entityManager->persist($devis);
+                $entityManager->flush();
+            } catch (\Exception $e) {
+                $this->addFlash('error', 'Une erreur est survenue lors de la sauvegarde du devis.');
+                return $this->redirectToRoute('front_devis_new');
+            }
 
-            // Envoi de l'e-mail avec le récapitulatif du devis
-            $email = (new TemplatedEmail())
-                ->from(new Address('contact@scriptzenit.fr', 'L\'équipe Scriptzenit'))
-                ->to($devis->getEmail())
-                ->bcc('wbelbeche.s@gmail.com')
-                ->subject('Récapitulatif de demande de devis')
-                ->context([
-                    'registredNumber' => $devis->getId(),
-                    'emailAddress' => $devis->getEmail(),
-                    'subject' => $devis->getTypeDeSiteWeb(),
-                    'designWebsite' => $devis->getAttentesDesignWeb(),
-                    'typeWeb' => $devis->getTypeDeSiteWeb(),
-                    'message' => $devis->getDescriptionProjet()
-                ])
-                ->htmlTemplate('front/devis/email.html.twig');
-            $mailer->send($email);
+            // Générer le PDF du devis
+            try {
+                $html = $this->renderView('front/devis/show.html.twig', [
+                    'devis' => $devis
+                ]);
 
+                $filename = 'devis_' . $devis->getId() . '.pdf';
+                $mpdf = new Mpdf();
+                $mpdf->WriteHTML($html);
+                $pdfContent = $mpdf->Output('', 'S'); // Générer le PDF en tant que chaîne
+            } catch (\Exception $e) {
+                $this->addFlash('error', 'Impossible de générer le PDF du devis.');
+                return $this->redirectToRoute('front_devis_new');
+            }
 
-            $this->addFlash('success', 'Votre demande a bien été prise en compte, vérifiez votre adresse e-mail.');
+            // Envoi de l'e-mail avec le récapitulatif du devis et le PDF en pièce jointe
+            try {
+                $email = (new TemplatedEmail())
+                    ->from(new Address('contact@scriptzenit.fr', 'L\'équipe Scriptzenit'))
+                    ->to($devis->getEmail())
+                    ->bcc('wbelbeche.s@gmail.com')
+                    ->subject('Récapitulatif de votre demande de devis')
+                    ->htmlTemplate('front/devis/email.html.twig')
+                    ->context([
+                        'registredNumber' => $devis->getId(),
+                        'emailAddress' => $devis->getEmail(),
+                        'subject' => $devis->getTypeDeSiteWeb(),
+                        'designWebsite' => $devis->getAttentesDesignWeb(),
+                        'typeWeb' => $devis->getTypeDeSiteWeb(),
+                        'message' => $devis->getDescriptionProjet()
+                    ])
+                    ->attach($pdfContent, $filename, 'application/pdf');
 
-            return $this->redirectToRoute('front_assistance');
+                $mailer->send($email);
+            } catch (\Exception $e) {
+                $this->addFlash('error', 'Une erreur est survenue lors de l\'envoi de l\'email.');
+                return $this->redirectToRoute('front_devis_new');
+            }
+
+            // Message de confirmation à l'utilisateur
+            $this->addFlash('success', 'Votre demande a bien été prise en compte. Vérifiez votre adresse e-mail.');
+
+            return $this->redirectToRoute('front_confirmation_estimate', [
+                'id' => $devis->getId()
+            ]);
         }
 
         return $this->render('front/devis/new.html.twig', [
             'formDevis' => $form->createView(),
         ]);
     }
+
 
     /**
      * @Route("/continuer/{id}", name="front_devis_set_password")
@@ -170,19 +193,14 @@ class DevisController extends AbstractController
     }
 
     /**
-     * @Route("/devis/remerciement/{email}", name="front_confirmation_estimate")
+     * @Route("/devis/remerciement/{id}", name="front_confirmation_estimate")
      */
     public function messageConfirmation(
         EntityManagerInterface $entityManager,
-        Request $request,
-        string $email
+        string $id
     ): Response
     {
-        $user = $entityManager->getRepository(User::class)->findOneBy(['email' => $email]);
-        /*if ($user === null) {
-            // Gérer l'erreur, peut-être rediriger vers une page d'erreur
-            throw $this->createNotFoundException('Aucun utilisateur avec cette adresse e-mail n\'a été trouvé.');
-        }*/
+        $user = $entityManager->getRepository(User::class)->find($id);
 
         return $this->render('front/devis/confirmation.html.twig', [
             'user' => $user,

@@ -4,6 +4,7 @@ namespace App\Entity;
 
 
 use DateTimeImmutable;
+use Doctrine\DBAL\Types\Types;
 use Symfony\Component\Uid\Uuid;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\DevisRepository;
@@ -12,7 +13,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * @ORM\Entity(repositoryClass="App\Repository\DevisRepository", repositoryClass=DevisRepository::class)
+ * @ORM\Entity(repositoryClass=DevisRepository::class)
  */
 class Devis
 {
@@ -57,6 +58,11 @@ class Devis
     private $statut;
 
     /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $response;
+
+    /**
      * @ORM\OneToMany(targetEntity=Message::class, mappedBy="devis", orphanRemoval=true, cascade={"remove"})
      */
     private $messages;
@@ -67,9 +73,11 @@ class Devis
     private $tickets;
 
     /**
-     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="devis")
-     */
+    * @ORM\ManyToOne(targetEntity=User::class, inversedBy="devis")
+    * @ORM\JoinColumn(nullable=true)
+    */
     private $user;
+
 
     /**
      * @ORM\ManyToMany(targetEntity="App\Entity\AttenteDesignWeb", inversedBy="devis", cascade={"persist"})
@@ -132,19 +140,12 @@ class Devis
         return $this;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getPrix()
+    public function getPrix(): ?int
     {
         return $this->prix;
     }
 
-    /**
-     * @param mixed $prix
-     * @return Devis
-     */
-    public function setPrix($prix)
+    public function setPrix(?int $prix): self
     {
         $this->prix = $prix;
         return $this;
@@ -171,6 +172,17 @@ class Devis
     {
         $this->statut = $statut;
 
+        return $this;
+    }
+
+    public function getResponse(): ?string
+    {
+        return $this->response;
+    }
+
+    public function setResponse(?string $response): self
+    {
+        $this->response = $response;
         return $this;
     }
 
@@ -234,39 +246,64 @@ class Devis
         return $this;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getUser()
+    public function getUser(): ?User
     {
         return $this->user;
     }
 
-    /**
-     * @param mixed $user
-     * @return Devis
-     */
-    public function setUser($user)
+    public function setUser(?User $user): self
     {
         $this->user = $user;
+
         return $this;
     }
 
-    /**
-     * @return Collection
-     */
     public function getAttentesDesignWeb(): Collection
     {
         return $this->attentesDesignWeb;
     }
 
-    /**
-     * @param Collection $attentesDesignWeb
-     * @return Devis
-     */
     public function setAttentesDesignWeb(Collection $attentesDesignWeb): Devis
     {
         $this->attentesDesignWeb = $attentesDesignWeb;
+        return $this;
+    }
+
+    public function addTicket(Ticket $ticket): static
+    {
+        if (!$this->tickets->contains($ticket)) {
+            $this->tickets->add($ticket);
+            $ticket->setDevis($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTicket(Ticket $ticket): static
+    {
+        if ($this->tickets->removeElement($ticket)) {
+            // set the owning side to null (unless already changed)
+            if ($ticket->getDevis() === $this) {
+                $ticket->setDevis(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function addAttentesDesignWeb(AttenteDesignWeb $attentesDesignWeb): static
+    {
+        if (!$this->attentesDesignWeb->contains($attentesDesignWeb)) {
+            $this->attentesDesignWeb->add($attentesDesignWeb);
+        }
+
+        return $this;
+    }
+
+    public function removeAttentesDesignWeb(AttenteDesignWeb $attentesDesignWeb): static
+    {
+        $this->attentesDesignWeb->removeElement($attentesDesignWeb);
+
         return $this;
     }
 }

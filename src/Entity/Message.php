@@ -2,14 +2,16 @@
 
 namespace App\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
+use Doctrine\DBAL\Types\Types;
 use Monolog\DateTimeImmutable;
 use Symfony\Component\Uid\Uuid;
-use Symfony\Component\Validator\Constraints as Assert;
+use Doctrine\ORM\Mapping as ORM;
+use App\Repository\MessageRepository;
 use Symfony\Component\Validator\Constraints\DateTime;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * @ORM\Entity()
+ * @ORM\Entity(repositoryClass=MessageRepository::class)
  */
 class Message
 {
@@ -42,25 +44,31 @@ class Message
     private $status;
 
     /**
-     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="receivedMessages")
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private ?User $receiver;
-
-    /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $attachment;
 
     /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private ?string $sender;
-
-    /**
      * @ORM\ManyToOne(targetEntity=Devis::class, inversedBy="messages", cascade={"remove"})
      */
     private $devis;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=User::class)
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private ?User $sender;
+
+    /**
+    * @ORM\Column(type="string", length=255, nullable=false)
+    */
+    private ?string $receiver = null;
+
+    /**
+    * @ORM\ManyToOne(targetEntity=Ticket::class, inversedBy="messages")
+    * @ORM\JoinColumn(nullable=false)
+    */
+    private ?Ticket $ticket = null;
 
     /**
      * @throws \Exception
@@ -113,51 +121,11 @@ class Message
         return $this;
     }
 
-    public function getReceiver(): ?User
-    {
-        return $this->receiver;
-    }
-
-    /**
-     * @param mixed $receiver
-     * @return Message
-     */
-    public function setReceiver(?User $receiver):self
-    {
-        $this->receiver = $receiver;
-        return $this;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getSender(): ?string
-    {
-        return $this->sender;
-    }
-
-    /**
-     * @param string|null $sender
-     * @return Message
-     */
-    public function setSender(?string $sender): Message
-    {
-        $this->sender = $sender;
-        return $this;
-    }
-
-    /**
-     * @return mixed
-     */
     public function getAttachment()
     {
         return $this->attachment;
     }
 
-    /**
-     * @param mixed $attachment
-     * @return Message
-     */
     public function setAttachment($attachment)
     {
         $this->attachment = $attachment;
@@ -179,6 +147,38 @@ class Message
     {
         $this->createdAt = $createdAt;
 
+        return $this;
+    }
+
+    public function getSender(): ?User
+    {
+        return $this->sender;
+    }
+
+    public function setSender(?User $sender): self
+    {
+        $this->sender = $sender;
+
+        return $this;
+    }
+
+    public function getReceiver(): ?string
+    {
+        return $this->receiver;
+    }
+
+    public function setReceiver(?string $receiver): self
+    {
+        $this->receiver = $receiver;
+
+        return $this;
+    }
+    public function getTicket(): ?Ticket {
+        return $this->ticket;
+    }
+    
+    public function setTicket(?Ticket $ticket): self {
+        $this->ticket = $ticket;
         return $this;
     }
 }

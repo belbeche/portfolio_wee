@@ -72,9 +72,9 @@ class Subject
     private $updatedAt;
 
     /**
-     * @ORM\OneToMany(targetEntity=Comment::class, mappedBy="Subject", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity=Comment::class, mappedBy="subject")
      */
-    private $commentaires;
+    private $comments;
 
     /**
      * @ORM\ManyToMany(targetEntity=Category::class, inversedBy="Subjects")
@@ -92,6 +92,14 @@ class Subject
      */
     private Collection $images;
 
+    #[ORM\ManyToOne(targetEntity: self::class, inversedBy: "replies")]
+    #[ORM\JoinColumn(onDelete: "CASCADE")]
+    private $parent;
+
+    #[ORM\OneToMany(mappedBy: "parent", targetEntity: self::class, cascade: ["remove"])]
+    private $replies;
+
+
     /**
      * @ORM\OneToMany(
      *     targetEntity="UserLike",
@@ -102,17 +110,12 @@ class Subject
      */
     private ?Collection $likes;
 
-    /**
-     * @ORM\Column(type="integer")
-     */
-    private $Subject_id;
-
     public function __construct()
     {
         $this->user = null;
         $this->categories = null;
         $this->active = true;
-        $this->commentaires = new ArrayCollection();
+        $this->comments = new ArrayCollection();
         $this->categories = new ArrayCollection();
         $this->images = new ArrayCollection();
         $this->likes = new ArrayCollection();
@@ -171,57 +174,39 @@ class Subject
         return $this;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getSlug(): mixed
+    public function getComments(): Collection
     {
-        return $this->title;
+        return $this->comments;
     }
 
-    public function setSlug($slug): static
+    public function addComment(Comment $comment): self
     {
-        $this->title = $title;
-        return $this;
-    }
-
-    public function getCommentaires(): Collection
-    {
-        return $this->commentaires;
-    }
-
-    public function setCommentaires(ArrayCollection $commentaires): Subject
-    {
-        $this->commentaires = $commentaires;
-        return $this;
-    }
-
-    public function addCommentaire(Comment $commentaire): self
-    {
-        if (!$this->commentaires->contains($commentaire)) {
-            $this->commentaires[] = $commentaire;
-            $commentaire->setSubject($this);
+        if (!$this->comments->contains($comment)) {
+            $this->comments[] = $comment;
+            $comment->setSubject($this);
         }
 
         return $this;
     }
 
-    public function removeCommentaire(Comment $commentaire): self
+    public function removeComment(Comment $comment): self
     {
-        if ($this->commentaires->removeElement($commentaire)) {
+        if ($this->comments->contains($comment)) {
+            $this->comments->removeElement($comment);
             // set the owning side to null (unless already changed)
-            if ($commentaire->getSubject() === $this) {
-                $commentaire->setSubject(null);
+            if ($comment->getSubject() === $this) {
+                $comment->setSubject(null);
             }
         }
 
         return $this;
     }
 
-    public function getCategories()
+    public function getCategories(): Collection
     {
         return $this->categories;
     }
+
 
     public function setCategories(ArrayCollection $categories)
     {
@@ -346,14 +331,56 @@ class Subject
         $this->likes->removeElement($like);
     }
 
-    public function getSubjectId(): ?int
+    /**
+     * Get the value of slug
+     */
+    public function getSlug()
     {
-        return $this->Subject_id;
+        return $this->slug;
     }
 
-    public function setSubjectId(int $SubjectId): self
+    /**
+     * Set the value of slug
+     */
+    public function setSlug($slug): self
     {
-        $this->Subject_id = $SubjectId;
+        $this->slug = $slug;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of replies
+     */
+    public function getReplies()
+    {
+        return $this->replies;
+    }
+
+    /**
+     * Set the value of replies
+     */
+    public function setReplies($replies): self
+    {
+        $this->replies = $replies;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of parent
+     */
+    public function getParent()
+    {
+        return $this->parent;
+    }
+
+    /**
+     * Set the value of parent
+     */
+    public function setParent($parent): self
+    {
+        $this->parent = $parent;
 
         return $this;
     }

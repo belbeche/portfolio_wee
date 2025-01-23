@@ -4,29 +4,30 @@
     <div class="container">
 
         <div class="card">
-            {#{% for image in Subject.images %}
-                <img src="{{ asset('uploads/' ~ image.name) }}" alt="{{ Subject.title }}" class="img-fluid">
+            {#{% for image in subject.images %}
+                <img src="{{ asset('uploads/' ~ image.name) }}" alt="{{ subject.title }}" class="img-fluid">
             {% endfor %}#}
         </div>
 
-        <h1>{{ Subject.title }}</h1><br>
-        <p>Par {{ Subject.user.username }}</p>
-        <img src="{{ asset('uploads/avatar/' ~Subject.user.avatar) }}" alt="{{ Subject.user.username }}" class="rounded-0 img-thumbnail" width="50" height="50">
+        <h1>{{ subject.title }}</h1><br>
+        <p>Par {{ subject.user.username }}</p>
+        <img src="{{ asset('uploads/avatar/' ~subject.user.avatar) }}" alt="{{ subject.user.username }}" class="rounded-0 img-thumbnail" width="50" height="50">
 
         <pre>
             <code>
-                {{ Subject.content|raw }}
+                {{ subject.content|raw }}
             </code>
         </pre>
 
         <p>
-            Crée le : {{ Subject.createdAt|format_datetime('full', 'short', locale='fr') }}
+            Crée le : {{ subject.createdAt|format_datetime('full', 'short', locale='fr') }}
         </p>
         <p>
-            Modifier le :  {{ Subject.updatedAt|format_datetime('full', 'short', locale='fr') }}
+            Modifier le :  {{ subject.updatedAt|format_datetime('full', 'short', locale='fr') }}
         </p>
 
-        <a href="{{ url('front_Subjects_show', {title: Subject.title}) }}">Voir l'Subject</a>
+        <a href="{{ path('front_subject_show', {'subjectId': subject.id}) }}">Voir le sujet</a>
+        
     </div>
 
 {% endblock %}

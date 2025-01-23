@@ -2,17 +2,17 @@
 
 {% block content %}
     <div class="container mt-4">
-        <h1>Ajouter un Subject</h1>
+        <h1>Ajouter un subject</h1>
 
-        {% if app.request.attributes.get('_route') == 'back_Subjects_new' %}
+        {% if app.request.attributes.get('_route') == 'back_subjects_new' %}
             <hr>
             <h2>Gestion des images</h2>
-            {% for image in Subject.images %}
+            {% for image in subject.images %}
                 <div>
-                    <img src="{{ asset('/uploads/'~image.name) }}" alt="{{ Subject.name }}" width="150">
+                    <img src="{{ asset('/uploads/'~image.name) }}" alt="{{ subject.name }}" width="150">
 
                     {# We add a link to delete an image (will be managed in Ajax in images.js) #}
-                    <a href="{{ path('back_Subjects_remove_image', {id: image.id})}}" data-delete data-token="{{ csrf_token('delete' ~ image.id )}}">
+                    <a href="{{ path('back_subjects_remove_image', {id: image.id})}}" data-delete data-token="{{ csrf_token('delete' ~ image.id )}}">
                         <i class="bi bi-file-earmark-x"></i>
                         Supprimer
                     </a>
@@ -20,6 +20,6 @@
             {% endfor %}
         {% endif %}
         <br>
-        {% include 'back/includes/_Subject_form.html.twig' %}
+        {% include 'back/includes/_subject_form.html.twig' %}
     </div>
 {% endblock %}
