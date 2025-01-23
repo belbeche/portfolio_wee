@@ -260,3 +260,17 @@ project:
     categories: "Catégories"
     client: "Client"
     related_projects: "Projets connexes"
+
+callback_request:
+    name:
+        label: "Nom/Prénom"
+        placeholder: "Entrez votre nom et prénom"
+    phone_prefix:
+        label: "Indicatif téléphonique"
+        placeholder: "Sélectionnez votre indicatif téléphonique"
+    phone:
+        label: "Numéro de téléphone"
+        placeholder: "Entrez votre numéro de téléphone"
+    email:
+        label: "Adresse email"
+        placeholder: "Entrez votre adresse email"

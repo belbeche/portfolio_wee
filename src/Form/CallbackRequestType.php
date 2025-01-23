@@ -15,13 +15,13 @@ class CallbackRequestType extends AbstractType
     {
         $builder
             ->add('name', TextType::class, [
-                'label' => 'Nom/Prénom',
+                'label' => 'callback_request.name.label',
                 'attr' => [
-                    'placeholder' => 'Entrez votre nom et prénom',
+                    'placeholder' => 'callback_request.name.placeholder',
                 ],
             ])
             ->add('phonePrefix', ChoiceType::class, [
-                'label' => 'Indicatif téléphonique',
+                'label' => 'callback_request.phone_prefix.label',
                 'choices' => [
                     '+1 (USA/Canada)' => '+1',
                     '+7 (Russie)' => '+7',
@@ -152,18 +152,19 @@ class CallbackRequestType extends AbstractType
                     '+420 (République tchèque)' => '+420',
                     '+421 (Slovaquie)' => '+421',
                     '+423 (Liechtenstein)' => '+423',
-                ]
-            ])            
+                ],
+                'placeholder' => 'callback_request.phone_prefix.placeholder',
+            ])
             ->add('phone', TelType::class, [
-                'label' => 'Numéro de téléphone',
+                'label' => 'callback_request.phone.label',
                 'attr' => [
-                    'placeholder' => 'Entrez votre numéro de téléphone',
+                    'placeholder' => 'callback_request.phone.placeholder',
                 ],
             ])
             ->add('email', EmailType::class, [
-                'label' => 'Email',
+                'label' => 'callback_request.email.label',
                 'attr' => [
-                    'placeholder' => 'Entrez votre adresse email',
+                    'placeholder' => 'callback_request.email.placeholder',
                 ],
             ]);
     }
