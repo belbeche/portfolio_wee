@@ -263,3 +263,17 @@ project:
     categories: "Categories"
     client: "Client"
     related_projects: "Related Projects"
+
+callback_request:
+    name:
+        label: "Name"
+        placeholder: "Enter your full name"
+    phone_prefix:
+        label: "Phone Prefix"
+        placeholder: "Select your country code"
+    phone:
+        label: "Phone Number"
+        placeholder: "Enter your phone number"
+    email:
+        label: "Email Address"
+        placeholder: "Enter your email address"
