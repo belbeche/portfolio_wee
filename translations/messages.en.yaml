@@ -277,3 +277,5 @@ callback_request:
     email:
         label: "Email Address"
         placeholder: "Enter your email address"
+
+site_name: "Walid B."
