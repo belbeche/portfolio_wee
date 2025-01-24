@@ -143,7 +143,7 @@ quote_benefits_customization_desc: "Provide quotes tailored to your clients' spe
 quote_benefits_traceability: "Traceability:"
 quote_benefits_traceability_desc: "Track each quote with digital archives."
 
-quote_image_alt: "Quote generation by ScriptZenIT"
+quote_image_alt: "Quote generation by Walid BELBECHE"
 
 features_title: "Features of Our Solutions"
 feature_1_title: "1. Instant Generation"
@@ -195,7 +195,7 @@ register_form_subheading: "To track the progress of your request"
 login_question: "Already a member?"
 login_link_text: "Log In"
 login_redirect_text: "Log in by following this link"
-register_image_alt: "Sign Up ScriptZenIT"
+register_image_alt: "Sign Up Walid BELBECHE"
 
 form_civility_label: "Civility"
 form_nom_label: "Last Name"
@@ -278,4 +278,42 @@ callback_request:
         label: "Email Address"
         placeholder: "Enter your email address"
 
-site_name: "Walid B."
+site_name: "Walid BELBECHE."
+
+recent_projects_title: "Recent Projects"
+
+site_description: "Walid BELBECHE's portfolio - Symfony Expert & Digital Solutions"
+
+keywords_site: "Walid BELBECHE, Symfony expert, digital solutions, web development, performance optimization, website creation, custom applications, task automation, quote generation"
+
+site_title: "Walid BELBECHE's Portfolio - Symfony Expert & Digital Solutions"
+
+email_subject: "Your Request Confirmation"
+email_header: "Thank You for Your Request"
+email_greeting: "Hello %name%,"
+email_received_message: "I have successfully received your request. Here are the details you provided:"
+email_label_name: "Name"
+email_label_phone: "Phone"
+email_label_email: "Email"
+email_team_contact_message: "I will contact you shortly. An initial exchange may take place via email to better understand your needs."
+email_urgent_question: "For urgent inquiries, feel free to <a href=\"mailto:%contact_email%\">contact me</a>."
+email_best_practices_title: "Best Practices and Terms of Use"
+email_best_practices_reminder: "Please note that any fraudulent use of our services is strictly prohibited and will be reported to the relevant authorities."
+email_terms_and_conditions: "Please review our <a href=\"%terms_url%\">terms of use</a> for more information."
+email_footer_company: "Walid BELBECHE - Web Development"
+email_footer_tagline: "Simplify Your Digital Transformation"
+
+flash.success.callback_request: "Your request has been successfully recorded. I will call you back soon."
+flash.error.input_invalid: "An error occurred. Please check the entered information."
+callback_request_email_header: "Callback Request Received"
+
+contact_email_subject: "Contact Request Details"
+contact_email_header: "Thank You for Contacting me"
+contact_email_intro: "I have received your message. Here are the details of your request:"
+contact_email_details: "Please find the information you provided below:"
+email_label_first_name: "First Name"
+email_label_last_name: "Last Name"
+email_label_service: "Service"
+email_label_message: "Message"
+email_footer_disclaimer: "You are receiving this email because you submitted a contact request on my platform. If this was not you, please contact me immediately."
+contact_form_success_message: "Your message has been sent successfully. I will get back to you soon."

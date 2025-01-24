@@ -17,10 +17,19 @@ use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class HomeController extends AbstractController
 {
+
+    private TranslatorInterface $translator;
+
+    public function __construct(TranslatorInterface $translator)
+    {
+        $this->translator = $translator;
+    }
+    
     /**
     * @Route("/", name="front_home")
     * @Route("/realisations/{category}", name="front_project_by_category")
@@ -53,16 +62,18 @@ class HomeController extends AbstractController
                     'name' => $callbackRequest->getName(),
                     'phone' => $callbackRequest->getPhone(),
                     'user_email' => $callbackRequest->getEmail(),
+                    'locale' => $request->getLocale(),
+                    'contact' => $entityManager->getRepository(Contact::class)->findOneBy(['email' => $callbackRequest->getEmail()]),
                 ]);
 
             $mailer->send($email);
 
-            $this->addFlash('success', 'Votre demande a été enregistrée avec succès. Nous vous rappellerons bientôt.');
+            $this->addFlash('success', $this->translator->trans('flash.success.callback_request'));
 
             // Rediriger pour éviter la soumission multiple du formulaire
             return $this->redirectToRoute('front_home');
         } elseif ($form->isSubmitted() && !$form->isValid()) {
-            $this->addFlash('error', 'Une erreur est survenue. Veuillez vérifier les informations saisies.');
+            $this->addFlash('error', $this->translator->trans('flash.error.input_invalid'));
         }
 
         if ($category) {
@@ -110,7 +121,10 @@ class HomeController extends AbstractController
                     ->to($contact->getEmail())
                     ->bcc('wbelbeche.s@gmail.com')
                     ->subject('Prise de contact, ScriptZenIT')
-                    ->html($this->renderView('front/contact/email.html.twig', ['contact' => $contact]));
+                    ->html($this->renderView('front/contact/email.html.twig', [
+                        'contact' => $contact,
+                        'locale' => $request->getLocale(),
+                    ]));
 
                 $mailer->send($email);
 
