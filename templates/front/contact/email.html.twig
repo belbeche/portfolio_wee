@@ -1,7 +1,79 @@
-<h2>Voici un récapitulatif de votre demande sur la plateforme <a href="https://scriptzenit.fr">ScriptZenIT</a></h2>
-<p><strong>Prénom :</strong> {{ contact.firstName }}</p>
-<p><strong>Nom :</strong> {{ contact.lastName }}</p>
-<p><strong>Email :</strong> {{ contact.email }}</p>
-<p><strong>Téléphone :</strong> {{ contact.phone }}</p>
-<p><strong>Service :</strong> {{ contact.service }}</p>
-<p><strong>Message :</strong> {{ contact.content }}</p>
+<!DOCTYPE html>
+<html lang="{{ locale }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ 'contact_email_subject'|trans }}</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            color: #333;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+        }
+        .email-container {
+            max-width: 600px;
+            margin: 20px auto;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        .email-header {
+            background-color: #007bff;
+            color: #fff;
+            text-align: center;
+            padding: 20px;
+        }
+        .email-header h2 {
+            margin: 0;
+        }
+        .email-body {
+            padding: 20px;
+        }
+        .email-footer {
+            background-color: #f1f1f1;
+            padding: 15px;
+            text-align: center;
+            font-size: 14px;
+            color: #777;
+        }
+        .email-footer a {
+            color: #007bff;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="email-container">
+        <!-- Header -->
+        <div class="email-header">
+            <h2>{{ 'contact_email_header'|trans }}</h2>
+        </div>
+
+        <!-- Body -->
+        <div class="email-body">
+            <h3>{{ 'contact_email_intro'|trans }}</h3>
+            <p>{{ 'contact_email_details'|trans }}</p>
+            <ul>
+                <li><strong>{{ 'email_label_first_name'|trans }}:</strong> {{ contact.firstName }}</li>
+                <li><strong>{{ 'email_label_last_name'|trans }}:</strong> {{ contact.lastName }}</li>
+                <li><strong>{{ 'email_label_email'|trans }}:</strong> {{ contact.email }}</li>
+                <li><strong>{{ 'email_label_phone'|trans }}:</strong> {{ contact.phone }}</li>
+                <li><strong>{{ 'email_label_service'|trans }}:</strong> {{ contact.service }}</li>
+                <li><strong>{{ 'email_label_message'|trans }}:</strong> {{ contact.content }}</li>
+            </ul>
+            <p>{{ 'email_team_contact_message'|trans }}</p>
+        </div>
+
+        <!-- Footer -->
+        <div class="email-footer">
+            <p><strong>{{ 'email_footer_company'|trans }}</strong> - {{ 'email_footer_tagline'|trans }}</p>
+            <p>{{ 'email_footer_disclaimer'|trans }}</p>
+        </div>
+    </div>
+</body>
+</html>
