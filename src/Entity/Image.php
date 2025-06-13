@@ -33,12 +33,12 @@ class Image
     /**
      * @ORM\ManyToOne(targetEntity=Subject::class, inversedBy="images")
      */
-    private $Subject;
+    private ?Subject $subject = null;
 
     /**
-     * @ORM\OneToMany(targetEntity=Ticket::class, mappedBy="attachments")
+     * @ORM\ManyToMany(targetEntity=Ticket::class, mappedBy="attachments")
      */
-    private $tickets;
+    private ?Collection $tickets = null;
 
     public function __construct()
     {
@@ -80,12 +80,12 @@ class Image
     }
     public function getSubject(): ?Subject
     {
-        return $this->Subject;
+        return $this->subject;
     }
 
     public function setSubject(?Subject $Subject): self
     {
-        $this->Subject = $Subject;
+        $this->subject = $Subject;
 
         return $this;
     }
@@ -93,16 +93,6 @@ class Image
     public function getTickets(): Collection
     {
         return $this->tickets;
-    }
-
-    public function addTicket(Ticket $ticket): self
-    {
-        if (!$this->tickets->contains($ticket)) {
-            $this->tickets[] = $ticket;
-            $ticket->getAttachments($this);
-        }
-
-        return $this;
     }
 
     public function removeTicket(Ticket $ticket): self

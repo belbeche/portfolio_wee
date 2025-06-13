@@ -78,7 +78,7 @@ class DevisController extends AbstractController
             // Envoi de l'e-mail avec le récapitulatif du devis et le PDF en pièce jointe
             try {
                 $email = (new TemplatedEmail())
-                    ->from(new Address('contact@scriptzenit.fr', 'L\'équipe Scriptzenit'))
+                    ->from(new Address('contact@walid belbeche.fr', 'L\'équipe Walid BELBECHE'))
                     ->to($devis->getEmail())
                     ->bcc('wbelbeche.s@gmail.com')
                     ->subject('Récapitulatif de votre demande de devis')

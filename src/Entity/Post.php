@@ -36,12 +36,12 @@ class Post
     private ?string $content = null;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Section", mappedBy="post", cascade={"persist", "remove"}, orphanRemoval=true)
-     */
-    private Collection $sections;
+    * @ORM\OneToMany(targetEntity=PostSection::class, mappedBy="post", cascade={"persist", "remove"}, orphanRemoval=true)
+    */
+    private $sections;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\CodeBlock", mappedBy="post", cascade={"persist", "remove"}, orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity=CodeBlock::class, mappedBy="post", cascade={"persist", "remove"}, orphanRemoval=true)
      */
     private Collection $codeBlocks;
 
@@ -66,6 +66,7 @@ class Post
         $this->sections = new ArrayCollection();
         $this->codeBlocks = new ArrayCollection(); 
         $this->createdAt = new DateTime();
+        $this->sections = new ArrayCollection();
     }
 
     /**
@@ -148,31 +149,6 @@ class Post
         return $this;
     }
 
-    // Getters et setters pour les sections
-    public function getSections(): Collection
-    {
-        return $this->sections;
-    }
-
-    public function addSection(Section $section): self
-    {
-        if (!$this->sections->contains($section)) {
-            $this->sections[] = $section;
-            $section->setPost($this);
-        }
-        return $this;
-    }
-
-    public function removeSection(Section $section): self
-    {
-        if ($this->sections->removeElement($section)) {
-            if ($section->getPost() === $this) {
-                $section->setPost(null);
-            }
-        }
-        return $this;
-    }
-
     /**
      * Get the value of codeBlocks
      */
@@ -181,6 +157,12 @@ class Post
         return $this->codeBlocks;
     }
 
+    /**
+     * Add a CodeBlock to the post
+     *
+     * @param CodeBlock $codeBlock
+     * @return self
+     */
     public function addCodeBlock(CodeBlock $codeBlock): self
     {
         if (!$this->codeBlocks->contains($codeBlock)) {
@@ -243,5 +225,25 @@ class Post
         $this->status = $status;
 
         return $this;
+    }
+
+    public function addSection(PostSection $section): self
+    {
+        if (!$this->sections->contains($section)) {
+            $this->sections[] = $section;
+            $section->setPost($this);
+        }
+        return $this;
+    }
+
+    public function removeSection(PostSection $section): self
+    {
+        $this->sections->removeElement($section);
+        return $this;
+    }
+
+    public function getSections(): Collection
+    {
+        return $this->sections;
     }
 }

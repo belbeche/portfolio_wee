@@ -1,15 +1,16 @@
 <!DOCTYPE html>
-<html>
+<html lang="{{ app.request.locale }}">
 	<head>
 		<meta charset="UTF-8">
 		<meta name="language" content="fr">
 		<meta name="robots" content="index, follow">
 		<meta name="created" content="21-01-2025">
-		<meta name="image" content="https://scriptzenit.fr/img/moi2.jpg">
+		<meta name="image" content="https://walidbelbeche.frimg/moi2.jpg">
 		<meta name="viewport" content="width=device-width, initial-scale=1"/>
 		<meta name="description" content="{{ 'site_description'|trans }}"/>
 		<meta name="keywords" content="{{ 'keywords_site'|trans }}"/>
 		<meta content="Walid BELBECHE" name="author"/>
+		<meta name="language" content="{{ app.request.locale }}">
 		<title>
 			{% block title %}{{ 'site_title'|trans }} - {{ 'site_description'|trans }}
 			{% endblock %}
@@ -30,9 +31,11 @@
 		{% block stylesheets %}
 			{{ encore_entry_link_tags('app') }}
 		{% endblock %}
+		<link rel="alternate" hreflang="fr" href="{{ url('front_home', {_locale: 'fr'}) }}" />
+    	<link rel="alternate" hreflang="en" href="{{ url('front_home', {_locale: 'en'}) }}" />
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flag-icons/6.6.6/css/flag-icons.min.css">
 	</head>
 	<body class="page">
-
 		{#<div class="lm-animated-bg"></div>#}
 
 		<!-- Loading animation -->
@@ -187,14 +190,64 @@
 			// 	})
 			</script>#}
 
-			<script defer src="https://stats.youss.dev/script.js" data-website-id="2f81360d-92bc-460b-bcd6-81ba64683e42" defer></script>
+			<script defer src="https://stats.youss.dev/script.js" data-website-id="da401e5f-1df7-49fc-bea6-74639ed8fdf9"></script>
 			<script type="application/ld+json">
 			{
 				"@context": "https://schema.org",
 				"@type": "WebPage",
-				"name": "Agence Web ScriptzenIT",
+				"name": "Agence Web Walid BELBECHE",
 				"description": "Spécialiste de la création et gestion d'applications web et mobiles."
 			}
+			</script>
+
+			{# Script pour le changement de langue #}
+			<script>
+				document.addEventListener('DOMContentLoaded', function() {
+					const languageButtons = document.querySelectorAll('.select-language');
+					
+					languageButtons.forEach(button => {
+						button.addEventListener('click', function() {
+							const locale = this.getAttribute('data-locale');
+							
+							// Envoie la requête pour changer la langue
+							fetch(`/change-locale/${locale}`, {
+								method: 'GET',
+								headers: {
+									'X-Requested-With': 'XMLHttpRequest',
+									'Accept': 'application/json'
+								}
+							})
+							.then(response => {
+								if (response.ok) {
+									// Cache le sélecteur de langue
+									const selector = document.getElementById('language-selector');
+									if (selector) {
+										selector.style.opacity = '0';
+										setTimeout(() => {
+											selector.style.display = 'none';
+											// Recharge la page après un délai
+											setTimeout(() => window.location.reload(), 300);
+										}, 500);
+									} else {
+										window.location.reload();
+									}
+								} else {
+									console.error('Erreur lors du changement de langue');
+								}
+							})
+							.catch(error => {
+								console.error('Erreur:', error);
+								window.location.href = `/change-locale/${locale}`;
+							});
+						});
+					});
+
+					// Cache le sélecteur si la locale est déjà définie
+					if (document.getElementById('language-selector') && 
+						(navigator.cookieEnabled || localStorage.getItem('locale'))) {
+						document.getElementById('language-selector').style.display = 'none';
+					}
+				});
 			</script>
 		{% endblock %}
 	</body>

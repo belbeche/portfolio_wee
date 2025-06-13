@@ -2,31 +2,31 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
     <url>
-        <loc>https://scriptzenit.fr/</loc>
+        <loc>https://walidbelbeche.fr</loc>
         <changefreq>daily</changefreq>
         <priority>1.0</priority>
     </url>
 
     <url>
-        <loc>https://scriptzenit.fr/a-propos</loc>
+        <loc>https://walidbelbeche.fra-propos</loc>
         <changefreq>weekly</changefreq>
         <priority>0.8</priority>
     </url>
 
     <url>
-        <loc>https://scriptzenit.fr/devis-en-ligne</loc>
+        <loc>https://walidbelbeche.frdevis-en-ligne</loc>
         <changefreq>monthly</changefreq>
         <priority>0.6</priority>
     </url>
 
     <url>
-        <loc>https://scriptzenit.fr/connexion</loc>
+        <loc>https://walidbelbeche.frconnexion</loc>
         <changefreq>monthly</changefreq>
         <priority>0.5</priority>
     </url>
 
     <url>
-        <loc>https://scriptzenit.fr/contact</loc>
+        <loc>https://walidbelbeche.frcontact</loc>
         <changefreq>monthly</changefreq>
         <priority>0.5</priority>
     </url>

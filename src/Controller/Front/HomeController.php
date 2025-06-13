@@ -11,49 +11,40 @@ use App\Entity\CallbackRequest;
 use App\Form\CallbackRequestType;
 use Symfony\Component\Mime\Address;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class HomeController extends AbstractController
 {
-
-    private TranslatorInterface $translator;
-
-    public function __construct(TranslatorInterface $translator)
-    {
-        $this->translator = $translator;
-    }
-    
     /**
-    * @Route("/", name="front_home")
-    * @Route("/realisations/{category}", name="front_project_by_category")
-    */
-    public function index(EntityManagerInterface $entityManager, Request $request, MailerInterface $mailer, string $category = null): Response
-    {
+     * @Route("/", name="front_home")
+     * @Route("/realisations/{category}", name="front_project_by_category")
+     */
+    public function index(
+        Request $request,
+        MailerInterface $mailer,
+        ManagerRegistry $entityManager,
+        ?string $category = null
+    ): Response {
         $callbackRequest = new CallbackRequest();
         $form = $this->createForm(CallbackRequestType::class, $callbackRequest);
-
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $callbackRequest->setEmail($form->get('email')->getData());
             $callbackRequest->setName($form->get('name')->getData());
-            $phonePrefix = $callbackRequest->getPhonePrefix();
-            $phone = $callbackRequest->getPhone();
-            $callbackRequest->setPhone($phonePrefix . $phone);
+            $callbackRequest->setPhone(
+                $callbackRequest->getPhonePrefix() . $callbackRequest->getPhone()
+            );
 
-            $entityManager->persist($callbackRequest);
-            $entityManager->flush();
-
-            // Envoi de l'email
             $email = (new TemplatedEmail())
-                ->from(new Address('contact@scriptzenit.fr', 'ScriptzenIT - Demande de rappel'))
+                ->from(new Address('contact@walid belbeche.fr', 'Walid BELBECHE - Demande de rappel'))
                 ->to($form->get('email')->getData())
                 ->bcc('wbelbeche.s@gmail.com')
                 ->subject('Nouvelle demande de rappel')
@@ -63,35 +54,39 @@ class HomeController extends AbstractController
                     'phone' => $callbackRequest->getPhone(),
                     'user_email' => $callbackRequest->getEmail(),
                     'locale' => $request->getLocale(),
-                    'contact' => $entityManager->getRepository(Contact::class)->findOneBy(['email' => $callbackRequest->getEmail()]),
+                    'contact' => $entityManager->getRepository(Contact::class)->findOneBy([
+                        'email' => $callbackRequest->getEmail()
+                    ]),
                 ]);
 
+            // Envoi de l'email
             $mailer->send($email);
 
-            $this->addFlash('success', $this->translator->trans('flash.success.callback_request'));
+            // Enregistrement de la demande de rappel dans la base de données
+            $em = $entityManager->getManager();
+            $em->flush();
 
-            // Rediriger pour éviter la soumission multiple du formulaire
+            $this->addFlash('success', 'Votre demande de rappel a été envoyée avec succès!');
             return $this->redirectToRoute('front_home');
-        } elseif ($form->isSubmitted() && !$form->isValid()) {
-            $this->addFlash('error', $this->translator->trans('flash.error.input_invalid'));
         }
 
-        if ($category) {
-            $projects = $entityManager->getRepository(Project::class)->findBy(['category' => $category]);
-        } else {
-            $projects = $entityManager->getRepository(Project::class)->findAll();
-        }
+        $projects = $category
+            ? $entityManager->getRepository(Project::class)->findBy(['category' => $category])
+            : $entityManager->getRepository(Project::class)->findAll();
+
+        // Récupérer la langue actuelle
+        $locale = $request->getLocale(); // e.g., "en" or "fr"
 
         return $this->render('front/home/index.html.twig', [
             'projects' => $projects,
             'form' => $form->createView(),
+            'callbackRequest' => $callbackRequest,
+            'locale' => $locale,
         ]);
     }
 
-
     /**
      * @Route("/a-propos", name="front_about")
-     *
      */
     public function about(): Response
     {
@@ -117,10 +112,10 @@ class HomeController extends AbstractController
 
                 // Envoi de l'email
                 $email = (new TemplatedEmail())
-                    ->from('contact@scriptzenit.fr')
+                    ->from('contact@walid belbeche.fr')
                     ->to($contact->getEmail())
                     ->bcc('wbelbeche.s@gmail.com')
-                    ->subject('Prise de contact, ScriptZenIT')
+                    ->subject('Prise de contact, Walid BELBECHE')
                     ->html($this->renderView('front/contact/email.html.twig', [
                         'contact' => $contact,
                         'locale' => $request->getLocale(),

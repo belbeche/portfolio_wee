@@ -1,54 +1,226 @@
 <style>
-    .libutton {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        padding: 7px;
-        text-align: center;
-        outline: none;
-        text-decoration: none !important;
-        color: #ffffff !important;
-        width: 200px;
-        height: 32px;
-        border-radius: 16px;
-        background-color: #0A66C2;
-        font-family: "SF Pro Text", Helvetica, sans-serif;
-        margin-top: 13px;
+    /* Style global de la navbar */
+    .navbar {
+        background: rgba(10, 25, 47, 0.9) !important;
+        backdrop-filter: blur(10px);
+        box-shadow: 0 10px 30px -10px rgba(2, 12, 27, 0.7);
+        transition: all 0.3s ease;
+        padding: 1rem 2rem;
     }
-    @media (max-width: 576px) {
+
+    .navbar.scrolled {
+        background: rgba(10, 25, 47, 0.95) !important;
+        padding: 0.5rem 2rem;
+    }
+
+    .nav-link {
+        font-weight: 500;
+        padding: 0.5rem 1rem !important;
+        margin: 0 0.25rem;
+        transition: all 0.3s ease;
+        position: relative;
+    }
+
+    .nav-link:hover, .nav-link:focus {
+        color: #64ffda !important;
+    }
+
+    .nav-link.active {
+        color: #64ffda !important;
+    }
+
+    .nav-link.active::after {
+        content: '';
+        position: absolute;
+        bottom: -5px;
+        left: 1rem;
+        width: calc(100% - 2rem);
+        height: 2px;
+        background: #64ffda;
+    }
+
+    /* Bandeau de langue */
+    .language-banner {
+        color: white;
+        padding: 0.5rem 0;
+        text-align: center;
+        font-size: 0.9rem;
+        top: 0;
+        z-index: 1050; /* Au-dessus de tout */
+    }
+
+    body {
+        padding-top: 2.5rem; /* Décale le contenu pour ne pas cacher la navbar */
+    }
+
+    .language-banner .container {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+    }
+
+    .language-switcher {
+        display: flex;
+        gap: 1rem;
+        margin-right: 1rem;
+    }
+
+    .language-option {
+        color: rgba(255, 255, 255, 0.7);
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        gap: 0.3rem;
+    }
+
+    .language-option:hover {
+        color: white;
+        text-decoration: none;
+    }
+
+    .language-option.active {
+        color: white;
+        font-weight: bold;
+    }
+
+    /* Bouton LinkedIn amélioré */
+    .libutton {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0.5rem 1.5rem;
+        text-decoration: none !important;
+        color: white !important;
+        background-color: #0A66C2;
+        border-radius: 4px;
+        font-family: "SF Pro Text", Helvetica, sans-serif;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        margin-left: 1rem;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .libutton:hover {
+        background-color: #004182;
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0, 65, 130, 0.3);
+        color: white !important;
+    }
+
+    /* Menu mobile */
+    .navbar-toggler {
+        border: none;
+        padding: 0.5rem;
+    }
+
+    .navbar-toggler:focus {
+        box-shadow: none;
+    }
+
+    /* Dropdown menu */
+    .dropdown-menu {
+        background: rgba(10, 25, 47, 0.95);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .dropdown-item {
+        color: #ffffff !important;
+        transition: all 0.2s ease;
+    }
+
+    .dropdown-divider {
+        border-color: rgba(255, 255, 255, 0.1);
+    }
+
+    /* Logo */
+    .logo a {
+        font-family: 'SF Pro Display', sans-serif;
+        font-weight: 700;
+        font-size: 1.25rem;
+        color: white !important;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+    }
+
+    /* Responsive */
+    @media (max-width: 992px) {
+        .navbar-collapse {
+            background: rgba(10, 25, 47, 0.98);
+            padding: 1rem;
+            margin-top: 1rem;
+            border-radius: 0.5rem;
+        }
+
         .libutton {
-            margin-left: 12px;
+            margin-left: 0;
+            margin-top: 1rem;
+            width: 100%;
+        }
+
+        .language-banner .container {
+            justify-content: center;
+        }
+
+        .language-switcher {
+            margin-right: 0;
+        }
+    }
+
+    @media (min-width: 992px) {
+        .nav-link {
+            font-weight: 500;
+            padding: 0.5rem 1rem !important;
+            margin: 0 0.25rem;
+            transition: all 0.3s ease;
+            position: relative;
+            color: rgba(255, 255, 255, 0.8) !important;
         }
     }
 </style>
-<header id="header">
-    <nav class="navbar navbar-expand-lg fixed-top container-fluid text-white">
-        <!-- Logo -->
-        <div class="logo">
-            <a href="{{ url('front_home') }}">
-                <div class="text-white d-md-block d-sm-block fw-bold" style="font-size: 1rem;margin-left: 21px!important;">{{ 'site_name'|trans }}</div>
-            </a>
+
+<!-- Navbar principale -->
+<nav class="navbar navbar-expand-lg fixed-top">
+    <div class="container-fluid">
+        <!-- Logo MAINTENANT EN BLANC -->
+        <a class="navbar-brand text-white" href="{{ url('front_home') }}">
+            {{ 'site_name'|trans }}
+        </a>
+
+        
+        <!-- Bandeau de changement de langue - MAINTENANT VISIBLE -->
+        <div class="language-banner">
+            <div class="container">
+                <div class="language-switcher">
+                    <span class="language-option {{ app.request.locale == 'fr' ? 'active' : '' }}" data-locale="fr">
+                        <span class="fi fi-fr fis"></span> Français
+                    </span>
+                    <span class="language-option {{ app.request.locale == 'en' ? 'active' : '' }}" data-locale="en">
+                        <span class="fi fi-gb fis"></span> English
+                    </span>
+                </div>
+            </div>
         </div>
 
         <!-- Burger Menu -->
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMenu" aria-controls="navbarMenu" aria-expanded="false" aria-label="{{ 'toggle_navigation'|trans }}">
-            <div class="list mt-3">
-                <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="white" class="bi bi-list" viewBox="0 0 16 16">
-                    <path fill-rule="evenodd" d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5"/>
-                </svg>
-            </div>
+            <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="white" viewBox="0 0 16 16">
+                <path fill-rule="evenodd" d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5"/>
+            </svg>
         </button>
 
         <!-- Menu -->
-        <div class="collapse navbar-collapse justify-content-end" id="navbarMenu">
-            <ul class="navbar-nav ms-auto menu_mobile">
+        <div class="collapse navbar-collapse" id="navbarMenu">
+            <ul class="navbar-nav ms-auto">
                 <li class="nav-item {{ app.request.get('_route') == 'front_home' ? 'active' : '' }}">
                     <a class="nav-link" href="{{ url('front_home') }}">{{ 'nav_home'|trans }}</a>
                 </li>
-                <li class="menu-item {{ app.request.get('_route') == 'front_project' ? 'active' : '' }}">
+                <li class="nav-item {{ app.request.get('_route') == 'front_project' ? 'active' : '' }}">
                     <a class="nav-link" href="{{ url('front_project') }}">{{ 'nav_projects'|trans }}</a>
                 </li>
-                <li class="menu-item {{ app.request.get('_route') == 'blog_index' ? 'active' : '' }}">
+                <li class="nav-item {{ app.request.get('_route') == 'blog_index' ? 'active' : '' }}">
                     <a class="nav-link" href="{{ url('blog_index') }}">{{ 'nav_blog'|trans }}</a>
                 </li>
                 <li class="nav-item dropdown">
@@ -56,58 +228,126 @@
                         {{ 'nav_services'|trans }}
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="servicesDropdown">
-                        <li><a class="dropdown-item text-black" href="{{ path('expertise_web') }}">{{ 'service_web_creation'|trans }}</a></li>
-                        <li><a class="dropdown-item text-black" href="{{ path('custom_app') }}">{{ 'service_custom_app'|trans }}</a></li>
-                        <li><a class="dropdown-item text-black" href="{{ path('quote_generation') }}">{{ 'service_quote_generation'|trans }}</a></li>
-                        <li><a class="dropdown-item text-black" href="{{ path('task_automation') }}">{{ 'service_task_automation'|trans }}</a></li>
+                        <li><a class="dropdown-item" href="{{ path('expertise_web') }}">{{ 'service_web_creation'|trans }}</a></li>
+                        <li><a class="dropdown-item" href="{{ path('custom_app') }}">{{ 'service_custom_app'|trans }}</a></li>
+                        <li><a class="dropdown-item" href="{{ path('quote_generation') }}">{{ 'service_quote_generation'|trans }}</a></li>
+                        <li><a class="dropdown-item" href="{{ path('task_automation') }}">{{ 'service_task_automation'|trans }}</a></li>
                     </ul>
                 </li>
-                {% if not app.user %}
-                {# <div class="user">
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            {{ 'nav_client_area'|trans }}
-                        </a>
-                        <ul class="dropdown-menu dropdown-menu-end">
-                            <li class="menu-item {{ app.request.get('_route') == 'app_register' ? 'active' : '' }}">
-                                <a class="dropdown-item text-black" href="{{ url('app_register') }}">{{ 'nav_register'|trans }}</a>
-                            </li>
-                            <li class="menu-item {{ app.request.get('_route') == 'app_login' ? 'active' : '' }}">
-                                <a class="dropdown-item text-black" href="{{ url('app_login') }}">{{ 'nav_login'|trans }}</a>
-                            </li>
-                        </ul>
-                    </li>
-                </div> #}
-                {% endif %}
+                
                 {% if is_granted('ROLE_ADMIN') %}
                     <li class="nav-item {{ app.request.get('_route') == 'back_index' ? 'active' : '' }}">
                         <a class="nav-link" href="{{ url('back_index') }}">{{ 'nav_admin_panel'|trans }}</a>
                     </li>
                 {% endif %}
+                
                 {% if app.user %}
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                             {{ 'nav_account'|trans }}
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end">
-                            <li class="menu-item {{ app.request.get('_route') == 'front_assistance' ? 'active' : '' }}">
-                                <a class="dropdown-item text-black" href="{{ url('front_assistance') }}">{{ 'nav_profile'|trans }}</a>
+                            <li class="nav-item {{ app.request.get('_route') == 'front_assistance' ? 'active' : '' }}">
+                                <a class="dropdown-item" href="{{ url('front_assistance') }}">{{ 'nav_profile'|trans }}</a>
                             </li>
-                            <li class="menu-item {{ app.request.get('_route') == 'front_profile_project' ? 'active' : '' }}">
-                                <a class="dropdown-item text-black" href="{{ url('front_profile_project') }}">{{ 'nav_my_projects'|trans }}</a>
+                            <li class="nav-item {{ app.request.get('_route') == 'front_profile_project' ? 'active' : '' }}">
+                                <a class="dropdown-item" href="{{ url('front_profile_project') }}">{{ 'nav_my_projects'|trans }}</a>
                             </li>
                             <li><hr class="dropdown-divider"></li>
-                            <li class="menu-item {{ app.request.get('_route') == 'app_logout' ? 'active' : '' }}">
-                                <a class="btn btn-outline-danger dropdown-item text-black" href="{{ url('app_logout') }}">{{ 'nav_logout'|trans }}</a>
+                            <li class="nav-item">
+                                <a class="dropdown-item text-danger" href="{{ url('app_logout') }}">{{ 'nav_logout'|trans }}</a>
                             </li>
                         </ul>
                     </li>
                 {% endif %}
-                <li class="menu-item {{ app.request.get('_route') == 'front_contact' ? 'active' : '' }}">
+                
+                <li class="nav-item {{ app.request.get('_route') == 'front_contact' ? 'active' : '' }}">
                     <a class="nav-link" href="{{ url('front_contact') }}">{{ 'nav_contact'|trans }}</a>
                 </li>
-                <a class="libutton" href="https://www.linkedin.com/company/scriptzenit/" target="_blank">{{ 'nav_follow_linkedin'|trans }}</a>
+                
+                <li class="nav-item">
+                    <a class="libutton" href="https://www.linkedin.com/company/walid belbeche/" target="_blank">
+                        <i class="bi bi-linkedin me-2"></i> {{ 'nav_follow_linkedin'|trans }}
+                    </a>
+                </li>
             </ul>
         </div>
-    </nav>
-</header>
+    </div>
+</nav>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Animation de la navbar au scroll
+    const navbar = document.querySelector('.navbar');
+    if (navbar) {
+        window.addEventListener('scroll', function() {
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+    }
+    
+    // Changement de langue
+    document.querySelectorAll('.language-option').forEach(option => {
+        option.addEventListener('click', function() {
+            const locale = this.getAttribute('data-locale');
+            const currentText = this.textContent.trim();
+            
+            // Afficher un indicateur de chargement
+            this.innerHTML = `<span class="spinner-border spinner-border-sm me-2"></span> ${currentText}`;
+            
+            // Désactiver temporairement les options
+            document.querySelectorAll('.language-option').forEach(opt => {
+                opt.style.pointerEvents = 'none';
+            });
+            
+            // Envoyer la requête
+            fetch(`/change-locale/${locale}`, {
+                method: 'POST',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => {
+                if (response.ok) {
+                    document.cookie = `_locale=${locale}; path=/; max-age=31536000; SameSite=Lax`;
+                    window.location.reload();
+                } else {
+                    // Réactiver les options en cas d'erreur
+                    document.querySelectorAll('.language-option').forEach(opt => {
+                        opt.style.pointerEvents = 'auto';
+                        const flagClass = opt.getAttribute('data-locale') === 'fr' ? 'fi-fr' : 'fi-gb';
+                        opt.innerHTML = `<span class="fi ${flagClass} fis"></span> ${opt === this ? currentText : opt.textContent.trim()}`;
+                    });
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                document.querySelectorAll('.language-option').forEach(opt => {
+                    opt.style.pointerEvents = 'auto';
+                    const flagClass = opt.getAttribute('data-locale') === 'fr' ? 'fi-fr' : 'fi-gb';
+                    opt.innerHTML = `<span class="fi ${flagClass} fis"></span> ${opt === this ? currentText : opt.textContent.trim()}`;
+                });
+            });
+        });
+    });
+    
+    // Fermer le menu mobile après clic
+    const navLinks = document.querySelectorAll('.nav-link');
+    const navbarCollapse = document.querySelector('.navbar-collapse');
+    
+    navLinks.forEach(link => {
+        link.addEventListener('click', () => {
+            if (window.innerWidth < 992 && navbarCollapse.classList.contains('show')) {
+                const bsCollapse = new bootstrap.Collapse(navbarCollapse, {
+                    toggle: false
+                });
+                bsCollapse.hide();
+            }
+        });
+    });
+});
+</script>

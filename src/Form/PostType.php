@@ -1,11 +1,11 @@
 <?php
 
-// src/Form/PostType.php
 namespace App\Form;
 
 use App\Entity\Post;
 use App\Entity\Category;
-use App\Entity\CodeBlock;
+use App\Form\CodeBlockType;
+use App\Form\SectionType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -26,6 +26,7 @@ class PostType extends AbstractType
             ])
             ->add('slug', TextType::class, [
                 'label' => 'Slug',
+                'required' => false,
                 'attr' => ['placeholder' => 'slug-de-l-article'],
             ])
             ->add('content', TextareaType::class, [
@@ -33,6 +34,7 @@ class PostType extends AbstractType
                 'attr' => [
                     'placeholder' => 'Texte principal du tutoriel',
                     'rows' => 10,
+                    'class' => 'editor'
                 ],
             ])
             ->add('status', ChoiceType::class, [
@@ -42,21 +44,14 @@ class PostType extends AbstractType
                 ],
                 'label' => 'Statut de l\'article',
             ])
-            ->add('codeBlocks', CollectionType::class, [
-                'entry_type' => CodeBlockType::class,
-                'allow_add' => true,
-                'allow_delete' => true,
-                'by_reference' => false,
-                'label' => false,
-                'prototype' => true, // Nécessaire pour les ajouts dynamiques
-                'attr' => ['class' => 'code-blocks-collection'],
-            ])
             ->add('sections', CollectionType::class, [
                 'entry_type' => SectionType::class,
+                'entry_options' => ['label' => false],
                 'allow_add' => true,
                 'allow_delete' => true,
                 'by_reference' => false,
                 'prototype' => true,
+                'label' => false,
             ])
             ->add('category', EntityType::class, [
                 'class' => Category::class,
@@ -64,13 +59,12 @@ class PostType extends AbstractType
                 'label' => 'Catégorie',
                 'placeholder' => 'Choisir une catégorie',
             ]);
-            ;
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'data_class' => Post::class,
+            'data_class' => Post::class, // Ici on utilise Post et non PostSection
         ]);
     }
 }

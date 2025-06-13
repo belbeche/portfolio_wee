@@ -52,8 +52,12 @@ class BlogController extends AbstractController
     #[Route('/{slug}', name: 'show', methods: ['GET'])]
     public function show(Post $post): Response
     {
+        // Assure-toi que les sections sont bien récupérées (si Fetch est LAZY)
+        $sections = $post->getSections();
+
         return $this->render('front/blog/show.html.twig', [
             'post' => $post,
+            'sections' => $sections,
         ]);
     }
 }

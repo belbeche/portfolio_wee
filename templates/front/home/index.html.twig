@@ -5,253 +5,519 @@
 {% block content %}
 
 <style>
-    .select2-container .select2-selection--single {
-        height: calc(2.5em + 2px);
-        line-height: 41px!important;
-        margin-left: 2px;
-        padding-top: 2px;
+    /* Animation d'entrée */
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
     }
-    .select2-container .select2-selection__arrow {
-        height: calc(2.5em + 2px);
-    }
-</style>
-
-<style>
+    
+    /* Style pour le sélecteur de langue */
     #language-selector {
-        display: flex;
-        flex-direction: row;
-        height: 100vh;
-        width: 100%;
         position: fixed;
         top: 0;
         left: 0;
+        width: 100%;
+        height: 100%;
+        background: radial-gradient(circle at center, #2b5876 0%, #4e4376 100%);
         z-index: 9999;
+        display: none;
+        justify-content: center;
+        align-items: center;
+        opacity: 0;
+        transition: opacity 0.5s ease;
     }
-    .language-option {
-        text-align: center;
-        transition: transform 0.3s ease, background-color 0.3s ease;
+    
+    #language-selector.show {
+        opacity: 1;
     }
-    .language-option:hover {
+    
+    .language-card {
+        transition: all 0.3s ease;
+        transform: scale(0.95);
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    
+    .language-card:hover {
         transform: scale(1.05);
-        background-color: #0056b3 !important;
+        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+    }
+    
+    /* Texte de chargement */
+    #language-loading-text {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        color: white;
+        font-size: 1.5rem;
+        font-weight: bold;
+        z-index: 10000;
+        background: rgba(0, 0, 0, 0.7);
+        padding: 1.5rem 3rem;
+        border-radius: 0.5rem;
+        display: none;
+        animation: pulse 1.5s infinite;
+    }
+    
+    @keyframes pulse {
+        0% { opacity: 0.6; }
+        50% { opacity: 1; }
+        100% { opacity: 0.6; }
+    }
+    
+    /* Section Hero améliorée */
+    .hero-section {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        position: relative;
+        background: linear-gradient(135deg, #4e4376 0%, #2b5876 100%);
+        overflow: hidden;
+    }
+    
+    .hero-content {
+        animation: fadeIn 1s ease-out 0.5s both;
+    }
+    
+    /* Forme géométrique décorative */
+    .hero-shape {
+        position: absolute;
+        width: 600px;
+        height: 600px;
+        border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+        background: rgba(255, 255, 255, 0.03);
+        animation: float 15s ease-in-out infinite;
+    }
+    
+    .hero-shape:nth-child(2) {
+        width: 500px;
+        height: 500px;
+        animation-delay: 2s;
+        animation-direction: reverse;
+    }
+    
+    .hero-shape:nth-child(3) {
+        width: 300px;
+        height: 300px;
+        animation-delay: 4s;
+    }
+    
+    @keyframes float {
+        0% { transform: translate(0, 0) rotate(0deg); }
+        50% { transform: translate(-50px, -50px) rotate(180deg); }
+        100% { transform: translate(0, 0) rotate(360deg); }
+    }
+    
+    /* Animation des cartes */
+    .card {
+        transition: all 0.3s ease;
+    }
+    
+    .card:hover {
+        transform: translateY(-10px);
+    }
+    
+    /* Effet de parallaxe */
+    .parallax-section {
+        background-attachment: fixed;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: cover;
+        position: relative;
+    }
+    
+    /* Animation des éléments */
+    .animate-on-scroll {
+        opacity: 0;
+        transform: translateY(30px);
+        transition: all 0.6s ease;
+    }
+    
+    .animate-on-scroll.visible {
+        opacity: 1;
+        transform: translateY(0);
     }
 </style>
 
-<!-- Language Selector Fullscreen -->
-<div id="language-selector" class="d-flex vh-100">
-    <!-- Français -->
-    <div class="language-option bg-primary text-white d-flex flex-column justify-content-center align-items-center w-50">
-        <h1 class="display-6 fw-bold">Français</h1>
-        <button data-locale="fr" class="btn btn-light btn-lg mt-4 select-language">Choisir</button>
-    </div>
-    <!-- Anglais -->
-    <div class="language-option bg-secondary text-white d-flex flex-column justify-content-center align-items-center w-50">
-        <h1 class="display-6 fw-bold">English</h1>
-        <button data-locale="en" class="btn btn-light btn-lg mt-4 select-language">Choose</button>
-    </div>
-</div>
-
-<script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js" defer></script>
-
-<!-- Hero Section -->
-<section id="hero" class="container-fluid text-white position-relative bg-primary" style="min-height: 100vh; background-attachment: fixed;">
-    <!-- Particles Background -->
-    <div id="particles-js" class="position-absolute w-100 h-100"></div>
-
-    <!-- Content -->
-    <div class="d-flex align-items-center position-relative header_intro">
-        <div class="row w-100 mx-0 align-items-center">
-            <div class="container">
-                {% for type, messages in app.flashes %}
-                    {% for message in messages %}
-                        <div class="alert alert-{{ type }}">
-                            {{ message|trans }}
+<div class="container-fluid p-0">
+    {% if app.request.cookies.get('_locale') is empty %}
+        {# Sélecteur de langue immersive #}
+        <div id="language-selector" class="position-fixed top-0 start-0 w-100 h-100 d-flex justify-content-center align-items-center z-3">
+            <div class="hero-shape"></div>
+            <div class="hero-shape"></div>
+            <div class="hero-shape"></div>
+            
+            <div class="row g-4 w-100 justify-content-center">
+                <div class="col-md-5 col-10">
+                    <div class="card h-100 shadow-lg language-card select-language" data-locale="fr">
+                        <div class="card-body d-flex flex-column align-items-center justify-content-center p-5 text-center text-white">
+                            <span class="fi fi-fr fis rounded mb-3" style="font-size: 3rem"></span>
+                            <h3 class="mb-2">Français</h3>
+                            <p class="mb-0 text-white">Choisir cette langue</p>
                         </div>
-                    {% endfor %}
-                {% endfor %}
-            </div>
-            <!-- Texte et boutons -->
-            <div class="col-lg-7 col-md-12 d-flex flex-column justify-content-center px-4 px-md-5 text-center text-lg-start mb-4 mb-lg-0 intro_mobile">
-                <h1 class="display-4 fw-bold mb-4">{{ 'hero_title'|trans }}</h1>
-                <p class="fs-5 mb-4 text-white">{{ 'hero_subtitle_1'|trans }}</p>
-                <p class="fs-5 mb-4 text-white">{{ 'hero_subtitle_2'|trans }}</p>
-                <div class="d-flex flex-column flex-md-row gap-3 justify-content-center button_intro">
-                    <a href="https://calendly.com/walid_belbeche/expertise-offerte" class="btn btn-warning">{{ 'hero_button_schedule'|trans }}</a>
-                    <a href="{{ url('front_contact') }}" class="btn btn-outline-light">{{ 'hero_button_contact'|trans }}</a>
+                    </div>
                 </div>
-            </div>
-
-            <div class="col-lg-5 col-md-12 d-flex justify-content-center mt-4 mb-4 mt-lg-0">
-                <div class="rounded shadow-lg bg-light p-4" style="width: 100%; max-width: 400px;">
-                    {% if app.request.query.get('submitted') %}
-                        <div id="successMessage" class="alert alert-success text-center">
-                            {{ 'form_success_message'|trans }}
+                <div class="col-md-5 col-10">
+                    <div class="card h-100 shadow-lg language-card select-language" data-locale="en">
+                        <div class="card-body d-flex flex-column align-items-center justify-content-center p-5 text-center text-white">
+                            <span class="fi fi-gb fis rounded mb-3" style="font-size: 3rem"></span>
+                            <h3 class="mb-2">English</h3>
+                            <p class="mb-0 text-white">Choose this language</p>
                         </div>
-                    {% else %}
-                        <div id="callbackForm">
-                            {{ form_start(form, {'attr': {'class': 'needs-validation'}, 'method': 'POST'}) }}
-                                <div class="form-floating mb-3">
-                                    {{ form_row(form.name, {'attr': {'class': 'form-control', 'id': 'name', 'placeholder': 'form_name_placeholder'|trans}}) }}
-                                    {{ form_errors(form.name) }}
-                                </div>
-                                <div class="form-floating mb-3">
-                                    {{ form_row(form.phonePrefix, {'attr': {'class': 'select2', 'id': 'phonePrefix'}}) }}
-                                    {{ form_errors(form.phonePrefix) }}
-                                </div>
-                                <div class="form-floating mb-3">
-                                    {{ form_row(form.phone, {'attr': {'class': 'form-control', 'id': 'phone', 'placeholder': 'form_phone_placeholder'|trans}}) }}
-                                    {{ form_errors(form.phone) }}
-                                </div>
-                                <div class="form-floating mb-3">
-                                    {{ form_row(form.email, {'attr': {'class': 'form-control', 'id': 'email', 'placeholder': 'form_email_placeholder'|trans}}) }}
-                                    {{ form_errors(form.email) }}
-                                </div>
-                                <button type="submit" id="submitButton" class="btn btn-primary w-100">
-                                    {{ 'form_submit_button'|trans }}
-                                </button>
-                            {{ form_end(form) }}
-                        </div>
-                    {% endif %}
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- Pourquoi me choisir -->
-<section class="container-fluid position-relative mt-6">
-    <div class="row h-100 align-items-center">
-        <!-- Image -->
-        <div class="col-lg-6 col-md-12 d-flex justify-content-center">
-            <img src="{{ asset('img/moi2.jpg') }}" loading="lazy" 
-                alt="Walid BELBECHE - Expert Symfony et solutions numériques sur mesure" 
-                class="img-fluid rounded shadow-lg"
-                width="60%">
-        </div>
-        <div class="col-lg-6 col-md-12 d-flex flex-column justify-content-center px-5">
-            <h2 class="display-4 fw-bold mb-4 mt-4">{{ 'why_work_with_me_title'|trans }}</h2>
-            <p class="fs-5 mb-4">{{ 'about_me_text'|trans }}</p>
-            <ul class="list-unstyled mb-4">
-                <li class="mb-3 d-flex align-items-start">
-                    <i class="bi bi-check-circle-fill text-primary me-3"></i>
-                    <span>{{ 'personalized_support'|trans }}</span>
-                </li>
-                <li class="mb-3 d-flex align-items-start">
-                    <i class="bi bi-check-circle-fill text-primary me-3"></i>
-                    <span>{{ 'deep_expertise'|trans }}</span>
-                </li>
-                <li class="mb-3 d-flex align-items-start">
-                    <i class="bi bi-check-circle-fill text-primary me-3"></i>
-                    <span>{{ 'long_term_commitment'|trans }}</span>
-                </li>
-            </ul>
-            <a href="https://calendly.com/walid_belbeche/expertise-offerte" class="btn btn-info btn-lg rounded-pill mb-4">{{ 'button_schedule'|trans }}</a>
-        </div>
-    </div>
-</section>
-
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        particlesJS("particles-js", {
-            "particles": {
-                "number": { "value": 50, "density": { "enable": true, "value_area": 800 } },
-                "color": { "value": "#ffffff" },
-                "shape": { "type": "circle" },
-                "opacity": { "value": 0.5 },
-                "size": { "value": 3 },
-                "line_linked": { "enable": true, "distance": 150, "color": "#ffffff", "opacity": 0.4, "width": 1 },
-                "move": { "enable": true, "speed": 2 }
-            },
-            "interactivity": { "detect_on": "canvas", "events": { "onhover": { "enable": true, "mode": "grab" }, "onclick": { "enable": true, "mode": "push" } }, "modes": { "grab": { "distance": 140, "line_linked": { "opacity": 1 } } } },
-            "retina_detect": true
-        });
-    });
-</script>
-
-<!-- Skills and Technologies Section -->
-<section class="container mt-5">
-    <h2 class="text-center display-4 fw-bold mb-5">{{ 'skills_title'|trans }}</h2>
-    <div class="row">
-        {% set tools = [
-            { 'img': 'spec-4.png', 'name': 'Symfony' },
-            { 'img': 'spec-1.png', 'name': 'PHP' },
-            { 'img': 'spec-18.svg', 'name': 'PHP Storm' },
-            { 'img': 'spec-20.png', 'name': 'Docker' },
-            { 'img': 'spec-14.png', 'name': 'React' },
-            { 'img': 'spec-5.svg', 'name': 'VueJS' },
-            { 'img': 'spec-10.png', 'name': 'Next.js' },
-            { 'img': 'spec-7.png', 'name': 'SaaS' },
-            { 'img': 'spec-12.png', 'name': 'Node.js' }
-        ] %}
-        {% for tool in tools %}
-            <div class="col-xs-12 col-sm-3">
-                <div class="lm-info-block gray-default text-center">
-                    <img src="{{ asset('img/clients/' ~ tool.img) }}" loading="lazy" alt="{{ tool.name }}" class="img-fluid">
-                    <h4>{{ tool.name }}</h4>
-                </div>
-            </div>
-        {% endfor %}
-    </div>
-</section>
-
-<div class="divider"></div>
-
-<!-- Projects Section -->
-<section class="container">
-    <h2 class="text-center display-4 fw-bold mb-5">{{ 'recent_projects_title'|trans }}</h2>
-    <div class="row">
-        {% for project in projects %}
-            <div class="col-md-4 mb-4">
-                <div class="card shadow">
-                    {% for image in project.images %}
-                        <img src="{{ asset('image_project/' ~ image.name) }}" loading="lazy" alt="{{ image.name }}">
-                    {% endfor %}
-                    <div class="card-body">
-                        <h5 class="card-title">{{ project.title }}</h5>
-                        <a href="{{ url('front_project_show', {id: project.id}) }}" class="btn btn-primary">{{ 'view_more'|trans }}</a>
                     </div>
                 </div>
             </div>
-        {% endfor %}
+        </div>
+    {% endif %}
+
+    <!-- Texte de chargement -->
+    <div id="language-loading-text" class="position-fixed text-white" style="display: none;">
+        <div class="d-flex flex-column align-items-center">
+            <div class="spinner-border mb-3" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+            <span class="fs-4 fw-bold">{{ 'loading'|trans }}...</span>
+        </div>
     </div>
-</section>
 
+    {# Section Hero avec Particles.js et effets visuels #}
+    <section class="hero-section">
+        <div id="particles-js" class="position-absolute w-100 h-100"></div>
+        <div class="container position-relative py-5">
+            <div class="row align-items-center">
+                <div class="col-lg-6 pe-lg-5 mb-5 mb-lg-0 text-white hero-content">
+                    <h1 class="display-4 fw-bold mb-4 animate-on-scroll">{{ 'hero_title'|trans }}</h1>
+                    <p class="lead mb-4 text-white animate-on-scroll" style="animation-delay: 0.2s">{{ 'hero_subtitle_1'|trans }}</p>
+                    <div class="d-flex flex-wrap gap-3 animate-on-scroll" style="animation-delay: 0.4s">
+                        <a href="https://calendly.com/walid_belbeche/expertise-offerte" class="btn btn-light px-4 py-3">
+                            {{ 'hero_button_schedule'|trans }}
+                        </a>
+                        <a href="{{ url('front_contact') }}" class="btn btn-outline-light px-4 py-3">
+                            {{ 'hero_button_contact'|trans }}
+                        </a>
+                    </div>
+                </div>
+                <div class="col-lg-6 animate-on-scroll" style="animation-delay: 0.6s">
+                    <div class="bg-white rounded-3 shadow-lg p-4" style="max-width: 500px; margin: 0 auto;">
+                        {% if app.request.query.get('submitted') %}
+                            <div class="alert alert-success text-center">
+                                {{ 'form_success_message'|trans }}
+                            </div>
+                        {% else %}
+                            {{ form_start(form, {'attr': {'class': 'needs-validation'}, 'method': 'POST'}) }}
+                                <div class="mb-3">
+                                    {{ form_row(form.name, {'attr': {'class': 'form-control', 'placeholder': 'form_name_placeholder'|trans}}) }}
+                                </div>
+                                <div class="mb-3">
+                                    {{ form_row(form.phonePrefix, {'attr': {'class': 'select2'}}) }}
+                                </div>
+                                <div class="mb-3">
+                                    {{ form_row(form.phone, {'attr': {'class': 'form-control', 'placeholder': 'form_phone_placeholder'|trans}}) }}
+                                </div>
+                                <div class="mb-3">
+                                    {{ form_row(form.email, {'attr': {'class': 'form-control', 'placeholder': 'form_email_placeholder'|trans}}) }}
+                                </div>
+                                <button type="submit" class="btn btn-primary w-100 py-2">
+                                    {{ 'form_submit_button'|trans }}
+                                </button>
+                            {{ form_end(form) }}
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    {# Section À Propos avec effet de parallaxe #}
+    <section class="py-5 bg-white parallax-section" style="background-image: url('{{ asset('img/abstract-bg.jpg') }}');">
+        <div class="container py-5">
+            <div class="row align-items-center">
+                <div class="col-lg-6 mb-5 mb-lg-0 animate-on-scroll">
+                    <div class="position-relative">
+                        <img src="{{ asset('img/moi2.jpg') }}" alt="Photo professionnelle" class="img-fluid rounded-3 shadow-lg w-75">
+                        <div class="position-absolute top-0 start-0 w-75 h-100 border border-4 border-primary rounded-3" style="z-index: -1; transform: translate(20px, 20px);"></div>
+                    </div>
+                </div>
+                <div class="col-lg-6 ps-lg-5 animate-on-scroll" style="animation-delay: 0.2s">
+                    <h2 class="display-5 fw-bold mb-4">{{ 'why_work_with_me_title'|trans }}</h2>
+                    <p class="lead mb-4">{{ 'about_me_text'|trans }}</p>
+                    <ul class="list-unstyled">
+                        <li class="mb-3 d-flex align-items-start">
+                            <i class="bi bi-check-circle-fill text-primary me-3 fs-5"></i>
+                            <span>{{ 'personalized_support'|trans }}</span>
+                        </li>
+                        <li class="mb-3 d-flex align-items-start">
+                            <i class="bi bi-check-circle-fill text-primary me-3 fs-5"></i>
+                            <span>{{ 'deep_expertise'|trans }}</span>
+                        </li>
+                        <li class="mb-3 d-flex align-items-start">
+                            <i class="bi bi-check-circle-fill text-primary me-3 fs-5"></i>
+                            <span>{{ 'long_term_commitment'|trans }}</span>
+                        </li>
+                    </ul>
+                    <a href="https://calendly.com/walid_belbeche/expertise-offerte" class="btn btn-outline-primary px-4 py-3 mt-3">
+                        {{ 'button_schedule'|trans }}
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    {# Section Compétences #}
+    <section class="py-5 bg-light">
+        <div class="container py-5">
+            <h2 class="display-5 fw-bold text-center mb-5 animate-on-scroll">{{ 'skills_title'|trans }}</h2>
+            
+            <div class="row g-4">
+                {% set tools = [
+                    { 'img': 'spec-4.png', 'name': 'Symfony' },
+                    { 'img': 'spec-1.png', 'name': 'PHP' },
+                    { 'img': 'spec-18.svg', 'name': 'PHP Storm' },
+                    { 'img': 'spec-20.png', 'name': 'Docker' },
+                    { 'img': 'spec-14.png', 'name': 'React' },
+                    { 'img': 'spec-5.svg', 'name': 'VueJS' },
+                    { 'img': 'spec-10.png', 'name': 'Next.js' },
+                    { 'img': 'spec-7.png', 'name': 'SaaS' },
+                    { 'img': 'spec-12.png', 'name': 'Node.js' }
+                ] %}
+                
+                {% for tool in tools %}
+                <div class="col-6 col-md-4 col-lg-3 animate-on-scroll" style="animation-delay: {{ 0.1 * loop.index }}s">
+                    <div class="card border-0 bg-white shadow-sm h-100 hover-shadow transition-all text-center p-4">
+                        <img src="{{ asset('img/clients/' ~ tool.img) }}" alt="{{ tool.name }}" class="img-fluid mx-auto" style="height: 60px; width: auto;">
+                        <div class="card-body p-0 pt-3">
+                            <h5 class="card-title mb-0">{{ tool.name }}</h5>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+
+    {# Section Projets #}
+    <section class="py-5 bg-white">
+        <div class="container py-5">
+            <h2 class="display-5 fw-bold text-center mb-5 animate-on-scroll">{{ 'recent_projects_title'|trans }}</h2>
+            
+            <div class="row g-4">
+                {% for project in projects %}
+                <div class="col-md-6 col-lg-4 animate-on-scroll" style="animation-delay: {{ 0.1 * loop.index }}s">
+                    <div class="card border-0 shadow-sm h-100 hover-shadow transition-all overflow-hidden">
+                        <div class="position-relative" style="height: 200px; overflow: hidden;">
+                            <img src="{{ asset('image_project/' ~ project.images.first.name) }}" class="w-100 h-100 object-fit-cover" alt="{{ project.title }}">
+                            <div class="position-absolute top-0 start-0 w-100 h-100 bg-primary opacity-0 hover-opacity-10 transition-all"></div>
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title">{{ project.title }}</h5>
+                            <p class="card-text">{{ project.description }}</p>
+                            <a href="{{ url('front_project_show', {id: project.id}) }}" class="btn btn-sm btn-outline-primary">
+                                {{ 'view_more'|trans }}
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const languageButtons = document.querySelectorAll('.select-language');
-
-        languageButtons.forEach(button => {
-            button.addEventListener('click', function () {
-                const locale = this.getAttribute('data-locale');
-
-                // Send AJAX request to change locale
-                fetch(`/change-locale/${locale}`, {
-                    method: 'GET',
-                    headers: {
-                        'X-Requested-With': 'XMLHttpRequest'
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialisation de Particles.js améliorée
+    particlesJS("particles-js", {
+        "particles": {
+            "number": { 
+                "value": 100,
+                "density": { 
+                    "enable": true,
+                    "value_area": 800 
+                } 
+            },
+            "color": { 
+                "value": "#ffffff" 
+            },
+            "shape": { 
+                "type": "circle",
+                "stroke": {
+                    "width": 0,
+                    "color": "#000000"
+                },
+                "polygon": {
+                    "nb_sides": 5
+                }
+            },
+            "opacity": {
+                "value": 0.5,
+                "random": true,
+                "anim": {
+                    "enable": true,
+                    "speed": 1,
+                    "opacity_min": 0.1,
+                    "sync": false
+                }
+            },
+            "size": {
+                "value": 3,
+                "random": true,
+                "anim": {
+                    "enable": true,
+                    "speed": 2,
+                    "size_min": 0.1,
+                    "sync": false
+                }
+            },
+            "line_linked": {
+                "enable": true,
+                "distance": 150,
+                "color": "#ffffff",
+                "opacity": 0.4,
+                "width": 1
+            },
+            "move": {
+                "enable": true,
+                "speed": 2,
+                "direction": "none",
+                "random": true,
+                "straight": false,
+                "out_mode": "out",
+                "bounce": false,
+                "attract": {
+                    "enable": true,
+                    "rotateX": 600,
+                    "rotateY": 1200
+                }
+            }
+        },
+        "interactivity": {
+            "detect_on": "canvas",
+            "events": {
+                "onhover": {
+                    "enable": true,
+                    "mode": "grab"
+                },
+                "onclick": {
+                    "enable": true,
+                    "mode": "push"
+                },
+                "resize": true
+            },
+            "modes": {
+                "grab": {
+                    "distance": 140,
+                    "line_linked": {
+                        "opacity": 1
                     }
-                })
-                .then(response => {
-                    if (response.ok) {
-                        // Hide the language selector after successful locale change
-                        const selector = document.getElementById('language-selector');
-                        selector.style.transition = 'opacity 0.5s ease';
-                        selector.style.opacity = '0';
-                        setTimeout(() => selector.remove(), 500); // Remove the selector after fade-out
-                    } else {
-                        console.error('Failed to change language');
-                    }
-                })
-                .catch(error => console.error('Error:', error));
-            });
-        });
-
-        // Automatically hide the selector if the locale is already set
-        const currentLocale = '{{ app.request.locale }}';
-        if (currentLocale === 'fr' || currentLocale === 'en') {
-            document.getElementById('language-selector').style.display = 'none';
-        }
+                },
+                "bubble": {
+                    "distance": 400,
+                    "size": 40,
+                    "duration": 2,
+                    "opacity": 8,
+                    "speed": 3
+                },
+                "repulse": {
+                    "distance": 200,
+                    "duration": 0.4
+                },
+                "push": {
+                    "particles_nb": 4
+                },
+                "remove": {
+                    "particles_nb": 2
+                }
+            }
+        },
+        "retina_detect": true
     });
+
+    // Animation au défilement
+    const animateElements = document.querySelectorAll('.animate-on-scroll');
+    
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+            }
+        });
+    }, {
+        threshold: 0.1
+    });
+
+    animateElements.forEach(el => observer.observe(el));
+
+    // Sélecteur de langue amélioré
+    const langSelector = document.getElementById('language-selector');
+    const loadingText = document.getElementById('language-loading-text');
+
+    function getCookie(name) {
+        const value = `; ${document.cookie}`;
+        const parts = value.split(`; ${name}=`);
+        if (parts.length === 2) {
+            return decodeURIComponent(parts.pop().split(';').shift());
+        }
+        return null;
+    }
+
+    const localeCookie = getCookie('_locale');
+    if (!localeCookie) {
+        setTimeout(() => {
+            langSelector.classList.add('show');
+            document.body.style.overflow = 'hidden';
+        }, 500);
+    } else {
+        langSelector.remove();
+    }
+
+    document.querySelectorAll('.select-language').forEach(btn => {
+        btn.addEventListener('click', async function(e) {
+            e.preventDefault();
+            const locale = this.dataset.locale;
+
+            // Animation de sélection
+            this.style.transform = 'scale(0.95)';
+            this.style.opacity = '0.7';
+            
+            // Affiche le texte de chargement
+            loadingText.style.display = 'flex';
+            langSelector.style.opacity = '0';
+            
+            try {
+                const response = await fetch(`/change-locale/${locale}`, {
+                    method: 'POST',
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (response.ok) {
+                    document.cookie = `_locale=${locale}; path=/; max-age=31536000; SameSite=Lax`;
+                    localStorage.setItem('appLocale', locale);
+                    
+                    // Ajoute une animation de transition avant le rechargement
+                    loadingText.innerHTML = '<div class="text-center"><div class="spinner-border text-success mb-3" role="status"></div><div class="fs-4 fw-bold">{{ 'ready'|trans }}!</div></div>';
+                    
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 1000);
+                } else {
+                    alert("{{ 'language_change_error'|trans }}");
+                    loadingText.style.display = 'none';
+                    langSelector.style.opacity = '1';
+                }
+            } catch (error) {
+                console.error("AJAX error:", error);
+                loadingText.style.display = 'none';
+                langSelector.style.opacity = '1';
+            }
+        });
+    });
+});
 </script>
 
 {% endblock %}

@@ -278,7 +278,7 @@ callback_request:
         label: "Email Address"
         placeholder: "Enter your email address"
 
-site_name: "Walid BELBECHE."
+site_name: "</Walid BELBECHE>"
 
 recent_projects_title: "Recent Projects"
 
@@ -317,3 +317,12 @@ email_label_service: "Service"
 email_label_message: "Message"
 email_footer_disclaimer: "You are receiving this email because you submitted a contact request on my platform. If this was not you, please contact me immediately."
 contact_form_success_message: "Your message has been sent successfully. I will get back to you soon."
+view_more: "View More"
+projects_section_heading: "Projects"
+no_articles_found: "No articles found."
+course_tutorials_title: "Courses and Tutorials"
+course_tutorials: "Explore my courses and tutorials to enhance your skills in web development, Symfony, and digital solutions."
+title_news: "News"
+projects_title: "Project"
+read_more: "Read More"
+maintenance_title: "Maintenance Mode"

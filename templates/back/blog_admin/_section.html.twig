@@ -1,0 +1,21 @@
+<div class="section-content existing-section" data-index="{{ index }}" data-type="{{ section.type }}" data-content="{{ section.content }}" data-name="sections[{{ index }}][content]">
+    <button type="button" class="btn btn-sm btn-danger remove-section">
+        <i class="bi bi-trash"></i>
+    </button>
+    <input type="hidden" name="sections[{{ index }}][type]" value="{{ section.type }}">
+    
+    <div class="section-editor editor-container">
+        {% if section.type == 'code' %}
+            <textarea class="form-control code-editor" rows="10" name="sections[{{ index }}][content]">{{ section.content }}</textarea>
+        {% elseif section.type == 'media' %}
+            <div class="media-preview-container">
+                {% if section.mediaUrl %}
+                    <img src="{{ asset(section.mediaUrl) }}" class="media-preview img-fluid">
+                {% endif %}
+                <input type="file" class="form-control mt-2" name="sections[{{ index }}][mediaFile]" accept="image/*,video/*">
+            </div>
+        {% else %}
+            <div class="text-editor">{{ section.content|raw }}</div>
+        {% endif %}
+    </div>
+</div>

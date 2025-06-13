@@ -6,7 +6,6 @@ use Doctrine\ORM\Mapping as ORM;
 use App\Repository\CategoryRepository;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
-use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * @ORM\Entity(repositoryClass=CategoryRepository::class)
@@ -21,7 +20,6 @@ class Category
     private $id;
 
     /**
-     * @Gedmo\Translatable
      * @ORM\Column(type="string", length=255)
      */
     private $name;
@@ -39,7 +37,6 @@ class Category
     private $Subjects;
 
     /**
-     * @Gedmo\Translatable
      * @ORM\Column(type="string", length=255)
      */
     private ?string $slug = null;
@@ -80,17 +77,7 @@ class Category
     {
         return $this->projects;
     }
-
-    public function addProject(Project $project): self
-    {
-        if (!$this->projects->contains($project)) {
-            $this->projects[] = $project;
-            $project->addCategory($this);
-        }
-
-        return $this;
-    }
-
+    
     public function removeProject(Project $project): self
     {
         if ($this->projects->removeElement($project)) {

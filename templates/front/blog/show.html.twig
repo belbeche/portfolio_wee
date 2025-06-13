@@ -3,7 +3,7 @@
 {% block title %}{{ post.title }}{% endblock %}
 
 {% block content %}
-<!-- Prism.js for syntax highlighting -->
+<!-- Prism.js pour syntax highlighting -->
 <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/themes/prism-tomorrow.min.css" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/prism.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/components/prism-core.min.js"></script>
@@ -26,44 +26,45 @@
     </div>
 
     <!-- Sections dynamiques -->
-    {% if post.sections|length > 0 %}
+    {% if post.sections is not empty %}
         <div class="article-sections">
             {% for section in post.sections %}
-                {% if section.type == 'content' %}
-                    <!-- Section de contenu -->
+                
+                {% if section.type == 'text' %}
+                    <!-- Section de texte -->
                     <div class="section-content mb-4">
                         <p>{{ section.content|raw }}</p>
                     </div>
+
                 {% elseif section.type == 'code' %}
                     <!-- Section de code -->
                     <div class="section-code mb-4">
                         <div class="card">
                             <div class="card-header">
-                                Langage : <strong>{{ section.language }}</strong>
+                                Langage : <strong>{{ post.category.name }}</strong>
                             </div>
                             <div class="card-body bg-light">
                                 <pre><code class="language-{{ section.language|default('plaintext') }}">{{ section.content|e }}</code></pre>
                             </div>
                         </div>
                     </div>
+
                 {% elseif section.type == 'media' %}
                     <!-- Section de média -->
-                    {% if section.mediaType == 'image' %}
-                        <div class="section-media mb-4">
+                    <div class="section-media mb-4">
+                        {% set extension = section.mediaUrl|split('.')|last|lower %}
+                        {% if extension in ['jpg', 'jpeg', 'png', 'gif', 'webp'] %}
                             <img src="{{ asset('uploads/' ~ section.mediaUrl) }}" alt="Image" class="img-fluid">
-                        </div>
-                    {% elseif section.mediaType == 'video' %}
-                        <div class="section-media mb-4">
-                            <video controls>
-                                <source src="{{ asset('uploads/' ~ section.mediaUrl) }}" type="video/mp4">
-                                Votre navigateur ne supporte pas les vidéos.
+                        {% elseif extension in ['mp4', 'webm'] %}
+                            <video controls class="w-100">
+                                <source src="{{ asset('uploads/' ~ section.mediaUrl) }}" type="video/{{ extension }}">
+                                Votre navigateur ne supporte pas la lecture vidéo.
                             </video>
-                        </div>
-                    {% else %}
-                        <div class="section-media mb-4 text-danger">
-                            <p>Média non supporté ou invalide.</p>
-                        </div>
-                    {% endif %}
+                        {% else %}
+                            <p class="text-danger">Média non supporté ou fichier manquant.</p>
+                        {% endif %}
+                    </div>
+
                 {% endif %}
             {% endfor %}
         </div>

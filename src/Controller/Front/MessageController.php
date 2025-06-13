@@ -118,10 +118,10 @@ class MessageController extends AbstractController
 
             // Envoi de l'email
             $email = (new TemplatedEmail())
-                ->from('contact@scriptzenit.fr')
+                ->from('contact@walid belbeche.fr')
                 ->to($receiverEmail)
                 ->bcc('wbelbeche.s@gmail.com')
-                ->subject('Demande assistance - ScriptZenIT')
+                ->subject('Demande assistance - Walid BELBECHE')
                 ->context([
                     'email_address' => $user->getEmail(),
                     'service' => $receiverEmail,
@@ -323,9 +323,9 @@ class MessageController extends AbstractController
 
             // Envoi de l'email
             $email = (new TemplatedEmail())
-                ->from('contact@scriptzenit.fr')
+                ->from('contact@walid belbeche.fr')
                 ->to($originalMessage->getSender()->getEmail())
-                ->subject('Réponse à votre demande, Devis, ScriptZenIT')
+                ->subject('Réponse à votre demande, Devis, Walid BELBECHE')
                 ->bcc('wbelbeche.s@gmail.com')
                 ->context([
                     'email_address' => $currentUser->getUserIdentifier(),

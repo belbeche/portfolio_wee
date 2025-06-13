@@ -82,7 +82,7 @@ class CreateAdministratorCommand extends Command
             ->setNom($nom)
             ->setPrenom($prenom)
             ->setEmail($email)
-            ->setUser($user)
+            ->setUsername($user)
             ->setPassword($this->hasher->hashPassword(
                 $user,
                 $plainPassword

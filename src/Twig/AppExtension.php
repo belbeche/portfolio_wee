@@ -2,8 +2,9 @@
 
 namespace App\Twig;
 
-use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
+use Twig\TwigFunction;
+use Twig\Extension\AbstractExtension;
 
 class AppExtension extends AbstractExtension
 {
@@ -19,5 +20,29 @@ class AppExtension extends AbstractExtension
     {
         // Mettre la première lettre en majuscule et le reste en minuscule
         return ucfirst(strtolower($string));
+    }
+
+    public function getFunctions()
+    {
+        return [
+            new TwigFunction('get_fr_translations', [$this, 'getFrTranslations']),
+            new TwigFunction('get_en_translations', [$this, 'getEnTranslations']),
+        ];
+    }
+
+    public function getFrTranslations()
+    {
+        return json_encode([
+            'hero_title' => 'Développeur Full Stack',
+            // Ajoutez TOUTES vos clés françaises
+        ]);
+    }
+
+    public function getEnTranslations()
+    {
+        return json_encode([
+            'hero_title' => 'Full Stack Developer',
+            // Ajoutez TOUTES vos clés anglaises
+        ]);
     }
 }

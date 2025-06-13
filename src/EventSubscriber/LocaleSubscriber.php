@@ -8,25 +8,33 @@ use Symfony\Component\HttpKernel\KernelEvents;
 
 class LocaleSubscriber implements EventSubscriberInterface
 {
-    private $defaultLocale;
+    private string $defaultLocale;
 
-    public function __construct(string $defaultLocale = 'en')
+    public function __construct(string $defaultLocale = 'fr')
     {
         $this->defaultLocale = $defaultLocale;
     }
 
-    public function onKernelRequest(RequestEvent $event)
+    public function onKernelRequest(RequestEvent $event): void
     {
         $request = $event->getRequest();
-        if (!$request->hasPreviousSession()) {
+
+        if (!$event->isMainRequest()) {
             return;
         }
 
-        $locale = $request->getSession()->get('_locale', $this->defaultLocale);
+        // 1. On lit d'abord le paramètre _locale (ex: dans l'URL ou en GET/POST)
+        if ($locale = $request->get('_locale')) {
+            $request->setLocale($locale);
+            return;
+        }
+
+        // 2. Sinon, on regarde dans les cookies (comme celui que ton JS crée)
+        $locale = $request->cookies->get('_locale', $this->defaultLocale);
         $request->setLocale($locale);
     }
 
-    public static function getSubscribedEvents()
+    public static function getSubscribedEvents(): array
     {
         return [
             KernelEvents::REQUEST => [['onKernelRequest', 20]],

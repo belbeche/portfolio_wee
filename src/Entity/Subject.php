@@ -82,21 +82,24 @@ class Subject
     private $categories;
 
     /**
-     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="Subjects")
-     * @ORM\JoinColumn(nullable=true)
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="subjects")
      */
-    private ?User $user;
+    private ?User $user = null;
 
     /**
-     * @ORM\OneToMany(targetEntity=Image::class, mappedBy="Subject", orphanRemoval=true, cascade={"persist"})
+     * @ORM\OneToMany(targetEntity=Image::class, mappedBy="subject", cascade={"persist", "remove"})
      */
     private Collection $images;
 
-    #[ORM\ManyToOne(targetEntity: self::class, inversedBy: "replies")]
-    #[ORM\JoinColumn(onDelete: "CASCADE")]
+    /**
+     * @ORM\ManyToOne(targetEntity=Subject::class, inversedBy="replies")
+     * @ORM\JoinColumn(name="parent_id", referencedColumnName="id", nullable=true)
+     */
     private $parent;
 
-    #[ORM\OneToMany(mappedBy: "parent", targetEntity: self::class, cascade: ["remove"])]
+    /**
+     * @ORM\OneToMany(targetEntity=Subject::class, mappedBy="parent")
+     */
     private $replies;
 
 

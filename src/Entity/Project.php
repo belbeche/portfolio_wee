@@ -6,7 +6,6 @@ use App\Repository\ProjectRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * @ORM\Entity(repositoryClass=ProjectRepository::class)
@@ -21,31 +20,26 @@ class Project
     private $id;
 
     /**
-     * @Gedmo\Translatable
      * @ORM\Column(type="string", length=255)
      */
     private ?string $title;
 
     /**
-     * @Gedmo\Translatable
      * @ORM\Column(type="text")
      */
     private ?string $description;
 
     /**
-     * @Gedmo\Translatable
      * @ORM\Column(type="datetime")
      */
     private ?\DateTime $created_at;
 
     /**
-     * @Gedmo\Translatable
      * @ORM\Column(type="datetime")
      */
     private ?\DateTime $updated_at;
 
     /**
-     * @Gedmo\Translatable
      * @ORM\Column(type="string", length=255)
      */
     private ?string $category;
@@ -60,7 +54,7 @@ class Project
      * @ORM\ManyToMany(targetEntity="App\Entity\Category", inversedBy="projects", cascade={"persist"})
      * @ORM\JoinTable(name="project_category")
      */
-    private Collection $categories;
+    private ?Collection $categories;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
@@ -68,26 +62,19 @@ class Project
     private ?string $link;
 
     /**
-     * @Gedmo\Translatable
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private ?string $client;
 
     /**
-     * @Gedmo\Translatable
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private ?string $developer;
 
     /**
-     * @Gedmo\Locale
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
-    private $locale;
-
-    /**
-     * @ORM\OneToMany(targetEntity="Gedmo\Translatable\Entity\Translation", mappedBy="object", cascade={"persist", "remove"})
-     */
-    private $translations;
+    private ?string $locale;
 
     /**
      * @throws \Exception
@@ -97,7 +84,6 @@ class Project
         $this->images = new ArrayCollection();
         $this->created_at = new \DateTime('now', new \DateTimeZone('Europe/Paris'));
         $this->categories = new ArrayCollection();
-        $this->translations = new ArrayCollection();
     }
 
 
@@ -209,16 +195,6 @@ class Project
         return $this;
     }
 
-    public function addCategory(Category $category): self
-    {
-        if (!$this->categories->contains($category)) {
-            $this->categories[] = $category;
-                $category->addProject($this);
-        }
-
-        return $this;
-    }
-
     public function removeCategory(Category $category): self
     {
         if ($this->categories->removeElement($category)) {
@@ -284,26 +260,6 @@ class Project
     public function setDeveloper(?string $developer): self
     {
         $this->developer = $developer;
-
-        return $this;
-    }
-
-    /**
-     * Get the value of translations
-     */ 
-    public function getTranslations()
-    {
-        return $this->translations;
-    }
-
-    /**
-     * Set the value of translations
-     *
-     * @return  self
-     */ 
-    public function setTranslations($translations)
-    {
-        $this->translations = $translations;
 
         return $this;
     }

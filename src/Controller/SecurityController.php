@@ -162,7 +162,7 @@ class SecurityController extends AbstractController
                 $resetLink = $this->generateUrl('reset_password', ['token' => $token], UrlGeneratorInterface::ABSOLUTE_URL);
 
                 $email = (new TemplatedEmail())
-                    ->from('contact@scriptzenit.fr')
+                    ->from('contact@walid belbeche.fr')
                     ->to($user->getEmail())
                     ->subject('Réinitialisation de votre mot de passe')
                     ->htmlTemplate('reset_password/email.html.twig')

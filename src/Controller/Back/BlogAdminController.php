@@ -4,14 +4,16 @@ namespace App\Controller\Back;
 
 use App\Entity\Post;
 use App\Form\PostType;
+use App\Entity\PostSection;
 use App\Repository\PostRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\String\Slugger\SluggerInterface;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
-use Symfony\Component\String\Slugger\SluggerInterface;
 
 #[Route('/admin/blog', name: 'admin_blog_')]
 class BlogAdminController extends AbstractController
@@ -33,7 +35,9 @@ class BlogAdminController extends AbstractController
         ]);
     }
 
-    #[Route('/create', name: 'create', methods: ['GET', 'POST'])]
+    /**
+     * @Route("/create", name="create", methods={"GET", "POST"})
+     */
     public function create(Request $request, SluggerInterface $slugger): Response
     {
         $post = new Post();
@@ -41,7 +45,32 @@ class BlogAdminController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->handleMediaSections($post, $slugger);
+            // Traitement du contenu principal
+            $post->setContent($request->request->get('main_content'));
+
+            // Traitement des sections
+            $sectionsData = $request->request->all()['sections'] ?? [];
+            foreach ($sectionsData as $index => $sectionData) {
+                $section = new PostSection();
+                $section->setType($sectionData['type']);
+                
+                if ($sectionData['type'] === 'media') {
+                    $file = $request->files->get('sections')[$index]['mediaFile'] ?? null;
+                    if ($file) {
+                        $fileName = $slugger->slug(uniqid()) . '.' . $file->guessExtension();
+                        $file->move($this->getParameter('media_directory'), $fileName);
+                        $section->setMediaUrl($fileName);
+                    }
+                } else {
+                    $section->setContent($sectionData['content']);
+                    
+                    if ($sectionData['type'] === 'code') {
+                        $section->setLanguage($sectionData['language'] ?? 'plaintext');
+                    }
+                }
+                
+                $post->addSection($section);
+            }
 
             $this->entityManager->persist($post);
             $this->entityManager->flush();
@@ -56,18 +85,56 @@ class BlogAdminController extends AbstractController
         ]);
     }
 
-    #[Route('/edit/{id}', name: 'edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Post $post, SluggerInterface $slugger): Response
-    {
+    /**
+    * @Route("/admin/blog/{id}/edit", name="edit", requirements={"id"="\d+"}, defaults={"id"=null})
+    */
+    public function edit(
+        Request $request,
+        EntityManagerInterface $em,
+        SluggerInterface $slugger,
+        PostRepository $postRepository,
+        int $id
+    ): Response {
+        $post = $id ? $postRepository->find($id) : new Post();
+
         $form = $this->createForm(PostType::class, $post);
         $form->handleRequest($request);
 
+        // Traitement des sections dynamiques
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->handleMediaSections($post, $slugger);
+            // Récupération des données depuis les champs `name="sections[index][type]"`
+            $sectionsData = $request->request->all()['sections'] ?? [];
 
-            $this->entityManager->flush();
+            // Nettoyer les anciennes sections (si édition)
+            foreach ($post->getSections() as $existingSection) {
+                $post->removeSection($existingSection);
+                $em->remove($existingSection);
+            }
 
-            $this->addFlash('success', 'Article modifié avec succès.');
+            // Ajout des nouvelles sections
+            foreach ($sectionsData as $sectionIndex => $section) {
+                $type = $section['type'];
+                $content = $section['content'] ?? null;
+                $mediaFile = $request->files->get('sections')[$sectionIndex]['mediaFile'] ?? null;
+
+                $newSection = new PostSection();
+                $newSection->setType($type);
+
+                if ($type === PostSection::TYPE_MEDIA && $mediaFile instanceof UploadedFile) {
+                    $filename = uniqid().'.'.$mediaFile->guessExtension();
+                    $mediaFile->move($this->getParameter('uploads_dir'), $filename);
+                    $newSection->setMediaUrl('/uploads/' . $filename);
+                } else {
+                    $newSection->setContent($content);
+                }
+
+                $post->addSection($newSection);
+            }
+
+            $em->persist($post);
+            $em->flush();
+
+            $this->addFlash('success', 'Article enregistré avec succès.');
             return $this->redirectToRoute('admin_blog_index');
         }
 
@@ -77,7 +144,9 @@ class BlogAdminController extends AbstractController
         ]);
     }
 
-    #[Route('/delete/{id}', name: 'delete', methods: ['POST'])]
+    /**
+     * @Route("/admin/blog/{id}/delete", name="delete", requirements={"id"="\d+"}, methods={"POST"})
+     */
     public function delete(Request $request, Post $post): Response
     {
         if ($this->isCsrfTokenValid('delete' . $post->getId(), $request->request->get('_token'))) {
@@ -89,7 +158,9 @@ class BlogAdminController extends AbstractController
 
         return $this->redirectToRoute('admin_blog_index');
     }
-
+    /**
+     * @Route("/admin/blog/{id}/media", name="media", requirements={"id"="\d+"}, methods={"POST"})
+     */
     private function handleMediaSections(Post $post, SluggerInterface $slugger): void
     {
         foreach ($post->getSections() as $section) {
@@ -110,7 +181,9 @@ class BlogAdminController extends AbstractController
         }
     }
 
-    #[Route('/validate/{id}', name: 'validate', methods: ['POST'])]
+    /**
+     * @Route("/admin/blog/{id}/validate", name="validate", requirements={"id"="\d+"}, methods={"POST"})
+     */
     public function validate(Post $post): Response
     {
         $post->setStatus('validated');

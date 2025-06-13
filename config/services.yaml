@@ -8,6 +8,7 @@ parameters:
     subject_directory: "%kernel.project_dir%/public/uploads/subject/image"
     message_directory: "%kernel.project_dir%/public/uploads/message/image"
     uploads_directory: "%kernel.project_dir%/public/uploads/avatar"
+    uploads_dir: '%kernel.project_dir%/public/uploads'
     media_directory: '%kernel.project_dir%/public/uploads/media'
     prospects_directory: '%kernel.project_dir%/public/uploads/prospects'
     api_resource_token: "%env(API_RESOURCE_TOKEN)%"
@@ -16,19 +17,6 @@ services:
     _defaults:
         autowire: true
         autoconfigure: true
-
-    Gedmo\Translatable\TranslatableListener:
-        tags:
-            - { name: doctrine.event_subscriber, connection: default }
-        calls:
-            - [ setDefaultLocale, ["%kernel.default_locale%"] ]
-            - [ setTranslationFallback, [true] ]
-
-    App\Controller\Front\LocaleController:
-        public: true
-        autowire: true
-        autoconfigure: true
-        tags: ['controller.service_arguments']
 
     App\Controller\ExceptionController:
         arguments:
@@ -52,6 +40,18 @@ services:
             - "../src/DependencyInjection/"
             - "../src/Entity/"
             - "../src/Kernel.php"
+
+    # controllers are services too
+    App\Controller\Front\LocaleController:
+        public: true
+        arguments:
+            $translator: '@translator'
+        tags: ['controller.service_arguments']
+
+     # Subscriber pour la locale
+    App\EventSubscriber\LocaleSubscriber:
+        tags:
+            - { name: kernel.event_subscriber }
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones

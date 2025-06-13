@@ -1,6 +1,6 @@
-# ScriptZenIT
+# Walid BELBECHE
 
-ScriptZenIT est une solution tout-en-un pour la gestion de rendez-vous et de projets de votre entreprise. 
+Walid BELBECHE est une solution tout-en-un pour la gestion de rendez-vous et de projets de votre entreprise. 
 
 Nous offrons une gamme complète de services, de la création de sites web à la gestion de serveurs, en passant par le support client et les outils de CRM.
 
@@ -19,7 +19,7 @@ Nous offrons une gamme complète de services, de la création de sites web à la
 
 ## Présentation
 
-Bienvenue sur ScriptZenIT ! Nous sommes dédiés à fournir des solutions technologiques innovantes pour les entreprises de toutes tailles. Notre plateforme est conçue pour être facile à utiliser tout en offrant une puissante suite d'outils pour optimiser vos opérations.
+Bienvenue sur Walid BELBECHE ! Nous sommes dédiés à fournir des solutions technologiques innovantes pour les entreprises de toutes tailles. Notre plateforme est conçue pour être facile à utiliser tout en offrant une puissante suite d'outils pour optimiser vos opérations.
 
 ## Fonctionnalités
 
@@ -73,4 +73,4 @@ Gérez vos serveurs, consultez vos statistiques, utilisez notre CRM, accédez à
 
 1. Clonez le dépôt
    ```sh
-   git clone https://github.com/votre-utilisateur/scriptzenit.git
+   git clone https://github.com/votre-utilisateur/walid belbeche.git

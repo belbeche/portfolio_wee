@@ -1,43 +1,62 @@
 <?php
 
+// src/Controller/Front/LocaleController.php
 namespace App\Controller\Front;
 
-use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Contracts\Translation\TranslatorInterface;
+use Symfony\Component\Translation\TranslatorBagInterface;
 
-class LocaleController extends AbstractController
+class LocaleController
 {
-    private $requestStack;
+    private $translator;
 
-    public function __construct(RequestStack $requestStack)
+    public function __construct(TranslatorBagInterface $translator)
     {
-        $this->requestStack = $requestStack;
+        $this->translator = $translator;
     }
 
-    /**
-     * @Route("/change-locale/{_locale}", name="switch_locale")
-     *
-     * @param string $_locale
-     * @param Request $request
-     * @return RedirectResponse
-     */
-    public function switchLocale(string $_locale, Request $request): RedirectResponse
+    #[Route('/change-locale/{locale}', name: 'change_locale', methods: ['GET','POST'])]
+    public function changeLocale(string $locale, Request $request): JsonResponse
     {
-        // Met à jour la langue dans la session
-        $this->requestStack->getSession()->set('_locale', $_locale);
+        $session = $request->getSession();
+        $session->set('_locale', $locale);
 
-        // Récupère l'URL de référence (HTTP referer)
-        $referer = $request->headers->get('referer');
+        return new JsonResponse(['success' => true]);
+    }
 
-        // Si l'URL de référence existe, redirige l'utilisateur vers celle-ci
-        if ($referer) {
-            return new RedirectResponse($referer);
+    public function __invoke(Request $request, string $locale): JsonResponse
+    {
+        // 1. Valider la locale
+        if (!in_array($locale, ['fr', 'en'])) {
+            return new JsonResponse(['status' => 'error'], 400);
         }
 
-        // Si aucune URL de référence, redirige vers la racine
-        return new RedirectResponse('/');
+        // 2. Préparer toutes les traductions
+        $translations = $this->getAllTranslations($locale);
+
+        // 3. Retourner une réponse JSON SANS redirection
+        return new JsonResponse([
+            'status' => 'success',
+            'locale' => $locale,
+            'translations' => $translations
+        ]);
+    }
+
+    private function getAllTranslations(string $locale): array
+    {
+        $translations = [];
+        $catalogue = $this->translator->getCatalogue($locale);
+        
+        // Récupérer toutes les traductions du domaine 'messages'
+        if ($messages = $catalogue->all('messages')) {
+            foreach ($messages as $key => $translation) {
+                $translations[$key] = $translation;
+            }
+        }
+        
+        return $translations;
     }
 }

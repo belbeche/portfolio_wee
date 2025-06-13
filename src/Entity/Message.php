@@ -60,9 +60,9 @@ class Message
     private ?User $sender;
 
     /**
-    * @ORM\Column(type="string", length=255, nullable=false)
-    */
-    private ?string $receiver = null;
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="receivedMessages")
+     */
+    private ?User $receiver = null;
 
     /**
     * @ORM\ManyToOne(targetEntity=Ticket::class, inversedBy="messages")

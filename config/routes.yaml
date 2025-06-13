@@ -8,3 +8,15 @@ exception:
 front_maintenance:
     path: /maintenance
     controller: App\Controller\Front\MaintenanceController::maintenance
+
+change_locale:
+    path: /change-locale/{locale}
+    controller: App\Controller\Front\LocaleController
+    methods: ['GET',POST] 
+    requirements:
+        locale: fr|en
+
+translate_batch:
+    path: /translate-batch
+    controller: App\Controller\Front\TranslationController::translateBatch
+    methods: POST

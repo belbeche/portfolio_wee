@@ -1,47 +1,168 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}{{ 'title_news'|trans }}{% endblock %}
+{% block title %}{{ post.title }}{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/themes/prism-tomorrow.min.css" rel="stylesheet">
+    <style>
+        .article-content {
+            line-height: 1.8;
+            font-size: 1.1rem;
+        }
+        .article-content img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            margin: 1.5rem 0;
+        }
+        .article-content pre {
+            background: #2d2d2d;
+            border-radius: 8px;
+            padding: 1rem;
+            overflow-x: auto;
+        }
+        .code-section {
+            margin: 2rem 0;
+            position: relative;
+        }
+        .code-language {
+            position: absolute;
+            top: -10px;
+            right: 15px;
+            background: #64ffda;
+            color: #020c1b;
+            padding: 2px 10px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+        .media-section {
+            margin: 2rem 0;
+            text-align: center;
+        }
+        .media-section img, .media-section video {
+            max-width: 100%;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+    </style>
+{% endblock %}
 
 {% block content %}
-<div class="container mt-6">
-    <h1 class="text-center mb-5">{{ 'course_tutorials'|trans }}</h1>
+<div class="container mt-5">
+    <article class="blog-post">
+        <!-- En-tête de l'article -->
+        <header class="mb-5">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <span class="badge bg-primary">{{ post.category.name }}</span>
+                <span class="text-muted">{{ post.createdAt|date('d/m/Y à H:i') }}</span>
+            </div>
+            <h1 class="display-5 fw-bold mb-3">{{ post.title }}</h1>
+            {% if post.featuredImage %}
+                <img src="{{ asset('uploads/' ~ post.featuredImage) }}" class="img-fluid rounded mb-4" alt="{{ post.title }}">
+            {% endif %}
+        </header>
 
-    <!-- Navigation des catégories -->
-    <div class="d-flex justify-content-center mb-4 flex-wrap">
-        <a href="{{ path('blog_index') }}" 
-           class="btn btn-outline-primary mx-2 mb-2 {% if currentCategory is not defined %}active{% endif %}">
-            {{ 'all'|trans }}
-        </a>
-        {% for category in categories %}
-            <a href="{{ path('blog_category', { category: category.name }) }}" 
-               class="btn btn-outline-primary mx-2 mb-2 {% if currentCategory == category.name %}active{% endif %}">
-                {{ category.name }}
+        <!-- Contenu principal -->
+        <div class="article-content mb-5">
+            {{ post.content|raw }}
+        </div>
+
+        <!-- Sections dynamiques -->
+        {% if post.sections|length > 0 %}
+            <div class="sections-container">
+                {% for section in post.sections %}
+                    {% if section.type == 'text' %}
+                        <!-- Section texte -->
+                        <div class="text-section mb-5">
+                            {{ section.content|raw }}
+                        </div>
+
+                    {% elseif section.type == 'code' %}
+                        <!-- Section code -->
+                        <div class="code-section">
+                            <span class="code-language">{{ section.language|default('code') }}</span>
+                            <pre><code class="language-{{ section.language|default('plaintext') }}">{{ section.content }}</code></pre>
+                        </div>
+
+                    {% elseif section.type == 'media' and section.mediaUrl %}
+                        <!-- Section média -->
+                        <div class="media-section">
+                            {% set extension = section.mediaUrl|split('.')|last|lower %}
+                            {% if extension in ['jpg', 'jpeg', 'png', 'gif', 'webp'] %}
+                                <img src="{{ asset('uploads/' ~ section.mediaUrl) }}" 
+                                     alt="Média de l'article" 
+                                     class="img-fluid">
+                                {% if section.content %}
+                                    <div class="media-caption mt-2 text-muted">
+                                        {{ section.content }}
+                                    </div>
+                                {% endif %}
+                            {% elseif extension in ['mp4', 'webm', 'ogg'] %}
+                                <video controls class="w-100">
+                                    <source src="{{ asset('uploads/' ~ section.mediaUrl) }}" 
+                                            type="video/{{ extension }}">
+                                    Votre navigateur ne supporte pas la vidéo.
+                                </video>
+                            {% endif %}
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <!-- Pied de page de l'article -->
+        <footer class="mt-5 pt-4 border-top">
+            <a href="{{ path('blog_index') }}" class="btn btn-outline-primary">
+                <i class="bi bi-arrow-left"></i> Retour aux articles
             </a>
-        {% endfor %}
-    </div>
-
-    <!-- Liste des articles -->
-    <div class="row g-4">
-        {% for post in posts %}
-            <div class="col-md-6 col-lg-4">
-                <div class="card h-100 shadow-sm border-0">
-                    <div class="card-body d-flex flex-column">
-                        <h5 class="card-title">{{ post.title }}</h5>
-                        <p class="card-text text-muted small">
-                            {{ 'published_on'|trans }} {{ post.createdAt|date('d/m/Y') }}
-                        </p>
-                        <p class="card-text flex-grow-1">
-                            {{ post.content|striptags|slice(0, 120) ~ '...' }}
-                        </p>
-                        <a href="{{ path('blog_show', { slug: post.slug }) }}" class="btn btn-primary mt-auto">{{ 'read_more'|trans }}</a>
-                    </div>
-                </div>
-            </div>
-        {% else %}
-            <div class="col-12">
-                <p class="text-center text-muted">{{ 'no_articles_found'|trans }}</p>
-            </div>
-        {% endfor %}
-    </div>
+        </footer>
+    </article>
 </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/components/prism-clike.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/components/prism-php.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/components/prism-javascript.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/components/prism-css.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/components/prism-markup.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/components/prism-bash.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/components/prism-json.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/components/prism-sql.min.js"></script>
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Appliquer Prism.js à tous les blocs de code
+        Prism.highlightAll();
+        
+        // Ajouter des boutons de copie pour les blocs de code
+        document.querySelectorAll('pre code').forEach(codeBlock => {
+            const pre = codeBlock.parentNode;
+            const button = document.createElement('button');
+            button.className = 'btn btn-sm btn-outline-secondary copy-btn';
+            button.innerHTML = '<i class="bi bi-clipboard"></i>';
+            button.title = 'Copier le code';
+            
+            button.addEventListener('click', () => {
+                navigator.clipboard.writeText(codeBlock.textContent)
+                    .then(() => {
+                        button.innerHTML = '<i class="bi bi-check"></i>';
+                        setTimeout(() => {
+                            button.innerHTML = '<i class="bi bi-clipboard"></i>';
+                        }, 2000);
+                    });
+            });
+            
+            const div = document.createElement('div');
+            div.className = 'd-flex justify-content-end';
+            div.appendChild(button);
+            
+            pre.parentNode.insertBefore(div, pre);
+        });
+    });
+    </script>
 {% endblock %}

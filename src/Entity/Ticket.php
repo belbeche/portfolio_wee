@@ -69,9 +69,10 @@ class Ticket
     private Collection $messages;
 
     /**
-     * @ORM\OneToMany(targetEntity=Image::class, mappedBy="ticket", cascade={"persist", "remove"})
+     * @ORM\ManyToMany(targetEntity=Image::class, inversedBy="tickets")
+     * @ORM\JoinTable(name="ticket_attachments")
      */
-    private Collection $attachments;
+    private $attachments;
 
     /**
      * @throws \Exception
@@ -80,6 +81,7 @@ class Ticket
         $this->messages = new ArrayCollection();
         $this->createdAt = new \Datetime('now', new \DateTimeZone('Europe/Paris'));
         $this->updatedAt = new \Datetime('now', new \DateTimeZone('Europe/Paris'));
+        $this->attachments = new ArrayCollection();
     }
 
     public function getId(): ?Uuid
@@ -229,14 +231,6 @@ class Ticket
     }
     public function getMessages(): Collection {
         return $this->messages;
-    }
-    
-    public function addMessage(Message $message): self {
-        if (!$this->messages->contains($message)) {
-            $this->messages[] = $message;
-            $message->setTicket($this);
-        }
-        return $this;
     }
     
     public function removeMessage(Message $message): self {

@@ -64,7 +64,7 @@
 
 //     axios.post(btnRegister.dataset.registerUrl, formData)
 //         .then(response => {
-//             // envoie à la base de données du site support de scriptzenit
+//             // envoie à la base de données du site support de walid belbeche
 //             const url2 = document.querySelector('.register-url2')    
 //             // console.log(url2)
 //             // console.log(url2.dataset.registerUrl2)
@@ -120,7 +120,7 @@
 
 //     axios.patch(btnEditProfile.dataset.registerUrl, formData)
 //         .then(response => {
-//             // envoie à la base de données du site support de scriptzenit
+//             // envoie à la base de données du site support de walid belbeche
 //             const url2 = document.querySelector('.register-url2')    
 //             // console.log(url2)
 //             // console.log(url2.dataset.registerUrl2)

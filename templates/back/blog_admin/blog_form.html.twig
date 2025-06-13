@@ -2,143 +2,325 @@
 
 {% block title %}{{ post ? 'Modifier' : 'Créer' }} un Article{% endblock %}
 
+{% block stylesheets %}
+    {{ parent() }}
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+    <style>
+        .editor-container {
+            height: 500px;
+            margin-bottom: 20px;
+        }
+        .code-editor {
+            font-family: 'Courier New', monospace;
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+        .media-preview {
+            max-width: 100%;
+            max-height: 200px;
+            margin: 10px 0;
+        }
+        .section-toolbar {
+            background: #f8f9fa;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+        .section-content {
+            margin-bottom: 20px;
+            padding: 15px;
+            border: 1px solid #dee2e6;
+            border-radius: 5px;
+            position: relative;
+        }
+        .remove-section {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+        }
+    </style>
+{% endblock %}
+
 {% block content %}
-<div class="container mt-6">
-    <h1>{{ post ? 'Modifier' : 'Créer' }} un Article</h1>
+<div class="container mt-4">
+    <h1 class="mb-4">{{ post ? 'Modifier' : 'Créer' }} un Article</h1>
+    
     {{ form_start(form) }}
-
-    <!-- Informations générales -->
-    <div class="card p-4 mb-4">
-        <h2 class="card-title">Informations générales</h2>
-        <div class="mb-3">
-            {{ form_row(form.title) }}
-        </div>
-        <div class="mb-3">
-            {{ form_row(form.slug) }}
-        </div>
-        <div class="mb-3">
-            {{ form_row(form.content)}}
-        </div>
-
-        <div class="mb-3">
-            {{ form_row(form.category)}}
-        </div>
-
-        <div class="mb-3">
-            {{ form_row(form.status)}}
-        </div>
-    </div>
-
-    <!-- Sections dynamiques -->
-    <div class="card p-4 mb-4">
-        <h2 class="card-title">Article</h2>
-        <div class="sections-collection" data-prototype="{{ form_widget(form.sections.vars.prototype)|e('html_attr') }}">
-            {% for section in form.sections %}
-                <div class="form-group border p-3 mb-3 rounded section-item">
-                    {{ form_widget(section) }}
-                    <button type="button" class="btn btn-danger mt-2 remove-item">Supprimer</button>
+    
+    <div class="card mb-4">
+        <div class="card-body">
+            <h2 class="card-title h5">Informations de base</h2>
+            
+            <div class="row">
+                <div class="col-md-8">
+                    {{ form_row(form.title, {'attr': {'class': 'form-control-lg'}}) }}
                 </div>
-            {% endfor %}
-        </div>
-        <div class="d-flex justify-content-between mt-3">
-            <button type="button" class="btn btn-primary add-content-section">Ajouter une Section de Contenu</button>
-            <button type="button" class="btn btn-secondary add-code-section">Ajouter un Bloc de Code</button>
-            <button type="button" class="btn btn-info add-media-section">Ajouter un Média</button>
+                <div class="col-md-4">
+                    {{ form_row(form.category) }}
+                </div>
+            </div>
+            
+            <div class="mb-3">
+                {{ form_row(form.slug) }}
+            </div>
+            
+            <div class="mb-3">
+                <label class="form-label">Statut</label>
+                <div class="btn-group w-100" role="group">
+                    {% for choice in form.status.vars.choices %}
+                        <input type="radio" class="btn-check" name="{{ form.status.vars.full_name }}" 
+                               id="status_{{ choice.value }}" value="{{ choice.value }}" 
+                               {{ form.status.vars.data == choice.value ? 'checked' : '' }}>
+                        <label class="btn btn-outline-{{ choice.value == 'draft' ? 'secondary' : 'success' }}" 
+                               for="status_{{ choice.value }}">{{ choice.label }}</label>
+                    {% endfor %}
+                </div>
+            </div>
         </div>
     </div>
 
-    <button type="submit" class="btn btn-success mt-4">{{ post ? 'Enregistrer' : 'Créer' }}</button>
+    <div class="card mb-4">
+        <div class="card-body">
+            <h2 class="card-title h5">Contenu de l'article</h2>
+            
+            <div id="article-editor">
+                <!-- L'éditeur principal -->
+                <div id="main-editor" class="editor-container"></div>
+                <input type="hidden" id="main-content" name="main_content" value="{{ post.content|default('') }}">
+                
+                <!-- Sections dynamiques -->
+                <div id="sections-container">
+                    {% for section in post.sections|default([]) %}
+                        {% include 'back/blog_admin/_section.html.twig' with {'section': section, 'index': loop.index0} %}
+                    {% endfor %}
+                </div>
+                
+                <!-- Boutons pour ajouter des sections -->
+                <div class="d-flex gap-2 mb-4">
+                    <button type="button" class="btn btn-outline-primary" id="add-text-section">
+                        <i class="bi bi-text-paragraph"></i> Ajouter du texte
+                    </button>
+                    <button type="button" class="btn btn-outline-success" id="add-code-section">
+                        <i class="bi bi-code"></i> Ajouter du code
+                    </button>
+                    <button type="button" class="btn btn-outline-info" id="add-media-section">
+                        <i class="bi bi-image"></i> Ajouter un média
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="d-flex justify-content-between">
+        <a href="{{ path('admin_blog_index') }}" class="btn btn-secondary">
+            <i class="bi bi-arrow-left"></i> Annuler
+        </a>
+        <button type="submit" class="btn btn-primary">
+            <i class="bi bi-save"></i> {{ post ? 'Mettre à jour' : 'Publier' }}
+        </button>
+    </div>
+    
     {{ form_end(form) }}
-    <a href="{{ path('admin_blog_index') }}" class="btn btn-secondary mt-2">Retour à la liste</a>
 </div>
 
-<script>
-    document.addEventListener('DOMContentLoaded', () => {
-        const collectionHolder = document.querySelector('.sections-collection');
-        if (!collectionHolder) return;
+<!-- Template pour les nouvelles sections (utilisé par JavaScript) -->
+<script type="text/template" id="section-template">
+    <div class="section-content" data-index="__index__">
+        <button type="button" class="btn btn-sm btn-danger remove-section">
+            <i class="bi bi-trash"></i>
+        </button>
+        <div class="section-editor editor-container"></div>
+        <input type="hidden" name="sections[__index__][type]" value="__type__">
+        <textarea class="d-none" name="sections[__index__][content]"></textarea>
+        {% if form.sections.vars.prototype.mediaFile is defined %}
+            <input type="file" class="d-none" name="sections[__index__][mediaFile]">
+        {% endif %}
+    </div>
+</script>
+{% endblock %}
 
-        // Initialiser l'index des sections
-        collectionHolder.dataset.index = collectionHolder.querySelectorAll('.section-item').length;
+{% block javascripts %}
+    {{ parent() }}
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+    
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Initialiser Select2 pour la catégorie
+        $('select').select2({
+            theme: 'bootstrap-5',
+            width: '100%'
+        });
 
-        // Fonction pour ajouter un nouvel élément dynamique
-        const addDynamicElement = (type) => {
-            const prototype = collectionHolder.dataset.prototype;
-            if (!prototype) {
-                console.error('Le data-prototype est manquant pour la collection.');
-                return;
-            }
-            const index = collectionHolder.dataset.index || collectionHolder.children.length;
-            const newForm = prototype.replace(/__name__/g, index);
-            collectionHolder.dataset.index = parseInt(index) + 1;
+        // Configuration de Quill (éditeur WYSIWYG)
+        const quillOptions = {
+            theme: 'snow',
+            modules: {
+                toolbar: [
+                    ['bold', 'italic', 'underline', 'strike'],
+                    ['blockquote', 'code-block'],
+                    [{ 'header': 1 }, { 'header': 2 }],
+                    [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                    [{ 'script': 'sub'}, { 'script': 'super' }],
+                    [{ 'indent': '-1'}, { 'indent': '+1' }],
+                    [{ 'direction': 'rtl' }],
+                    [{ 'size': ['small', false, 'large', 'huge'] }],
+                    [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+                    [{ 'color': [] }, { 'background': [] }],
+                    [{ 'font': [] }],
+                    [{ 'align': [] }],
+                    ['link', 'image', 'video'],
+                    ['clean']
+                ]
+            },
+            placeholder: 'Écrivez votre contenu ici...'
+        };
 
+        // Initialiser l'éditeur principal
+        const mainEditor = new Quill('#main-editor', quillOptions);
+        const mainContentInput = document.getElementById('main-content');
+        
+        // Charger le contenu existant
+        if (mainContentInput.value) {
+            mainEditor.root.innerHTML = mainContentInput.value;
+        }
+        
+        // Sauvegarder le contenu avant soumission
+        document.querySelector('form').addEventListener('submit', function() {
+            mainContentInput.value = mainEditor.root.innerHTML;
+        });
+
+        // Gestion des sections dynamiques
+        let sectionIndex = {{ post.sections|default([])|length }};
+        const sectionsContainer = document.getElementById('sections-container');
+        const sectionTemplate = document.getElementById('section-template').innerHTML;
+
+        // Ajouter une section de texte
+        document.getElementById('add-text-section').addEventListener('click', function() {
+            addSection('text');
+        });
+
+        // Ajouter une section de code
+        document.getElementById('add-code-section').addEventListener('click', function() {
+            addSection('code');
+        });
+
+        // Ajouter une section média
+        document.getElementById('add-media-section').addEventListener('click', function() {
+            addSection('media');
+        });
+
+        function addSection(type) {
+            const newSection = sectionTemplate
+                .replace(/__index__/g, sectionIndex)
+                .replace(/__type__/g, type);
+            
             const div = document.createElement('div');
-            div.classList.add('form-group', 'border', 'p-3', 'mb-3', 'rounded', 'section-item');
-            div.innerHTML = newForm;
-
-            // Pré-configurer le champ "type" et afficher les champs spécifiques si nécessaire
-            const typeField = div.querySelector('[name$="[type]"]');
-            if (typeField) {
-                typeField.value = type;
-
-                // Ajouter un événement pour afficher dynamiquement les champs
-                if (type === 'media') {
-                    showMediaFields(div);
-                } else if (type === 'code') {
-                    showCodeFields(div);
-                }
+            div.innerHTML = newSection;
+            sectionsContainer.appendChild(div.firstElementChild);
+            
+            const sectionElement = sectionsContainer.lastElementChild;
+            const editorElement = sectionElement.querySelector('.section-editor');
+            
+            if (type === 'code') {
+                // Créer un simple textarea pour le code
+                editorElement.innerHTML = '<textarea class="form-control code-editor" rows="10" name="sections[' + sectionIndex + '][content]" placeholder="Collez votre code ici..."></textarea>';
+                
+                // Initialiser Highlight.js pour la coloration syntaxique
+                const textarea = editorElement.querySelector('textarea');
+                textarea.addEventListener('input', function() {
+                    const pre = document.createElement('pre');
+                    const code = document.createElement('code');
+                    code.textContent = textarea.value;
+                    pre.appendChild(code);
+                    hljs.highlightElement(code);
+                    
+                    // Afficher le rendu en dessous
+                    const preview = editorElement.querySelector('.code-preview') || document.createElement('div');
+                    preview.className = 'code-preview mt-2';
+                    preview.innerHTML = '';
+                    preview.appendChild(pre);
+                    
+                    if (!editorElement.querySelector('.code-preview')) {
+                        editorElement.appendChild(preview);
+                    }
+                });
+            } else if (type === 'media') {
+                // Créer un uploader de média
+                editorElement.innerHTML = `
+                    <div class="media-uploader">
+                        <input type="file" class="form-control" name="sections[${sectionIndex}][mediaFile]" accept="image/*,video/*">
+                        <div class="form-text">Téléchargez une image ou une vidéo</div>
+                    </div>
+                `;
+            } else {
+                // Créer un éditeur Quill pour le texte
+                const editor = new Quill(editorElement, quillOptions);
+                const hiddenInput = sectionElement.querySelector('textarea');
+                
+                editor.on('text-change', function() {
+                    hiddenInput.value = editor.root.innerHTML;
+                });
             }
+            
+            // Bouton de suppression
+            sectionElement.querySelector('.remove-section').addEventListener('click', function() {
+                sectionElement.remove();
+            });
+            
+            sectionIndex++;
+        }
 
-            const removeButton = document.createElement('button');
-            removeButton.textContent = 'Supprimer';
-            removeButton.type = 'button';
-            removeButton.classList.add('btn', 'btn-danger', 'mt-2');
-            removeButton.addEventListener('click', () => div.remove());
-
-            div.appendChild(removeButton);
-            collectionHolder.appendChild(div);
-        };
-
-        // Fonction pour afficher les champs spécifiques pour le type "media"
-        const showMediaFields = (container) => {
-            const mediaTypeField = container.querySelector('[name$="[mediaType]"]');
-            const mediaFileField = container.querySelector('[name$="[mediaFile]"]');
-
-            if (mediaTypeField) {
-                mediaTypeField.parentElement.style.display = 'block';
+        // Initialiser les sections existantes
+        document.querySelectorAll('.existing-section').forEach(section => {
+            const type = section.dataset.type;
+            const content = section.dataset.content;
+            const editorElement = section.querySelector('.section-editor');
+            
+            if (type === 'code') {
+                editorElement.innerHTML = `<textarea class="form-control code-editor" rows="10" name="${section.dataset.name}" placeholder="Collez votre code ici...">${content}</textarea>`;
+                
+                const textarea = editorElement.querySelector('textarea');
+                const pre = document.createElement('pre');
+                const code = document.createElement('code');
+                code.textContent = content;
+                pre.appendChild(code);
+                hljs.highlightElement(code);
+                
+                const preview = document.createElement('div');
+                preview.className = 'code-preview mt-2';
+                preview.appendChild(pre);
+                editorElement.appendChild(preview);
+                
+                textarea.addEventListener('input', function() {
+                    code.textContent = textarea.value;
+                    hljs.highlightElement(code);
+                });
+            } else if (type === 'media') {
+                editorElement.innerHTML = `
+                    <div class="media-preview-container">
+                        <img src="${content}" class="media-preview img-fluid">
+                        <input type="file" class="form-control mt-2" name="${section.dataset.name.replace('[content]', '[mediaFile]')}" accept="image/*,video/*">
+                    </div>
+                `;
+            } else {
+                const editor = new Quill(editorElement, quillOptions);
+                editor.root.innerHTML = content;
+                
+                editor.on('text-change', function() {
+                    section.querySelector('input[type="hidden"]').value = editor.root.innerHTML;
+                });
             }
-
-            if (mediaFileField) {
-                mediaFileField.parentElement.style.display = 'block';
-            }
-        };
-
-        // Fonction pour afficher les champs spécifiques pour le type "code"
-        const showCodeFields = (container) => {
-            const languageField = container.querySelector('[name$="[language]"]');
-            if (languageField) {
-                languageField.parentElement.style.display = 'block';
-            }
-        };
-
-        // Gestion des boutons d'ajout
-        document.querySelector('.add-content-section').addEventListener('click', () => {
-            addDynamicElement('content');
-        });
-
-        document.querySelector('.add-code-section').addEventListener('click', () => {
-            addDynamicElement('code');
-        });
-
-        document.querySelector('.add-media-section').addEventListener('click', () => {
-            addDynamicElement('media');
-        });
-
-        // Supprimer un élément existant
-        collectionHolder.querySelectorAll('.remove-item').forEach((button) => {
-            button.addEventListener('click', (e) => {
-                e.target.closest('.section-item').remove();
+            
+            section.querySelector('.remove-section').addEventListener('click', function() {
+                section.remove();
             });
         });
     });
-</script>
+    </script>
 {% endblock %}

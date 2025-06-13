@@ -58,9 +58,9 @@ class MessageType extends AbstractType
             ])
             ->add('receiver', ChoiceType::class, [
                 'choices' => [
-                    'Avancement projet' => 'contact@scriptzenit.fr',
-                    'Problème lié à la demande' => 'support@scriptzenit.fr',
-                    'Autre demandes' => 'w.belbeche@scriptzenit.fr',
+                    'Avancement projet' => 'contact@walid belbeche.fr',
+                    'Problème lié à la demande' => 'support@walid belbeche.fr',
+                    'Autre demandes' => 'w.belbeche@walid belbeche.fr',
                 ],
                 'placeholder' => 'Choisissez un destinataire',
                 'required' => true,

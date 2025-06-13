@@ -64,7 +64,7 @@ btnRegister.addEventListener('click', function(e) {
 
     axios.post(btnRegister.dataset.registerUrl, formData)
         .then(response => {
-            // Envoie à la base de données du site support de scriptzenit
+            // Envoie à la base de données du site support de walid belbeche
             const url2 = document.querySelector('.register-url2');
             axios.post(url2.dataset.registerUrl2, formData)
                 .then(response2 => {

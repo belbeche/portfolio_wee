@@ -3,7 +3,7 @@
 namespace App\Entity;
 
 use DateTime;
-use Doctrine\DBAL\Types\Types;
+use App\Entity\Devis;
 use Symfony\Component\Uid\Uuid;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\UserRepository;
@@ -26,7 +26,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @ORM\GeneratedValue(strategy="CUSTOM")
      * @ORM\CustomIdGenerator(class="doctrine.uuid_generator")
      */
-    private $id;
+    private ?Uuid $id;
 
     /**
      * @ORM\Column(type="string", length=180, unique=true)
@@ -113,7 +113,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @ORM\OneToMany(targetEntity=Subject::class, mappedBy="user", orphanRemoval=true)
      */
-    private ?Collection $Subject;
+    private Collection $subjects;
 
     /**
      * @throws \Exception
@@ -126,23 +126,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->avatar = 'support0.svg';
         $this->roles = ['ROLE_USER'];
 
-        $this->Subject = new ArrayCollection();
+        $this->subjects = new ArrayCollection();
         $this->comments = new ArrayCollection();
         $this->likes = new ArrayCollection();
         $this->date = new \DateTime('now', new \DateTimeZone('Europe/Paris'));
-
     }
-
-    /**
-     * Génère un UUID unique pour chaque Subject et l'ajoute à la collection
-     */
-    // public function generateSubjectIds(): void
-    // {
-    //     foreach ($this->Subject as $Subject) {
-    //         // Génération de l'UUID et affectation à l'Subject
-    //         $this->id
-    //     }
-    // }
 
     public function getId(): ?Uuid
     {
@@ -367,16 +355,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function addReceivedMessage(Message $receivedMessage): static
-    {
-        if (!$this->receivedMessages->contains($receivedMessage)) {
-            $this->receivedMessages->add($receivedMessage);
-            $receivedMessage->setReceiver($this);
-        }
-
-        return $this;
-    }
-
     public function removeReceivedMessage(Message $receivedMessage): static
     {
         if ($this->receivedMessages->removeElement($receivedMessage)) {
@@ -489,29 +467,25 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->likes->removeElement($like);
     }
 
-    /**
-     * @return ArrayCollection
-     */
-    public function getSubject(): Collection
+    public function getSubjects(): Collection
     {
-        return $this->Subject;
+        return $this->subjects;
     }
     
-    public function setSubject(ArrayCollection $Subject): Collection
+    public function setSubjects(Collection $subjects): self
     {
-        $this->Subject = $Subject;
+        $this->subjects = $subjects;
+
         return $this;
     }
 
-    public function addSubject(Subject $Subject): self
+    public function addSubjects($subjects): self
     {
-        $this->Subject[] = $Subject;
+        $this->subjects[] = $subjects;
+
+        return $this;
     }
 
-    public function removeSubject(Subject $Subject)
-    {
-        $this->Subject->removeElement($Subject);
-    }
     public function getDate(): ?\DateTimeInterface
     {
         return $this->date;
