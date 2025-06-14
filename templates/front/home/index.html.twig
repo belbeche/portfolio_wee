@@ -139,6 +139,40 @@
         opacity: 1;
         transform: translateY(0);
     }
+
+    /* Fond spatial */
+    .space-background {
+        background: radial-gradient(ellipse at bottom, #1B2735 0%, #090A0F 100%);
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .stars, .stars2, .stars3 {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+    }
+    
+    .stars { 
+        background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><circle cx="50" cy="50" r="1" fill="white" opacity="0.6"/></svg>') repeat; 
+        animation: moveStars 200s linear infinite; 
+    }
+    .stars2 { 
+        background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><circle cx="50" cy="50" r="0.5" fill="white" opacity="0.4"/></svg>') repeat; 
+        animation: moveStars 150s linear infinite; 
+    }
+    .stars3 { 
+        background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><circle cx="50" cy="50" r="0.25" fill="white" opacity="0.2"/></svg>') repeat; 
+        animation: moveStars 100s linear infinite; 
+    }
+    
+    @keyframes moveStars {
+        from { transform: translateY(0) translateX(0); }
+        to { transform: translateY(-1000px) translateX(-500px); }
+    }
 </style>
 
 <div class="container-fluid p-0">
@@ -266,9 +300,9 @@
     </section>
 
     {# Section Compétences #}
-    <section class="py-5 bg-light">
+    <section class="py-5" style="background: linear-gradient(135deg, #3b5999 0%, #242e4c 100%);">
         <div class="container py-5">
-            <h2 class="display-5 fw-bold text-center mb-5 animate-on-scroll">{{ 'skills_title'|trans }}</h2>
+            <h2 class="display-5 fw-bold text-center text-white mb-5 animate-on-scroll">{{ 'skills_title'|trans }}</h2>
             
             <div class="row g-4">
                 {% set tools = [
@@ -297,23 +331,27 @@
         </div>
     </section>
 
-    {# Section Projets #}
-    <section class="py-5 bg-white">
-        <div class="container py-5">
+    {# Section Projets avec fond spatial #}
+    <section class="py-5 space-background text-white">
+        <div class="stars"></div>
+        <div class="stars2"></div>
+        <div class="stars3"></div>
+        
+        <div class="container py-5 position-relative">
             <h2 class="display-5 fw-bold text-center mb-5 animate-on-scroll">{{ 'recent_projects_title'|trans }}</h2>
             
             <div class="row g-4">
                 {% for project in projects %}
                 <div class="col-md-6 col-lg-4 animate-on-scroll" style="animation-delay: {{ 0.1 * loop.index }}s">
-                    <div class="card border-0 shadow-sm h-100 hover-shadow transition-all overflow-hidden">
+                    <div class="card border-0 bg-dark text-white shadow-sm h-100 hover-shadow transition-all overflow-hidden">
                         <div class="position-relative" style="height: 200px; overflow: hidden;">
                             <img src="{{ asset('image_project/' ~ project.images.first.name) }}" class="w-100 h-100 object-fit-cover" alt="{{ project.title }}">
                             <div class="position-absolute top-0 start-0 w-100 h-100 bg-primary opacity-0 hover-opacity-10 transition-all"></div>
                         </div>
-                        <div class="card-body">
+                        <div class="card-body p-4">
                             <h5 class="card-title">{{ project.title }}</h5>
-                            <p class="card-text">{{ project.description|slice(0, 120) ~ (project.description|length > 120 ? '...' : '') }}</p>
-                            <a href="{{ url('front_project_show', {id: project.id}) }}" class="btn btn-sm btn-outline-primary">
+                            <p class="card-text text-white">{{ project.description|slice(0, 120) ~ (project.description|length > 120 ? '...' : '') }}</p>
+                            <a href="{{ url('front_project_show', {id: project.id}) }}" class="btn btn-sm btn-outline-light">
                                 {{ 'view_more'|trans }}
                             </a>
                         </div>
@@ -328,11 +366,11 @@
 <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Initialisation de Particles.js améliorée
+    // Initialisation de Particles.js
     particlesJS("particles-js", {
         "particles": {
             "number": { 
-                "value": 100,
+                "value": 80,
                 "density": { 
                     "enable": true,
                     "value_area": 800 
@@ -346,30 +384,15 @@ document.addEventListener('DOMContentLoaded', function() {
                 "stroke": {
                     "width": 0,
                     "color": "#000000"
-                },
-                "polygon": {
-                    "nb_sides": 5
                 }
             },
             "opacity": {
                 "value": 0.5,
-                "random": true,
-                "anim": {
-                    "enable": true,
-                    "speed": 1,
-                    "opacity_min": 0.1,
-                    "sync": false
-                }
+                "random": true
             },
             "size": {
                 "value": 3,
-                "random": true,
-                "anim": {
-                    "enable": true,
-                    "speed": 2,
-                    "size_min": 0.1,
-                    "sync": false
-                }
+                "random": true
             },
             "line_linked": {
                 "enable": true,
@@ -385,12 +408,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 "random": true,
                 "straight": false,
                 "out_mode": "out",
-                "bounce": false,
-                "attract": {
-                    "enable": true,
-                    "rotateX": 600,
-                    "rotateY": 1200
-                }
+                "bounce": false
             }
         },
         "interactivity": {
@@ -403,8 +421,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 "onclick": {
                     "enable": true,
                     "mode": "push"
-                },
-                "resize": true
+                }
             },
             "modes": {
                 "grab": {
@@ -413,22 +430,8 @@ document.addEventListener('DOMContentLoaded', function() {
                         "opacity": 1
                     }
                 },
-                "bubble": {
-                    "distance": 400,
-                    "size": 40,
-                    "duration": 2,
-                    "opacity": 8,
-                    "speed": 3
-                },
-                "repulse": {
-                    "distance": 200,
-                    "duration": 0.4
-                },
                 "push": {
                     "particles_nb": 4
-                },
-                "remove": {
-                    "particles_nb": 2
                 }
             }
         },
@@ -450,7 +453,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     animateElements.forEach(el => observer.observe(el));
 
-    // Sélecteur de langue amélioré
+    // Sélecteur de langue
     const langSelector = document.getElementById('language-selector');
     const loadingText = document.getElementById('language-loading-text');
 
@@ -478,11 +481,9 @@ document.addEventListener('DOMContentLoaded', function() {
             e.preventDefault();
             const locale = this.dataset.locale;
 
-            // Animation de sélection
             this.style.transform = 'scale(0.95)';
             this.style.opacity = '0.7';
             
-            // Affiche le texte de chargement
             loadingText.style.display = 'flex';
             langSelector.style.opacity = '0';
             
@@ -498,10 +499,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (response.ok) {
                     document.cookie = `_locale=${locale}; path=/; max-age=31536000; SameSite=Lax`;
                     localStorage.setItem('appLocale', locale);
-                    
-                    // Ajoute une animation de transition avant le rechargement
                     loadingText.innerHTML = '<div class="text-center"><div class="spinner-border text-success mb-3" role="status"></div><div class="fs-4 fw-bold">{{ 'ready'|trans }}!</div></div>';
-                    
+
                     setTimeout(() => {
                         window.location.reload();
                     }, 1000);

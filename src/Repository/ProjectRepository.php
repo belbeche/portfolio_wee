@@ -3,8 +3,9 @@
 namespace App\Repository;
 
 use App\Entity\Project;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use App\Entity\Category;
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
 /**
  * @extends ServiceEntityRepository<Project>
@@ -37,6 +38,16 @@ class ProjectRepository extends ServiceEntityRepository
         if ($flush) {
             $this->getEntityManager()->flush();
         }
+    }
+
+    // Variante 1: Par entité Category
+    public function findByCategory(?string $category)
+    {
+        return $this->createQueryBuilder('p')
+            ->andWhere(':category MEMBER OF p.categories')
+            ->setParameter('category', $category)
+            ->getQuery()
+            ->getResult();
     }
 
     //    public function findOneBySomeField($value): ?Project

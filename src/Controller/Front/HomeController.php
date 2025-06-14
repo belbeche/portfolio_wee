@@ -6,10 +6,12 @@ use App\Entity\User;
 use App\Entity\Contact;
 use App\Entity\Project;
 
+use App\Entity\Category;
 use App\Form\ContactType;
 use App\Entity\CallbackRequest;
 use App\Form\CallbackRequestType;
 use Symfony\Component\Mime\Address;
+use App\Repository\ProjectRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
@@ -30,7 +32,8 @@ class HomeController extends AbstractController
         Request $request,
         MailerInterface $mailer,
         ManagerRegistry $entityManager,
-        ?string $category = null
+        ProjectRepository $projectRepository,
+        ?string $category = null,
     ): Response {
         $callbackRequest = new CallbackRequest();
         $form = $this->createForm(CallbackRequestType::class, $callbackRequest);
@@ -44,7 +47,7 @@ class HomeController extends AbstractController
             );
 
             $email = (new TemplatedEmail())
-                ->from(new Address('contact@scriptzenit.fr', 'Walid BELBECHE - Demande de rappel'))
+                ->from(new Address('wbelbeche.s@gmail.com', 'Walid BELBECHE - Demande de rappel'))
                 ->to($form->get('email')->getData())
                 ->bcc('wbelbeche.s@gmail.com')
                 ->subject('Nouvelle demande de rappel')
@@ -82,6 +85,7 @@ class HomeController extends AbstractController
             'form' => $form->createView(),
             'callbackRequest' => $callbackRequest,
             'locale' => $locale,
+            'projectCategories' => $projectRepository->findByCategory($category),
         ]);
     }
 

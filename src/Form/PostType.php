@@ -64,7 +64,7 @@ class PostType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'data_class' => Post::class, // Ici on utilise Post et non PostSection
+            'data_class' => Post::class, 
         ]);
     }
 }
