@@ -312,7 +312,7 @@
                         </div>
                         <div class="card-body">
                             <h5 class="card-title">{{ project.title }}</h5>
-                            <p class="card-text">{{ project.description }}</p>
+                            <p class="card-text">{{ project.description|slice(0, 120) ~ (project.description|length > 120 ? '...' : '') }}</p>
                             <a href="{{ url('front_project_show', {id: project.id}) }}" class="btn btn-sm btn-outline-primary">
                                 {{ 'view_more'|trans }}
                             </a>
