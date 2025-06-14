@@ -6,6 +6,7 @@ use App\Entity\User;
 use App\Entity\Subject;
 use App\Entity\CallbackRequest;
 use Symfony\Component\Mime\Email;
+use Symfony\Component\Mime\Address;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Form\CallbackRequestRelaunchType;
 use Knp\Component\Pager\PaginatorInterface;
@@ -84,7 +85,7 @@ class BackController extends AbstractController
             // Gérer les fichiers joints
             $attachments = $form->get('attachments')->getData();
             $email = (new Email())
-                ->from('wbelbeche.s@gmail.com')
+                ->from(new Address('contact@scriptzenit.fr'))
                 ->to($request->getEmail())
                 ->bcc('wbelbeche.s@gmail.com')
                 ->subject('Relance: Walid BELBECHE - Demande de rappel')

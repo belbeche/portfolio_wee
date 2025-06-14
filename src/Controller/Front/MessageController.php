@@ -7,8 +7,9 @@ use App\Entity\Devis;
 use App\Entity\Ticket;
 use App\Entity\Message;
 use App\Form\MessageType;
-use App\Repository\DevisRepository;
 use App\Repository\UserRepository;
+use App\Repository\DevisRepository;
+use Symfony\Component\Mime\Address;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\Filesystem\Filesystem;
@@ -118,7 +119,7 @@ class MessageController extends AbstractController
 
             // Envoi de l'email
             $email = (new TemplatedEmail())
-                ->from('wbelbeche.s@gmail.com')
+                ->from(new Address('contact@scriptzenit.fr'))
                 ->to($receiverEmail)
                 ->bcc('wbelbeche.s@gmail.com')
                 ->subject('Demande assistance - Walid BELBECHE')
@@ -323,7 +324,7 @@ class MessageController extends AbstractController
 
             // Envoi de l'email
             $email = (new TemplatedEmail())
-                ->from('wbelbeche.s@gmail.com')
+                ->from(new Address('contact@scriptzenit.fr'))
                 ->to($originalMessage->getSender()->getEmail())
                 ->subject('Réponse à votre demande, Devis, Walid BELBECHE')
                 ->bcc('wbelbeche.s@gmail.com')

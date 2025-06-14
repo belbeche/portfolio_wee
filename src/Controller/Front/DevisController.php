@@ -78,7 +78,7 @@ class DevisController extends AbstractController
             // Envoi de l'e-mail avec le récapitulatif du devis et le PDF en pièce jointe
             try {
                 $email = (new TemplatedEmail())
-                    ->from(new Address('contact@scriptzenit.fr', 'L\'équipe Walid BELBECHE'))
+                    ->from(new Address('contact@walidbelbeche.fr', 'Walid BELBECHE'))
                     ->to($devis->getEmail())
                     ->bcc('wbelbeche.s@gmail.com')
                     ->subject('Récapitulatif de votre demande de devis')
@@ -175,7 +175,7 @@ class DevisController extends AbstractController
      */
     public function downloadDevis(EntityManagerInterface $entityManager, $id): Response
     {
-        $currentUser = $this->getUser();
+        $currentUser = $entityManager->getRepository(User::class)->find($this->getUser());
 
         $devis = $entityManager->getRepository(Devis::class)->find($id);
 

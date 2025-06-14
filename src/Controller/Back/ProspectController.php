@@ -5,6 +5,7 @@ namespace App\Controller\Back;
 use App\Entity\Prospect;
 use App\Form\ProspectType;
 use Symfony\Component\Mime\Email;
+use Symfony\Component\Mime\Address;
 use App\Repository\ProspectRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -69,7 +70,7 @@ class ProspectController extends AbstractController
 
             // Prepare email
             $email = (new Email())
-                ->from('wbelbeche.s@gmail.com')
+                ->from(new Address('contact@scriptzenit.fr'))
                 ->to($prospect->getEmail())
                 ->bcc('wbelbeche.s@gmail.com')
                 ->subject('Suite conversation téléphonique - Walid BELBECHE.fr')
@@ -112,7 +113,7 @@ class ProspectController extends AbstractController
 
             // Envoi d'un email de notification
             $email = (new Email())
-                ->from('wbelbeche.s@gmail.com')
+                ->from(new Address('contact@scriptzenit.fr'))
                 ->to($prospect->getEmail())
                 ->subject('Prospect Modifié - Walid BELBECHE.fr')
                 ->text('Le prospect avec l\'email: ' . $prospect->getEmail() . ' a été modifié.');
@@ -138,7 +139,7 @@ class ProspectController extends AbstractController
 
             // Envoi d'un email de notification
             $email = (new Email())
-                ->from('wbelbeche.s@gmail.com')
+                ->from(new Address('contact@scriptzenit.fr'))
                 ->to($prospect->getEmail())
                 ->subject('Prospect supprimé - Walid BELBECHE.fr')
                 ->text('Le prospect avec l\'email : ' . $prospect->getEmail() . ' a bien était supprimé. Merci pour votre temps.');

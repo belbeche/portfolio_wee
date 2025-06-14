@@ -9,6 +9,7 @@ use App\Entity\Devis;
 use App\Form\DevisType;
 use App\Form\ReplyDevisFormType;
 use App\Repository\DevisRepository;
+use Symfony\Component\Mime\Address;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\HttpFoundation\Request;
@@ -108,7 +109,7 @@ class DevisController extends AbstractController
 
             // Envoi de l'e-mail avec le récapitulatif du devis et le PDF en pièce jointe
             $email = (new TemplatedEmail())
-            ->from('wbelbeche.s@gmail.com')
+            ->from(new Address('contact@scriptzenit.fr'))
             ->to($devis->getEmail())
             ->bcc('wbelbeche.s@gmail.com')
             ->subject('Réponse à votre demande de devis #' . $devis->getId())

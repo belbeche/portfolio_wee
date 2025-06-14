@@ -7,6 +7,7 @@ use App\Entity\Devis;
 use App\Form\UserType;
 use App\Form\EditProfileType;
 use App\Form\UserPasswordType;
+use Symfony\Component\Mime\Address;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\HttpFoundation\Request;
@@ -110,7 +111,7 @@ class SecurityController extends AbstractController
      */
     public function EditProfile(Request $request,EntityManagerInterface $entityManager,UserPasswordHasherInterface $userPasswordHasher): Response
     {
-        $user = $this->getUser();
+        $user = $entityManager->getRepository(User::class)->find($this->getUser());
 
         $form = $this->createForm(EditProfileType::class, $user);
 
@@ -162,7 +163,7 @@ class SecurityController extends AbstractController
                 $resetLink = $this->generateUrl('reset_password', ['token' => $token], UrlGeneratorInterface::ABSOLUTE_URL);
 
                 $email = (new TemplatedEmail())
-                    ->from('wbelbeche.s@gmail.com')
+                    ->from(new Address('contact@scriptzenit.fr'))
                     ->to($user->getEmail())
                     ->subject('Réinitialisation de votre mot de passe')
                     ->htmlTemplate('reset_password/email.html.twig')
