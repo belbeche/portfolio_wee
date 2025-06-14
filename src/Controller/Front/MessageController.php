@@ -118,7 +118,7 @@ class MessageController extends AbstractController
 
             // Envoi de l'email
             $email = (new TemplatedEmail())
-                ->from('contact@walid belbeche.fr')
+                ->from('wbelbeche.s@gmail.com')
                 ->to($receiverEmail)
                 ->bcc('wbelbeche.s@gmail.com')
                 ->subject('Demande assistance - Walid BELBECHE')
@@ -323,7 +323,7 @@ class MessageController extends AbstractController
 
             // Envoi de l'email
             $email = (new TemplatedEmail())
-                ->from('contact@walid belbeche.fr')
+                ->from('wbelbeche.s@gmail.com')
                 ->to($originalMessage->getSender()->getEmail())
                 ->subject('Réponse à votre demande, Devis, Walid BELBECHE')
                 ->bcc('wbelbeche.s@gmail.com')

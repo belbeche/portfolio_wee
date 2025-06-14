@@ -69,7 +69,7 @@ class ProspectController extends AbstractController
 
             // Prepare email
             $email = (new Email())
-                ->from('contact@walid belbeche.fr')
+                ->from('wbelbeche.s@gmail.com')
                 ->to($prospect->getEmail())
                 ->bcc('wbelbeche.s@gmail.com')
                 ->subject('Suite conversation téléphonique - Walid BELBECHE.fr')
@@ -112,7 +112,7 @@ class ProspectController extends AbstractController
 
             // Envoi d'un email de notification
             $email = (new Email())
-                ->from('contact@walid belbeche.fr')
+                ->from('wbelbeche.s@gmail.com')
                 ->to($prospect->getEmail())
                 ->subject('Prospect Modifié - Walid BELBECHE.fr')
                 ->text('Le prospect avec l\'email: ' . $prospect->getEmail() . ' a été modifié.');
@@ -138,7 +138,7 @@ class ProspectController extends AbstractController
 
             // Envoi d'un email de notification
             $email = (new Email())
-                ->from('contact@walid belbeche.fr')
+                ->from('wbelbeche.s@gmail.com')
                 ->to($prospect->getEmail())
                 ->subject('Prospect supprimé - Walid BELBECHE.fr')
                 ->text('Le prospect avec l\'email : ' . $prospect->getEmail() . ' a bien était supprimé. Merci pour votre temps.');

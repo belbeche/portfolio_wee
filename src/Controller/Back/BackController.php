@@ -84,7 +84,7 @@ class BackController extends AbstractController
             // Gérer les fichiers joints
             $attachments = $form->get('attachments')->getData();
             $email = (new Email())
-                ->from('contact@walid belbeche.fr')
+                ->from('wbelbeche.s@gmail.com')
                 ->to($request->getEmail())
                 ->bcc('wbelbeche.s@gmail.com')
                 ->subject('Relance: Walid BELBECHE - Demande de rappel')

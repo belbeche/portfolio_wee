@@ -44,7 +44,7 @@ class HomeController extends AbstractController
             );
 
             $email = (new TemplatedEmail())
-                ->from(new Address('contact@walid belbeche.fr', 'Walid BELBECHE - Demande de rappel'))
+                ->from(new Address('wbelbeche.s@gmail.com', 'Walid BELBECHE - Demande de rappel'))
                 ->to($form->get('email')->getData())
                 ->bcc('wbelbeche.s@gmail.com')
                 ->subject('Nouvelle demande de rappel')
@@ -112,7 +112,7 @@ class HomeController extends AbstractController
 
                 // Envoi de l'email
                 $email = (new TemplatedEmail())
-                    ->from('contact@walid belbeche.fr')
+                    ->from('wbelbeche.s@gmail.com')
                     ->to($contact->getEmail())
                     ->bcc('wbelbeche.s@gmail.com')
                     ->subject('Prise de contact, Walid BELBECHE')

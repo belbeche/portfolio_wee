@@ -108,7 +108,7 @@ class DevisController extends AbstractController
 
             // Envoi de l'e-mail avec le récapitulatif du devis et le PDF en pièce jointe
             $email = (new TemplatedEmail())
-            ->from('contact@walid belbeche.fr')
+            ->from('wbelbeche.s@gmail.com')
             ->to($devis->getEmail())
             ->bcc('wbelbeche.s@gmail.com')
             ->subject('Réponse à votre demande de devis #' . $devis->getId())
