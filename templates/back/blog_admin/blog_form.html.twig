@@ -234,7 +234,6 @@
                 // Initialiser Highlight.js pour la coloration syntaxique
                 const textarea = editorElement.querySelector('textarea');
                 textarea.addEventListener('input', function() {
-                    const pre = document.createElement('pre');
                     const code = document.createElement('code');
                     code.textContent = textarea.value;
                     pre.appendChild(code);
@@ -285,8 +284,7 @@
             if (type === 'code') {
                 editorElement.innerHTML = `<textarea class="form-control code-editor" rows="10" name="${section.dataset.name}" placeholder="Collez votre code ici...">${content}</textarea>`;
                 
-                const textarea = editorElement.querySelector('textarea');
-                const pre = document.createElement('pre');
+                const textarea = editorElement.querySelector('textarea')
                 const code = document.createElement('code');
                 code.textContent = content;
                 pre.appendChild(code);

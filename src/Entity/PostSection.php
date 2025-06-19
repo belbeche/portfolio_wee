@@ -41,6 +41,9 @@ class PostSection
      */
     private $mediaUrl; // Chemin vers le fichier média
 
+    // Propriété non persistée pour le fichier média (upload)
+    private $mediaFile;
+
     /**
      * @ORM\ManyToOne(targetEntity=Post::class, inversedBy="sections")
      * @ORM\JoinColumn(nullable=false)
@@ -68,7 +71,6 @@ class PostSection
     {
         return $this->content;
     }
-
     public function setContent(?string $content): self
     {
         $this->content = $content;
@@ -96,6 +98,27 @@ class PostSection
     public function setPost(?Post $post): self
     {
         $this->post = $post;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of mediaFile
+     */
+    public function getMediaFile()
+    {
+        return $this->mediaFile;
+    }
+
+    /**
+     * Set the value of mediaFile
+     *
+     * @param mixed $mediaFile
+     * @return self
+     */
+    public function setMediaFile($mediaFile): self
+    {
+        $this->mediaFile = $mediaFile;
 
         return $this;
     }
