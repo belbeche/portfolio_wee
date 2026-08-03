@@ -4,14 +4,19 @@ namespace App\Entity;
 
 use Doctrine\DBAL\Types\Types;
 use Symfony\Component\Uid\Uuid;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use App\Entity\Traits\ProspectionTrait;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\ProspectRepository")
  */
 class Prospect
 {
+    use ProspectionTrait;
+
     /**
      * @ORM\Id
      * @ORM\Column(type="uuid")
@@ -87,6 +92,47 @@ class Prospect
     public function setNotes(?string $notes): self
     {
         $this->notes = $notes;
+        return $this;
+    }
+
+    /**
+     * Journal des echanges. Le champ notes historique reste en place :
+     * il sert de resume libre, tandis que ces entrees conservent la
+     * trace datee de chaque contact.
+     *
+     * @ORM\OneToMany(targetEntity=ProspectNote::class, mappedBy="prospect", cascade={"persist", "remove"})
+     * @ORM\OrderBy({"createdAt" = "ASC"})
+     */
+    private Collection $prospectNotes;
+
+    public function __construct()
+    {
+        $this->prospectNotes = new ArrayCollection();
+        $this->createdAt = new \DateTime('now', new \DateTimeZone('Europe/Paris'));
+    }
+
+    /** @return Collection<int, ProspectNote> */
+    public function getProspectNotes(): Collection
+    {
+        return $this->prospectNotes;
+    }
+
+    public function addProspectNote(ProspectNote $note): self
+    {
+        if (!$this->prospectNotes->contains($note)) {
+            $this->prospectNotes[] = $note;
+            $note->setProspect($this);
+        }
+
+        return $this;
+    }
+
+    public function removeProspectNote(ProspectNote $note): self
+    {
+        if ($this->prospectNotes->removeElement($note) && $note->getProspect() === $this) {
+            $note->setProspect(null);
+        }
+
         return $this;
     }
 }

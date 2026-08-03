@@ -1,40 +1,75 @@
-{% extends 'base.html.twig' %}
+{% extends 'base_back.html.twig' %}
 
-{% block title %}Gestion des Articles{% endblock %}
+{% block title %}Blog{% endblock %}
 
 {% block content %}
-<div class="container mt-5">
-    <h1>Gestion des Articles</h1>
-    <a href="{{ path('admin_blog_create') }}" class="btn btn-primary">Créer un nouvel article</a>
-    <table class="table">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Titre</th>
-                <th>Status</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for post in posts %}
-            <tr>
-                <td>{{ post.id }}</td>
-                <td>{{ post.title }}</td>
-                <td>{{ post.status }}</td>
-                <td>
-                    <a href="{{ path('admin_blog_edit', { id: post.id }) }}" class="btn btn-warning">Modifier</a>
-                    <form action="{{ path('admin_blog_delete', { id: post.id }) }}" method="post" style="display:inline-block;">
-                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ post.id) }}">
-                        <button class="btn btn-danger" onclick="return confirm('Confirmer la suppression ?')">Supprimer</button>
-                    </form>
-                    <form method="post" action="{{ path('admin_blog_validate', { id: post.id }) }}" style="display:inline-block;">
-                        <input type="hidden" name="_token" value="{{ csrf_token('validate' ~ post.id) }}">
-                        <button type="submit" class="btn btn-success">Valider</button>
-                    </form>
-                </td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+<div class="container py-4">
+
+    <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
+        <div>
+            <h1 class="h3 fw-bold mb-1">Blog</h1>
+            <p class="text-muted mb-0 small">{{ posts|length }} article(s). Un article en brouillon n'apparait pas sur le site.</p>
+        </div>
+        <a href="{{ path('admin_blog_create') }}" class="btn btn-primary">Ecrire un article</a>
+    </div>
+
+    {% for label, messages in app.flashes %}
+        {% for message in messages %}
+            <div class="alert alert-{{ label }}">{{ message }}</div>
+        {% endfor %}
+    {% endfor %}
+
+    {% if posts is empty %}
+        <div class="border rounded p-5 text-center">
+            <p class="text-muted mb-3">Aucun article pour le moment. Le blog est une porte d'entree pour le referencement : chaque article repond a une question que vos prospects tapent dans Google.</p>
+            <a href="{{ path('admin_blog_create') }}" class="btn btn-outline-primary">Ecrire le premier</a>
+        </div>
+    {% else %}
+        <div class="table-responsive border rounded">
+            <table class="table align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th>Titre</th>
+                        <th style="width: 140px;">Statut</th>
+                        <th style="width: 260px;" class="text-end">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for post in posts %}
+                    <tr>
+                        <td>
+                            <strong>{{ post.title }}</strong>
+                            {% if post.slug is defined and post.slug %}<div class="small text-muted">/{{ post.slug }}</div>{% endif %}
+                        </td>
+                        <td>
+                            {% if post.status == 'published' %}
+                                <span class="badge bg-success">Publie</span>
+                            {% elseif post.status == 'draft' %}
+                                <span class="badge bg-secondary">Brouillon</span>
+                            {% else %}
+                                <span class="badge bg-warning text-dark">{{ post.status|capitalize }}</span>
+                            {% endif %}
+                        </td>
+                        <td class="text-end">
+                            {% if post.status != 'published' %}
+                                <form method="post" action="{{ path('admin_blog_validate', { id: post.id }) }}" class="d-inline">
+                                    <input type="hidden" name="_token" value="{{ csrf_token('validate' ~ post.id) }}">
+                                    <button type="submit" class="btn btn-success btn-sm">Publier</button>
+                                </form>
+                            {% endif %}
+                            <a href="{{ path('admin_blog_edit', { id: post.id }) }}" class="btn btn-outline-primary btn-sm">Modifier</a>
+                            <form action="{{ path('admin_blog_delete', { id: post.id }) }}" method="post" class="d-inline"
+                                  onsubmit="return confirm('Supprimer cet article ?');">
+                                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ post.id) }}">
+                                <button class="btn btn-outline-danger btn-sm">Supprimer</button>
+                            </form>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% endif %}
+
 </div>
 {% endblock %}

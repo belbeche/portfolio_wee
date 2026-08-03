@@ -1,0 +1,194 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'offer.eyebrow'|trans }} | Diagnostic, Projet, Interlocuteur Unique{% endblock %}
+
+{% block content %}
+{% set en = app.request.locale == 'en' %}
+
+<section class="wb-hero wb-slant" data-tone="dark">
+    <div class="container" style="padding-top: 7rem; padding-bottom: 6rem;">
+        <div class="row">
+            <div class="col-lg-8">
+                <span class="wb-eyebrow">{{ 'offer.eyebrow'|trans }}</span>
+                <h1 class="wb-display">
+                    {{ 'offer.title_1'|trans }}<br>
+                    <span class="wb-mark">{{ 'offer.title_2'|trans }}</span> {{ 'offer.title_3'|trans }}
+                </h1>
+                <p class="wb-lead wb-lead--on-dark">
+                    {{ 'offer.lead'|trans }}
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="wb-section">
+    <div class="container">
+        <div class="row g-4 align-items-stretch">
+
+            <div class="col-lg-4">
+                <div class="wb-price" data-tone="light">
+                    <span class="wb-badge">{{ 'offer.t1_badge'|trans }}</span>
+                    <h2 class="wb-h3 mt-3 mb-0">{{ 'offer.t1_name'|trans }}</h2>
+                    <div class="wb-price__amount">290 €</div>
+                    <div class="wb-price__unit">{{ 'offer.t1_unit'|trans }}</div>
+                    {% set t1_items = en ? [
+                        "An audit of your site, your tools and your files",
+                        "What quietly costs you time without you seeing it",
+                        "The real risks: backups, security, dependencies",
+                        "A prioritised action plan, priced line by line",
+                        "A document you own, to hand to whoever you choose"
+                    ] : [
+                        "Audit de votre site, de vos outils et de vos fichiers",
+                        "Ce qui vous coûte du temps sans que vous le voyiez",
+                        "Les risques réels : sauvegardes, sécurité, dépendances",
+                        "Un plan d'action priorisé, chiffré ligne par ligne",
+                        "Un document qui vous appartient, remettable à qui vous voulez"
+                    ] %}
+                    <ul>
+                        {% for item in t1_items %}<li>{{ item }}</li>{% endfor %}
+                    </ul>
+                    <a href="{{ url('front_devis_new') }}" class="wb-btn wb-btn--outline w-100">{{ 'offer.t1_cta'|trans }}</a>
+                </div>
+            </div>
+
+            <div class="col-lg-4">
+                <div class="wb-price" data-tone="light">
+                    <span class="wb-badge">{{ 'offer.t2_badge'|trans }}</span>
+                    <h2 class="wb-h3 mt-3 mb-0">{{ 'offer.t2_name'|trans }}</h2>
+                    <div class="wb-price__amount">{{ 'offer.t2_price'|trans }}</div>
+                    <div class="wb-price__unit">{{ 'offer.t2_unit'|trans }}</div>
+                    {% set t2_items = en ? [
+                        "Specification and user stories approved before any code",
+                        "Website, business application or mobile app",
+                        "API, back office and production release included",
+                        "Payment in three milestones, you approve before you pay",
+                        "Source code, documentation and rights handed over at the end"
+                    ] : [
+                        "Cahier des charges et user stories validés avant le code",
+                        "Site web, application métier ou application mobile",
+                        "API, back-office et mise en production incluses",
+                        "Paiement en trois jalons, vous validez avant de régler",
+                        "Code source, documentation et droits cédés à la fin"
+                    ] %}
+                    <ul>
+                        {% for item in t2_items %}<li>{{ item }}</li>{% endfor %}
+                    </ul>
+                    <a href="{{ url('front_devis_new') }}" class="wb-btn wb-btn--outline w-100">{{ 'method.frame_cta'|trans }}</a>
+                </div>
+            </div>
+
+            <div class="col-lg-4">
+                <div class="wb-price wb-price--featured" data-tag="{{ 'offer.t3_tag'|trans }}" data-tone="light">
+                    <span class="wb-badge wb-badge--gold">{{ 'offer.t3_badge'|trans }}</span>
+                    <h2 class="wb-h3 mt-3 mb-0">{{ 'offer.t3_name'|trans }}</h2>
+                    <div class="wb-price__amount">390 €</div>
+                    <div class="wb-price__unit">{{ 'offer.t3_unit'|trans }}</div>
+                    {% set t3_first = en ? "One person, one number" : "Une personne, un numéro" %}
+                    {% set t3_first_rest = en ? ", answer within 4 working hours" : ", réponse sous 4 heures ouvrées" %}
+                    {% set t3_items = en ? [
+                        "Monitoring, verified backups, security patches",
+                        "4 hours of improvements included monthly, carried over 3 months",
+                        "A written report every month: what was done, what comes next",
+                        "Your third-party providers managed by me, not by you",
+                        "Reduced hourly rate beyond the quota"
+                    ] : [
+                        "Supervision, sauvegardes vérifiées, correctifs de sécurité",
+                        "4 heures d'évolutions incluses chaque mois, cumulables sur 3 mois",
+                        "Un rapport écrit chaque mois : ce qui a été fait, ce qui vient",
+                        "Vos prestataires tiers gérés par moi, pas par vous",
+                        "Tarif horaire réduit au-delà du quota"
+                    ] %}
+                    <ul>
+                        <li><strong>{{ t3_first }}</strong>{{ t3_first_rest }}</li>
+                        {% for item in t3_items %}<li>{{ item }}</li>{% endfor %}
+                    </ul>
+                    <a href="{{ url('front_contact') }}" class="wb-btn wb-btn--gold w-100">{{ 'offer.t3_cta'|trans }}</a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<section class="wb-section wb-section--paper" data-tone="light">
+    <div class="container">
+        <div class="row g-5 align-items-center">
+            <div class="col-lg-6">
+                <span class="wb-eyebrow wb-eyebrow--ink">{{ 'offer.why_eyebrow'|trans }}</span>
+                <h2 class="wb-h2">{{ 'offer.why_title_1'|trans }}<br>{{ 'offer.why_title_2'|trans }}</h2>
+                <p class="wb-lead">
+                    {{ 'offer.why_p1'|trans }}
+                </p>
+                <p class="wb-lead">
+                    {{ 'offer.why_p2'|trans }}
+                </p>
+                <a href="{{ url('front_contact') }}" class="wb-btn wb-btn--ink mt-2">{{ 'offer.why_cta'|trans }}</a>
+            </div>
+
+            <div class="col-lg-6">
+                <div class="row g-3">
+                    {% set compare = en ? [
+                        {'t': "What an agency does", 'd': "A project manager answers you, forwards to a developer, who forwards to the host. Three intermediaries, three delays."},
+                        {'t': "What a typical freelancer does", 'd': "He answers when he is not on another project. No response commitment, no monitoring between two assignments."},
+                        {'t': "What I do", 'd': "I monitor your setup continuously, fix issues before you notice them, and write to you every month about what I did."},
+                        {'t': "What you keep", 'd': "Your access, your code, your data. You leave whenever you want, with everything, no negotiation."}
+                    ] : [
+                        {'t': "Ce que fait une agence", 'd': "Un chef de projet vous répond, transmet à un développeur, qui transmet à l'hébergeur. Trois intermédiaires, trois délais."},
+                        {'t': "Ce que fait un freelance classique", 'd': "Il répond quand il n'est pas sur un autre projet. Aucun engagement de délai, aucune supervision entre deux missions."},
+                        {'t': "Ce que je fais", 'd': "Je surveille votre installation en continu, je corrige avant que vous ne le voyiez, et je vous écris chaque mois ce que j'ai fait."},
+                        {'t': "Ce que vous gardez", 'd': "Vos accès, votre code, vos données. Vous partez quand vous voulez, avec tout, sans négociation."}
+                    ] %}
+                    {% for item in compare %}
+                        <div class="col-sm-6">
+                            <div class="wb-card {{ loop.index == 3 ? 'wb-card--accent' : '' }}" data-tone="light">
+                                <h3 class="wb-h3">{{ item.t }}</h3>
+                                <p class="mb-0" style="color: var(--wb-text-2); font-size: .9rem;">{{ item.d }}</p>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="wb-section wb-section--ink" data-tone="dark">
+    <div class="container">
+        <div class="text-center mb-5">
+            <span class="wb-eyebrow">{{ 'offer.path_eyebrow'|trans }}</span>
+            <h2 class="wb-h2">{{ 'offer.path_title'|trans }}</h2>
+        </div>
+        <div class="row g-3">
+            {% set etapes = en ? [
+                {'n': '1', 't': "You describe your need", 'd': "Two minutes on the estimate form, or a fifteen-minute call. Nothing to prepare."},
+                {'n': '2', 't': "I answer you honestly", 'd': "If your project is outside my scope, I say so and point you in the right direction. You do not lose three weeks."},
+                {'n': '3', 't': "The diagnostic sets the frame", 'd': "A written, priced document that belongs to you. At this point you already have something usable."},
+                {'n': '4', 't': "The project is built in milestones", 'd': "You see, you test, you approve, you pay. In that order, at every step."},
+                {'n': '5', 't': "And afterwards, someone stays", 'd': "The Single Point of Contact plan takes over. Your tool is not orphaned on delivery day."}
+            ] : [
+                {'n': '1', 't': "Vous décrivez votre besoin", 'd': "Deux minutes sur le formulaire d'estimation, ou un appel de quinze minutes. Vous n'avez rien à préparer."},
+                {'n': '2', 't': "Je vous réponds franchement", 'd': "Si votre projet n'entre pas dans mon périmètre, je vous le dis et je vous oriente. Vous ne perdez pas trois semaines."},
+                {'n': '3', 't': "Le diagnostic pose le cadre", 'd': "Un document écrit, chiffré, qui vous appartient. À ce stade vous avez déjà quelque chose d'utilisable."},
+                {'n': '4', 't': "Le projet se construit par jalons", 'd': "Vous voyez, vous testez, vous validez, vous payez. Dans cet ordre, à chaque étape."},
+                {'n': '5', 't': "Et après, quelqu'un reste", 'd': "La formule Interlocuteur Unique prend le relais. Votre outil ne devient pas orphelin le jour de la livraison."}
+            ] %}
+            {% for etape in etapes %}
+                <div class="col-lg col-md-6">
+                    <div class="wb-card wb-card--glass h-100" data-tone="dark">
+                        <span class="wb-card__num">{{ etape.n }}</span>
+                        <h3 class="wb-h3" style="color: #fff;">{{ etape.t }}</h3>
+                        <p class="mb-0" style="color: var(--wb-on-dark-2); font-size: .88rem;">{{ etape.d }}</p>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        <div class="text-center mt-5">
+            <a href="{{ url('front_devis_new') }}" class="wb-btn wb-btn--gold">{{ 'offer.path_cta'|trans }}</a>
+        </div>
+    </div>
+</section>
+
+{{ include('front/includes/_axishumain.html.twig', {context: 'services'}) }}
+
+{% endblock %}

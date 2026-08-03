@@ -3,47 +3,61 @@
 namespace App\Controller;
 
 use App\Entity\User;
-use App\Entity\Devis;
-use App\Form\UserType;
 use App\Form\EditProfileType;
 use App\Form\UserPasswordType;
+use App\Form\UserType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\TooManyRequestsHttpException;
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Symfony\Component\RateLimiter\RateLimiterFactory;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
-use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class SecurityController extends AbstractController
 {
+    /**
+     * Durée de validité d'un lien de définition ou de réinitialisation
+     * de mot de passe.
+     */
+    private const TOKEN_TTL = '+1 hour';
 
-     /**
+    /**
      * @Route("/inscription", name="app_register")
      */
-    public function renderRegister(Request $request, EntityManagerInterface $entityManager): Response
-    {
+    public function renderRegister(
+        Request $request,
+        EntityManagerInterface $entityManager,
+        RateLimiterFactory $registrationLimiter
+    ): Response {
+        $this->enforceLimit($registrationLimiter, $request);
+
         $user = new User();
         $form = $this->createForm(UserType::class, $user);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-
-            // Définition de l'email
             $user->setEmail($form->get('email')->getData());
             $user->setRoles(['ROLE_USER']);
 
-            // Persistance de l'utilisateur en base de données
-            $entityManager->persist($user);
-            $entityManager->flush(); // Ici, le user_id est généré automatiquement
+            // Le mot de passe est défini à l'étape suivante, via un jeton
+            // à usage unique. On ne transmet JAMAIS l'identifiant en clair
+            // dans l'URL : sinon n'importe qui peut définir le mot de passe
+            // de n'importe quel compte en devinant un identifiant.
+            $token = bin2hex(random_bytes(32));
+            $user->setResetToken($token);
+            $user->setResetTokenExpireAt(new \DateTime(self::TOKEN_TTL));
 
-            // Redirection après l'inscription
+            $entityManager->persist($user);
+            $entityManager->flush();
+
             return $this->redirectToRoute('front_devis_set_password', [
-                'id' => $user->getId(),
+                'token' => $token,
             ]);
         }
 
@@ -53,33 +67,46 @@ class SecurityController extends AbstractController
     }
 
     /**
-     * @Route("/continuer/{id}", name="front_devis_set_password")
+     * Définition du premier mot de passe, via jeton à usage unique.
+     *
+     * @Route("/continuer/{token}", name="front_devis_set_password", requirements={"token"="[a-f0-9]{64}"})
      */
-    public function setPassword(Request $request, EntityManagerInterface $entityManager, UserPasswordEncoderInterface $passwordEncoder, $id): Response
-    {
-        // Rechercher l'utilisateur par e-mail
-        $user = $entityManager->getRepository(User::class)->findOneBy(['id' => $id]);
+    public function setPassword(
+        string $token,
+        Request $request,
+        EntityManagerInterface $entityManager,
+        UserPasswordHasherInterface $passwordHasher
+    ): Response {
+        $user = $entityManager->getRepository(User::class)->findOneBy(['resetToken' => $token]);
 
-        // Créer et traiter le formulaire pour le mot de passe
+        if (!$user || null === $user->getResetTokenExpireAt() || $user->getResetTokenExpireAt() < new \DateTime()) {
+            $this->addFlash('error', 'Ce lien n\'est plus valide. Demandez-en un nouveau.');
+
+            return $this->redirectToRoute('request_reset_password');
+        }
+
         $form = $this->createForm(UserPasswordType::class, $user);
-
         $form->handleRequest($request);
+
         if ($form->isSubmitted() && $form->isValid()) {
-            // Vérifier si un nouveau mot de passe a été saisi
             $plainPassword = $form->get('password')->getData();
-            if (!empty($plainPassword)) {
-                // Hasher et définir le nouveau mot de passe
-                $hashedPassword = $passwordEncoder->encodePassword($user, $plainPassword);
-                $user->setPassword($hashedPassword);
-                $user->setUsername($user);
+
+            if (empty($plainPassword)) {
+                $this->addFlash('error', 'Le mot de passe ne peut pas être vide.');
+
+                return $this->redirectToRoute('front_devis_set_password', ['token' => $token]);
             }
 
-            // Enregistrer l'utilisateur
-            $entityManager->persist($user);
+            $user->setPassword($passwordHasher->hashPassword($user, $plainPassword));
+
+            // Le jeton est consommé : le lien ne peut plus resservir.
+            $user->setResetToken(null);
+            $user->setResetTokenExpireAt(null);
+
             $entityManager->flush();
 
+            $this->addFlash('success', 'Votre mot de passe est enregistré. Vous pouvez vous connecter.');
 
-            // Redirection vers la page de connexion
             return $this->redirectToRoute('app_login');
         }
 
@@ -93,51 +120,47 @@ class SecurityController extends AbstractController
      */
     public function login(AuthenticationUtils $authenticationUtils): Response
     {
-        // get the login error if there is one
-        $error = $authenticationUtils->getLastAuthenticationError();
-        // last username entered by the user
-        $lastUsername = $authenticationUtils->getLastUsername();
+        if ($this->getUser()) {
+            return $this->redirectToRoute('front_espace_client');
+        }
 
-        return $this->render('security/login.html.twig', ['last_username' => $lastUsername, 'error' => $error]);
+        return $this->render('security/login.html.twig', [
+            'last_username' => $authenticationUtils->getLastUsername(),
+            'error' => $authenticationUtils->getLastAuthenticationError(),
+        ]);
     }
 
     /**
      * @Route("/utilisateur/modifier/profil", name="front_edit_profile")
-     * @param Request $request
-     * @param EntityManagerInterface $entityManager
-     * @param UserPasswordHasherInterface $userPasswordHasher
-     * @return Response
      */
-    public function EditProfile(Request $request,EntityManagerInterface $entityManager,UserPasswordHasherInterface $userPasswordHasher): Response
-    {
+    public function editProfile(
+        Request $request,
+        EntityManagerInterface $entityManager,
+        UserPasswordHasherInterface $userPasswordHasher
+    ): Response {
         $user = $this->getUser();
-
         $form = $this->createForm(EditProfileType::class, $user);
-
         $form->handleRequest($request);
 
-    if ($form->isSubmitted() && $form->isValid()) {
-        // Encodage du mot de passe uniquement si le champ de mot de passe est rempli
-        $plainPassword = $form->get('password')->getData();
-        if (!empty($plainPassword)) {
-            $user->setPassword($userPasswordHasher->hashPassword($user, $plainPassword));
+        if ($form->isSubmitted() && $form->isValid()) {
+            $plainPassword = $form->get('password')->getData();
+            if (!empty($plainPassword)) {
+                $user->setPassword($userPasswordHasher->hashPassword($user, $plainPassword));
+            }
+
+            $avatar = $form->get('avatar')->getData();
+            if ($avatar) {
+                $fileName = md5(uniqid('', true)).'.'.$avatar->guessExtension();
+                $avatar->move($this->getParameter('uploads_directory'), $fileName);
+                $user->setAvatar($fileName);
+            }
+
+            $entityManager->flush();
+
+            $this->addFlash('success', 'Profil mis à jour avec succès.');
+
+            return $this->redirectToRoute('front_espace_client');
         }
-
-        // Gestion de l'avatar
-        $avatar = $form->get('avatar')->getData();
-        if ($avatar) {
-            $fileName = md5(uniqid()) . '.' . $avatar->guessExtension();
-            $avatar->move($this->getParameter('uploads_directory'), $fileName);
-            $user->setAvatar($fileName);
-        }
-
-        $entityManager->persist($user);
-        $entityManager->flush();
-
-        $this->addFlash('success', 'Profil mis à jour avec succès.');
-
-        return $this->redirectToRoute('front_profile_project');
-    }
 
         return $this->render('front/profil/edit.html.twig', [
             'form' => $form->createView(),
@@ -147,31 +170,48 @@ class SecurityController extends AbstractController
     /**
      * @Route("/mot-de-passe-oublier", name="request_reset_password")
      */
-    public function requestResetPassword(Request $request, MailerInterface $mailer, EntityManagerInterface $em): Response
-    {
+    public function requestResetPassword(
+        Request $request,
+        MailerInterface $mailer,
+        EntityManagerInterface $em,
+        RateLimiterFactory $passwordResetLimiter
+    ): Response {
         if ($request->isMethod('POST')) {
-            $email = $request->request->get('email');
+            // Sans limitation, ce formulaire sert d'outil d'envoi de courriels
+            // en masse et d'énumération de comptes.
+            $this->enforceLimit($passwordResetLimiter, $request);
+
+            if (!$this->isCsrfTokenValid('reset_password_request', (string) $request->request->get('_csrf_token'))) {
+                throw $this->createAccessDeniedException('Jeton CSRF invalide.');
+            }
+
+            $email = (string) $request->request->get('email');
             $user = $em->getRepository(User::class)->findOneBy(['email' => $email]);
 
             if ($user) {
                 $token = bin2hex(random_bytes(32));
                 $user->setResetToken($token);
-                $user->setResetTokenExpireAt(new \DateTime('+1 hour'), new \DateTimeZone('Europe/Paris'));
+                $user->setResetTokenExpireAt(new \DateTime(self::TOKEN_TTL));
                 $em->flush();
 
-                $resetLink = $this->generateUrl('reset_password', ['token' => $token], UrlGeneratorInterface::ABSOLUTE_URL);
+                $resetLink = $this->generateUrl(
+                    'reset_password',
+                    ['token' => $token],
+                    UrlGeneratorInterface::ABSOLUTE_URL
+                );
 
-                $email = (new TemplatedEmail())
-                    ->from('contact@scriptzenit.fr')
-                    ->to($user->getEmail())
-                    ->subject('Réinitialisation de votre mot de passe')
-                    ->htmlTemplate('reset_password/email.html.twig')
-                    ->context(['resetLink' => $resetLink]);
-
-                $mailer->send($email);
+                $mailer->send(
+                    (new TemplatedEmail())
+                        ->from('contact@walidbelbeche.fr')
+                        ->to($user->getEmail())
+                        ->subject('Réinitialisation de votre mot de passe')
+                        ->htmlTemplate('reset_password/email.html.twig')
+                        ->context(['resetLink' => $resetLink])
+                );
             }
 
-            // Rediriger vers une page de confirmation, même si l'email n'existe pas.
+            // Même réponse que le compte existe ou non : c'est ce qui empêche
+            // de savoir si une adresse est inscrite.
             return $this->redirectToRoute('front_check_email');
         }
 
@@ -181,33 +221,48 @@ class SecurityController extends AbstractController
     /**
      * @Route("/message-confirmation-email", name="front_check_email")
      */
-    public function frontCheckEmail()
+    public function frontCheckEmail(): Response
     {
-
         return $this->render('reset_password/check_email.html.twig');
     }
 
     /**
-     * @Route("/reset-password/{token}", name="reset_password")
+     * @Route("/reset-password/{token}", name="reset_password", requirements={"token"="[a-f0-9]{64}"})
      */
-    public function resetPassword($token, Request $request, EntityManagerInterface $em, UserPasswordEncoderInterface $passwordEncoder)
-    {
+    public function resetPassword(
+        string $token,
+        Request $request,
+        EntityManagerInterface $em,
+        UserPasswordHasherInterface $passwordHasher
+    ): Response {
         $user = $em->getRepository(User::class)->findOneBy(['resetToken' => $token]);
 
-        if (!$user || $user->getResetTokenExpireAt() < new \DateTime()) {
-            // Token invalide ou expiré.
+        if (!$user || null === $user->getResetTokenExpireAt() || $user->getResetTokenExpireAt() < new \DateTime()) {
+            $this->addFlash('error', 'Ce lien de réinitialisation a expiré.');
+
             return $this->redirectToRoute('request_reset_password');
         }
 
         if ($request->isMethod('POST')) {
-            $password = $request->request->get('password');
-            $hashedPassword = $passwordEncoder->encodePassword($user, $password);
-            $user->setPassword($hashedPassword);
+            if (!$this->isCsrfTokenValid('reset_password', (string) $request->request->get('_csrf_token'))) {
+                throw $this->createAccessDeniedException('Jeton CSRF invalide.');
+            }
+
+            $password = (string) $request->request->get('password');
+
+            if (strlen($password) < 12) {
+                $this->addFlash('error', 'Le mot de passe doit contenir au moins 12 caractères.');
+
+                return $this->redirectToRoute('reset_password', ['token' => $token]);
+            }
+
+            $user->setPassword($passwordHasher->hashPassword($user, $password));
             $user->setResetToken(null);
             $user->setResetTokenExpireAt(null);
             $em->flush();
 
-            // Rediriger vers la page de connexion avec un message de succès.
+            $this->addFlash('success', 'Mot de passe modifié. Vous pouvez vous connecter.');
+
             return $this->redirectToRoute('app_login');
         }
 
@@ -219,6 +274,21 @@ class SecurityController extends AbstractController
      */
     public function logout(): void
     {
-        throw new \LogicException('This method can be blank - it will be intercepted by the logout key on your firewall.');
+        throw new \LogicException('Cette méthode est interceptée par la clé logout du pare-feu.');
+    }
+
+    /**
+     * Consomme un jeton du limiteur, ou renvoie une 429.
+     */
+    private function enforceLimit(RateLimiterFactory $factory, Request $request): void
+    {
+        $limiter = $factory->create($request->getClientIp() ?? 'anonymous');
+
+        if (false === $limiter->consume(1)->isAccepted()) {
+            throw new TooManyRequestsHttpException(
+                null,
+                'Trop de tentatives. Réessayez dans quelques minutes.'
+            );
+        }
     }
 }

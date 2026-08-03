@@ -1,28 +1,55 @@
 # see https://symfony.com/doc/current/reference/configuration/framework.html
 framework:
     secret: "%env(APP_SECRET)%"
-    #csrf_protection: true
+
+    # Explicite plutôt qu'implicite : la protection CSRF ne doit jamais
+    # dépendre d'une valeur par défaut qu'une mise à jour pourrait changer.
+    csrf_protection: true
+
     http_method_override: false
     error_controller: App\Controller\ExceptionController::showException
-    default_locale: en
+    # Le site s'adresse d'abord a un public francophone : la langue par
+    # defaut doit etre le francais, pas l'anglais.
+    default_locale: fr
+
     translator:
         default_path: '%kernel.project_dir%/translations'
+
     request:
         formats:
             html: ['text/html', 'application/xhtml+xml']
 
-    # Enables session support. Note that the session will ONLY be started if you read or write from it.
-    # Remove or comment this section to explicitly disable session support.
     session:
         handler_id: null
         cookie_secure: auto
+        cookie_httponly: true
         cookie_samesite: lax
+        # Le nom par défaut PHPSESSID annonce la technologie employée.
+        name: SZIDSESS
         storage_factory_id: session.storage.factory.native
 
-    #esi: true
-    #fragments: true
     php_errors:
         log: true
+
+    # Limiteurs de débit. Le pare-feu gère déjà la connexion via
+    # login_throttling ; ceux-ci couvrent les autres portes d'entrée.
+    rate_limiter:
+        password_reset:
+            policy: 'sliding_window'
+            limit: 5
+            interval: '1 hour'
+        registration:
+            policy: 'sliding_window'
+            limit: 10
+            interval: '1 hour'
+        contact_form:
+            policy: 'sliding_window'
+            limit: 10
+            interval: '1 hour'
+        quote_request:
+            policy: 'sliding_window'
+            limit: 5
+            interval: '1 hour'
 
 when@test:
     framework:

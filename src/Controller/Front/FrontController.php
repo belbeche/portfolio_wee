@@ -64,15 +64,21 @@ class FrontController extends AbstractController
      * @Route("/blog/categorie/{name}", name="front_category")
      * @return Response
      */
-    public function Categories(Category $category, EntityManagerInterface $entityManager, PaginatorInterface $paginator): Response
+    public function Categories(Category $category, EntityManagerInterface $entityManager): Response
     {
-        $category = $entityManager->getRepository(Category::class)->find($category);
-
-        $Subjects = $entityManager->getRepository(Subject::class)->findByCategoryName($category->getName());
+        // Le sujet est deja resolu par le ParamConverter : le rechercher une
+        // seconde fois par son propre objet ne servait a rien.
+        $subjects = $entityManager
+            ->getRepository(Subject::class)
+            ->findByCategoryName($category->getName());
 
         return $this->render('front/category/home.html.twig', [
             'categorie' => $category,
-            'Subjects' => $Subjects,
+            'subjects' => $subjects,
+            // Toutes les categories, pour la barre de filtres.
+            'categories' => $entityManager
+                ->getRepository(Category::class)
+                ->findBy([], ['name' => 'ASC']),
         ]);
     }
 
@@ -132,9 +138,6 @@ class FrontController extends AbstractController
 
         $userLike = $entityManager->getRepository(UserLike::class)->findOneBy(['Subject' => $Subject]);
 
-        $userLike->getLike();
-
-        dd($userLike);
 
         return $this->render('front/favorites/show.html.twig', [
             'favorites' => $favorites,

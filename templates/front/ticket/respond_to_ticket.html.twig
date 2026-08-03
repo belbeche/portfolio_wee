@@ -3,7 +3,17 @@
 {% block title %}Assistance - Répondre au Ticket{% endblock %}
 
 {% block content %}
-<div class="container mt-7">
+
+<section class="wb-hero" data-tone="dark">
+    <div class="container" style="padding-top: 7rem; padding-bottom: 3rem;">
+        <span class="wb-eyebrow">{{ app.request.locale == 'en' ? 'Client area' : 'Espace client' }}</span>
+        <h1 class="wb-display" style="font-size: clamp(1.8rem, 4vw, 2.6rem);">{{ app.request.locale == 'en' ? 'Reply to the request' : 'Répondre à la demande' }}</h1>
+        <p class="wb-lead wb-lead--on-dark mb-0" style="max-width:620px;">Votre réponse rejoint le fil et me notifie immédiatement.</p>
+    </div>
+</section>
+
+<section class="wb-section wb-section--paper" data-tone="light">
+<div class="container">
     <!-- Notifications -->
     <div>
         {% for type, messages in app.flashes %}
@@ -26,7 +36,7 @@
 
     <!-- Original Message -->
     <div class="card shadow-sm mb-4">
-        <div class="card-header bg-primary text-white">
+        <div class="card-header bg-primary text-white" data-tone="dark">
             <h5 class="mb-0">Message Original</h5>
         </div>
         <div class="card-body">
@@ -89,4 +99,5 @@
         </div>
     </div>
 </div>
+</section>
 {% endblock %}

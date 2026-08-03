@@ -1,0 +1,135 @@
+{#
+    Bloc de relais vers AxisHumain.
+
+    Le point important : AxisHumain n'est pas un partenaire tiers, c'est une
+    plateforme concue et developpee par Walid. Le dire change tout, pour deux
+    raisons. Le visiteur comprend qu'il a en face de lui quelqu'un capable de
+    construire une place de marche complete, pas seulement un site vitrine.
+    Et le renvoi devient credible : on n'oriente pas vers un inconnu, on
+    oriente vers son propre reseau d'experts.
+
+    Parametres facultatifs :
+      context : identifiant de l'emplacement, pour tracer d'ou vient le renvoi
+      variant : 'full' (bloc complet) ou 'compact' (bandeau une ligne)
+      title   : titre personnalise
+
+    Usage :
+      {{ include('front/includes/_axishumain.html.twig', {context: 'agences'}) }}
+#}
+
+{% set context = context|default('portfolio') %}
+{% set variant = variant|default('full') %}
+
+{% if variant == 'compact' %}
+
+    <div class="alert alert-primary d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-3 mb-0"
+         role="note">
+        <div>
+            <strong>{{ title|default("Un besoin que je ne peux pas couvrir ?") }}</strong>
+            <span class="d-block small">
+                J'ai construit AxisHumain pour ça : publiez votre mission et
+                recevez des propositions d'experts IT en quelques jours.
+            </span>
+        </div>
+        <a href="{{ url('front_referral_go', {context: context}) }}"
+           class="btn btn-primary flex-shrink-0" rel="noopener">
+            Découvrir AxisHumain
+        </a>
+    </div>
+
+{% else %}
+
+    <section class="py-5" style="background-color: #0f172a;">
+        <div class="container">
+
+            <div class="row align-items-center text-white mb-5">
+                <div class="col-lg-7">
+                    <p class="text-uppercase small fw-bold mb-2" style="letter-spacing: 2px; color: #ffc107;">
+                        Mon second projet
+                    </p>
+                    <h2 class="h1 fw-bold mb-3">
+                        {{ title|default("AxisHumain, la plateforme que j'ai construite") }}
+                    </h2>
+                    <p class="fs-5 mb-4" style="opacity: .9;">
+                        Quand un besoin sort de ma spécialité, de mon budget ou de
+                        mes disponibilités, je ne vous laisse pas sans réponse.
+                        Je vous oriente vers <strong>AxisHumain</strong> : une place
+                        de marché qui met en relation les entreprises avec des
+                        experts IT indépendants.
+                    </p>
+                    <p class="mb-4" style="opacity: .8;">
+                        Ce n'est pas un annuaire trouvé au hasard. C'est une
+                        application complète que j'ai conçue, développée et mise en
+                        production seul, sous Symfony 6.4. Elle vous donne une idée
+                        assez précise de ce que je sais construire.
+                    </p>
+                    <div class="d-flex flex-column flex-md-row gap-3">
+                        <a href="{{ url('front_referral_go', {context: context}) }}"
+                           class="btn btn-warning btn-lg fw-semibold" rel="noopener">
+                            Publier ma mission
+                        </a>
+                        <a href="{{ url('front_referral') }}" class="btn btn-outline-light btn-lg">
+                            Comment ça marche
+                        </a>
+                    </div>
+                </div>
+
+                <div class="col-lg-5 mt-4 mt-lg-0">
+                    <div class="rounded shadow-lg p-4" style="background-color: #1a2337;">
+                        <p class="text-uppercase small fw-bold mb-3" style="letter-spacing: 1.5px; color: #8fb8f0;">
+                            Ce que contient la plateforme
+                        </p>
+                        <ul class="list-unstyled mb-0 text-white small">
+                            {% set briques = [
+                                'Mise en relation clients et experts, par technologie',
+                                'Paiement en ligne intégré et offres de mise en avant',
+                                'Générateur de description de mission assisté',
+                                "Fil d'actualité, événements et système d'avis",
+                                'Demande de devis multi-étapes'
+                            ] %}
+                            {% for brique in briques %}
+                                <li class="d-flex mb-2">
+                                    <span class="me-2" style="color: #ffc107;">&#9679;</span>
+                                    <span style="opacity: .9;">{{ brique }}</span>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row g-3">
+                <div class="col-md-7">
+                    <div class="h-100 rounded p-4" style="background-color: #1a2337;">
+                        <h3 class="h5 fw-bold text-white mb-2">Vous cherchez un prestataire</h3>
+                        <p class="small mb-3" style="color: #c9d4e6;">
+                            Décrivez votre besoin, recevez des propositions, comparez.
+                            Vous gardez la main du premier message jusqu'au choix final.
+                        </p>
+                        <a href="{{ url('front_referral_go', {context: context}) }}"
+                           class="btn btn-sm btn-warning fw-semibold" rel="noopener">
+                            Publier une mission
+                        </a>
+                    </div>
+                </div>
+                <div class="col-md-5">
+                    <div class="h-100 rounded p-4 bg-white" data-tone="light">
+                        <span class="badge bg-warning text-dark mb-2">Nouveaux inscrits</span>
+                        <h3 class="h6 fw-bold mb-2">Vous êtes développeur ou prestataire</h3>
+                        <p class="small text-muted mb-3">
+                            Créez votre profil expert et recevez les missions qui
+                            correspondent à vos compétences. Inscription et
+                            candidatures gratuites.
+                        </p>
+                        <a href="{{ url('front_referral_go', {context: context ~ '_expert'}) }}"
+                           class="btn btn-sm btn-dark" rel="noopener">
+                            Créer mon profil expert
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+{% endif %}

@@ -1,0 +1,235 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ app.request.locale == 'en' ? 'White-label React Native development for web agencies' : 'Sous-traitance mobile pour agences web | React Native en marque blanche' }}{% endblock %}
+
+{% block content %}
+{% set en = app.request.locale == 'en' %}
+
+{#
+    Page de destination des e-mails de prospection.
+    Elle répond dans l'ordre aux trois seules questions qu'un directeur
+    d'agence se pose : va-t-il me prendre mon client, va-t-il me planter
+    devant lui, et combien.
+#}
+
+<section class="bg-primary text-white py-5" data-tone="dark">
+    <div class="container py-4">
+        <div class="row align-items-center">
+            <div class="col-lg-7">
+                <p class="text-uppercase fw-bold mb-3" style="letter-spacing: 2px; opacity: .8;">
+                    {{ 'agency.eyebrow'|trans }}
+                </p>
+                <h1 class="display-5 fw-bold mb-4">
+                    {{ 'agency.title'|trans }}
+                </h1>
+                <p class="fs-5 mb-4">
+                    {{ 'agency.lead'|trans }}
+                </p>
+                <div class="d-flex flex-column flex-md-row gap-3">
+                    <a href="https://calendly.com/walid_belbeche/expertise-offerte"
+                       class="btn btn-warning btn-lg fw-semibold">{{ 'agency.cta_book'|trans }}</a>
+                    <a href="{{ url('front_devis_new') }}"
+                       class="btn btn-outline-light btn-lg">{{ 'agency.cta_estimate'|trans }}</a>
+                </div>
+            </div>
+            <div class="col-lg-5 mt-5 mt-lg-0">
+                <div class="bg-white text-dark rounded shadow-lg p-4" data-tone="light">
+                    <h2 class="h5 fw-bold mb-3">{{ 'agency.calc_title'|trans }}</h2>
+                    <p class="mb-3">
+                        {{ 'agency.calc_p'|trans }}
+                    </p>
+                    {% set calc = en ? [
+                        {'t': "Hire", 'd': ": 55 k&euro; a year, three months of recruiting, then you have to keep them busy full time."},
+                        {'t': "Decline", 'd': ": you are funding your competitor."},
+                        {'t': "Subcontract", 'd': ": zero fixed cost, you keep the account."}
+                    ] : [
+                        {'t': "Recruter", 'd': " : 55 k&euro; par an, trois mois de recrutement, et il faut ensuite l'occuper à plein temps."},
+                        {'t': "Refuser", 'd': " : vous financez votre concurrent."},
+                        {'t': "Sous-traiter", 'd': " : zéro coût fixe, vous gardez le compte."}
+                    ] %}
+                    <ul class="list-unstyled mb-0 small">
+                        {% for c in calc %}
+                        <li class="{{ loop.last ? 'mb-0' : 'mb-2' }}"><strong>{{ c.t }}</strong>{{ c.d|raw }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="container py-5">
+    <h2 class="h1 fw-bold text-center mb-2">{{ 'agency.q_title'|trans }}</h2>
+    <p class="text-center text-muted mb-5">{{ 'agency.q_sub'|trans }}</p>
+
+    {% set questions = en ? [
+        {'t': "1. Are you going to take my client?", 'd': "No, and I sign it. Full white label: I have no direct contact with your client, every deliverable goes out under your name, and I commit in writing not to solicit them. My interest is ten projects over five years with you, not one stolen project."},
+        {'t': "2. Are you going to let me down?", 'd': "That is the real question, and the answer lives in the deliverables. You receive a specification, functional specs and user stories with acceptance criteria. At any moment, another developer can take over the project. I am not a single point of dependency, and that is by design."},
+        {'t': "3. How much?", 'd': "<strong>&euro;400 a day</strong> on a time basis, or fixed price. For scale: a complete application with its API represents 15,000 to 20,000 &euro; and 6 to 8 weeks. You apply your margin on top."}
+    ] : [
+        {'t': "1. Allez-vous me prendre mon client&nbsp;?", 'd': "Non, et je le signe. Marque blanche intégrale : je n'ai aucun contact direct avec votre client, tous les livrables sortent à votre nom, et je m'engage par écrit à ne pas le solliciter. Mon intérêt, c'est dix projets sur cinq ans avec vous, pas un projet volé."},
+        {'t': "2. Allez-vous me planter&nbsp;?", 'd': "C'est la vraie question, et la réponse tient dans les livrables. Vous recevez un cahier des charges, des spécifications fonctionnelles et des user stories avec critères d'acceptation. À tout moment, un autre développeur peut reprendre le projet. Je ne suis pas un point de dépendance, et c'est voulu."},
+        {'t': "3. Combien&nbsp;?", 'd': "<strong>400 &euro; par jour</strong> en régie, ou au forfait. Pour situer : une application complète avec son API représente 15 000 à 20 000 &euro; et 6 à 8 semaines. Vous appliquez votre marge par-dessus."}
+    ] %}
+    <div class="row g-4">
+        {% for q in questions %}
+        <div class="col-md-4">
+            <div class="h-100 p-4 border rounded shadow-sm">
+                <h3 class="h5 fw-bold text-primary">{{ q.t|raw }}</h3>
+                <p class="mb-0">{{ q.d|raw }}</p>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+
+<section class="bg-light py-5" data-tone="light">
+    <div class="container">
+        <h2 class="h1 fw-bold text-center mb-5">{{ 'agency.deliver_title'|trans }}</h2>
+        <div class="row g-4">
+            {% set livrables = en ? [
+                { 'titre': 'The source code', 'texte': "React Native application for iOS and Android, API and back office. Documented, structured, maintainable by others." },
+                { 'titre': 'The specification', 'texte': "Versioned. The reference document whenever an expected behaviour is disputed." },
+                { 'titre': 'The user stories', 'texte': "Each with its acceptance criterion. You know exactly what is done and how to verify it." },
+                { 'titre': 'The functional specs', 'texte': "Written so another contractor could take over the project without you." },
+                { 'titre': "The feature inventory", 'texte': "It ends with the list of what does not exist. No meeting should drift onto a feature assumed to be there." },
+                { 'titre': 'The user guide', 'texte': "Ready to hand to the end client, under your name." }
+            ] : [
+                { 'titre': 'Le code source', 'texte': "Application React Native iOS et Android, API et back-office. Documenté, structuré, reprenable." },
+                { 'titre': 'Le cahier des charges', 'texte': "Versionné. Le document de référence en cas de désaccord sur un comportement attendu." },
+                { 'titre': 'Les user stories', 'texte': "Chacune avec son critère d'acceptation. Vous savez exactement ce qui est fait et comment le vérifier." },
+                { 'titre': 'Les spécifications', 'texte': "Rédigées pour qu'un autre prestataire puisse reprendre le projet sans vous." },
+                { 'titre': "L'inventaire des fonctionnalités", 'texte': "Il se termine par la liste de ce qui n'existe pas. Aucune réunion ne doit s'égarer sur une fonction supposée acquise." },
+                { 'titre': 'La notice utilisateur', 'texte': "Prête à être remise au client final, à votre nom." }
+            ] %}
+            {% for item in livrables %}
+                <div class="col-md-6 col-lg-4">
+                    <div class="h-100 bg-white p-4 rounded shadow-sm" data-tone="light">
+                        <h3 class="h6 fw-bold">{{ item.titre }}</h3>
+                        <p class="mb-0 small text-muted">{{ item.texte }}</p>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        <div class="text-center mt-4">
+            <a href="{{ url('front_methode') }}" class="btn btn-outline-primary">
+                {{ 'agency.deliver_cta'|trans }}
+            </a>
+        </div>
+    </div>
+</section>
+
+<section class="container py-5">
+    <div class="row align-items-center">
+        <div class="col-lg-6">
+            <h2 class="h1 fw-bold mb-4">{{ 'agency.pay_title'|trans }}</h2>
+            <p class="fs-5 text-muted mb-4">
+                {{ 'agency.pay_lead'|trans }}
+            </p>
+            <div class="table-responsive">
+                <table class="table align-middle">
+                    {% set jalons = en ? {
+                        'head': ['Milestone', 'Share', 'Trigger'],
+                        'rows': [
+                            ['Signature', '30 %', 'Development starts'],
+                            ['Testable beta', '30 %', 'TestFlight for iOS and Android APK in your hands'],
+                            ['Publication', '40 %', 'The application is live on both stores']
+                        ]
+                    } : {
+                        'head': ['Jalon', 'Part', 'Déclencheur'],
+                        'rows': [
+                            ['Signature', '30 %', 'Démarrage du développement'],
+                            ['Bêta testable', '30 %', 'TestFlight iOS et APK Android entre vos mains'],
+                            ['Publication', '40 %', "L'application est en ligne sur les deux magasins"]
+                        ]
+                    } %}
+                    <thead>
+                        <tr>
+                            {% for h in jalons.head %}<th scope="col">{{ h }}</th>{% endfor %}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for r in jalons.rows %}
+                        <tr>
+                            <td class="fw-semibold">{{ r[0] }}</td>
+                            <td>{{ r[1] }}</td>
+                            <td class="small text-muted">{{ r[2] }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="col-lg-6 mt-4 mt-lg-0">
+            <div class="bg-primary text-white rounded shadow-lg p-4 p-md-5" data-tone="dark">
+                <h3 class="h4 fw-bold mb-3">{{ en ? 'Start with the scoping phase' : 'Commencez par le cadrage' }}</h3>
+                <p class="display-6 fw-bold mb-1">890 &euro;</p>
+                <p class="mb-4" style="opacity: .85;">{{ en ? '5 days. Deducted if you continue.' : '5 jours. Déduits si vous poursuivez.' }}</p>
+                <p class="mb-4">
+                    {{ en ? "Before coding anything, we write down what we are going to build: specification, functional specs, user stories, screen map, line-by-line pricing and schedule."
+                          : "Avant de coder quoi que ce soit, on écrit ce qu'on va construire : cahier des charges, spécifications, user stories, arborescence des écrans, chiffrage ligne par ligne et planning." }}
+                </p>
+                <p class="mb-4 small" style="opacity: .85;">
+                    {{ en ? "The file belongs to you. You can hand it to any contractor, including one who is not me."
+                          : "Le dossier vous appartient. Vous pouvez le remettre à n'importe quel prestataire, y compris un autre que moi." }}
+                </p>
+                <a href="{{ url('front_devis_new') }}" class="btn btn-warning btn-lg w-100 fw-semibold">
+                    {{ en ? 'Request an estimate' : 'Demander une estimation' }}
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% if caseStudies|length > 0 %}
+<section class="bg-light py-5" data-tone="light">
+    <div class="container">
+        <h2 class="h1 fw-bold text-center mb-5">{{ en ? "Delivered projects, not mock-ups" : "Des projets livrés, pas des maquettes" }}</h2>
+        <div class="row g-4">
+            {% for project in caseStudies %}
+                <div class="col-md-4">
+                    <div class="card h-100 shadow-sm border-0">
+                        {% for image in project.images|slice(0, 1) %}
+                            <img src="{{ asset('image_project/' ~ image.name) }}"
+                                 loading="lazy" class="card-img-top"
+                                 alt="{{ project.title }}">
+                        {% endfor %}
+                        <div class="card-body">
+                            {% if project.sector %}
+                                <p class="small text-uppercase text-muted mb-1">{{ project.sector }}</p>
+                            {% endif %}
+                            <h3 class="h5 card-title fw-bold">{{ project.title }}</h3>
+                            {% if project.result %}
+                                <p class="small text-muted">{{ project.result|slice(0, 140) }}</p>
+                            {% endif %}
+                            <a href="{{ url('front_project_show', {id: project.id}) }}"
+                               class="btn btn-sm btn-outline-primary">{{ en ? 'Read the case study' : "Lire l'étude de cas" }}</a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+{{ include('front/includes/_axishumain.html.twig', {context: 'agences'}) }}
+
+<section class="container py-5 text-center">
+    <h2 class="h1 fw-bold mb-3">{{ 'agency.final_title'|trans }}</h2>
+    <p class="fs-5 text-muted mb-4">
+        {{ en ? 'How many mobile app requests did you turn down this year?' : "Combien de demandes d'application mobile avez-vous refusées cette année ?" }}
+    </p>
+    <div class="d-flex flex-column flex-md-row gap-3 justify-content-center">
+        <a href="https://calendly.com/walid_belbeche/expertise-offerte"
+           class="btn btn-primary btn-lg">{{ 'agency.cta_book'|trans }}</a>
+        <a href="{{ url('front_contact') }}" class="btn btn-outline-secondary btn-lg">
+            {{ 'home.final_cta_2'|trans }}
+        </a>
+    </div>
+    <p class="mt-4 text-muted small">
+        {{ en ? 'Walid BELBECHE, independent developer in France. +33 6 61 28 77 86' : 'Walid BELBECHE, développeur indépendant en France. 06 61 28 77 86' }}
+    </p>
+</section>
+
+{% endblock %}

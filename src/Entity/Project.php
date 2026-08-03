@@ -7,12 +7,15 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
+use App\Entity\Traits\CaseStudyTrait;
 
 /**
  * @ORM\Entity(repositoryClass=ProjectRepository::class)
  */
 class Project
 {
+    use CaseStudyTrait;
+
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -85,11 +88,6 @@ class Project
     private $locale;
 
     /**
-     * @ORM\OneToMany(targetEntity="Gedmo\Translatable\Entity\Translation", mappedBy="object", cascade={"persist", "remove"})
-     */
-    private $translations;
-
-    /**
      * @throws \Exception
      */
     public function __construct()
@@ -97,7 +95,6 @@ class Project
         $this->images = new ArrayCollection();
         $this->created_at = new \DateTime('now', new \DateTimeZone('Europe/Paris'));
         $this->categories = new ArrayCollection();
-        $this->translations = new ArrayCollection();
     }
 
 
@@ -288,25 +285,7 @@ class Project
         return $this;
     }
 
-    /**
-     * Get the value of translations
-     */ 
-    public function getTranslations()
-    {
-        return $this->translations;
-    }
 
-    /**
-     * Set the value of translations
-     *
-     * @return  self
-     */ 
-    public function setTranslations($translations)
-    {
-        $this->translations = $translations;
-
-        return $this;
-    }
 
     /**
      * Get the value of locale

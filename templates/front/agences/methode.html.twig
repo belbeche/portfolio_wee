@@ -1,0 +1,152 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'home.skills_cta'|trans }}{% endblock %}
+
+{% block content %}
+{% set en = app.request.locale == 'en' %}
+
+<section class="bg-dark text-white py-5" data-tone="dark">
+    <div class="container py-4">
+        <h1 class="display-5 fw-bold mb-3">{{ 'method.title'|trans }}</h1>
+        <p class="fs-5 mb-0" style="max-width: 720px; opacity: .9;">
+            {{ 'method.lead'|trans }}
+        </p>
+    </div>
+</section>
+
+<section class="container py-5">
+    <div class="row">
+        <div class="col-lg-8">
+
+            {% set etapes = en ? [
+                {
+                    'num': '1',
+                    'titre': 'Scoping, before the first line of code',
+                    'texte': "Versioned specification, functional specs, user stories with acceptance criteria, screen map, line-by-line pricing and schedule. The file belongs to you. It serves to build the application as much as to support a grant application or convince a partner.",
+                    'livrable': 'A complete PDF file, delivered before any development.'
+                },
+                {
+                    'num': '2',
+                    'titre': 'The web base, live in production',
+                    'texte': "When the project allows it, I first put online a web base that validates the user journeys in real conditions. The native application is then built on the same API. It is faster, cheaper, and you see the service working before the app stores.",
+                    'livrable': 'A live service, testable by real users.'
+                },
+                {
+                    'num': '3',
+                    'titre': 'The testable beta, on your phone',
+                    'texte': "A TestFlight build for iOS and an APK for Android. You install, you test, you approve it yourself. No milestone is billed on a promise: it is billed on something you have held in your hands.",
+                    'livrable': 'An application you can install on your devices.'
+                },
+                {
+                    'num': '4',
+                    'titre': 'Publication on both stores',
+                    'texte': "Developer accounts, listings, screenshots, compliance with Apple and Google policies, submission and review follow-up. The submission date is a commitment on my side. The stores' review time depends on nobody: it is never announced as a launch date.",
+                    'livrable': 'The application live on the App Store and Google Play.'
+                },
+                {
+                    'num': '5',
+                    'titre': 'Follow-up and warranty',
+                    'texte': "One month of follow-up included after publication, back-office training included. Then the warranty remains: any defect in what was delivered is fixed at no charge. A new feature always gets a prior quote. The line is written down, and it protects both parties.",
+                    'livrable': 'Source code, documentation and rights transfer on full payment.'
+                }
+            ] : [
+                {
+                    'num': '1',
+                    'titre': 'Le cadrage, avant la première ligne de code',
+                    'texte': "Cahier des charges versionné, spécifications fonctionnelles, user stories avec critères d'acceptation, arborescence des écrans, chiffrage ligne par ligne et planning. Le dossier vous appartient. Il sert autant à construire l'application qu'à monter un dossier de subvention ou à convaincre un partenaire.",
+                    'livrable': 'Un dossier PDF complet, remis avant tout développement.'
+                },
+                {
+                    'num': '2',
+                    'titre': 'Le socle web en production',
+                    'texte': "Quand le projet s'y prête, je mets d'abord en ligne un socle web qui valide les parcours en conditions réelles. L'application native se construit ensuite sur la même API. C'est plus rapide, moins cher, et vous voyez le service fonctionner avant les magasins d'applications.",
+                    'livrable': 'Un service en ligne, testable par de vrais utilisateurs.'
+                },
+                {
+                    'num': '3',
+                    'titre': 'La bêta testable, sur votre téléphone',
+                    'texte': "Une version TestFlight pour iOS et un APK pour Android. Vous installez, vous testez, vous validez vous-même. Aucun jalon n'est facturé sur une promesse : il est facturé sur quelque chose que vous avez tenu entre les mains.",
+                    'livrable': 'Une application installable sur vos appareils.'
+                },
+                {
+                    'num': '4',
+                    'titre': 'La publication sur les deux magasins',
+                    'texte': "Comptes développeur, fiches, captures, conformité des politiques Apple et Google, soumission et suivi des retours de validation. La date de soumission est un engagement de ma part. Le délai de validation des magasins, lui, ne dépend de personne : il n'est jamais annoncé comme une date de lancement.",
+                    'livrable': "L'application en ligne sur l'App Store et Google Play."
+                },
+                {
+                    'num': '5',
+                    'titre': 'Le suivi et la garantie',
+                    'texte': "Un mois de suivi inclus après publication, prise en main du back-office comprise. Ensuite, la garantie reste : tout défaut de ce qui a été livré est corrigé sans frais. Une nouvelle fonctionnalité, elle, fait toujours l'objet d'un devis préalable. La frontière est écrite, elle protège les deux parties.",
+                    'livrable': 'Code source, documentation et cession des droits au paiement intégral.'
+                }
+            ] %}
+
+            {% for etape in etapes %}
+                <div class="d-flex mb-5">
+                    <div class="flex-shrink-0 me-4">
+                        <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center fw-bold"
+                             style="width: 48px; height: 48px; font-size: 1.25rem;" data-tone="dark">
+                            {{ etape.num }}
+                        </div>
+                    </div>
+                    <div>
+                        <h2 class="h4 fw-bold mb-2">{{ etape.titre }}</h2>
+                        <p class="text-muted">{{ etape.texte }}</p>
+                        <p class="small fw-semibold text-primary mb-0">
+                            {{ 'method.deliverable'|trans }} {{ etape.livrable }}
+                        </p>
+                    </div>
+                </div>
+            {% endfor %}
+
+        </div>
+
+        <div class="col-lg-4">
+            <div class="sticky-top bg-light rounded p-4 shadow-sm" style="top: 100px;" data-tone="light">
+                <h2 class="h5 fw-bold mb-3">{{ 'method.frame_title'|trans }}</h2>
+                <p class="small text-muted mb-3">
+                    {{ 'method.frame_lead'|trans }}
+                </p>
+                {% set canaux = en ? [
+                    {'t': "Defects", 'd': "A support desk, with screenshots. Every report gets a reference and a follow-up."},
+                    {'t': "Ideas", 'd': "Noted freely, reviewed once a week. Each one gets an answer: covered, already exists, to be quoted, or advised against."},
+                    {'t': "Decisions", 'd': "Budget, scope, dates: by e-mail, so both parties keep a written trace."},
+                    {'t': "Emergencies", 'd': "Instant messaging, only for an outage or a security alert."}
+                ] : [
+                    {'t': "Les anomalies", 'd': "Guichet d'assistance, avec capture d'écran. Chaque signalement reçoit une référence et un suivi."},
+                    {'t': "Les idées", 'd': "Notées librement, traitées une fois par semaine. Chacune reçoit une réponse : garantie, existant, à chiffrer, ou déconseillé."},
+                    {'t': "Les décisions", 'd': "Budget, périmètre, dates : par e-mail, pour que les deux parties en gardent la trace."},
+                    {'t': "L'urgence", 'd': "Messagerie instantanée, uniquement pour une panne ou une alerte de sécurité."}
+                ] %}
+                <ul class="list-unstyled small mb-4">
+                    {% for c in canaux %}
+                    <li class="{{ loop.last ? 'mb-0' : 'mb-3' }}">
+                        <strong class="d-block">{{ c.t }}</strong>
+                        <span class="text-muted">{{ c.d }}</span>
+                    </li>
+                    {% endfor %}
+                </ul>
+                <a href="{{ url('front_devis_new') }}" class="btn btn-primary w-100">
+                    {{ 'method.frame_cta'|trans }}
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="bg-primary text-white py-5" data-tone="dark">
+    <div class="container text-center">
+        <h2 class="h1 fw-bold mb-3">{{ 'method.promise_title'|trans }}</h2>
+        <p class="fs-5 mb-4" style="opacity: .9;">
+            {{ 'method.promise_sub'|trans }}
+        </p>
+        <p class="small mb-4" style="opacity: .75; max-width: 720px; margin: 0 auto;">
+            {{ 'method.promise_note'|trans }}
+        </p>
+        <a href="https://calendly.com/walid_belbeche/expertise-offerte"
+           class="btn btn-warning btn-lg fw-semibold">{{ 'agency.cta_book'|trans }}</a>
+    </div>
+</section>
+
+{% endblock %}

@@ -1,0 +1,140 @@
+{#
+	Panneau « L'application », affiche en bas du tableau de bord.
+
+	Reprend les informations du tableau de bord HTML : ce qui a ete construit,
+	sur quelle base technique, et ou en est chaque chantier. C'est la fiche
+	d'identite du projet, consultable sans sortir de l'administration.
+#}
+
+<section class="ad-card" style="margin-top: 1.6rem;" data-tone="light">
+	<div class="ad-card__head">
+		<h2>L'application</h2>
+		<span class="ad-tag ad-tag--green">En production</span>
+	</div>
+
+	<div class="ad-card__body">
+		<div class="ad-grid ad-grid--2" style="align-items:start;">
+
+			<div>
+				<h3 style="font-size:.9rem;font-weight:750;margin:0 0 .8rem;">Ce qui est construit</h3>
+				<table class="ad-table" style="border:1px solid var(--ad-line);border-radius:10px;">
+					<tbody>
+						<tr><td>Entités Doctrine</td><td class="num" style="text-align:right;"><strong>23</strong></td></tr>
+						<tr><td>Contrôleurs</td><td class="num" style="text-align:right;"><strong>31</strong></td></tr>
+						<tr><td>Routes exposées</td><td class="num" style="text-align:right;"><strong>112</strong></td></tr>
+						<tr><td>Gabarits Twig</td><td class="num" style="text-align:right;"><strong>132</strong></td></tr>
+						<tr><td>Formulaires</td><td class="num" style="text-align:right;"><strong>33</strong></td></tr>
+						<tr><td>Lignes de code</td><td class="num" style="text-align:right;"><strong>~22 000</strong></td></tr>
+					</tbody>
+				</table>
+				<p style="font-size:.8rem;color:var(--ad-text-3);margin:.6rem 0 0;">
+					Construit seul. Beaucoup d'agences de cinq personnes n'ont pas cet outillage.
+				</p>
+			</div>
+
+			<div>
+				<h3 style="font-size:.9rem;font-weight:750;margin:0 0 .8rem;">Socle technique</h3>
+				<div style="display:flex;flex-wrap:wrap;gap:.4rem;margin-bottom:1rem;">
+					{% for t in ['Symfony 5.4', 'PHP 8', 'Doctrine ORM', 'MySQL 8', 'Twig', 'Webpack Encore', 'Bootstrap 5', 'React Native'] %}
+						<span class="ad-tag ad-tag--blue ad-tag--muted">{{ t }}</span>
+					{% endfor %}
+				</div>
+
+				<h3 style="font-size:.9rem;font-weight:750;margin:1.2rem 0 .8rem;">Fonctionnalités en service</h3>
+				{% set modules = [
+					{'n': 'Génération de devis avec PDF et relances', 's': 'ok'},
+					{'n': 'Assistance par tickets', 's': 'ok'},
+					{'n': 'Forum et sujets', 's': 'ok'},
+					{'n': 'Blog et catégories', 's': 'ok'},
+					{'n': 'CRM de prospection avec relances J+4 et J+10', 's': 'ok'},
+					{'n': 'Supervision des hébergements par API', 's': 'ok'},
+					{'n': 'Compétences administrables', 's': 'ok'},
+					{'n': 'Relais AxisHumain avec mesure UTM', 's': 'ok'},
+					{'n': 'Site bilingue français et anglais', 's': 'actif'}
+				] %}
+				<ul style="list-style:none;padding:0;margin:0;">
+					{% for m in modules %}
+						<li style="display:flex;align-items:center;gap:.5rem;padding:.3rem 0;font-size:.85rem;color:var(--ad-text-2);">
+							<span class="ad-tag {{ m.s == 'ok' ? 'ad-tag--green' : 'ad-tag--gold' }}" style="min-width:0;">
+								{{ m.s == 'ok' ? 'actif' : 'partiel' }}
+							</span>
+							{{ m.n }}
+						</li>
+					{% endfor %}
+				</ul>
+			</div>
+
+		</div>
+
+		<hr style="border-color:var(--ad-line);margin:1.4rem 0;">
+
+		<h3 style="font-size:.9rem;font-weight:750;margin:0 0 .9rem;">Sécurité et conformité</h3>
+		<div class="ad-grid ad-grid--3">
+			{% set securite = [
+				{'t': 'Anti force brute', 'd': "5 tentatives par quart d'heure, plus 4 limiteurs sur les autres formulaires"},
+				{'t': 'En-têtes de sécurité', 'd': '8 en-têtes posés sur chaque réponse, CSP pilotable depuis .env'},
+				{'t': 'Protection CSRF', 'd': 'Déclarée explicitement, jetons sur les formulaires sensibles'},
+				{'t': 'Énumération de comptes', 'd': 'hide_user_not_found actif, réponse identique que le compte existe ou non'},
+				{'t': 'Jetons à usage unique', 'd': '64 caractères, expiration une heure, détruits après usage'},
+				{'t': 'Données personnelles', 'd': 'Hébergement en France, mentions et politique à jour'}
+			] %}
+			{% for item in securite %}
+				<div style="border:1px solid var(--ad-line);border-radius:10px;padding:.8rem .9rem;background:var(--ad-surface-2);">
+					<div style="display:flex;align-items:center;gap:.4rem;margin-bottom:.25rem;">
+						<span class="ad-tag ad-tag--green" style="font-size:.65rem;">OK</span>
+						<strong style="font-size:.83rem;">{{ item.t }}</strong>
+					</div>
+					<p style="margin:0;font-size:.78rem;color:var(--ad-text-3);">{{ item.d }}</p>
+				</div>
+			{% endfor %}
+		</div>
+
+		<hr style="border-color:var(--ad-line);margin:1.4rem 0;">
+
+		<h3 style="font-size:.9rem;font-weight:750;margin:0 0 .9rem;">Chantiers ouverts</h3>
+		{% set chantiers = [
+			{'t': 'Traduction des nouvelles pages commerciales', 'e': 'Fait', 'c': 'green'},
+			{'t': 'Style des pages ticketing et forum', 'e': 'Fait', 'c': 'green'},
+			{'t': 'Fusion des 5 anciennes pages de service dans /mes-formules', 'e': 'Fait, redirections 301', 'c': 'green'},
+			{'t': 'Actions Éditer et Supprimer sur les catégories', 'e': 'Fait', 'c': 'green'},
+			{'t': 'Gabarits e-mail sobres et unifiés', 'e': 'Fait', 'c': 'green'},
+			{'t': 'Montée en Symfony 6.4 et retrait de sensio', 'e': 'Après le 25 août', 'c': 'blue'},
+			{'t': 'Conversion des annotations en attributs PHP 8', 'e': 'Avec la montée de version', 'c': 'blue'}
+		] %}
+		<table class="ad-table" style="border:1px solid var(--ad-line);border-radius:10px;">
+			<tbody>
+			{% for c in chantiers %}
+				<tr>
+					<td><strong>{{ c.t }}</strong></td>
+					<td style="text-align:right;"><span class="ad-tag ad-tag--{{ c.c }}">{{ c.e }}</span></td>
+				</tr>
+			{% endfor %}
+			</tbody>
+		</table>
+
+		<hr style="border-color:var(--ad-line);margin:1.4rem 0;">
+
+		<h3 style="font-size:.9rem;font-weight:750;margin:0 0 .9rem;">Commandes utiles</h3>
+		{% set commandes = [
+			{'c': 'php bin/console app:prospection:daily', 'd': 'Le point de prospection du matin : relances dues, cibles du jour, diagnostic'},
+			{'c': 'php bin/console app:import:skills', 'd': 'Importe ou réaligne le référentiel de compétences'},
+			{'c': 'php bin/console app:diag:schema', 'd': 'Vérifie les collisions de mapping Doctrine'},
+			{'c': 'php bin/console app:create-admin', 'd': 'Crée un compte administrateur'},
+			{'c': 'php bin/console doctrine:schema:validate', 'd': 'Contrôle que base et entités sont alignées'}
+		] %}
+		<div class="ad-grid ad-grid--2">
+			{% for cmd in commandes %}
+				<div style="border:1px solid var(--ad-line);border-radius:10px;padding:.75rem .9rem;">
+					<code style="display:block;font-size:.79rem;margin-bottom:.3rem;">{{ cmd.c }}</code>
+					<span style="font-size:.77rem;color:var(--ad-text-3);">{{ cmd.d }}</span>
+				</div>
+			{% endfor %}
+		</div>
+
+	</div>
+
+	<div class="ad-card__foot" style="color:var(--ad-text-3);">
+		Consultant informatique indépendant · Titre professionnel RNCP niveau 5 ·
+		12 ans de pratique · 3 plateformes en production : walidbelbeche.fr, AxisHumain, Rêves
+	</div>
+</section>

@@ -58,6 +58,55 @@ class CategoryController extends AbstractController
     }
 
     /**
+     * @Route("/admin/categorie/{id}/modifier", name="back_categories_edit", requirements={"id"="\d+"})
+     * @IsGranted("ROLE_ADMIN")
+     */
+    public function edit(Request $request, EntityManagerInterface $entityManager, Category $category): Response
+    {
+        $form = $this->createForm(CategoryType::class, $category);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager->flush();
+            $this->addFlash('success', 'Categorie mise a jour.');
+
+            return $this->redirectToRoute('back_category_index');
+        }
+
+        return $this->render('back/category/edit.html.twig', [
+            'categoryForm' => $form->createView(),
+            'category' => $category,
+        ]);
+    }
+
+    /**
+     * @Route("/admin/categorie/{id}/supprimer", name="back_categories_remove", methods={"POST"}, requirements={"id"="\d+"})
+     * @IsGranted("ROLE_ADMIN")
+     */
+    public function remove(Request $request, EntityManagerInterface $entityManager, Category $category): Response
+    {
+        if (!$this->isCsrfTokenValid('delete_category'.$category->getId(), $request->request->get('_token'))) {
+            return $this->redirectToRoute('back_category_index');
+        }
+
+        $liees = count($category->getProjects()) + count($category->getSubjects()) + count($category->getPosts());
+        if ($liees > 0) {
+            $this->addFlash('warning', sprintf(
+                'Impossible de supprimer "%s" : %d contenu(s) y sont encore rattaches. Reclassez-les d\'abord.',
+                $category->getName(), $liees
+            ));
+
+            return $this->redirectToRoute('back_category_index');
+        }
+
+        $entityManager->remove($category);
+        $entityManager->flush();
+        $this->addFlash('success', 'Categorie supprimee.');
+
+        return $this->redirectToRoute('back_category_index');
+    }
+
+    /**
      * @Route("/admin/categorie/afficher/{id}", name="back_category_show")
      * @param EntityManagerInterface $entityManager
      * @return Response

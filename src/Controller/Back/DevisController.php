@@ -68,13 +68,16 @@ class DevisController extends AbstractController
     }
 
     /**
-     * @Route("/admin/devis/{id}/delete", name="back_devis_delete")
+     * @Route("/admin/devis/{id}/delete", name="back_devis_delete", methods={"POST"})
      * @IsGranted("ROLE_ADMIN")
      */
     public function delete(Request $request, EntityManagerInterface $entityManager, Devis $devis): Response
     {
-        $entityManager->remove($devis);
-        $entityManager->flush();
+        if ($this->isCsrfTokenValid('delete_devis'.$devis->getId(), $request->request->get('_token'))) {
+            $entityManager->remove($devis);
+            $entityManager->flush();
+            $this->addFlash('success', 'Devis supprime.');
+        }
 
         return $this->redirectToRoute('back_devis_index');
     }
@@ -108,7 +111,7 @@ class DevisController extends AbstractController
 
             // Envoi de l'e-mail avec le récapitulatif du devis et le PDF en pièce jointe
             $email = (new TemplatedEmail())
-            ->from('contact@scriptzenit.fr')
+            ->from('contact@walidbelbeche.fr')
             ->to($devis->getEmail())
             ->bcc('wbelbeche.s@gmail.com')
             ->subject('Réponse à votre demande de devis #' . $devis->getId())

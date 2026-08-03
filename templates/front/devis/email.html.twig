@@ -1,272 +1,35 @@
-{% block body_text %}
+{% extends 'emails/_layout.html.twig' %}
 
-	<!--[if gte mso 9]>
-	<xml>
-	  <o:OfficeDocumentSettings>
-		<o:AllowPNG/>
-		<o:PixelsPerInch>96</o:PixelsPerInch>
-	  </o:OfficeDocumentSettings>
-	</xml>
-	<![endif]-->
+{% block email_title %}Votre demande est bien reçue{% endblock %}
 
-	<!--[if IE]><div class="ie-container"><![endif]-->
-	<!--[if mso]><div class="mso-container"><![endif]-->
-		<table id="u_body" style="border-collapse: collapse;table-layout: fixed;border-spacing: 0;mso-table-lspace: 0pt;mso-table-rspace: 0pt;vertical-align: top;min-width: 320px;Margin: 0 auto;background-color: #ffffff;width:100%" cellpadding="0" cellspacing="0"> <tbody>
-			<tr style="vertical-align: top">
-				<td
-					style="word-break: break-word;border-collapse: collapse !important;vertical-align: top">
-					<!--[if (mso)|(IE)]><table width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td align="center" style="background-color: #ffffff;"><![endif]-->
+{% block email_body %}
+    <p style="margin:0 0 14px;">Bonjour,</p>
+    <p style="margin:0 0 14px;">
+        Votre demande d'estimation est bien arrivée. Je la lis personnellement et je
+        reviens vers vous avec un chiffrage détaillé, ligne par ligne,
+        <strong style="color:#141c2e;">sous 48 heures ouvrées</strong>.
+    </p>
 
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:14px 0;border:1px solid #e4e7ec;border-radius:8px;background-color:#f8fafc;">
+        <tr><td style="padding:7px 14px;font-family:Arial,Helvetica,sans-serif;font-size:13px;color:#6b7280;white-space:nowrap;">Référence</td><td style="padding:7px 14px;font-family:Arial,Helvetica,sans-serif;font-size:13px;color:#141c2e;">{{ (registredNumber ~ '')|slice(0, 8) }}</td></tr>
+        <tr><td style="padding:7px 14px;font-family:Arial,Helvetica,sans-serif;font-size:13px;color:#6b7280;white-space:nowrap;">Projet</td><td style="padding:7px 14px;font-family:Arial,Helvetica,sans-serif;font-size:13px;color:#141c2e;">{{ typeWeb }}</td></tr>
+        {% if designWebsite is defined and designWebsite|length > 0 %}
+        <tr><td style="padding:7px 14px;font-family:Arial,Helvetica,sans-serif;font-size:13px;color:#6b7280;white-space:nowrap;">Attentes</td><td style="padding:7px 14px;font-family:Arial,Helvetica,sans-serif;font-size:13px;color:#141c2e;">{% for d in designWebsite %}{{ d.label }}{{ not loop.last ? ', ' : '' }}{% endfor %}</td></tr>
+        {% endif %}
+    </table>
 
-					<div class="u-row-container" style="padding: 0px 10px;background-image: url('https://a.mailmunch.co/user_data/landing_pages/1503909279487-aassd_01.jpg');background-repeat: no-repeat;background-position: center top;background-color: #1b1c1c">
-						<div class="u-row" style="Margin: 0 auto;min-width: 320px;max-width: 600px;overflow-wrap: break-word;word-wrap: break-word;word-break: break-word;background-color: #0075a3;">
-							<div style="border-collapse: collapse;display: table;width: 100%;height: 100%;background-color: transparent;">
-								<!--[if (mso)|(IE)]><table width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="padding: 0px 10px;background-image: url('https://a.mailmunch.co/user_data/landing_pages/1503909279487-aassd_01.jpg');background-repeat: no-repeat;background-position: center top;background-color: #1b1c1c;" align="center"><table cellpadding="0" cellspacing="0" border="0" style="width:600px;"><tr style="background-color: #0075a3;"><![endif]-->
+    {% if message %}
+    <p style="margin:14px 0 6px;font-size:13px;color:#6b7280;">Votre description, pour mémoire :</p>
+    <p style="margin:0 0 14px;padding:12px 14px;background-color:#f8fafc;border-left:3px solid #f5b301;font-size:13px;color:#333c4d;">
+        {{ message }}
+    </p>
+    {% endif %}
 
-								<!--[if (mso)|(IE)]><td align="center" width="600" style="width: 600px;padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;" valign="top"><![endif]-->
-									<div class="u-col u-col-100" style="max-width: 320px;min-width: 600px;display: table-cell;vertical-align: top;"> <div
-										style="height: 100%;width: 100% !important;">
-										<!--[if (!mso)&(!IE)]><!-->
-										<div
-											style="box-sizing: border-box; height: 100%; padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;">
-											<!--<![endif]-->
-
-											<table style="font-family:'Lato',sans-serif;" role="presentation" cellpadding="0" cellspacing="0" width="100%" border="0">
-												<tbody>
-													<tr>
-														<td style="overflow-wrap:break-word;word-break:break-word;padding:48px 20px 35px;font-family:'Lato',sans-serif;" align="left">
-
-															<table width="100%" cellpadding="0" cellspacing="0" border="0">
-																<tr>
-																	<td style="padding-right: 0px;padding-left: 0px;" align="center">
-
-																		<img align="center" border="0" src="https://scriptzenit.fr/img/logo.png" alt="Image" title="Image" style="outline: none;text-decoration: none;-ms-interpolation-mode: bicubic;clear: both;display: inline-block !important;border: none;height: auto;float: none;width: 100%;max-width: 560px;" width="560"/>
-
-																	</td>
-																</tr>
-															</table>
-
-														</td>
-													</tr>
-												</tbody>
-											</table>
-
-											<table style="font-family:'Lato',sans-serif;" role="presentation" cellpadding="0" cellspacing="0" width="100%" border="0">
-												<tbody>
-													<tr>
-														<td style="overflow-wrap:break-word;word-break:break-word;padding:20px;font-family:'Lato',sans-serif;" align="left">
-
-															<div style="color: #ffffff; line-height: 130%; text-align: center; word-wrap: break-word;">
-																<p style="line-height: 130%;">Demande enregistrée</p>
-															</div>
-
-														</td>
-													</tr>
-												</tbody>
-											</table>
-
-											<!--[if (!mso)&(!IE)]><!-->
-										</div>
-										<!--<![endif]-->
-									</div>
-								</div>
-								<!--[if (mso)|(IE)]></td><![endif]-->
-								<!--[if (mso)|(IE)]></tr></table></td></tr></table><![endif]-->
-							</div>
-						</div>
-					</div>
-
-
-					<div class="u-row-container" style="padding: 0px 10px;background-color: #1b1c1c">
-						<div class="u-row" style="Margin: 0 auto;min-width: 320px;max-width: 600px;overflow-wrap: break-word;word-wrap: break-word;word-break: break-word;background-color: transparent;">
-							<div style="border-collapse: collapse;display: table;width: 100%;height: 100%;background-color: transparent;">
-								<!--[if (mso)|(IE)]><table width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="padding: 0px 10px;background-color: #1b1c1c;" align="center"><table cellpadding="0" cellspacing="0" border="0" style="width:600px;"><tr style="background-color: transparent;"><![endif]-->
-
-								<!--[if (mso)|(IE)]><td align="center" width="600" style="width: 600px;padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;" valign="top"><![endif]-->
-									<div class="u-col u-col-100" style="max-width: 320px;min-width: 600px;display: table-cell;vertical-align: top;"> <div
-										style="height: 100%;width: 100% !important;">
-										<!--[if (!mso)&(!IE)]><!-->
-										<div
-											style="box-sizing: border-box; height: 100%; padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;">
-											<!--<![endif]-->
-
-											<table style="font-family:'Lato',sans-serif;" role="presentation" cellpadding="0" cellspacing="0" width="100%" border="0">
-												<tbody>
-													<tr>
-														<td style="overflow-wrap:break-word;word-break:break-word;padding:0px;font-family:'Lato',sans-serif;" align="left">
-
-															<table width="100%" cellpadding="0" cellspacing="0" border="0">
-																<tr>
-																	<td style="padding-right: 0px;padding-left: 0px;" align="center">
-
-																		<img align="center" border="0" src="https://a.mailmunch.co/user_data/landing_pages/1503910043014-22231_05.png" alt="Image" title="Image" style="outline: none;text-decoration: none;-ms-interpolation-mode: bicubic;clear: both;display: inline-block !important;border: none;height: auto;float: none;width: 100%;max-width: 600px;" width="600"/>
-
-																	</td>
-																</tr>
-															</table>
-
-														</td>
-													</tr>
-												</tbody>
-											</table>
-
-											<table style="font-family:'Lato',sans-serif;" role="presentation" cellpadding="0" cellspacing="0" width="100%" border="0">
-												<tbody>
-													<tr>
-														<td style="overflow-wrap:break-word;word-break:break-word;padding:25px 20px 5px;font-family:'Lato',sans-serif;" align="left">
-
-															<div style="color: #fff200; line-height: 120%; text-align: left; word-wrap: break-word;">
-																<p style="font-size: 14px; line-height: 120%;">Récapitulatif demande de devis
-																</p>
-															</div>
-
-															<p style="color:white;">
-
-																Numéro d'inscription :
-																{{ registredNumber }}
-
-																<br>
-
-																Adresse email :
-																{{ emailAddress }},
-																<br>
-
-																Votre demande est :
-																{{ message }}
-																<br>
-
-																Vos préferences :
-																Vous souhaitez réaliser {{ typeWeb }}
-
-																<br>
-
-																Votre attente concernant le design :
-																{% for attente in designWebsite %}
-																	{{ attente.label }}
-																{% endfor %}
-																<br>
-															</p>
-														</td>
-													</tr>
-												</tbody>
-											</table>
-
-											<!--[if (!mso)&(!IE)]><!-->
-										</div>
-										<!--<![endif]-->
-									</div>
-								</div>
-								<!--[if (mso)|(IE)]></td><![endif]-->
-								<!--[if (mso)|(IE)]></tr></table></td></tr></table><![endif]-->
-							</div>
-						</div>
-					</div>
-
-
-					<div class="u-row-container" style="padding: 0px 10px;background-color: #1b1c1c">
-						<div class="u-row" style="Margin: 0 auto;min-width: 320px;max-width: 600px;overflow-wrap: break-word;word-wrap: break-word;word-break: break-word;background-color: #0075a3;">
-							<div style="border-collapse: collapse;display: table;width: 100%;height: 100%;background-color: transparent;">
-								<!--[if (mso)|(IE)]><table width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="padding: 0px 10px;background-color: #1b1c1c;" align="center"><table cellpadding="0" cellspacing="0" border="0" style="width:600px;"><tr style="background-color: #0075a3;"><![endif]-->
-
-								<!--[if (mso)|(IE)]><td align="center" width="600" style="width: 600px;padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;" valign="top"><![endif]-->
-									<div class="u-col u-col-100" style="max-width: 320px;min-width: 600px;display: table-cell;vertical-align: top;"> <div
-										style="height: 100%;width: 100% !important;">
-										<!--[if (!mso)&(!IE)]><!-->
-										<div
-											style="box-sizing: border-box; height: 100%; padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;">
-											<!--<![endif]-->
-
-											<table style="font-family:'Lato',sans-serif;" role="presentation" cellpadding="0" cellspacing="0" width="100%" border="0">
-												<tbody>
-													<tr>
-														<td
-															style="overflow-wrap:break-word;word-break:break-word;padding:20px 20px 40px;font-family:'Lato',sans-serif;" align="left">
-
-															<!--[if mso]><style>.v-button {background: transparent !important;}</style><![endif]-->
-															<div
-																align="center">
-																<!--[if mso]><v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="https://scriptzenit.fr/realisations" style="height:37px; v-text-anchor:middle; width:208px;" arcsize="0%"  stroke="f" fillcolor="#fff200"><w:anchorlock/><center style="color:#0075a3;font-family:'Lato',sans-serif;"><![endif]-->
-																<a href="https://scriptzenit.fr/realisations" target="_blank" class="v-button" style="box-sizing: border-box;display: inline-block;font-family:'Lato',sans-serif;text-decoration: none;-webkit-text-size-adjust: none;text-align: center;color: #0075a3; background-color: #fff200; border-radius: 0px;-webkit-border-radius: 0px; -moz-border-radius: 0px; width:auto; max-width:100%; overflow-wrap: break-word; word-break: break-word; word-wrap:break-word; mso-border-alt: none;font-size: 14px;">
-																	<span style="display:block;padding:10px 20px;line-height:120%;">
-																		<strong>
-																			<span style="line-height: 16.8px;">NOUS PROPOSONS
-																			</span>
-																		</strong>
-																	</span>
-																</a>
-																<!--[if mso]></center></v:roundrect><![endif]-->
-															</div>
-
-														</td>
-													</tr>
-												</tbody>
-											</table>
-
-											<!--[if (!mso)&(!IE)]><!-->
-										</div>
-										<!--<![endif]-->
-									</div>
-								</div>
-								<!--[if (mso)|(IE)]></td><![endif]-->
-								<!--[if (mso)|(IE)]></tr></table></td></tr></table><![endif]-->
-							</div>
-						</div>
-					</div>
-
-
-					<div class="u-row-container" style="padding: 30px;">
-						<div class="u-row" style="Margin: 0 auto;min-width: 320px;max-width: 600px;overflow-wrap: break-word;word-wrap: break-word;word-break: break-word;background-color: transparent;">
-							<div style="border-collapse: collapse;display: table;width: 100%;height: 100%;background-color: transparent;">
-								<!--[if (mso)|(IE)]><table width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="padding: 30px;" align="center"><table cellpadding="0" cellspacing="0" border="0" style="width:600px;"><tr style="background-color: transparent;"><![endif]-->
-
-								<!--[if (mso)|(IE)]><td align="center" width="600" style="width: 600px;padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;" valign="top"><![endif]-->
-									<div class="u-col u-col-100" style="max-width: 320px;min-width: 600px;display: table-cell;vertical-align: top;"> <div
-										style="height: 100%;width: 100% !important;">
-										<!--[if (!mso)&(!IE)]><!-->
-										<div
-											style="box-sizing: border-box; height: 100%; padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;">
-											<!--<![endif]-->
-
-											<table style="font-family:'Lato',sans-serif;" role="presentation" cellpadding="0" cellspacing="0" width="100%" border="0">
-												<tbody>
-													<tr>
-														<td style="overflow-wrap:break-word;word-break:break-word;padding:20px;font-family:'Lato',sans-serif;" align="left">
-
-															<div style="line-height: 120%; text-align: left; word-wrap: break-word;">
-																<div style="font-family: arial, helvetica, sans-serif;">
-																	<span style="font-size: 12px; color: #999999; line-height: 14.4px;">Vous avez reçu cet e-mail parce que vous venez de faire une demande de devis.</span>
-																</div>
-																<div style="font-family: arial, helvetica, sans-serif;">&nbsp;</div>
-																<div style="font-family: arial, helvetica, sans-serif;">
-																	<span style="font-size: 12px; color: #999999; line-height: 14.4px;">Nous revenons vers vous dans 48h/72h maximum, vérifiez votre adresse email, passé ce délai, veuillez rédiger un ticket.<a href="{{ url('front_assistance')}}">Clickez ici</a>
-																	</span>
-																</div>
-															</div>
-
-														</td>
-													</tr>
-												</tbody>
-											</table>
-
-											<!--[if (!mso)&(!IE)]><!-->
-										</div>
-										<!--<![endif]-->
-									</div>
-								</div>
-								<!--[if (mso)|(IE)]></td><![endif]-->
-								<!--[if (mso)|(IE)]></tr></table></td></tr></table><![endif]-->
-							</div>
-						</div>
-					</div>
-
-
-					<!--[if (mso)|(IE)]></td></tr></table><![endif]-->
-				</td>
-			</tr>
-		</tbody>
-	</table>
-	<!--[if mso]></div><![endif]-->
-	<!--[if IE]></div><![endif]-->
-
-
+    <p style="margin:0 0 14px;">
+        D'ici là, vous n'avez rien à faire. Si un détail vous revient,
+        répondez simplement à cet e-mail : votre message rejoindra le dossier.
+    </p>
+    <p style="margin:0;font-size:13px;color:#6b7280;">
+        Vous ne recevrez aucune relance commerciale : mon devis, et c'est tout.
+    </p>
 {% endblock %}

@@ -1,12 +1,212 @@
 {% extends 'base_back.html.twig' %}
 
-{% block title %}Back controller index{% endblock %}
+{% block title %}Tableau de bord{% endblock %}
+{% block breadcrumb %}Administration{% endblock %}
+{% block heading %}Tableau de bord{% endblock %}
+
+{% block topActions %}
+	<a href="{{ url('back_devis_index') }}" class="ad-btn ad-btn--primary">Voir les devis</a>
+{% endblock %}
 
 {% block content %}
 
-    <h1>Page administration principal</h1>
-    <div class="justify-content-center">
-        <a href="{{ url('front_home') }}">Retour à la page d'accueil</a>
-    </div>
+{% set c = admin_counts() %}
+
+{# --------------------------------------------------------- ce qui presse -- #}
+{% set aTraiter = c.callbacks + c.tickets %}
+
+{% if aTraiter > 0 %}
+	<div class="ad-flash ad-flash--warning" style="display:flex;align-items:center;gap:1rem;flex-wrap:wrap;">
+		<strong style="font-size:.95rem;">{{ aTraiter }} élément(s) attendent une réponse de ta part.</strong>
+		<span style="color:var(--ad-text-2);">
+			{{ c.callbacks }} demande(s) de rappel et {{ c.tickets }} ticket(s).
+			Un rappel non traité sous 24 heures est un client perdu.
+		</span>
+		<span style="margin-left:auto;display:flex;gap:.4rem;">
+			<a href="{{ url('back_callback_requests') }}" class="ad-btn ad-btn--ghost ad-btn--sm">Les rappels</a>
+			<a href="{{ url('back_ticket') }}" class="ad-btn ad-btn--ghost ad-btn--sm">Les tickets</a>
+		</span>
+	</div>
+{% endif %}
+
+{# ---------------------------------------------------------------- chiffres -- #}
+<div class="ad-kpis">
+	<a href="{{ url('back_devis_index') }}" class="ad-kpi" data-tone="light">
+		<div class="ad-kpi__n">{{ c.devis }}</div>
+		<div class="ad-kpi__l">Devis</div>
+		<div class="ad-kpi__hint">Demandes d'estimation reçues</div>
+	</a>
+	<a href="{{ url('back_callback_requests') }}" class="ad-kpi ad-kpi--gold" data-tone="light">
+		<div class="ad-kpi__n">{{ c.callbacks }}</div>
+		<div class="ad-kpi__l">Rappels</div>
+		<div class="ad-kpi__hint">À rappeler sous 24 h ouvrées</div>
+	</a>
+	<a href="{{ url('back_prospect_index') }}" class="ad-kpi ad-kpi--violet" data-tone="light">
+		<div class="ad-kpi__n">{{ c.prospects }}</div>
+		<div class="ad-kpi__l">Prospects</div>
+		<div class="ad-kpi__hint">Pipeline de prospection</div>
+	</a>
+	<a href="{{ url('back_ticket') }}" class="ad-kpi ad-kpi--red" data-tone="light">
+		<div class="ad-kpi__n">{{ c.tickets }}</div>
+		<div class="ad-kpi__l">Tickets</div>
+		<div class="ad-kpi__hint">Assistance client</div>
+	</a>
+	<a href="{{ url('back_project_index') }}" class="ad-kpi ad-kpi--green" data-tone="light">
+		<div class="ad-kpi__n">{{ c.projects }}</div>
+		<div class="ad-kpi__l">Réalisations</div>
+		<div class="ad-kpi__hint">Publiées sur le site</div>
+	</a>
+	<a href="{{ url('back_user_index') }}" class="ad-kpi" data-tone="light">
+		<div class="ad-kpi__n">{{ c.users }}</div>
+		<div class="ad-kpi__l">Comptes</div>
+		<div class="ad-kpi__hint">Utilisateurs inscrits</div>
+	</a>
+</div>
+
+{# ------------------------------------------------------------ actions rapides #}
+<div class="ad-grid ad-grid--3" style="margin-bottom:1.6rem;">
+	{% set raccourcis = [
+		{'url': url('back_project_new'),   'titre': 'Ajouter une réalisation', 'sous': 'Nouvelle étude de cas'},
+		{'url': url('back_skill_new'),     'titre': 'Ajouter une compétence',  'sous': "Visible sur l'accueil"},
+		{'url': url('back_prospect_new'),  'titre': 'Ajouter un prospect',     'sous': 'Alimenter le pipeline'},
+		{'url': url('back_subjects_new'),  'titre': 'Écrire un sujet',         'sous': 'Forum et support'},
+		{'url': url('back_category_new'),  'titre': 'Créer une catégorie',     'sous': 'Classement du contenu'},
+		{'url': url('back_user_new'),      'titre': 'Créer un compte',         'sous': 'Accès client ou admin'}
+	] %}
+	{% for item in raccourcis %}
+		<a href="{{ item.url }}" class="ad-quick" data-tone="light">
+			<span class="ad-quick__ico">
+				<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+					<path d="M12 5v14M5 12h14"/>
+				</svg>
+			</span>
+			<span>
+				<b>{{ item.titre }}</b>
+				<span>{{ item.sous }}</span>
+			</span>
+		</a>
+	{% endfor %}
+</div>
+
+{# --------------------------------------------------------------- activite --- #}
+<div class="ad-grid ad-grid--2">
+
+	<section class="ad-card" data-tone="light">
+		<div class="ad-card__head">
+			<h2>Derniers devis</h2>
+			<a href="{{ url('back_devis_index') }}" class="ad-btn ad-btn--ghost ad-btn--sm">Tout voir</a>
+		</div>
+		{% if derniersDevis|length > 0 %}
+			<table class="ad-table">
+				<thead><tr><th>Référence</th><th>Client</th><th style="text-align:right;">Action</th></tr></thead>
+				<tbody>
+				{% for devis in derniersDevis %}
+					<tr>
+						<td style="white-space:nowrap;">
+							<strong title="{{ devis.id }}">#{{ (devis.id ~ '')|slice(0, 8) }}</strong>
+							<div class="ad-hint">{{ devis.createdAt|date('d/m/Y') }}</div>
+						</td>
+						<td style="max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">
+							{{ devis.email ?? (devis.user ? devis.user.email : 'Non renseigné') }}
+						</td>
+						<td class="ad-actions" style="white-space:nowrap;">
+							<a href="{{ url('back_devis_show', {id: devis.id}) }}" class="ad-btn ad-btn--ghost ad-btn--sm">Ouvrir</a>
+						</td>
+					</tr>
+				{% endfor %}
+				</tbody>
+			</table>
+		{% else %}
+			<div class="ad-card__body"><p style="margin:0;color:var(--ad-text-3);">Aucun devis pour le moment.</p></div>
+		{% endif %}
+	</section>
+
+	<section class="ad-card" data-tone="light">
+		<div class="ad-card__head">
+			<h2>Demandes de rappel</h2>
+			<a href="{{ url('back_callback_requests') }}" class="ad-btn ad-btn--ghost ad-btn--sm">Tout voir</a>
+		</div>
+		{% if derniersRappels|length > 0 %}
+			<table class="ad-table">
+				<thead><tr><th>Nom</th><th>Téléphone</th><th style="text-align:right;">Action</th></tr></thead>
+				<tbody>
+				{% for rappel in derniersRappels %}
+					<tr>
+						<td><strong>{{ rappel.name ?? 'Anonyme' }}</strong></td>
+						<td class="num">{{ rappel.phone ?? '-' }}</td>
+						<td class="ad-actions">
+							<a href="tel:{{ rappel.phone }}" class="ad-btn ad-btn--primary ad-btn--sm">Appeler</a>
+						</td>
+					</tr>
+				{% endfor %}
+				</tbody>
+			</table>
+		{% else %}
+			<div class="ad-card__body"><p style="margin:0;color:var(--ad-text-3);">Aucune demande de rappel.</p></div>
+		{% endif %}
+	</section>
+
+	<section class="ad-card" data-tone="light">
+		<div class="ad-card__head">
+			<h2>Tickets récents</h2>
+			<a href="{{ url('back_ticket') }}" class="ad-btn ad-btn--ghost ad-btn--sm">Tout voir</a>
+		</div>
+		{% if derniersTickets|length > 0 %}
+			<table class="ad-table">
+				<thead><tr><th>Sujet</th><th>Émetteur</th><th style="text-align:right;">Action</th></tr></thead>
+				<tbody>
+				{% for ticket in derniersTickets %}
+					<tr>
+						<td><strong>{{ ticket.title ?? ('Ticket #' ~ ticket.id) }}</strong></td>
+						<td>{{ ticket.sender ? ticket.sender.email : '-' }}</td>
+						<td class="ad-actions">
+							<a href="{{ url('back_show_ticket', {id: ticket.id}) }}" class="ad-btn ad-btn--ghost ad-btn--sm">Ouvrir</a>
+						</td>
+					</tr>
+				{% endfor %}
+				</tbody>
+			</table>
+		{% else %}
+			<div class="ad-card__body"><p style="margin:0;color:var(--ad-text-3);">Aucun ticket ouvert.</p></div>
+		{% endif %}
+	</section>
+
+	<section class="ad-card" data-tone="light">
+		<div class="ad-card__head">
+			<h2>État du contenu</h2>
+		</div>
+		<div class="ad-card__body">
+			{% set contenus = [
+				{'l': 'Réalisations publiées', 'n': c.projects, 'max': 15, 'c': 'var(--ad-green)'},
+				{'l': 'Compétences renseignées', 'n': c.skills, 'max': 25, 'c': 'var(--ad-primary)'},
+				{'l': 'Articles de blog', 'n': c.posts, 'max': 10, 'c': 'var(--ad-violet)'},
+				{'l': 'Sujets du forum', 'n': c.subjects, 'max': 20, 'c': 'var(--ad-gold)'}
+			] %}
+			{% for item in contenus %}
+				<div style="margin-bottom:1rem;">
+					<div style="display:flex;justify-content:space-between;font-size:.83rem;margin-bottom:.3rem;">
+						<span style="color:var(--ad-text-2);">{{ item.l }}</span>
+						<strong>{{ item.n }}</strong>
+					</div>
+					<div class="ad-bar">
+						<div class="ad-bar__fill" style="width: {{ min(100, (item.n / item.max * 100)|round) }}%; background: {{ item.c }};"></div>
+					</div>
+				</div>
+			{% endfor %}
+
+			{% if c.skills == 0 %}
+				<p style="margin:.8rem 0 0;font-size:.82rem;color:var(--ad-text-2);">
+					Aucune compétence en base. Lance
+					<code style="background:var(--ad-line-2);padding:.1rem .35rem;border-radius:4px;">php bin/console app:import:skills</code>
+					pour importer le référentiel, puis ajuste-les ici.
+				</p>
+			{% endif %}
+		</div>
+	</section>
+
+</div>
+
+
+{{ include('back/index/_application.html.twig') }}
 
 {% endblock %}

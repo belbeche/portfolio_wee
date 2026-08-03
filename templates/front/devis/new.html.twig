@@ -16,28 +16,71 @@
 		});
 	</script>
 
-	<div class="container-fluid text-center jumbotron" style="margin-bottom: 1rem;">
-		<h1>Demande en ligne</h1>
-		<div class="page-subtitle">
-			<br>
-			<p class="lead mb-4">Nous comprenons qu'aborder la création ou la refonte d'un site web ou d'une application mobile peut être intimidant. </p>
-			<p>C'est pourquoi notre approche commence par une écoute attentive de vos besoins.</p>
-			<p>Nous suivons un processus clair et transparent pour garantir que chaque étape de votre projet est parfaitement alignée avec vos objectifs.</p>
+	<section class="wb-hero wb-slant" data-tone="dark">
+		<div class="container" style="padding-top: 7rem; padding-bottom: 6rem;">
+			<div class="row g-5 align-items-center">
+				<div class="col-lg-7">
+					<span class="wb-eyebrow">{{ 'quote.eyebrow'|trans }}</span>
+					<h1 class="wb-display">
+						{{ 'quote.title_1'|trans }}<br><span class="wb-mark">{{ 'quote.title_2'|trans }}</span>.
+					</h1>
+					<p class="wb-lead wb-lead--on-dark mb-4">
+						{{ 'quote.lead'|trans }}
+					</p>
+					<div class="d-flex flex-wrap gap-3">
+						<span class="wb-badge wb-badge--glass">{{ 'quote.badge1'|trans }}</span>
+						<span class="wb-badge wb-badge--glass">{{ 'quote.badge2'|trans }}</span>
+						<span class="wb-badge wb-badge--glass">{{ 'quote.badge3'|trans }}</span>
+					</div>
+				</div>
+				<div class="col-lg-5">
+					<div class="wb-card wb-card--glass p-4" data-tone="dark">
+						<h2 class="wb-h3 text-white">{{ 'quote.after_title'|trans }}</h2>
+						<ol class="mb-0 ps-3" style="color: var(--wb-on-dark-2); font-size: .93rem;">
+							<li class="mb-2">Je lis votre demande le jour même.</li>
+							<li class="mb-2">Je vous écris si un point manque, plutôt que de chiffrer au hasard.</li>
+							<li class="mb-2">Vous recevez un devis détaillé en PDF, valable un mois.</li>
+							<li class="mb-0">Vous suivez l'avancement depuis votre <a href="{{ path('front_assistance') }}" class="text-warning">espace assistance</a>.</li>
+						</ol>
+					</div>
+				</div>
+			</div>
 		</div>
-	</div>
+	</section>
 
-	<div class="container">
-    <img src="{{ asset('img/debut-667ec7b7cd006.jpg') }}" alt="Création site internet ScriptZenIT, solution digital sur mesure" class="img-fluid">
-  </div>
-	<div class="b-example-divider"></div>
-	<section class="container text-center">
-		<p class="lead mb-5">
-			Remplissez le formulaire ci-dessous pour détailler vos besoins. Une fois votre demande de devis soumise,
-			vous pourrez suivre son avancement en temps réel grâce à notre onglet <a href="{{ path('front_assistance') }}">Assistance</a>.
-			Nous sommes là pour vous accompagner à chaque étape.
-		</p>
+	<section class="wb-section--tight" style="background: var(--wb-paper);">
+		<div class="container">
+			<div class="row g-4">
+				<div class="col-md-4">
+					<div class="wb-card wb-card--accent h-100" data-tone="light">
+						<h3 class="wb-h3">{{ 'quote.card1_title'|trans }}</h3>
+						<p class="mb-0" style="color: var(--wb-text-2); font-size: .93rem;">
+							{{ 'quote.card1_p'|trans }}
+						</p>
+					</div>
+				</div>
+				<div class="col-md-4">
+					<div class="wb-card h-100" data-tone="light">
+						<h3 class="wb-h3">{{ 'quote.card2_title'|trans }}</h3>
+						<p class="mb-0" style="color: var(--wb-text-2); font-size: .93rem;">
+							{{ 'quote.card2_p'|trans }}
+						</p>
+					</div>
+				</div>
+				<div class="col-md-4">
+					<div class="wb-card h-100" data-tone="light">
+						<h3 class="wb-h3">{{ 'quote.card3_title'|trans }}</h3>
+						<p class="mb-0" style="color: var(--wb-text-2); font-size: .93rem;">
+							{{ 'quote.card3_p'|trans }}
+						</p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
 
-        <!-- Bouton pour ouvrir la modal -->
+	<section class="container wb-section--tight text-center">
+		<!-- Bouton pour ouvrir la modal -->
         <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#combinedModal">
           Voir les détails sur les types de sites et de design
         </button>
@@ -111,82 +154,139 @@
         </div>
 
 
-		<!-- Début du formulaire -->
-		<div class="px-4">
-			<div class="col-lg-12 mx-auto padding-top-xxl">
-				<!-- Formulaire de devis -->
-				{% if not app.user %}
-					{{ form_start(formDevis) }}
-					<label for="devis_email">L'adresse email pour recevoir votre devis</label>
-					{{ form_row(formDevis.email, {'attr': {'class': 'form-control'}}) }}
-					{{ form_errors(formDevis.email) }}
-				{% else %}
-					{{ form_start(formDevis) }}
-					<label for="" class="d-none">L'adresse email pour recevoir votre devis</label>
-					{{ form_row(formDevis.email, {'row_attr': {'class': 'd-none'}}) }}
-					{{ form_errors(formDevis.email) }}
-				{% endif %}
-
-				<label for="">Type d'application souhaité</label>
-				{{ form_row(formDevis.type_de_site_web)}}
-				{{ form_errors(formDevis.type_de_site_web)}}
-
-        <div class="container my-4">
-          <label class="form-label">Quelles sont vos attentes concernant le design ?</label>
-
-            <!-- Container pour les options -->
-            <div class="d-flex flex-nowrap justify-content-start align-items-center scroll-container">
-                {% for option in formDevis.attentes_design_web %}
-                    <div class="card mx-2 p-3 shadow-sm option-card">
-                        <div class="card-body text-center">
-                            <label class="form-check-label d-flex flex-column align-items-center">
-                                {{ form_widget(option, {'attr': {'class': 'form-check-input'}}) }}
-                                <span class="mt-3">{{ option.vars.label }}</span>
-                            </label>
-                        </div>
-                    </div>
-                {% endfor %}
-            </div>
-            <div class="form-text text-muted mt-3">Vous pouvez sélectionner une ou plusieurs attentes en défilant ou cliquant.</div>
-            {{ form_errors(formDevis.attentes_design_web) }}
-        </div>
-
-        <label for="">Parlez-nous un peu plus de votre projet !</label>
-        {{ form_row(formDevis.description_projet)}}
-        {{ form_errors(formDevis.description_projet)}}
-
-				<button type="submit">Valider</button>
-				{{ form_end(formDevis) }}
-			</div>
-		</div>
 	</section>
 
-<script>
-    document.addEventListener('DOMContentLoaded', () => {
-        const optionCards = document.querySelectorAll('.option-card input');
+	<!-- Début du formulaire -->
+	<section class="wb-section" data-tone="light" id="formulaire">
+		<div class="container" style="max-width: 900px;">
 
-        // Ajout des classes sur la sélection
-        optionCards.forEach(input => {
-            const card = input.closest('.option-card');
-            input.addEventListener('change', () => {
-                if (input.checked) {
-                    card.classList.add('border-primary', 'bg-light');
-                } else {
-                    card.classList.remove('border-primary', 'bg-light');
-                }
-            });
-        });
+			<div class="wb-card" data-tone="light" style="padding: 2rem 2rem 2.2rem;">
 
-        // Défilement fluide pour le conteneur
-        const scrollContainer = document.querySelector('.scroll-container');
-        if (scrollContainer) {
-            scrollContainer.addEventListener('wheel', (e) => {
-                e.preventDefault();
-                scrollContainer.scrollLeft += e.deltaY;
-            });
-        }
-    });
-</script>
+				{# Reperes d'avancement : un formulaire long sans repere donne
+				   l'impression de ne jamais finir. #}
+				<div class="wb-steps">
+					<span class="wb-steps__item is-current"></span>
+					<span class="wb-steps__item"></span>
+					<span class="wb-steps__item"></span>
+				</div>
 
+				<h2 class="wb-h2" style="font-size: 1.5rem;">{{ 'quote.form_title'|trans }}</h2>
+				<p class="wb-lead" style="font-size: 1rem; margin-bottom: 2rem;">
+					{{ 'quote.form_lead'|trans }}
+				</p>
+
+				<div class="wb-form">
+					{{ form_start(formDevis, {'attr': {'novalidate': 'novalidate'}}) }}
+
+						{# ------------------------------------------------ 1. contact -- #}
+						<fieldset style="border: 0; padding: 0; margin: 0 0 2rem;">
+							<legend class="wb-eyebrow wb-eyebrow--ink" style="float: none; width: auto; font-size: .72rem;">
+								{{ 'quote.step1'|trans }}
+							</legend>
+
+							{% if not app.user %}
+								{{ form_row(formDevis.email, {
+									'label': 'quote.email_label'|trans,
+									'attr': {'class': 'form-control', 'placeholder': 'vous@votre-entreprise.fr', 'autocomplete': 'email'}
+								}) }}
+								<div class="form-text" style="margin-top: -.5rem;">
+									{{ 'quote.email_help'|trans }}
+								</div>
+							{% else %}
+								{{ form_row(formDevis.email, {'row_attr': {'class': 'd-none'}}) }}
+								<p style="font-size: .9rem; color: var(--wb-text-2); margin: 0;">
+									{{ 'quote.sent_to'|trans }} <strong>{{ app.user.email }}</strong>.
+								</p>
+							{% endif %}
+							{{ form_errors(formDevis.email) }}
+						</fieldset>
+
+						{# --------------------------------------------------- 2. type -- #}
+						<fieldset style="border: 0; padding: 0; margin: 0 0 2rem;">
+							<legend class="wb-eyebrow wb-eyebrow--ink" style="float: none; width: auto; font-size: .72rem;">
+								{{ 'quote.step2'|trans }}
+							</legend>
+
+							{{ form_row(formDevis.type_de_site_web, {
+								'label': 'quote.type_label'|trans,
+								'attr': {'class': 'form-select'}
+							}) }}
+							{{ form_errors(formDevis.type_de_site_web) }}
+
+							<button type="button" class="wb-btn wb-btn--outline"
+							        style="padding: .4rem .85rem; font-size: .82rem; margin-top: .5rem;"
+							        data-bs-toggle="modal" data-bs-target="#combinedModal">
+								{{ 'quote.type_help'|trans }}
+							</button>
+						</fieldset>
+
+						{# ------------------------------------------------- 3. design -- #}
+						<fieldset style="border: 0; padding: 0; margin: 0 0 2rem;">
+							<legend class="wb-eyebrow wb-eyebrow--ink" style="float: none; width: auto; font-size: .72rem;">
+								{{ 'quote.step3'|trans }}
+							</legend>
+
+							<p style="font-size: .9rem; color: var(--wb-text-2); margin-bottom: 1rem;">
+								{{ 'quote.design_help'|trans }}
+							</p>
+
+							<div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 g-3">
+								{% for option in formDevis.attentes_design_web %}
+									<div class="col">
+										<label class="wb-choice h-100 d-flex align-items-start gap-2">
+											{{ form_widget(option, {'label': false, 'attr': {'class': 'form-check-input mt-1 flex-shrink-0'}}) }}
+											<span style="font-size: .9rem; line-height: 1.4;">{{ option.vars.label }}</span>
+										</label>
+									</div>
+								{% endfor %}
+							</div>
+							{{ form_errors(formDevis.attentes_design_web) }}
+						</fieldset>
+
+						{# --------------------------------------------- 4. description -- #}
+						<fieldset style="border: 0; padding: 0; margin: 0 0 2rem;">
+							<legend class="wb-eyebrow wb-eyebrow--ink" style="float: none; width: auto; font-size: .72rem;">
+								{{ 'quote.step4'|trans }}
+							</legend>
+
+							{{ form_row(formDevis.description_projet, {
+								'label': 'quote.desc_label'|trans,
+								'attr': {
+									'class': 'form-control',
+									'rows': 6,
+									'placeholder': 'quote.desc_ph'|trans
+								}
+							}) }}
+							{{ form_errors(formDevis.description_projet) }}
+
+							<div class="form-text">
+								{{ 'quote.desc_help'|trans }}
+							</div>
+						</fieldset>
+
+						{# ------------------------------------------------- validation -- #}
+						<div class="d-flex flex-column flex-sm-row align-items-sm-center gap-3 pt-3"
+						     style="border-top: 1px solid var(--wb-line);">
+							<button type="submit" class="wb-btn wb-btn--gold">
+								{{ 'quote.submit'|trans }}
+							</button>
+							<span style="font-size: .84rem; color: var(--wb-text-3);">
+								{{ 'quote.submit_note'|trans }}
+							</span>
+						</div>
+
+					{{ form_end(formDevis) }}
+				</div>
+
+			</div>
+
+			<p class="text-center" style="font-size: .84rem; color: var(--wb-text-3); margin-top: 1.5rem;">
+				{{ 'quote.prefer_talk'|trans }}
+				<a href="{{ url('front_contact') }}">{{ 'quote.write_me'|trans }}</a> ou appelez le
+				<a href="tel:0661287786">06 61 28 77 86</a>.
+			</p>
+
+		</div>
+	</section>
 
 {% endblock %}

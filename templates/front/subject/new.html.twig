@@ -2,28 +2,27 @@
 
 {% block content %}
 
-    <div class="container-fluid text-center jumbotron mt-7">
-        <div class="container">
-            {% for type, messages in app.flashes %}
-                {% for message in messages %}
-                    <div class="alert alert-{{ type }}">{{ message }}</div>
-                {% endfor %}
-            {% endfor %}
-        </div>
-        <h1>Support Technique</h1>
-        <div class="page-subtitle">
-            <br>
-            <p class="fs-5 mb-4">Vous êtes sur le point de créer un sujet, afin de débloquer votre situation soit par un personnel de l'entreprise ou bien un membre qualifié vous répondra et notre support également.</p>
-
-            <h4></h4>
-        </div>
+<section class="wb-hero" data-tone="dark">
+    <div class="container" style="padding-top: 7rem; padding-bottom: 3rem;">
+        <span class="wb-eyebrow">{{ app.request.locale == 'en' ? 'Forum and support' : 'Forum et support' }}</span>
+        <h1 class="wb-display" style="font-size: clamp(1.8rem, 4vw, 2.6rem);">{{ app.request.locale == 'en' ? 'Open a topic' : 'Ouvrir un sujet' }}</h1>
+        <p class="wb-lead wb-lead--on-dark mb-0" style="max-width:620px;">
+            Décrivez votre situation en une phrase de titre et autant de détails que
+            nécessaire. Une capture d'écran vaut souvent dix lignes.
+        </p>
     </div>
+</section>
 
-    <div class="b-example-divider"></div>
+<section class="wb-section wb-section--paper" data-tone="light">
+    <div class="container" style="max-width: 760px;">
 
-    <div class="overflow-hidden">
-        <div class="container">
+        {% for type, messages in app.flashes %}
+            {% for message in messages %}
+                <div class="alert alert-{{ type }}">{{ message }}</div>
+            {% endfor %}
+        {% endfor %}
 
+        <div class="wb-card" data-tone="light">
             {% include 'front/includes/_Subject_form.html.twig' %}
             {% if app.request.attributes.get('_route') == 'front_subjects_new' and subject.images is not empty %}
                 {% for image in subject.images %}
@@ -38,8 +37,7 @@
                     </div>
                 {% endfor %}
             {% endif %}
-
-
         </div>
     </div>
+</section>
 {% endblock %}

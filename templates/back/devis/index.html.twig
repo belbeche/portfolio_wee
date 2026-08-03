@@ -1,68 +1,87 @@
 {% extends 'base_back.html.twig' %}
 
-{% block title %}Liste des devis{% endblock %}
+{% block title %}Devis{% endblock %}
 
 {% block content %}
+<div class="container py-4">
 
-<div class="container-fluid">
-    <h1>Liste des devis</h1>
-
-    <a href="{{ url('front_devis_new') }}" class="ml-auto btn btn-primary">Créer un nouveau devis</a>
-    <div class="table-responsive">
-        <table>
-            <thead class="table">
-            <tr>
-                <th>Numéro</th>
-                <th>Email</th>
-                <th>Type de site web</th>
-                <th>Type de design</th>
-                <th>Description du projet</th>
-                <th>Date de création</th>
-                <th>Status</th>
-                <th>Actions</th>
-            </tr>
-            </thead>
-            <tbody>
-            {% for devis in devis %}
-                <tr>
-                    <td>{{ devis.id }}</td>
-                    <td>{{ devis.email }}</td>
-                    <td>{{ devis.typeDeSiteWeb }}</td>
-                    <td>
-                        {% if devis.attentesDesignWeb is not empty %}
-                            <ul>
-                                {% for attente in devis.attentesDesignWeb %}
-                                    <li>
-									{% for list in devis.attentesDesignWeb %}
-										{{ list.label }}
-									{% endfor %}
-									</li>
-                                {% endfor %}
-                            </ul>
-                        {% else %}
-                            N/A
-                        {% endif %}
-                    </td>
-                    <td>{{ devis.descriptionProjet }}</td>
-                    <td>{{ devis.createdAt|date('Y-m-d H:i:s') }}</td>
-                    <td>{{ devis.statut }}</td>
-                    <td>
-                        <div class="mt-3">
-                            <a href="{{ path('back_devis_reply', {'id': devis.id}) }}" class="btn btn-primary">
-                                Répondre au Devis
-                            </a>
-                        </div>
-                        <a href="{{ path('back_devis_show', {'id': devis.id}) }}">Voir</a>
-                        <a href="{{ path('back_devis_edit', {'id': devis.id}) }}">Modifier</a>
-                        <form action="{{ path('back_devis_delete', {'id': devis.id}) }}" method="post" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce devis ?');">
-                            <button type="submit">Supprimer</button>
-                        </form>
-                    </td>
-                </tr>
-            {% endfor %}
-            </tbody>
-        </table>
+    <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
+        <div>
+            <h1 class="h3 fw-bold mb-1">Devis</h1>
+            <p class="text-muted mb-0 small">{{ devis|length }} demande(s) recue(s) depuis le site.</p>
+        </div>
+        <a href="{{ url('front_devis_new') }}" class="btn btn-primary">Creer un devis</a>
     </div>
-</div>
 
+    {% for label, messages in app.flashes %}
+        {% for message in messages %}
+            <div class="alert alert-{{ label }}">{{ message }}</div>
+        {% endfor %}
+    {% endfor %}
+
+    {% if devis is empty %}
+        <div class="border rounded p-5 text-center">
+            <p class="text-muted mb-3">Aucune demande de devis pour le moment.</p>
+            <a href="{{ url('front_devis_new') }}" class="btn btn-outline-primary">Creer le premier</a>
+        </div>
+    {% else %}
+        <div class="table-responsive border rounded">
+            <table class="table align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th style="width: 70px;">N°</th>
+                        <th>Client</th>
+                        <th>Projet</th>
+                        <th style="width: 130px;">Recu le</th>
+                        <th style="width: 120px;">Statut</th>
+                        <th style="width: 280px;" class="text-end">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for d in devis %}
+                    <tr>
+                        <th scope="row" style="white-space:nowrap;" title="{{ d.id }}">{{ (d.id ~ '')|slice(0, 8) }}</th>
+                        <td><a href="mailto:{{ d.email }}">{{ d.email }}</a></td>
+                        <td>
+                            <strong>{{ d.typeDeSiteWeb }}</strong>
+                            {% if d.attentesDesignWeb is not empty %}
+                                <div class="small text-muted">
+                                    {% for attente in d.attentesDesignWeb %}{{ attente.label }}{{ not loop.last ? ', ' : '' }}{% endfor %}
+                                </div>
+                            {% endif %}
+                            {% if d.descriptionProjet %}
+                                <div class="small text-muted text-truncate" style="max-width: 320px;">{{ d.descriptionProjet }}</div>
+                            {% endif %}
+                        </td>
+                        <td class="small">{{ d.createdAt|date('d/m/Y') }}</td>
+                        <td>
+                            {% set st = d.statut|lower %}
+                            {% if st starts with 'accept' or st starts with 'valid' %}
+                                <span class="badge bg-success">{{ d.statut }}</span>
+                            {% elseif st starts with 'refus' or st starts with 'annul' %}
+                                <span class="badge bg-danger">{{ d.statut }}</span>
+                            {% elseif st starts with 'envoy' %}
+                                <span class="badge bg-primary">{{ d.statut }}</span>
+                            {% else %}
+                                <span class="badge bg-secondary">{{ d.statut }}</span>
+                            {% endif %}
+                        </td>
+                        <td class="text-end">
+                            <a href="{{ path('back_devis_reply', {'id': d.id}) }}" class="btn btn-primary btn-sm">Repondre</a>
+                            <a href="{{ path('back_devis_show', {'id': d.id}) }}" class="btn btn-outline-secondary btn-sm">Voir</a>
+                            <a href="{{ path('back_devis_edit', {'id': d.id}) }}" class="btn btn-outline-primary btn-sm">Modifier</a>
+                            <form action="{{ path('back_devis_delete', {'id': d.id}) }}" method="post" class="d-inline"
+                                  onsubmit="return confirm('Supprimer ce devis ?');">
+                                <input type="hidden" name="_token" value="{{ csrf_token('delete_devis' ~ d.id) }}">
+                                <button type="submit" class="btn btn-outline-danger btn-sm">Supprimer</button>
+                            </form>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% endif %}
+
+</div>
 {% endblock %}

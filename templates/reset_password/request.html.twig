@@ -15,6 +15,7 @@
         </ol>
 
         <form method="post">
+            <input type="hidden" name="_csrf_token" value="{{ csrf_token('reset_password_request') }}">
             <div class="mb-3">
                 <label for="email" class="form-label">Adresse e-mail</label>
                 <input type="email" class="form-control" id="email" name="email" required placeholder="votre.email@example.com">

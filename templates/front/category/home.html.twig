@@ -1,63 +1,255 @@
 {% extends 'base.html.twig' %}
 
+{% block title %}{{ categorie.name }} | {{ 'nav_blog'|trans }}{% endblock %}
+
 {% block content %}
 
-    <div class="container p-xxl-5">
-        <h1>page de categorie : {{ categorie.name }}</h1>
+<style>
+    .cat-hero {
+        background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 55%, #1f3864 100%);
+        position: relative;
+        overflow: hidden;
+    }
+    .cat-hero:after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background-image:
+            radial-gradient(circle at 18% 22%, rgba(255,193,7,.18), transparent 42%),
+            radial-gradient(circle at 82% 78%, rgba(57,135,229,.22), transparent 46%);
+        pointer-events: none;
+    }
+    .cat-hero > .container { position: relative; z-index: 1; }
+
+    .cat-chip {
+        display: inline-flex;
+        align-items: center;
+        gap: .5rem;
+        padding: .45rem 1rem;
+        border-radius: 999px;
+        border: 1px solid #dee2e6;
+        background: #fff;
+        color: #495057;
+        font-size: .9rem;
+        font-weight: 500;
+        text-decoration: none;
+        transition: all .18s ease;
+        white-space: nowrap;
+    }
+    .cat-chip:hover { border-color: #1f3864; color: #1f3864; transform: translateY(-1px); }
+    .cat-chip.is-active { background: #1f3864; border-color: #1f3864; color: #fff; }
+    .cat-chip .count {
+        font-size: .75rem;
+        opacity: .7;
+        font-variant-numeric: tabular-nums;
+    }
+
+    .post-card {
+        border: 1px solid #e9ecef;
+        border-radius: 14px;
+        overflow: hidden;
+        background: #fff;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease;
+    }
+    .post-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 12px 28px rgba(15, 23, 42, .12);
+        border-color: #cfd8e3;
+    }
+    .post-card__media {
+        aspect-ratio: 16 / 9;
+        background: linear-gradient(135deg, #eef2f7, #dde5ef);
+        overflow: hidden;
+        position: relative;
+        flex: none;
+    }
+    .post-card__media img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+        transition: transform .35s ease;
+    }
+    .post-card:hover .post-card__media img { transform: scale(1.04); }
+    .post-card__placeholder {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2.6rem;
+        font-weight: 800;
+        color: #1f3864;
+        opacity: .22;
+        letter-spacing: -2px;
+    }
+    .post-card__body { padding: 1.25rem 1.35rem 1.35rem; display: flex; flex-direction: column; flex: 1; }
+    .post-card__title { font-size: 1.08rem; font-weight: 700; line-height: 1.35; margin-bottom: .5rem; }
+    .post-card__title a { color: #101828; text-decoration: none; }
+    .post-card__title a:hover { color: #1f3864; }
+    .post-card__excerpt { font-size: .92rem; color: #667085; margin-bottom: 1rem; flex: 1; }
+    .post-card__tags { display: flex; flex-wrap: wrap; gap: .35rem; margin-bottom: .85rem; }
+    .post-card__tag {
+        font-size: .7rem; text-transform: uppercase; letter-spacing: .6px; font-weight: 700;
+        color: #1f3864; background: #eef2f9; padding: .2rem .55rem; border-radius: 4px;
+    }
+    .post-card__meta {
+        display: flex; align-items: center; gap: .6rem;
+        padding-top: .85rem; border-top: 1px solid #f1f3f5;
+        font-size: .8rem; color: #667085;
+    }
+    .post-card__meta img { width: 28px; height: 28px; border-radius: 50%; object-fit: cover; }
+
+    .empty-state {
+        border: 2px dashed #dee2e6;
+        border-radius: 16px;
+        padding: 3.5rem 1.5rem;
+        text-align: center;
+    }
+</style>
+
+<section class="cat-hero text-white py-5" data-tone="dark">
+    <div class="container py-4">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb mb-3" style="--bs-breadcrumb-divider-color: rgba(255,255,255,.4);">
+                <li class="breadcrumb-item"><a href="{{ url('front_home') }}" class="text-white-50 text-decoration-none">{{ 'nav_home'|trans }}</a></li>
+                <li class="breadcrumb-item"><a href="{{ url('blog_index') }}" class="text-white-50 text-decoration-none">{{ 'nav_blog'|trans }}</a></li>
+                <li class="breadcrumb-item active text-white" aria-current="page">{{ categorie.name }}</li>
+            </ol>
+        </nav>
+
+        <p class="text-uppercase small fw-bold mb-2" style="letter-spacing: 2px; color: #ffc107;">
+            {{ 'nav_blog'|trans }}
+        </p>
+        <h1 class="display-4 fw-bold mb-3">{{ categorie.name }}</h1>
+        <p class="fs-5 mb-0" style="max-width: 680px; opacity: .85;">
+            {% if subjects|length > 0 %}
+                {{ subjects|length }}
+                {{ subjects|length > 1 ? 'articles publiés' : 'article publié' }}
+                dans cette catégorie.
+            {% else %}
+                Cette catégorie n'a pas encore d'article publié.
+            {% endif %}
+        </p>
     </div>
+</section>
 
-    <!-- blog start -->
-        <section class="blog-area pb-5">
-            <div class="container">
-                <div class="row justify-content-center">
-                    {% for Subject in Subjects %}
-                        <div class="col-lg-3 col-md-3 col-sm-10">
-                            <div class="single-blog blog-style-one">
-                                <div class="blog-image">
-                                    <a href="{{ path('front_Subjects_show', {'title': Subject.title}) }}">
-                                        {% for image in Subject.images %}
-                                            <img class="card-img-top rounded-0" src="{{ asset('uploads/' ~ image.name) }}" alt="{{ Subject.title }}">
-                                        {% endfor %}
-                                    </a>
-                                </div>
-                                <div class="blog-content">
-                                    <h5 class="blog-title">
-                                        <a href="{{ path('front_Subjects_show', {'title': Subject.title}) }}">
-                                            <h5 class="card-title">{{ Subject.title }}</h5>
-                                        </a>
-                                    </h5>
-                                    {% for categorie in Subject.categories %}
-                                        {{ categorie.name }}
+{% if categories is defined and categories|length > 0 %}
+<section class="bg-white border-bottom py-3 sticky-top" style="top: 0; z-index: 2;" data-tone="light">
+    <div class="container">
+        <div class="d-flex gap-2 overflow-auto pb-1">
+            <a href="{{ url('blog_index') }}" class="cat-chip">{{ 'all'|trans }}</a>
+            {% for cat in categories %}
+                <a href="{{ url('front_category', {name: cat.name}) }}"
+                   class="cat-chip {{ cat.name == categorie.name ? 'is-active' : '' }}">
+                    {{ cat.name }}
+                </a>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<section class="container py-5">
+    {% if subjects|length > 0 %}
+        <div class="row g-4">
+            {% for subject in subjects %}
+                {% set url_subject = url('front_subject_show', {subjectId: subject.id}) %}
+                <div class="col-md-6 col-lg-4">
+                    <article class="post-card" data-tone="light">
+                        <div class="post-card__media">
+                            <a href="{{ url_subject }}" aria-label="{{ subject.title }}">
+                                {% set cover = subject.images|first %}
+                                {% if cover %}
+                                    <img src="{{ asset('uploads/subject/image/' ~ cover.name) }}"
+                                         loading="lazy" alt="{{ subject.title }}">
+                                {% else %}
+                                    <span class="post-card__placeholder">{{ subject.title|slice(0, 2)|upper }}</span>
+                                {% endif %}
+                            </a>
+                        </div>
+
+                        <div class="post-card__body">
+                            {% if subject.categories|length > 0 %}
+                                <div class="post-card__tags">
+                                    {% for cat in subject.categories|slice(0, 3) %}
+                                        <span class="post-card__tag">{{ cat.name }}</span>
                                     {% endfor %}
-                                    <br>
-                                    <span><i class="bi bi-calendar"></i> {{ Subject.createdAt|format_datetime('medium', locale="fr") }}</span>
-                                    <span><i class="bi bi-chat-dots"></i>{{ Subject.commentaires|length }}</span>
-                                    {# <span class="favoris"><i class="bi bi-heart-fill"></i>{{ Subject.favoris|length }}</span> #}
-                                    <span><img src="{{ asset('uploads/avatar/' ~Subject.user.avatar) }}" alt="{{ Subject.user.username }}" class="rounded-0 img-thumbnail" width="50" height="50">  {{ Subject.user.username }}</span>
                                 </div>
-                                {# <div class="txt-red">
-                                    {% if app.user %}
-                                        {% set isFavorite = false %}
-                                        {% for favoris in Subject.favoris %}
-                                            {% if favoris.id == app.user.id %}
-                                                {% set isFavorite = true %}
-                                            {% endif %}
-                                        {% endfor %}
-                                        {% if isFavorite %}
-                                            <button class="btn-favorite" type="button" data-href="{{ url('front_remove_favoris', {id: Subject.id}) }}" data-id="{{ Subject.id }}"><i class="bi bi-hand-thumbs-up-fill"></i>
-                                            </button>
-                                        {% else %}
-                                            <button class="btn-favorite" type="button" data-href="{{ url('front_add_favoris', {id: Subject.id}) }}" data-id="{{ Subject.id }}"><i class="bi bi-hand-thumbs-up"></i>
-                                            </button>
-                                        {% endif %}
+                            {% endif %}
 
+                            <h2 class="post-card__title">
+                                <a href="{{ url_subject }}">{{ subject.title }}</a>
+                            </h2>
+
+                            {% if subject.content %}
+                                <p class="post-card__excerpt">
+                                    {{ subject.content|striptags|slice(0, 130) }}{{ subject.content|striptags|length > 130 ? '...' : '' }}
+                                </p>
+                            {% endif %}
+
+                            <div class="post-card__meta">
+                                {% if subject.user %}
+                                    <img src="{{ subject.user.avatar
+                                        ? asset('uploads/avatar/' ~ subject.user.avatar)
+                                        : asset('uploads/avatar/support0.svg') }}"
+                                         alt="{{ subject.user.username }}" loading="lazy">
+                                    <span class="fw-semibold text-truncate" style="max-width: 110px;">
+                                        {{ subject.user.username }}
+                                    </span>
+                                {% endif %}
+                                <span class="ms-auto d-flex align-items-center gap-3">
+                                    {% if subject.createdAt %}
+                                        <span title="{{ subject.createdAt|date('d/m/Y') }}">
+                                            {{ subject.createdAt|date('d/m/Y') }}
+                                        </span>
                                     {% endif %}
-                                </div> #}
+                                    <span>{{ subject.comments|length }}
+                                        {{ subject.comments|length > 1 ? 'réponses' : 'réponse' }}
+                                    </span>
+                                </span>
                             </div>
                         </div>
-                    {% endfor %}
+                    </article>
                 </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="empty-state" data-tone="light">
+            <h2 class="h4 fw-bold mb-2">{{ 'no_articles_found'|trans }}</h2>
+            <p class="text-muted mb-4" style="max-width: 460px; margin: 0 auto;">
+                Aucun article publié dans « {{ categorie.name }} » pour le moment.
+                Parcourez les autres catégories ou revenez bientôt.
+            </p>
+            <div class="d-flex flex-column flex-sm-row gap-2 justify-content-center">
+                <a href="{{ url('blog_index') }}" class="btn btn-primary">{{ 'nav_blog'|trans }}</a>
+                <a href="{{ url('front_subject_list') }}" class="btn btn-outline-secondary">
+                    {{ 'nav_support'|trans }}
+                </a>
             </div>
-        </section><!-- ./ End blog start -->
+        </div>
+    {% endif %}
+</section>
+
+<section class="bg-light py-5" data-tone="light">
+    <div class="container text-center">
+        <h2 class="h1 fw-bold mb-3">Un projet en tête ?</h2>
+        <p class="fs-5 text-muted mb-4" style="max-width: 620px; margin: 0 auto;">
+            Application mobile, back-end sur mesure ou reprise de projet.
+            Obtenez une estimation détaillée en deux minutes.
+        </p>
+        <div class="d-flex flex-column flex-md-row gap-3 justify-content-center">
+            <a href="{{ url('front_devis_new') }}" class="btn btn-primary btn-lg">
+                {{ 'nav_get_estimate'|trans }}
+            </a>
+            <a href="{{ url('front_agences') }}" class="btn btn-outline-secondary btn-lg">
+                {{ 'nav_agencies'|trans }}
+            </a>
+        </div>
     </div>
+</section>
+
 {% endblock %}

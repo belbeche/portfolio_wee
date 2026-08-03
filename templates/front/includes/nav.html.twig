@@ -15,10 +15,18 @@
         font-family: "SF Pro Text", Helvetica, sans-serif;
         margin-top: 13px;
     }
+    .nav-cta {
+        background-color: #ffc107;
+        color: #1a1a1a !important;
+        font-weight: 600;
+        border-radius: 16px;
+        padding: 6px 18px !important;
+        margin-top: 10px;
+    }
+    .nav-cta:hover { background-color: #ffcd39; }
     @media (max-width: 576px) {
-        .libutton {
-            margin-left: 12px;
-        }
+        .libutton { margin-left: 12px; }
+        .nav-cta { display: inline-block; margin: 10px 12px; }
     }
 </style>
 <header id="header">
@@ -42,71 +50,102 @@
         <!-- Menu -->
         <div class="collapse navbar-collapse justify-content-end" id="navbarMenu">
             <ul class="navbar-nav ms-auto menu_mobile">
+
                 <li class="nav-item {{ app.request.get('_route') == 'front_home' ? 'active' : '' }}">
                     <a class="nav-link" href="{{ url('front_home') }}">{{ 'nav_home'|trans }}</a>
                 </li>
-                <li class="menu-item {{ app.request.get('_route') == 'front_project' ? 'active' : '' }}">
+
+                {# Porte d'entrée dédiée aux agences : c'est la page que visent
+                   les e-mails de prospection. #}
+                <li class="nav-item {{ app.request.get('_route') == 'front_agences' ? 'active' : '' }}">
+                    <a class="nav-link" href="{{ url('front_agences') }}">{{ 'nav_agencies'|trans }}</a>
+                </li>
+
+                <li class="menu-item {{ app.request.get('_route') starts with 'front_project' ? 'active' : '' }}">
                     <a class="nav-link" href="{{ url('front_project') }}">{{ 'nav_projects'|trans }}</a>
                 </li>
+
+                <li class="nav-item {{ app.request.get('_route') == 'front_methode' ? 'active' : '' }}">
+                    <a class="nav-link" href="{{ url('front_methode') }}">{{ 'nav_method'|trans }}</a>
+                </li>
+
+                <li class="nav-item {{ app.request.get('_route') == 'front_services' ? 'active' : '' }}">
+                    <a class="nav-link" href="{{ path('front_services') }}">{{ 'nav_services'|trans }}</a>
+                </li>
+
                 <li class="menu-item {{ app.request.get('_route') == 'blog_index' ? 'active' : '' }}">
                     <a class="nav-link" href="{{ url('blog_index') }}">{{ 'nav_blog'|trans }}</a>
                 </li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="servicesDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        {{ 'nav_services'|trans }}
-                    </a>
-                    <ul class="dropdown-menu" aria-labelledby="servicesDropdown">
-                        <li><a class="dropdown-item text-black" href="{{ path('expertise_web') }}">{{ 'service_web_creation'|trans }}</a></li>
-                        <li><a class="dropdown-item text-black" href="{{ path('custom_app') }}">{{ 'service_custom_app'|trans }}</a></li>
-                        <li><a class="dropdown-item text-black" href="{{ path('quote_generation') }}">{{ 'service_quote_generation'|trans }}</a></li>
-                        <li><a class="dropdown-item text-black" href="{{ path('task_automation') }}">{{ 'service_task_automation'|trans }}</a></li>
-                    </ul>
+
+                <li class="nav-item {{ app.request.get('_route') starts with 'front_referral' ? 'active' : '' }}">
+                    <a class="nav-link" href="{{ url('front_referral') }}">{{ 'nav_find_expert'|trans }}</a>
                 </li>
-                {% if not app.user %}
-                {# <div class="user">
+
+                <li class="menu-item {{ app.request.get('_route') == 'front_contact' ? 'active' : '' }}">
+                    <a class="nav-link" href="{{ url('front_contact') }}">{{ 'nav_contact'|trans }}</a>
+                </li>
+
+                {# Espace client, visible en permanence.
+                   Il était entièrement commenté : aucun visiteur ne pouvait
+                   trouver la connexion ni l'inscription. #}
+                {% if app.user %}
+                    <li class="nav-item dropdown {{ app.request.get('_route') starts with 'front_espace' ? 'active' : '' }}">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            {{ 'nav_account'|trans }}
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li>
+                                <a class="dropdown-item text-black fw-semibold" href="{{ url('front_espace_client') }}">{{ 'nav_dashboard'|trans }}</a>
+                            </li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item text-black" href="{{ url('front_devis_new') }}">{{ 'nav_my_quotes'|trans }}</a></li>
+                            <li><a class="dropdown-item text-black" href="{{ url('front_show_ticket') }}">{{ 'nav_my_tickets'|trans }}</a></li>
+                            <li><a class="dropdown-item text-black" href="{{ url('front_assistance') }}">{{ 'nav_profile'|trans }}</a></li>
+                            <li><a class="dropdown-item text-black" href="{{ url('front_profile_project') }}">{{ 'nav_my_projects'|trans }}</a></li>
+                            <li><a class="dropdown-item text-black" href="{{ url('front_edit_profile') }}">{{ 'nav_edit_profile'|trans }}</a></li>
+                            {% if is_granted('ROLE_ADMIN') %}
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item text-black fw-semibold" href="{{ url('back_index') }}">{{ 'nav_admin_panel'|trans }}</a></li>
+                            {% endif %}
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item text-danger" href="{{ url('app_logout') }}">{{ 'nav_logout'|trans }}</a></li>
+                        </ul>
+                    </li>
+                {% else %}
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                             {{ 'nav_client_area'|trans }}
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end">
-                            <li class="menu-item {{ app.request.get('_route') == 'app_register' ? 'active' : '' }}">
-                                <a class="dropdown-item text-black" href="{{ url('app_register') }}">{{ 'nav_register'|trans }}</a>
-                            </li>
                             <li class="menu-item {{ app.request.get('_route') == 'app_login' ? 'active' : '' }}">
                                 <a class="dropdown-item text-black" href="{{ url('app_login') }}">{{ 'nav_login'|trans }}</a>
                             </li>
-                        </ul>
-                    </li>
-                </div> #}
-                {% endif %}
-                {% if is_granted('ROLE_ADMIN') %}
-                    <li class="nav-item {{ app.request.get('_route') == 'back_index' ? 'active' : '' }}">
-                        <a class="nav-link" href="{{ url('back_index') }}">{{ 'nav_admin_panel'|trans }}</a>
-                    </li>
-                {% endif %}
-                {% if app.user %}
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            {{ 'nav_account'|trans }}
-                        </a>
-                        <ul class="dropdown-menu dropdown-menu-end">
-                            <li class="menu-item {{ app.request.get('_route') == 'front_assistance' ? 'active' : '' }}">
-                                <a class="dropdown-item text-black" href="{{ url('front_assistance') }}">{{ 'nav_profile'|trans }}</a>
-                            </li>
-                            <li class="menu-item {{ app.request.get('_route') == 'front_profile_project' ? 'active' : '' }}">
-                                <a class="dropdown-item text-black" href="{{ url('front_profile_project') }}">{{ 'nav_my_projects'|trans }}</a>
-                            </li>
-                            <li><hr class="dropdown-divider"></li>
-                            <li class="menu-item {{ app.request.get('_route') == 'app_logout' ? 'active' : '' }}">
-                                <a class="btn btn-outline-danger dropdown-item text-black" href="{{ url('app_logout') }}">{{ 'nav_logout'|trans }}</a>
+                            <li class="menu-item {{ app.request.get('_route') == 'app_register' ? 'active' : '' }}">
+                                <a class="dropdown-item text-black" href="{{ url('app_register') }}">{{ 'nav_register'|trans }}</a>
                             </li>
                         </ul>
                     </li>
                 {% endif %}
-                <li class="menu-item {{ app.request.get('_route') == 'front_contact' ? 'active' : '' }}">
-                    <a class="nav-link" href="{{ url('front_contact') }}">{{ 'nav_contact'|trans }}</a>
+
+                {# Appel à l'action principal : l'estimation en ligne existe
+                   déjà et convertit bien mieux qu'une demande d'appel. #}
+                <li class="nav-item">
+                    <a class="nav-link nav-cta" href="{{ url('front_devis_new') }}">{{ 'nav_get_estimate'|trans }}</a>
                 </li>
-                <a class="libutton" href="https://www.linkedin.com/company/scriptzenit/" target="_blank">{{ 'nav_follow_linkedin'|trans }}</a>
+
+                {# Selecteur de langue. Il n'existait nulle part : une fois la
+                   langue posee en session, plus aucun moyen d'en changer. #}
+                <li class="nav-item d-flex align-items-center gap-1 ms-lg-2 mt-2 mt-lg-0">
+                    {% for code, label in {'fr': 'FR', 'en': 'EN'} %}
+                        <a href="{{ url('switch_locale', {_locale: code}) }}"
+                           class="btn btn-sm {{ app.request.locale == code ? 'btn-light text-dark fw-bold' : 'btn-outline-light' }}"
+                           style="padding: .15rem .5rem; font-size: .75rem;"
+                           hreflang="{{ code }}"
+                           aria-current="{{ app.request.locale == code ? 'true' : 'false' }}">{{ label }}</a>
+                    {% endfor %}
+                </li>
+
+                <a class="libutton" href="https://www.linkedin.com/in/walid-belbeche/" target="_blank" rel="noopener">{{ 'nav_follow_linkedin'|trans }}</a>
             </ul>
         </div>
     </nav>

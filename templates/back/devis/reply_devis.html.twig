@@ -1,12 +1,62 @@
 {% extends 'base_back.html.twig' %}
 
-{% block content %}
-    <h1>Répondre au Devis</h1>
-    {{ form_start(form) }}
-        {{ form_row(form.email) }}
-        {{ form_row(form.response) }}
-        {{ form_row(form.prix) }}
+{% block title %}Repondre au devis{% endblock %}
 
-        <button type="submit" class="btn btn-success">Envoyer la Réponse</button>
-    {{ form_end(form) }}
+{% block content %}
+<div class="container py-4">
+
+    <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
+        <div>
+            <h1 class="h3 fw-bold mb-1">Repondre au devis</h1>
+            <p class="text-muted mb-0 small">L'e-mail part avec le PDF du devis en piece jointe. Relis avant d'envoyer : il n'y a pas de brouillon.</p>
+        </div>
+        <a href="{{ url('back_devis_index') }}" class="btn btn-outline-secondary">Retour a la liste</a>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-lg-7">
+            <div class="border rounded p-4">
+                {{ form_start(form) }}
+                    {{ form_row(form.email, {'label': 'Destinataire'}) }}
+                    {{ form_row(form.response, {
+                        'label': 'Votre lecture du besoin',
+                        'help': "Ce texte apparait dans l'e-mail, au-dessus du montant. Reformule le besoin du client avec ses mots : c'est ce qui montre que la demande a ete lue par un humain.",
+                        'attr': {'rows': 8}
+                    }) }}
+                    {{ form_row(form.prix, {'label': 'Montant total (euros HT)'}) }}
+                    <button type="submit" class="btn btn-primary mt-2"
+                            onclick="return confirm('Envoyer le devis maintenant ?');">Envoyer le devis</button>
+                {{ form_end(form) }}
+            </div>
+        </div>
+
+        <div class="col-lg-5">
+            {% if devis is defined %}
+            <div class="border rounded p-4 mb-3 bg-light">
+                <h2 class="h6 text-uppercase text-muted mb-3" style="letter-spacing:1px;">La demande</h2>
+                <dl class="row mb-0 small">
+                    <dt class="col-4 text-muted">Reference</dt><dd class="col-8">{{ (devis.id ~ '')|slice(0, 8) }}</dd>
+                    <dt class="col-4 text-muted">Client</dt><dd class="col-8">{{ devis.email }}</dd>
+                    <dt class="col-4 text-muted">Projet</dt><dd class="col-8">{{ devis.typeDeSiteWeb }}</dd>
+                    <dt class="col-4 text-muted">Recue le</dt><dd class="col-8">{{ devis.createdAt|date('d/m/Y a H\\hi') }}</dd>
+                    {% if devis.descriptionProjet %}
+                        <dt class="col-4 text-muted">Description</dt><dd class="col-8">{{ devis.descriptionProjet }}</dd>
+                    {% endif %}
+                </dl>
+            </div>
+            {% endif %}
+
+            <div class="border rounded p-4">
+                <h2 class="h6 text-uppercase text-muted mb-3" style="letter-spacing:1px;">Trame qui fonctionne</h2>
+                <ol class="small mb-0 ps-3" style="line-height:1.8;">
+                    <li><strong>Reformuler le besoin</strong> en une ou deux phrases, avec les mots du client.</li>
+                    <li><strong>Nommer ce qui est inclus</strong> : ce que couvre le montant, sans jargon.</li>
+                    <li><strong>Nommer ce qui n'est pas inclus</strong> : c'est ce qui evite les malentendus.</li>
+                    <li><strong>Donner le premier pas</strong> : un appel, une signature, une date.</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+
+</div>
 {% endblock %}

@@ -23,7 +23,7 @@
 					</div>
 					<div>
 						<a href="{{ url('front_subjects_new') }}" class="button button-large border border-width-2 bg-alt py-2 rounded-1 fw-medium text-transform-none ls-0 ms-0 ms-sm-1 h-op-09"><i class="bi-file-earmark-plus"></i>Créer un nouveau sujet</a>
-						<a href="{{ url('front_subject') }}" class="button button-large button-border rounded-1 fw-medium text-transform-none h-bg-alt ls-0 ms-0"><i class="bi-text-left"></i>Voir tous les sujets</a>
+						<a href="{{ url('front_subject_list') }}" class="button button-large button-border rounded-1 fw-medium text-transform-none h-bg-alt ls-0 ms-0"><i class="bi-text-left"></i>Voir tous les sujets</a>
 					</div>
 				</div>
 
@@ -35,7 +35,7 @@
 		<div class="bg-alt py-5">
 			<div class="container">
 				<div class="d-flex">
-					<h4 class="mb-0"><span class="fw-normal text-white"><i class="bi-people icon-fw"></i></span> <span class="text-white">Membres enregistrès</span>  <span class="color fw-semibold">{{ users|length}}</span>.</span></h4>
+					<h4 class="mb-0"><span class="fw-normal text-white"><i class="bi-people icon-fw"></i></span> <span class="text-white">Membres enregistrès</span>  <span class="color fw-semibold">{{ users|length}}</span>.</h4>
 					<h4 class="mb-0 ms-5"><span class="fw-normal text-white"><i class="bi-chat-dots icon-fw "></i> <span class="text-white">Sujets créer</span>  <span class="color fw-semibold">{{ Subjects|length}}</span>.</span></h4>
 				</div>
 			</div>
@@ -62,13 +62,13 @@
 							{% for Subject in Subjects %}
 								<ul class="topic list-unstyled row mx-0 justify-content-between align-items-center">
 										<li class="entry mb-0 col-sm-10">
-											<a href="{{ path('front_Subjects_show', {'title': Subject.title}) }}" class="link-dark">
+											<a href="{{ path('front_subject_show', {subjectId: Subject.id}) }}" class="link-dark">
 												<h3 class="card-title">{{ Subject.title }}</h3>
 											</a>
 											<div class="entry-meta mt-1">
 												<ul>
-													<li><a href="#">{{ Subject.createdAt|format_datetime('medium', locale="fr") }}</a></li>
-													<li><a href="#">{{ Subject.commentaires|length }}</a></li>
+													<li><a href="#">{{ Subject.createdAt|format_datetime('medium', locale=app.request.locale) }}</a></li>
+													<li><a href="#">{{ Subject.comments|length }}</a></li>
 													{#<li><a href="#" class="badge bg-info text-white">In Progress</a></li>#}
 												</ul>
 											</div>

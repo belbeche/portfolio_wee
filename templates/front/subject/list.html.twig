@@ -3,17 +3,26 @@
 {% block title %}Sujets de Support{% endblock %}
 
 {% block content %}
-<section id="content">
-    <div class="content-wrap">
-        <div class="container mw-md">
+
+<section class="wb-hero" data-tone="dark">
+    <div class="container" style="padding-top: 7rem; padding-bottom: 3rem;">
+        <span class="wb-eyebrow">{{ app.request.locale == 'en' ? 'Forum and support' : 'Forum et support' }}</span>
+        <h1 class="wb-display" style="font-size: clamp(1.8rem, 4vw, 2.6rem);">{{ app.request.locale == 'en' ? 'The forum' : 'Le forum' }}</h1>
+        <p class="wb-lead wb-lead--on-dark mb-0" style="max-width:620px;">Les questions des clients et mes réponses, publiques et datées. Cherchez avant de demander : la réponse existe peut-être déjà.</p>
+    </div>
+</section>
+
+<section class="wb-section wb-section--paper" data-tone="light">
+
+        <div class="container" style="max-width: 860px;">
             <div class="d-flex justify-content-between align-items-center mb-4">
-                <h1 class="h2 fw-bold">Centre de Support</h1>
-                <a href="{{ path('front_subjects_new') }}" class="btn btn-primary">Créer un Nouveau Sujet</a>
+                <h2 class="wb-h3 mb-0">Sujets récents</h2>
+                <a href="{{ path('front_subjects_new') }}" class="wb-btn wb-btn--ink">Ouvrir un sujet</a>
             </div>
 
             {% if subjects is not empty %}
                 <div class="card shadow-sm">
-                    <div class="card-header bg-primary text-white">
+                    <div class="card-header bg-primary text-white" data-tone="dark">
                         <h5 class="mb-0">Sujets Récents</h5>
                     </div>
                     <div class="list-group list-group-flush">
@@ -43,6 +52,5 @@
                 </div>
             {% endif %}
         </div>
-    </div>
 </section>
 {% endblock %}

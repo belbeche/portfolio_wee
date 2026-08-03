@@ -4,8 +4,6 @@ namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\ImageRepository;
-use Doctrine\Common\Collections\Collection;
-use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * @ORM\Entity(repositoryClass=ImageRepository::class)
@@ -36,14 +34,13 @@ class Image
     private $Subject;
 
     /**
-     * @ORM\OneToMany(targetEntity=Ticket::class, mappedBy="attachments")
+     * Une image appartient a un seul ticket ; c'est le ticket qui possede
+     * plusieurs pieces jointes, pas l'inverse. L'ancien mapping declarait
+     * la relation dans le mauvais sens des deux cotes.
+     *
+     * @ORM\ManyToOne(targetEntity=Ticket::class, inversedBy="attachments")
      */
-    private $tickets;
-
-    public function __construct()
-    {
-        $this->tickets = new ArrayCollection();
-    }
+    private ?Ticket $ticket = null;
 
     public function getProject(): ?Project
     {
@@ -90,40 +87,14 @@ class Image
         return $this;
     }
 
-    public function getTickets(): Collection
+    public function getTicket(): ?Ticket
     {
-        return $this->tickets;
+        return $this->ticket;
     }
 
-    public function addTicket(Ticket $ticket): self
+    public function setTicket(?Ticket $ticket): self
     {
-        if (!$this->tickets->contains($ticket)) {
-            $this->tickets[] = $ticket;
-            $ticket->getAttachments($this);
-        }
-
-        return $this;
-    }
-
-    public function removeTicket(Ticket $ticket): self
-    {
-        if ($this->tickets->removeElement($ticket)) {
-            // set the owning side to null (unless already changed)
-            if ($ticket->getAttachments() === $this) {
-                $ticket->getAttachments(null);
-            }
-        }
-
-        return $this;
-    }
-
-
-    /**
-     * Set the value of tickets
-     */
-    public function setTickets($tickets): self
-    {
-        $this->tickets = $tickets;
+        $this->ticket = $ticket;
 
         return $this;
     }

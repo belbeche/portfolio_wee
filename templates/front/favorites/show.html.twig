@@ -13,7 +13,7 @@
 					<div class="col-lg-3 col-md-3 col-sm-10">
 						<div class="single-blog blog-style-one">
 							<div class="blog-image">
-								<a href="{{ path('front_Subjects_show', {'title': Subject.title}) }}">
+								<a href="{{ path('front_subject_show', {subjectId: Subject.id}) }}">
 									{% for image in Subject.images %}
 										<img class="card-img-top rounded-0" src="{{ asset('uploads/' ~ image.name) }}" alt="{{ Subject.title }}">
 									{% endfor %}
@@ -26,20 +26,20 @@
 							</div>
 							<div class="blog-content">
 								<h5 class="blog-title">
-									<a href="{{ path('front_Subjects_show', {'title': Subject.title}) }}">
+									<a href="{{ path('front_subject_show', {subjectId: Subject.id}) }}">
 										<h5 class="card-title">{{ Subject.title }}</h5>
 									</a>
 								</h5>
 								<br>
 								<span>
 									<i class="bi bi-calendar"></i>
-									{{ Subject.createdAt|format_datetime('medium', locale="fr") }}</span>
+									{{ Subject.createdAt|format_datetime('medium', locale=app.request.locale) }}</span>
 								<span>
 									<i class="bi bi-chat-dots"></i>
-									{{ Subject.commentaires|length }}</span>
+									{{ Subject.comments|length }}</span>
 								<span>
 									<i class="bi bi-heart-fill"></i>
-									{{ Subject.favoris|length }}</span>
+									{{ Subject.likes|length }}</span>
 							</div>
 						</div>
 					</div>

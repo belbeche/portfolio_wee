@@ -50,7 +50,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private bool $isVerified = false;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable="true")
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private ?string $nom;
 
@@ -71,7 +71,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     /**
      * @ORM\OneToMany(targetEntity=Ticket::class, mappedBy="sender")
-     * @ORM\JoinColumn(nullable=false)
      */
     private $sentMessages;
 
@@ -86,7 +85,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private string $avatar;
 
     /**
-     * @ORM\OneToMany(targetEntity=Message::class, mappedBy="receiver")
+     * @ORM\OneToMany(targetEntity=Ticket::class, mappedBy="receiver")
      */
     private Collection $receivedMessages;
 
@@ -527,7 +526,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @return ArrayCollection
      */
-    public function getSentMessages(): ArrayCollection
+    public function getSentMessages(): Collection
     {
         return $this->sentMessages;
     }

@@ -5,6 +5,7 @@ namespace App\Controller\Front;
 use App\Entity\User;
 use App\Entity\Contact;
 use App\Entity\Project;
+use App\Repository\SkillRepository;
 
 use App\Form\ContactType;
 use App\Entity\CallbackRequest;
@@ -34,7 +35,7 @@ class HomeController extends AbstractController
     * @Route("/", name="front_home")
     * @Route("/realisations/{category}", name="front_project_by_category")
     */
-    public function index(EntityManagerInterface $entityManager, Request $request, MailerInterface $mailer, string $category = null): Response
+    public function index(EntityManagerInterface $entityManager, Request $request, MailerInterface $mailer, SkillRepository $skillRepository, string $category = null): Response
     {
         $callbackRequest = new CallbackRequest();
         $form = $this->createForm(CallbackRequestType::class, $callbackRequest);
@@ -53,7 +54,7 @@ class HomeController extends AbstractController
 
             // Envoi de l'email
             $email = (new TemplatedEmail())
-                ->from(new Address('contact@scriptzenit.fr', 'ScriptzenIT - Demande de rappel'))
+                ->from(new Address('contact@walidbelbeche.fr', 'Walid BELBECHE - Demande de rappel'))
                 ->to($form->get('email')->getData())
                 ->bcc('wbelbeche.s@gmail.com')
                 ->subject('Nouvelle demande de rappel')
@@ -85,6 +86,8 @@ class HomeController extends AbstractController
         return $this->render('front/home/index.html.twig', [
             'projects' => $projects,
             'form' => $form->createView(),
+            // Competences administrables, regroupees par famille.
+            'skills' => $skillRepository->findGroupedByFamily(),
         ]);
     }
 
@@ -117,10 +120,10 @@ class HomeController extends AbstractController
 
                 // Envoi de l'email
                 $email = (new TemplatedEmail())
-                    ->from('contact@scriptzenit.fr')
+                    ->from('contact@walidbelbeche.fr')
                     ->to($contact->getEmail())
                     ->bcc('wbelbeche.s@gmail.com')
-                    ->subject('Prise de contact, ScriptZenIT')
+                    ->subject('Prise de contact, Walid BELBECHE')
                     ->html($this->renderView('front/contact/email.html.twig', [
                         'contact' => $contact,
                         'locale' => $request->getLocale(),
@@ -206,37 +209,26 @@ class HomeController extends AbstractController
     }
 
     /**
+     * Les trois formules : Diagnostic, Projet, Interlocuteur Unique.
+     *
+     * @Route("/mes-formules", name="front_services")
+     */
+    public function services(): Response
+    {
+        return $this->render('front/home/services.html.twig');
+    }
+    /**
+     * Anciennes pages de service, fusionnees dans /mes-formules.
+     * Redirection 301 : les liens externes et le referencement suivent.
+     *
      * @Route("/expertise_web", name="expertise_web")
-     */
-    public function expertiseWeb(): Response{
-        return $this->render('front/home/web.html.twig');
-    }
-
-    /**
      * @Route("/expertise_sur_mesure", name="expertise_sur_mesure")
-     */
-    public function expertiseSurMesure(): Response{
-        return $this->render('front/home/sur_mesure.html.twig');
-    }
-
-    /**
      * @Route("/task_automation", name="task_automation")
-     */
-    public function taskAutomation(): Response{
-        return $this->render('front/home/task_automation.html.twig');
-    }
-
-    /**
      * @Route("/quote_generation", name="quote_generation")
-     */
-    public function quoteGeneration(): Response{
-        return $this->render('front/home/quote_generation.html.twig');
-    }
-
-    /**
      * @Route("/custom_app", name="custom_app")
      */
-    public function customApp(): Response{
-        return $this->render('front/home/custom_app.html.twig');
+    public function legacyServices(): Response
+    {
+        return $this->redirectToRoute('front_services', [], Response::HTTP_MOVED_PERMANENTLY);
     }
 }

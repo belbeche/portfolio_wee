@@ -41,7 +41,7 @@
                             <div class="card-header">
                                 Langage : <strong>{{ section.language }}</strong>
                             </div>
-                            <div class="card-body bg-light">
+                            <div class="card-body bg-light" data-tone="light">
                                 <pre><code class="language-{{ section.language|default('plaintext') }}">{{ section.content|e }}</code></pre>
                             </div>
                         </div>

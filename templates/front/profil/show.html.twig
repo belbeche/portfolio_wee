@@ -1,63 +1,233 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Profil{% endblock %}
+{% block title %}Mes hébergements et mes projets{% endblock %}
 
 {% block content %}
 
-    <!-- Page Title
-		============================================= -->
-    <section class="page-title bg-primary border-bottom-0">
-        <div class="container">
-            <div class="page-title-row">
+{#
+    Espace « Mes projets ».
+    La page interroge l'API du panneau d'hebergement (Pterodactyl) via la
+    route api_resources et affiche l'etat reel des serveurs du client.
+    C'est une fonctionnalite rare chez un independant : elle merite d'etre
+    presentee comme telle, pas comme une liste brute.
+#}
 
-                <div class="page-title-content">
-                    <div class="d-flex align-items-center">
-                        <img src="{% if app.user %}{{ asset('uploads/avatar/'~app.user.avatar) }} {% else %} {{ asset('uploads/avatar/support0.svg') }} {% endif %}" width="35" height="35" class="rounded-circle me-3 border border-width-3 border-white" alt="{{ app.user.username }}" width="120" height="120">
-                        <div>
-                            <h2 class="h1 border-bottom border-dark border-width-4" style="font-weight: 800;color:white;">Profil de {{ app.user.prenom }}</h2>
-                            <p class="mb-0 text-white-50">Rôle du forum : <strong>{% for role in app.user.roles %}{{ role }}{% if not loop.last %}, {% endif %}{% endfor %}</strong></p>
-                            <a href="{{ url('front_subjects_new') }}" class="btn btn-secondary">Écrire au support</a>
-                            <a href="{{ url('front_subject_list') }}" class="btn btn-primary">Voir tous les sujets</a>
-                        </div>
-                    </div>
-                </div>
-
-                <nav aria-label="breadcrumb">
-                    <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a class="alt-color" href="{{ url('front_home') }}">Accueil</a></li>
-                        <li class="breadcrumb-item text-black-50 active" aria-current="page">{{ app.user.username }}</li>
-                    </ol>
-                </nav>
-
+<section class="wb-hero" data-tone="dark">
+    <div class="container" style="padding-top: 7rem; padding-bottom: 3.5rem;">
+        <div class="d-flex flex-wrap align-items-center gap-3 mb-3">
+            <img src="{{ app.user.avatar ? asset('uploads/avatar/' ~ app.user.avatar) : asset('uploads/avatar/support0.svg') }}"
+                 width="60" height="60" class="rounded-circle border border-2 border-light"
+                 alt="{{ app.user.username }}">
+            <div>
+                <span class="wb-eyebrow mb-1">Espace client</span>
+                <h1 class="wb-h2 mb-0 text-white">
+                    Bonjour {{ app.user.prenom ?: app.user.username }}
+                </h1>
             </div>
         </div>
-    </section>
+        <p class="wb-lead wb-lead--on-dark mb-4">
+            Vous voyez ici l'état réel de vos hébergements, en direct. Pas une capture
+            d'écran, pas un rapport mensuel : la donnée telle qu'elle est en ce moment
+            sur le serveur.
+        </p>
+        <div class="d-flex flex-wrap gap-2">
+            <a href="{{ url('front_espace_client') }}" class="wb-btn wb-btn--ghost">Tableau de bord</a>
+            <a href="{{ url('front_devis_new') }}" class="wb-btn wb-btn--gold">Nouvelle demande</a>
+            <a href="{{ url('send_message') }}" class="wb-btn wb-btn--ghost">Ouvrir un ticket</a>
+        </div>
+    </div>
+</section>
 
-    <!-- Content
-    ============================================= -->
-    <section>
-        <div class="container">
-            <div class="block-profil-informations">
-                <div class="block-information-user">
-                    <ul class="list-unstyled">
-                        <li class="py-2 text-larger">Rôle du forum: <strong>{% for role in app.user.roles %}{{ role }}{% if not loop.last %}, {% endif %}{% endfor %}</strong></li>
-                        <li class="py-2 text-larger">Sujets abordés: <strong>{{ app.user.subject|length }}</strong></li>
-                        <li class="py-2 text-larger">Réponses créées: <strong>{{ app.user.comments|length }}</strong></li>
-                        <li class="py-2 text-larger">Mes favoris: <strong>{{ app.user.likes|length }}</strong></li>
-                        <li class="py-2 text-larger">Sujets fermées: <strong>0</strong></li>
-                        {#<li class="py-2 text-larger">Pack assistance: <strong class="text-success">Actif</strong></li>#}
-                        <li class="py-2 text-larger">identifiant: <strong>{{ app.user.email }}</strong></li>
-                    </ul>
-                    <a href="{{ url('front_user_remove', {id: app.user.id.toRfc4122}) }}" class="btn btn-lg btn-block btn-outline-danger">Effacer mes données et mon compte</a>
+<section class="wb-section--tight" style="background: var(--wb-paper);">
+    <div class="container">
+        <div class="wb-stats wb-stats--paper">
+            <div class="wb-stat"><div class="wb-stat__n" id="stat-total">-</div><div class="wb-stat__l">hébergement(s)</div></div>
+            <div class="wb-stat"><div class="wb-stat__n" id="stat-online">-</div><div class="wb-stat__l">en fonctionnement</div></div>
+            <div class="wb-stat"><div class="wb-stat__n">{{ app.user.devis|length }}</div><div class="wb-stat__l">devis</div></div>
+            <div class="wb-stat"><div class="wb-stat__n">{{ app.user.sentMessages|length }}</div><div class="wb-stat__l">tickets ouverts</div></div>
+        </div>
+    </div>
+</section>
+
+<section class="wb-section">
+    <div class="container">
+        <div class="d-flex flex-wrap justify-content-between align-items-end gap-3 mb-4">
+            <div>
+                <span class="wb-eyebrow wb-eyebrow--ink">Supervision</span>
+                <h2 class="wb-h2 mb-0">Mes hébergements</h2>
+            </div>
+            <button type="button" id="refresh-resources" class="wb-btn wb-btn--outline">Actualiser</button>
+        </div>
+
+        {# Chargement #}
+        <div id="resources-loading" class="wb-card text-center py-5" data-tone="light">
+            <div class="spinner-border text-primary mb-3" role="status" aria-hidden="true"></div>
+            <p class="mb-0" style="color: var(--wb-text-2);">Interrogation du panneau d'hébergement…</p>
+        </div>
+
+        {# Erreur #}
+        <div id="resources-error" class="wb-card d-none" style="border-left: 4px solid #e34948;" data-tone="light">
+            <h3 class="wb-h3">Le panneau d'hébergement ne répond pas</h3>
+            <p class="mb-3" style="color: var(--wb-text-2);">
+                Vos services ne sont pas affectés : c'est uniquement l'affichage de
+                cette page qui n'a pas pu récupérer l'information. Si cela persiste,
+                ouvrez un ticket et je regarde.
+            </p>
+            <a href="{{ url('send_message') }}" class="wb-btn wb-btn--outline">Ouvrir un ticket</a>
+        </div>
+
+        {# Aucun hebergement #}
+        <div id="resources-empty" class="wb-card d-none text-center py-5" data-tone="light">
+            <h3 class="wb-h3">Aucun hébergement rattaché à votre compte</h3>
+            <p class="mb-4" style="color: var(--wb-text-2); max-width: 520px; margin: 0 auto;">
+                Vous n'avez pas encore de serveur géré par mes soins. La formule
+                Interlocuteur Unique inclut l'hébergement, la supervision et les
+                sauvegardes vérifiées.
+            </p>
+            <a href="{{ url('front_services') }}" class="wb-btn wb-btn--gold">Voir les formules</a>
+        </div>
+
+        {# Liste #}
+        <div class="row g-4 d-none" id="resources-list"></div>
+    </div>
+</section>
+
+<section class="wb-section wb-section--paper" data-tone="light">
+    <div class="container">
+        <div class="row g-4">
+            <div class="col-lg-8">
+                <div class="wb-card wb-card--accent h-100" data-tone="light">
+                    <span class="wb-badge wb-badge--gold mb-3">Ce que ça change pour vous</span>
+                    <h2 class="wb-h3">Vous n'avez plus à demander « est-ce que ça tourne ? »</h2>
+                    <p style="color: var(--wb-text-2);">
+                        Cette page lit directement le panneau d'hébergement. Elle vous
+                        montre l'état, la mémoire, le disque et le processeur alloués à
+                        chacun de vos services, ainsi que la date de dernière modification.
+                    </p>
+                    <p class="mb-0" style="color: var(--wb-text-2);">
+                        C'est la différence entre un prestataire qui vous répond quand
+                        vous relancez, et un prestataire chez qui l'information est
+                        disponible en permanence, sans avoir à la réclamer.
+                    </p>
                 </div>
-                <div class="block-hidden-resources"><div class="await-resources overflow-style-1"></div></div>
-                <a href="{{ url('front_devis_new') }}" class="btn btn-block btn-outline-primary mt-3">Faite une nouvelle demande</a>
+            </div>
+            <div class="col-lg-4">
+                <div class="wb-card wb-card--ink h-100" data-tone="dark">
+                    <h3 class="wb-h3" style="color:#fff;">Besoin d'une évolution ?</h3>
+                    <p class="mb-4" style="color: var(--wb-on-dark-2); font-size: .93rem;">
+                        Décrivez-la en deux minutes, je vous réponds avec un chiffrage
+                        sous 48 heures ouvrées.
+                    </p>
+                    <a href="{{ url('front_devis_new') }}" class="wb-btn wb-btn--gold w-100">Demander un chiffrage</a>
+                </div>
             </div>
         </div>
-    </section>
-    <!-- #content end -->
+    </div>
+</section>
 
-    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-    <script src="{{ asset('js/resource.js') }}"></script>
+<template id="resource-card-template">
+    <div class="col-md-6 col-lg-4">
+        <div class="wb-card h-100" data-tone="light">
+            <div class="d-flex justify-content-between align-items-start gap-2 mb-2">
+                <h3 class="wb-h3 mb-0" data-field="name"></h3>
+                <span class="wb-badge" data-field="status"></span>
+            </div>
+            <p class="mb-3" data-field="description" style="color: var(--wb-text-2); font-size: .9rem;"></p>
+            <dl class="row mb-0 small" style="color: var(--wb-text-2);">
+                <dt class="col-6 fw-normal">Mémoire</dt><dd class="col-6 text-end mb-1" data-field="memory"></dd>
+                <dt class="col-6 fw-normal">Disque</dt><dd class="col-6 text-end mb-1" data-field="disk"></dd>
+                <dt class="col-6 fw-normal">Processeur</dt><dd class="col-6 text-end mb-1" data-field="cpu"></dd>
+                <dt class="col-6 fw-normal">Mise à jour</dt><dd class="col-6 text-end mb-0" data-field="updated"></dd>
+            </dl>
+        </div>
+    </div>
+</template>
+
+<script>
+(function () {
+    var loading = document.getElementById('resources-loading');
+    var errorBox = document.getElementById('resources-error');
+    var emptyBox = document.getElementById('resources-empty');
+    var list = document.getElementById('resources-list');
+    var tpl = document.getElementById('resource-card-template');
+
+    function show(el) { el.classList.remove('d-none'); }
+    function hide(el) { el.classList.add('d-none'); }
+
+    function fmtMo(value) {
+        if (value === null || value === undefined) return 'non limité';
+        var n = Number(value);
+        if (!isFinite(n) || n === 0) return 'non limité';
+        return n >= 1024 ? (n / 1024).toFixed(1) + ' Go' : n + ' Mo';
+    }
+
+    function fmtDate(value) {
+        if (!value) return '-';
+        var d = new Date(value);
+        return isNaN(d) ? '-' : d.toLocaleDateString('fr-FR');
+    }
+
+    function render(resources) {
+        list.innerHTML = '';
+        var online = 0;
+
+        resources.forEach(function (r) {
+            var node = tpl.content.cloneNode(true);
+            var status = (r.status || 'inconnu');
+            var suspended = r.suspended === true;
+            var ok = !suspended && (status === 'running' || status === null || status === 'installed');
+
+            if (ok) { online++; }
+
+            node.querySelector('[data-field="name"]').textContent = r.name || 'Service';
+            node.querySelector('[data-field="description"]').textContent = r.description || 'Aucune description renseignée.';
+
+            var badge = node.querySelector('[data-field="status"]');
+            badge.textContent = suspended ? 'suspendu' : (ok ? 'en ligne' : status);
+            badge.className = 'wb-badge ' + (suspended ? '' : (ok ? 'wb-badge--green' : 'wb-badge--gold'));
+
+            node.querySelector('[data-field="memory"]').textContent = fmtMo(r.limits && r.limits.memory);
+            node.querySelector('[data-field="disk"]').textContent = fmtMo(r.limits && r.limits.disk);
+            node.querySelector('[data-field="cpu"]').textContent =
+                (r.limits && r.limits.cpu) ? r.limits.cpu + ' %' : 'non limité';
+            node.querySelector('[data-field="updated"]').textContent = fmtDate(r.updated_at);
+
+            list.appendChild(node);
+        });
+
+        document.getElementById('stat-total').textContent = resources.length;
+        document.getElementById('stat-online').textContent = online;
+        show(list);
+    }
+
+    function load() {
+        hide(errorBox); hide(emptyBox); hide(list); show(loading);
+
+        fetch('{{ url('api_resources') }}', {
+            headers: { 'X-Requested-With': 'XMLHttpRequest', 'Accept': 'application/json' },
+            credentials: 'same-origin'
+        })
+        .then(function (r) {
+            if (!r.ok) { throw new Error('HTTP ' + r.status); }
+            return r.json();
+        })
+        .then(function (data) {
+            hide(loading);
+            var resources = (data && data.resources) || [];
+            if (resources.length === 0) { show(emptyBox); return; }
+            render(resources);
+        })
+        .catch(function () {
+            hide(loading);
+            show(errorBox);
+            document.getElementById('stat-total').textContent = '-';
+            document.getElementById('stat-online').textContent = '-';
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', load);
+    document.getElementById('refresh-resources').addEventListener('click', load);
+})();
+</script>
 
 {% endblock %}

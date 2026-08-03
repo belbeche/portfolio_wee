@@ -1,0 +1,134 @@
+{% extends 'base_back.html.twig' %}
+
+{% block title %}{{ prospect.company ?: prospect.email }}{% endblock %}
+{% block breadcrumb %}Prospects{% endblock %}
+{% block heading %}{{ prospect.company ?: prospect.email }}{% endblock %}
+
+{% block topActions %}
+	<a href="{{ url('back_prospect_index') }}" class="ad-btn ad-btn--ghost">Retour à la liste</a>
+	<a href="{{ url('back_prospect_edit', {id: prospect.id}) }}" class="ad-btn ad-btn--primary">Modifier la fiche</a>
+{% endblock %}
+
+{% block content %}
+
+<div class="ad-grid" style="grid-template-columns: minmax(0, 2fr) minmax(280px, 1fr);">
+
+	{# ------------------------------------------------ colonne principale -- #}
+	<div>
+
+		<section class="ad-card" style="margin-bottom:1rem;" data-tone="light">
+			<div class="ad-card__head"><h2>Enregistrer un échange</h2></div>
+			<div class="ad-card__body ad-form">
+				{{ form_start(form) }}
+					<div class="ad-grid" style="grid-template-columns: 200px 1fr; gap:1rem; align-items:start;">
+						<div>{{ form_row(form.type) }}</div>
+						<div>{{ form_row(form.content) }}</div>
+					</div>
+					<button class="ad-btn ad-btn--primary">Enregistrer</button>
+					<span style="font-size:.78rem;color:var(--ad-text-3);margin-left:.6rem;">
+						Un appel ou un e-mail avance automatiquement le statut et programme la relance suivante.
+					</span>
+				{{ form_end(form) }}
+			</div>
+		</section>
+
+		<section class="ad-card" data-tone="light">
+			<div class="ad-card__head">
+				<h2>Historique</h2>
+				<span class="ad-tag">{{ prospect.prospectNotes|length }} échange(s)</span>
+			</div>
+
+			{% if prospect.prospectNotes|length > 0 %}
+				<div class="ad-card__body">
+					<div class="wb-timeline" style="padding-left:2.2rem;">
+						{% for note in prospect.prospectNotes|reverse %}
+							<div class="wb-timeline__item">
+								<div style="display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;">
+									<span class="ad-tag ad-tag--{{ note.tone }}">{{ note.typeLabel }}</span>
+									<span class="wb-timeline__date">{{ note.createdAt|date('d/m/Y à H:i') }}</span>
+									{% if note.author %}
+										<span style="font-size:.75rem;color:var(--ad-text-3);">par {{ note.author }}</span>
+									{% endif %}
+									<form method="post" action="{{ url('back_prospect_note_delete', {id: note.id}) }}"
+									      style="margin-left:auto;"
+									      onsubmit="return confirm('Supprimer cet échange ?');">
+										<input type="hidden" name="_token" value="{{ csrf_token('delete_note_' ~ note.id) }}">
+										<button class="ad-btn ad-btn--danger ad-btn--sm">Supprimer</button>
+									</form>
+								</div>
+								<p class="wb-timeline__desc" style="margin-top:.4rem;white-space:pre-line;">{{ note.content }}</p>
+							</div>
+						{% endfor %}
+					</div>
+				</div>
+			{% else %}
+				<div class="ad-card__body">
+					<div class="ad-empty">
+						<h3>Aucun échange enregistré</h3>
+						<p style="margin:0;font-size:.86rem;">
+							Note ici ce qui a été dit à chaque contact. C'est ce que tu reliras
+							avant de rappeler, et c'est ce qui fait la différence entre une
+							relance utile et une relance générique.
+						</p>
+					</div>
+				</div>
+			{% endif %}
+		</section>
+
+	</div>
+
+	{# ----------------------------------------------------- colonne fiche -- #}
+	<div>
+		<section class="ad-card" style="margin-bottom:1rem;" data-tone="light">
+			<div class="ad-card__head"><h2>La fiche</h2></div>
+			<table class="ad-table">
+				<tbody>
+					<tr><td>Société</td><td style="text-align:right;"><strong>{{ prospect.company ?: '-' }}</strong></td></tr>
+					<tr><td>Contact</td><td style="text-align:right;">{{ prospect.contactName ?: '-' }}</td></tr>
+					<tr><td>E-mail</td><td style="text-align:right;"><a href="mailto:{{ prospect.email }}">{{ prospect.email }}</a></td></tr>
+					<tr><td>Téléphone</td><td style="text-align:right;">
+						{% if prospect.phone %}<a href="tel:{{ prospect.phone }}">{{ prospect.phone }}</a>{% else %}-{% endif %}
+					</td></tr>
+					<tr><td>Ville</td><td style="text-align:right;">{{ prospect.city ?: '-' }}</td></tr>
+					<tr><td>Site web</td><td style="text-align:right;">
+						{% if prospect.website %}<a href="{{ prospect.website starts with 'http' ? prospect.website : 'https://' ~ prospect.website }}" target="_blank" rel="noopener">Ouvrir</a>{% else %}-{% endif %}
+					</td></tr>
+					<tr><td>Priorité</td><td style="text-align:right;">
+						{% if prospect.priority %}<span class="ad-tag ad-tag--{{ prospect.priority == 'P1' ? 'green' : (prospect.priority == 'P2' ? 'gold' : 'muted') }}">{{ prospect.priority }}</span>{% else %}-{% endif %}
+					</td></tr>
+					<tr><td>Statut</td><td style="text-align:right;"><span class="ad-tag ad-tag--blue">{{ prospect.statusLabel }}</span></td></tr>
+					<tr><td>Source</td><td style="text-align:right;">{{ prospect.source ?: '-' }}</td></tr>
+				</tbody>
+			</table>
+		</section>
+
+		<section class="ad-card" data-tone="light">
+			<div class="ad-card__head"><h2>Suivi</h2></div>
+			<table class="ad-table">
+				<tbody>
+					<tr><td>Dernier contact</td><td style="text-align:right;">
+						{{ prospect.lastContactedAt ? prospect.lastContactedAt|date('d/m/Y') : 'jamais' }}
+					</td></tr>
+					<tr><td>Relances envoyées</td><td class="num" style="text-align:right;"><strong>{{ prospect.followUpCount }}</strong></td></tr>
+					<tr><td>Prochaine relance</td><td style="text-align:right;">
+						{% if prospect.nextFollowUpAt %}
+							{% set due = prospect.isFollowUpDue() %}
+							<span class="ad-tag ad-tag--{{ due ? 'red' : 'gold' }}">
+								{{ prospect.nextFollowUpAt|date('d/m/Y') }}{{ due ? ' · due' : '' }}
+							</span>
+						{% else %}
+							<span class="ad-tag ad-tag--muted">aucune</span>
+						{% endif %}
+					</td></tr>
+				</tbody>
+			</table>
+			<div class="ad-card__foot" style="color:var(--ad-text-3);">
+				La cadence est J+4 puis J+10. Au-delà de deux relances, le prospect
+				n'est pas mûr : mieux vaut le laisser reposer que d'insister.
+			</div>
+		</section>
+	</div>
+
+</div>
+
+{% endblock %}

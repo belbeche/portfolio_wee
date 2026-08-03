@@ -1,257 +1,375 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}{{ 'portfolio_title'|trans }}{% endblock %}
+{% block title %}Walid BELBECHE | Consultant informatique, interlocuteur unique{% endblock %}
 
 {% block content %}
 
-<style>
-    .select2-container .select2-selection--single {
-        height: calc(2.5em + 2px);
-        line-height: 41px!important;
-        margin-left: 2px;
-        padding-top: 2px;
-    }
-    .select2-container .select2-selection__arrow {
-        height: calc(2.5em + 2px);
-    }
-</style>
+{# =====================================================================
+   Accueil.
+   Un principe a chaque section : ne jamais affirmer sans montrer.
+   Les chiffres viennent du code reellement ecrit, les anecdotes de
+   projets reellement livres.
+   ===================================================================== #}
 
-<style>
-    #language-selector {
-        display: flex;
-        flex-direction: row;
-        height: 100vh;
-        width: 100%;
-        position: fixed;
-        top: 0;
-        left: 0;
-        z-index: 9999;
-    }
-    .language-option {
-        text-align: center;
-        transition: transform 0.3s ease, background-color 0.3s ease;
-    }
-    .language-option:hover {
-        transform: scale(1.05);
-        background-color: #0056b3 !important;
-    }
-</style>
+{% for type, messages in app.flashes %}
+    {% for message in messages %}
+        <div class="container" style="padding-top: 6.5rem;">
+            <div class="wb-flash wb-flash--{{ type }}">{{ message|trans }}</div>
+        </div>
+    {% endfor %}
+{% endfor %}
 
-<!-- Language Selector Fullscreen -->
-<div id="language-selector" class="d-flex vh-100">
-    <!-- Français -->
-    <div class="language-option bg-primary text-white d-flex flex-column justify-content-center align-items-center w-50">
-        <h1 class="display-6 fw-bold">Français</h1>
-        <button data-locale="fr" class="btn btn-light btn-lg mt-4 select-language">Choisir</button>
+<section class="wb-hero wb-slant" data-tone="dark">
+    <div class="container" style="padding-top: 8rem; padding-bottom: 8rem;">
+        <div class="row align-items-center g-5">
+
+            <div class="col-lg-7">
+                <span class="wb-eyebrow">{{ 'home.eyebrow'|trans }}</span>
+
+                <h1 class="wb-display">
+                    {{ 'home.title_1'|trans }}<br>
+                    {{ 'home.title_2'|trans }} <span class="wb-mark">{{ 'home.title_3'|trans }}</span><br>
+                    {{ 'home.title_4'|trans }}
+                </h1>
+
+                <p class="wb-lead wb-lead--on-dark mb-4">
+                    {{ 'home.lead'|trans }}
+                </p>
+
+                <div class="d-flex flex-column flex-sm-row gap-3 mb-4">
+                    <a href="{{ url('front_devis_new') }}" class="wb-btn wb-btn--gold">
+                        {{ 'home.cta_estimate'|trans }}
+                    </a>
+                    <a href="{{ url('front_methode') }}" class="wb-btn wb-btn--ghost">
+                        {{ 'home.cta_method'|trans }}
+                    </a>
+                </div>
+
+                <div class="wb-credential">
+                    <span class="wb-credential__seal">RNCP</span>
+                    <span class="wb-credential__txt">
+                        <b>{{ 'home.rncp_title'|trans }}</b>
+                        <span>{{ 'home.rncp_sub'|trans }}</span>
+                    </span>
+                </div>
+            </div>
+
+            <div class="col-lg-5">
+                <div class="wb-card wb-card--glass p-4" data-tone="dark">
+                    <span class="wb-badge wb-badge--glass mb-3">{{ 'home.form_badge'|trans }}</span>
+                    <h2 class="wb-h3 text-white mb-1">{{ 'home.form_title'|trans }}</h2>
+                    <p class="small mb-4" style="color: var(--wb-on-dark-2);">
+                        {{ 'home.form_lead'|trans }}
+                    </p>
+
+                    {{ form_start(form, {'attr': {'class': 'wb-form'}, 'method': 'POST'}) }}
+                        {{ form_row(form.name, {'attr': {'class': 'form-control', 'placeholder': 'form_name_placeholder'|trans}}) }}
+                        {{ form_row(form.phonePrefix, {'attr': {'class': 'form-select'}}) }}
+                        {{ form_row(form.phone, {'attr': {'class': 'form-control', 'placeholder': 'form_phone_placeholder'|trans}}) }}
+                        {{ form_row(form.email, {'attr': {'class': 'form-control', 'placeholder': 'form_email_placeholder'|trans}}) }}
+                        <button type="submit" class="wb-btn wb-btn--gold w-100 mt-2">
+                            {{ 'form_submit_button'|trans }}
+                        </button>
+                    {{ form_end(form) }}
+                </div>
+            </div>
+
+        </div>
     </div>
-    <!-- Anglais -->
-    <div class="language-option bg-secondary text-white d-flex flex-column justify-content-center align-items-center w-50">
-        <h1 class="display-6 fw-bold">English</h1>
-        <button data-locale="en" class="btn btn-light btn-lg mt-4 select-language">Choose</button>
+</section>
+
+{# ------------------------------------------------------------ chiffres -- #}
+<section class="wb-section--tight" style="background: var(--wb-paper);">
+    <div class="container">
+        <div class="wb-stats wb-stats--paper">
+            <div class="wb-stat"><div class="wb-stat__n">12</div><div class="wb-stat__l">{{ 'home.stat_years'|trans }}<br>{{ 'home.stat_years_2'|trans }}</div></div>
+            <div class="wb-stat"><div class="wb-stat__n">3</div><div class="wb-stat__l">{{ 'home.stat_platforms'|trans }}<br>{{ 'home.stat_platforms_2'|trans }}</div></div>
+            <div class="wb-stat"><div class="wb-stat__n">1</div><div class="wb-stat__l">{{ 'home.stat_contact'|trans }}<br>{{ 'home.stat_contact_2'|trans }}</div></div>
+            <div class="wb-stat"><div class="wb-stat__n">100 %</div><div class="wb-stat__l">{{ 'home.stat_rights'|trans }}<br>{{ 'home.stat_rights_2'|trans }}</div></div>
+        </div>
     </div>
-</div>
+</section>
 
-<script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js" defer></script>
+{# ------------------------------------------------------- le vrai probleme -- #}
+<section class="wb-section wb-section--paper" data-tone="light">
+    <div class="container">
+        <div class="row g-5 align-items-start">
+            <div class="col-lg-5">
+                <span class="wb-eyebrow wb-eyebrow--ink">{{ 'home.problem_eyebrow'|trans }}</span>
+                <h2 class="wb-h2">{{ 'home.problem_title_1'|trans }}<br>{{ 'home.problem_title_2'|trans }}</h2>
+                <p class="wb-lead">
+                    {{ 'home.problem_p1'|trans }}
+                </p>
+                <p class="wb-lead">
+                    {{ 'home.problem_p2'|trans }}
+                </p>
+            </div>
 
-<!-- Hero Section -->
-<section id="hero" class="container-fluid text-white position-relative bg-primary" style="min-height: 100vh; background-attachment: fixed;">
-    <!-- Particles Background -->
-    <div id="particles-js" class="position-absolute w-100 h-100"></div>
-
-    <!-- Content -->
-    <div class="d-flex align-items-center position-relative header_intro">
-        <div class="row w-100 mx-0 align-items-center">
-            <div class="container">
-                {% for type, messages in app.flashes %}
-                    {% for message in messages %}
-                        <div class="alert alert-{{ type }}">
-                            {{ message|trans }}
+            <div class="col-lg-7">
+                <div class="row g-3">
+                    {% set piliers = [
+                        {'n': '01', 'titre': "Je comprends votre métier avant d'écrire du code", 'texte': "Le cadrage vient toujours en premier. Cahier des charges, spécifications, user stories avec critères d'acceptation. Vous savez exactement ce que vous achetez, et moi ce que je livre."},
+                        {'n': '02', 'titre': 'Je construis tout, du serveur à l\'écran', 'texte': "Base de données, API, back-office, site web, application mobile iOS et Android, mise en production. Aucun maillon confié à quelqu'un d'autre."},
+                        {'n': '03', 'titre': 'Je reste joignable après la livraison', 'texte': "Un guichet d'assistance avec référence et suivi, un point hebdomadaire pour les idées, l'e-mail pour les décisions. Le cadre est écrit, il protège les deux parties."},
+                        {'n': '04', 'titre': 'Je vous rends indépendant de moi', 'texte': "Code source, documentation et cession des droits au paiement final. Un autre développeur peut reprendre le projet demain. C'est voulu."}
+                    ] %}
+                    {% for pilier in piliers %}
+                        <div class="col-md-6">
+                            <div class="wb-card {{ loop.first ? 'wb-card--accent' : '' }}" data-tone="light">
+                                <span class="wb-card__num">{{ pilier.n }}</span>
+                                <h3 class="wb-h3">{{ pilier.titre }}</h3>
+                                <p class="mb-0" style="color: var(--wb-text-2); font-size: .93rem;">{{ pilier.texte }}</p>
+                            </div>
                         </div>
                     {% endfor %}
-                {% endfor %}
+                </div>
             </div>
-            <!-- Texte et boutons -->
-            <div class="col-lg-7 col-md-12 d-flex flex-column justify-content-center px-4 px-md-5 text-center text-lg-start mb-4 mb-lg-0 intro_mobile">
-                <h1 class="display-4 fw-bold mb-4">{{ 'hero_title'|trans }}</h1>
-                <p class="fs-5 mb-4 text-white">{{ 'hero_subtitle_1'|trans }}</p>
-                <p class="fs-5 mb-4 text-white">{{ 'hero_subtitle_2'|trans }}</p>
-                <div class="d-flex flex-column flex-md-row gap-3 justify-content-center button_intro">
-                    <a href="https://calendly.com/walid_belbeche/expertise-offerte" class="btn btn-warning">{{ 'hero_button_schedule'|trans }}</a>
-                    <a href="{{ url('front_contact') }}" class="btn btn-outline-light">{{ 'hero_button_contact'|trans }}</a>
+        </div>
+    </div>
+</section>
+
+{# ------------------------------------------------------- facon de travailler -- #}
+<section class="wb-section">
+    <div class="container">
+        <div class="text-center mb-5">
+            <span class="wb-eyebrow wb-eyebrow--ink">{{ 'home.anec_eyebrow'|trans }}</span>
+            <h2 class="wb-h2">{{ 'home.anec_title'|trans }}</h2>
+            <p class="wb-lead mx-auto">
+                {{ 'home.anec_lead'|trans }}
+            </p>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-lg-4">
+                <div class="wb-anecdote h-100" data-tone="light">
+                    <span class="wb-anecdote__label">{{ 'home.pil_1_label'|trans }}</span>
+                    <p>
+                        {{ 'home.pil_1_p1'|trans }}
+                    </p>
+                    <p class="mb-0">
+                        {{ 'home.pil_1_p2'|trans }}
+                    </p>
                 </div>
             </div>
 
-            <div class="col-lg-5 col-md-12 d-flex justify-content-center mt-4 mb-4 mt-lg-0">
-                <div class="rounded shadow-lg bg-light p-4" style="width: 100%; max-width: 400px;">
-                    {% if app.request.query.get('submitted') %}
-                        <div id="successMessage" class="alert alert-success text-center">
-                            {{ 'form_success_message'|trans }}
+            <div class="col-lg-4">
+                <div class="wb-anecdote h-100" data-tone="light">
+                    <span class="wb-anecdote__label">{{ 'home.pil_2_label'|trans }}</span>
+                    <p>
+                        {{ 'home.pil_2_p1'|trans }}
+                    </p>
+                    <p class="mb-0">
+                        {{ 'home.pil_2_p2'|trans }}
+                    </p>
+                </div>
+            </div>
+
+            <div class="col-lg-4">
+                <div class="wb-anecdote h-100" data-tone="light">
+                    <span class="wb-anecdote__label">{{ 'home.pil_3_label'|trans }}</span>
+                    <p>
+                        {{ 'home.pil_3_p1'|trans }}
+                    </p>
+                    <p class="mb-0">
+                        {{ 'home.pil_3_p2'|trans }}
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{# ------------------------------------------------------------ competences -- #}
+{% if skills is defined and skills|length > 0 %}
+<section class="wb-section wb-section--ink" data-tone="dark">
+    <div class="container">
+        <div class="row g-5">
+            <div class="col-lg-4">
+                <span class="wb-eyebrow">{{ 'home.skills_eyebrow'|trans }}</span>
+                <h2 class="wb-h2">{{ 'home.skills_title_1'|trans }}<br>{{ 'home.skills_title_2'|trans }}</h2>
+                <p class="wb-lead wb-lead--on-dark">
+                    {{ 'home.skills_lead'|trans }}
+                </p>
+                <a href="{{ url('front_methode') }}" class="wb-btn wb-btn--ghost mt-2">{{ 'home.skills_cta'|trans }}</a>
+
+                <div class="wb-scale mt-4">
+                    <p class="wb-scale__note">
+                        {{ 'home.skills_note'|trans }}
+                    </p>
+                </div>
+            </div>
+
+            <div class="col-lg-8">
+                <div class="row g-4">
+                    {% for group, list in skills %}
+                        <div class="col-md-6">
+                            <h3 class="wb-eyebrow" style="color: var(--wb-blue-soft);">{{ list|first.groupLabel }}</h3>
+                            {% for skill in list %}
+                                <div class="wb-skill {{ skill.highlighted ? 'wb-skill--gold' : '' }}"
+                                     title="{{ skill.levelHint }}">
+                                    <div class="wb-skill__head">
+                                        <span class="wb-skill__name" style="color: #fff;">{{ skill.name }}</span>
+                                        <span class="wb-skill__years">{% if skill.yearsOfExperience %}{{ skill.yearsOfExperience }} ans · {% endif %}{{ skill.levelLabel }}</span>
+                                    </div>
+                                    <div class="wb-skill__track" style="background: rgba(255,255,255,.12);"
+                                         role="img" aria-label="{{ skill.levelLabel }}. {{ skill.levelHint }}">
+                                        <div class="wb-skill__fill" style="width: {{ skill.levelPercent }}%;"></div>
+                                    </div>
+                                </div>
+                            {% endfor %}
                         </div>
-                    {% else %}
-                        <div id="callbackForm">
-                            {{ form_start(form, {'attr': {'class': 'needs-validation'}, 'method': 'POST'}) }}
-                                <div class="form-floating mb-3">
-                                    {{ form_row(form.name, {'attr': {'class': 'form-control', 'id': 'name', 'placeholder': 'form_name_placeholder'|trans}}) }}
-                                    {{ form_errors(form.name) }}
-                                </div>
-                                <div class="form-floating mb-3">
-                                    {{ form_row(form.phonePrefix, {'attr': {'class': 'select2', 'id': 'phonePrefix'}}) }}
-                                    {{ form_errors(form.phonePrefix) }}
-                                </div>
-                                <div class="form-floating mb-3">
-                                    {{ form_row(form.phone, {'attr': {'class': 'form-control', 'id': 'phone', 'placeholder': 'form_phone_placeholder'|trans}}) }}
-                                    {{ form_errors(form.phone) }}
-                                </div>
-                                <div class="form-floating mb-3">
-                                    {{ form_row(form.email, {'attr': {'class': 'form-control', 'id': 'email', 'placeholder': 'form_email_placeholder'|trans}}) }}
-                                    {{ form_errors(form.email) }}
-                                </div>
-                                <button type="submit" id="submitButton" class="btn btn-primary w-100">
-                                    {{ 'form_submit_button'|trans }}
-                                </button>
-                            {{ form_end(form) }}
-                        </div>
-                    {% endif %}
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- Pourquoi me choisir -->
-<section class="container-fluid position-relative mt-6">
-    <div class="row h-100 align-items-center">
-        <!-- Image -->
-        <div class="col-lg-6 col-md-12 d-flex justify-content-center">
-            <img src="{{ asset('img/moi2.jpg') }}" loading="lazy" 
-                alt="Walid BELBECHE - Expert Symfony et solutions numériques sur mesure" 
-                class="img-fluid rounded shadow-lg"
-                width="60%">
-        </div>
-        <div class="col-lg-6 col-md-12 d-flex flex-column justify-content-center px-5">
-            <h2 class="display-4 fw-bold mb-4 mt-4">{{ 'why_work_with_me_title'|trans }}</h2>
-            <p class="fs-5 mb-4">{{ 'about_me_text'|trans }}</p>
-            <ul class="list-unstyled mb-4">
-                <li class="mb-3 d-flex align-items-start">
-                    <i class="bi bi-check-circle-fill text-primary me-3"></i>
-                    <span>{{ 'personalized_support'|trans }}</span>
-                </li>
-                <li class="mb-3 d-flex align-items-start">
-                    <i class="bi bi-check-circle-fill text-primary me-3"></i>
-                    <span>{{ 'deep_expertise'|trans }}</span>
-                </li>
-                <li class="mb-3 d-flex align-items-start">
-                    <i class="bi bi-check-circle-fill text-primary me-3"></i>
-                    <span>{{ 'long_term_commitment'|trans }}</span>
-                </li>
-            </ul>
-            <a href="https://calendly.com/walid_belbeche/expertise-offerte" class="btn btn-info btn-lg rounded-pill mb-4">{{ 'button_schedule'|trans }}</a>
-        </div>
-    </div>
-</section>
-
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        particlesJS("particles-js", {
-            "particles": {
-                "number": { "value": 50, "density": { "enable": true, "value_area": 800 } },
-                "color": { "value": "#ffffff" },
-                "shape": { "type": "circle" },
-                "opacity": { "value": 0.5 },
-                "size": { "value": 3 },
-                "line_linked": { "enable": true, "distance": 150, "color": "#ffffff", "opacity": 0.4, "width": 1 },
-                "move": { "enable": true, "speed": 2 }
-            },
-            "interactivity": { "detect_on": "canvas", "events": { "onhover": { "enable": true, "mode": "grab" }, "onclick": { "enable": true, "mode": "push" } }, "modes": { "grab": { "distance": 140, "line_linked": { "opacity": 1 } } } },
-            "retina_detect": true
-        });
-    });
-</script>
-
-<!-- Skills and Technologies Section -->
-<section class="container mt-5">
-    <h2 class="text-center display-4 fw-bold mb-5">{{ 'skills_title'|trans }}</h2>
-    <div class="row">
-        {% set tools = [
-            { 'img': 'spec-4.png', 'name': 'Symfony' },
-            { 'img': 'spec-1.png', 'name': 'PHP' },
-            { 'img': 'spec-18.svg', 'name': 'PHP Storm' },
-            { 'img': 'spec-20.png', 'name': 'Docker' },
-            { 'img': 'spec-14.png', 'name': 'React' },
-            { 'img': 'spec-5.svg', 'name': 'VueJS' },
-            { 'img': 'spec-10.png', 'name': 'Next.js' },
-            { 'img': 'spec-7.png', 'name': 'SaaS' },
-            { 'img': 'spec-12.png', 'name': 'Node.js' }
-        ] %}
-        {% for tool in tools %}
-            <div class="col-xs-12 col-sm-3">
-                <div class="lm-info-block gray-default text-center">
-                    <img src="{{ asset('img/clients/' ~ tool.img) }}" loading="lazy" alt="{{ tool.name }}" class="img-fluid">
-                    <h4>{{ tool.name }}</h4>
-                </div>
-            </div>
-        {% endfor %}
-    </div>
-</section>
-
-<div class="divider"></div>
-
-<!-- Projects Section -->
-<section class="container">
-    <h2 class="text-center display-4 fw-bold mb-5">{{ 'recent_projects_title'|trans }}</h2>
-    <div class="row">
-        {% for project in projects %}
-            <div class="col-md-4 mb-4">
-                <div class="card shadow">
-                    {% for image in project.images %}
-                        <img src="{{ asset('image_project/' ~ image.name) }}" loading="lazy" alt="{{ image.name }}">
                     {% endfor %}
-                    <div class="card-body">
-                        <h5 class="card-title">{{ project.title }}</h5>
-                        <a href="{{ url('front_project_show', {id: project.id}) }}" class="btn btn-primary">{{ 'view_more'|trans }}</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endif %}
+
+{# ---------------------------------------------------------- realisations -- #}
+<section class="wb-section wb-section--paper" data-tone="light">
+    <div class="container">
+        <div class="d-flex flex-wrap justify-content-between align-items-end gap-3 mb-5">
+            <div>
+                <span class="wb-eyebrow wb-eyebrow--ink">{{ 'home.work_eyebrow'|trans }}</span>
+                <h2 class="wb-h2 mb-0">{{ 'home.work_title'|trans }}</h2>
+            </div>
+            <a href="{{ url('front_project') }}" class="wb-btn wb-btn--outline">{{ 'home.work_all'|trans }}</a>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-lg-4">
+                <a href="{{ url('front_referral_go', {context: 'accueil_axishumain'}) }}" class="wb-work" rel="noopener">
+                    <span class="wb-work__veil"></span>
+                    <span class="wb-work__body">
+                        <span class="wb-badge wb-badge--gold align-self-start">Place de marché</span>
+                        <span class="wb-work__title">AxisHumain</span>
+                        <span class="wb-work__desc">
+                            Mise en relation entre entreprises et experts IT. Deux parcours
+                            utilisateurs, paiement en ligne, système d'avis, générateur de
+                            mission assisté. Symfony 6.4.
+                        </span>
+                    </span>
+                </a>
+            </div>
+
+            <div class="col-lg-4">
+                <a href="https://reves.walidbelbeche.fr" class="wb-work" target="_blank" rel="noopener">
+                    <span class="wb-work__veil"></span>
+                    <span class="wb-work__body">
+                        <span class="wb-badge wb-badge--green align-self-start">Plateforme familiale</span>
+                        <span class="wb-work__title">Rêves</span>
+                        <span class="wb-work__desc">
+                            Les enfants créent leurs listes de rêves, la famille contribue.
+                            Défis mensuels, badges et points côté enfant, contributions
+                            sécurisées côté proches.
+                        </span>
+                    </span>
+                </a>
+            </div>
+
+            <div class="col-lg-4">
+                <a href="{{ url('front_project') }}" class="wb-work">
+                    <span class="wb-work__veil"></span>
+                    <span class="wb-work__body">
+                        <span class="wb-badge wb-badge--glass align-self-start">Application mobile</span>
+                        <span class="wb-work__title">SUSPENSION</span>
+                        <span class="wb-work__desc">
+                            Entraide de quartier : stationnement partagé, dons entre voisins,
+                            alerte de proximité. React Native iOS et Android, API, publication
+                            sur les deux magasins.
+                        </span>
+                    </span>
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+{# ------------------------------------------------------------- rassurance -- #}
+<section class="wb-section">
+    <div class="container">
+        <div class="row align-items-center g-5">
+            <div class="col-lg-6">
+                <span class="wb-eyebrow wb-eyebrow--ink">{{ 'home.trust_eyebrow'|trans }}</span>
+                <h2 class="wb-h2">{{ 'home.trust_title'|trans }}</h2>
+                <div class="wb-path mt-4">
+                    <div class="wb-path__step wb-path__step--gold">
+                        <h3 class="wb-h3">{{ 'agency.pay_title'|trans }}</h3>
+                        <p class="mb-0" style="color: var(--wb-text-2);">
+                            Trois jalons : signature, version testable sur votre téléphone,
+                            mise en ligne. Vous ne réglez l'étape suivante qu'après avoir
+                            validé la précédente.
+                        </p>
+                    </div>
+                    <div class="wb-path__step">
+                        <h3 class="wb-h3">La garantie n'expire pas</h3>
+                        <p class="mb-0" style="color: var(--wb-text-2);">
+                            Tout défaut de ce que j'ai livré est corrigé sans frais.
+                            Une fonctionnalité nouvelle fait l'objet d'un devis préalable.
+                            La frontière est écrite dès le départ.
+                        </p>
+                    </div>
+                    <div class="wb-path__step">
+                        <h3 class="wb-h3">Tout vous appartient</h3>
+                        <p class="mb-0" style="color: var(--wb-text-2);">
+                            Code source, documentation, comptes et cession de droits au
+                            paiement intégral. Vous n'êtes prisonnier de personne.
+                        </p>
+                    </div>
+                    <div class="wb-path__step">
+                        <h3 class="wb-h3">Un seul numéro</h3>
+                        <p class="mb-0" style="color: var(--wb-text-2);">
+                            Pas de service commercial, pas de chef de projet intermédiaire.
+                            La personne qui vous répond est celle qui écrit le code.
+                        </p>
                     </div>
                 </div>
             </div>
-        {% endfor %}
+
+            <div class="col-lg-6">
+                <div class="wb-card wb-card--ink p-4 p-lg-5" data-tone="dark">
+                    <span class="wb-badge wb-badge--gold mb-3">Offre d'entrée</span>
+                    <h3 class="mb-3">{{ 'offer.t1_name'|trans }}</h3>
+                    <p style="color: var(--wb-on-dark-2);">
+                        Avant de parler budget, je regarde ce que vous avez déjà :
+                        votre site, vos outils, vos fichiers, votre façon de travailler.
+                    </p>
+                    <p style="color: var(--wb-on-dark-2);">
+                        Vous recevez un document écrit : ce qui fonctionne, ce qui vous
+                        coûte du temps sans que vous le voyiez, ce qui présente un risque,
+                        et par quoi commencer. Avec un chiffrage.
+                    </p>
+                    <p class="mb-4" style="color: var(--wb-on-dark-2);">
+                        Ce document vous appartient. Vous pouvez le confier à
+                        n'importe quel prestataire, y compris un autre que moi.
+                    </p>
+                    <a href="{{ url('front_services') }}" class="wb-btn wb-btn--gold w-100">
+                        Voir les trois formules
+                    </a>
+                </div>
+            </div>
+        </div>
     </div>
 </section>
 
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const languageButtons = document.querySelectorAll('.select-language');
-
-        languageButtons.forEach(button => {
-            button.addEventListener('click', function () {
-                const locale = this.getAttribute('data-locale');
-
-                // Send AJAX request to change locale
-                fetch(`/change-locale/${locale}`, {
-                    method: 'GET',
-                    headers: {
-                        'X-Requested-With': 'XMLHttpRequest'
-                    }
-                })
-                .then(response => {
-                    if (response.ok) {
-                        // Hide the language selector after successful locale change
-                        const selector = document.getElementById('language-selector');
-                        selector.style.transition = 'opacity 0.5s ease';
-                        selector.style.opacity = '0';
-                        setTimeout(() => selector.remove(), 500); // Remove the selector after fade-out
-                    } else {
-                        console.error('Failed to change language');
-                    }
-                })
-                .catch(error => console.error('Error:', error));
-            });
-        });
-
-        // Automatically hide the selector if the locale is already set
-        const currentLocale = '{{ app.request.locale }}';
-        if (currentLocale === 'fr' || currentLocale === 'en') {
-            document.getElementById('language-selector').style.display = 'none';
-        }
-    });
-</script>
+{# --------------------------------------------------------------- passage -- #}
+<section class="wb-hero wb-section" data-tone="dark">
+    <div class="container text-center">
+        <h2 class="wb-display mb-3" style="font-size: clamp(1.8rem, 4vw, 3rem);">
+            {{ 'home.final_title_1'|trans }}<br>{{ 'home.final_title_2'|trans }}
+        </h2>
+        <p class="wb-lead wb-lead--on-dark mx-auto mb-4">
+            {{ 'home.final_lead'|trans }}
+        </p>
+        <div class="d-flex flex-column flex-sm-row gap-3 justify-content-center">
+            <a href="{{ url('front_devis_new') }}" class="wb-btn wb-btn--gold">{{ 'home.final_cta_1'|trans }}</a>
+            <a href="{{ url('front_contact') }}" class="wb-btn wb-btn--ghost">{{ 'home.final_cta_2'|trans }}</a>
+        </div>
+        <p class="mt-4 mb-0 small" style="color: var(--wb-on-dark-2);">
+            Walid BELBECHE · France · 06 61 28 77 86
+        </p>
+    </div>
+</section>
 
 {% endblock %}

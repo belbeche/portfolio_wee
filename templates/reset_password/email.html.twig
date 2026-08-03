@@ -1,14 +1,26 @@
-{% block subject %}Réinitialisation de votre mot de passe{% endblock %}
+{% extends 'emails/_layout.html.twig' %}
 
-{% block body %}
-    <p>
-        Bonjour,
+{% block email_title %}Réinitialisation de votre mot de passe{% endblock %}
+
+{% block email_body %}
+    <p style="margin:0 0 14px;">Bonjour,</p>
+    <p style="margin:0 0 14px;">
+        Une réinitialisation de mot de passe a été demandée pour votre compte
+        sur walidbelbeche.fr. Le lien ci-dessous est valable une heure et ne
+        sert qu'une fois.
     </p>
-    <p>
-        Vous avez demandé à réinitialiser votre mot de passe sur l'application ScriptZenIT. Veuillez cliquer sur le lien ci-dessous pour définir un nouveau mot de passe :
-    </p>
-    <a href="{{ resetLink }}">Cliquez ici pour réinitialiser votre mot de passe</a>
-    <p>
-        Si vous n'avez pas demandé de réinitialisation, veuillez ignorer cet e-mail.
+    <table role="presentation" cellpadding="0" cellspacing="0" style="margin:20px auto;">
+        <tr>
+            <td style="border-radius:8px;background-color:#141c2e;">
+                <a href="{{ resetLink }}"
+                   style="display:inline-block;padding:12px 28px;font-family:Arial,Helvetica,sans-serif;font-size:14px;font-weight:bold;color:#ffffff;text-decoration:none;">
+                    Choisir un nouveau mot de passe
+                </a>
+            </td>
+        </tr>
+    </table>
+    <p style="margin:0;font-size:13px;color:#6b7280;">
+        Si vous n'êtes pas à l'origine de cette demande, ignorez cet e-mail :
+        votre mot de passe actuel reste inchangé.
     </p>
 {% endblock %}

@@ -3,7 +3,17 @@
 {% block title %}Détails du Ticket{% endblock %}
 
 {% block content %}
-<div class="container mt-7">
+
+<section class="wb-hero" data-tone="dark">
+    <div class="container" style="padding-top: 7rem; padding-bottom: 3rem;">
+        <span class="wb-eyebrow">{{ app.request.locale == 'en' ? 'Client area' : 'Espace client' }}</span>
+        <h1 class="wb-display" style="font-size: clamp(1.8rem, 4vw, 2.6rem);">{{ app.request.locale == 'en' ? 'The request thread' : 'Le fil de la demande' }}</h1>
+        <p class="wb-lead wb-lead--on-dark mb-0" style="max-width:620px;">Tout l'échange, daté, au même endroit. La réponse arrive sous 4 heures ouvrées.</p>
+    </div>
+</section>
+
+<section class="wb-section wb-section--paper" data-tone="light">
+<div class="container">
     <div class="container">
 		{% for type, messages in app.flashes %}
 			{% for message in messages %}
@@ -21,7 +31,7 @@
 
     <!-- Ticket Details -->
     <div class="card shadow-sm mb-4">
-        <div class="card-header bg-primary text-white">
+        <div class="card-header bg-primary text-white" data-tone="dark">
             <h5 class="mb-0">Informations sur le Ticket</h5>
         </div>
         <div class="card-body">
@@ -97,7 +107,7 @@
 
     <!-- Response Form -->
     {# <div class="card shadow-sm">
-        <div class="card-header bg-light">
+        <div class="card-header bg-light" data-tone="light">
             <h5 class="mb-0">Envoyer une Réponse</h5>
         </div>
         <div class="card-body">
@@ -112,4 +122,5 @@
         </div>
     </div> #}
 </div>
+</section>
 {% endblock %}

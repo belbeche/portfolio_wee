@@ -5,7 +5,7 @@
 		<meta name="language" content="fr">
 		<meta name="robots" content="index, follow">
 		<meta name="created" content="21-01-2025">
-		<meta name="image" content="https://scriptzenit.fr/img/moi2.jpg">
+		<meta name="image" content="https://walidbelbeche.fr/img/moi2.jpg">
 		<meta name="viewport" content="width=device-width, initial-scale=1"/>
 		<meta name="description" content="{{ 'site_description'|trans }}"/>
 		<meta name="keywords" content="{{ 'keywords_site'|trans }}"/>
@@ -27,9 +27,16 @@
 		<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
 
 
+
 		{% block stylesheets %}
 			{{ encore_entry_link_tags('app') }}
 		{% endblock %}
+
+		{# Systeme visuel 2026.
+		   Il DOIT etre charge en dernier : le theme historique impose ses
+		   propres couleurs de titres. Charge avant lui, il etait ecrase,
+		   ce qui rendait les titres sombres sur fond sombre. #}
+		<link rel="stylesheet" href="{{ asset('src/css/wb-2026.css') }}?v=6">
 	</head>
 	<body class="page">
 
@@ -55,7 +62,7 @@
 					{% include "front/includes/nav.html.twig" %}
 				{% endblock %}
 				{#<section class="container-fluid">
-					<div id="cookie-consent" class="position-fixed bg-primary text-center" style="bottom:0;z-index: 99999;left: 0;right:0;">
+					<div id="cookie-consent" class="position-fixed bg-primary text-center" style="bottom:0;z-index: 99999;left: 0;right:0;" data-tone="dark">
 						<p class="text-white">
 							Nous utilisons des cookies pour améliorer votre expérience. En acceptant, vous consentez à l'utilisation de ces cookies à des fins non commerciales.
 						</p>
@@ -192,7 +199,7 @@
 			{
 				"@context": "https://schema.org",
 				"@type": "WebPage",
-				"name": "Agence Web ScriptzenIT",
+				"name": "Agence Web Walid BELBECHE",
 				"description": "Spécialiste de la création et gestion d'applications web et mobiles."
 			}
 			</script>

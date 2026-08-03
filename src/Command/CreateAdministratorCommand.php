@@ -14,11 +14,12 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
+#[AsCommand(
+    name: 'app:create-admin',
+    description: 'Create a new Admin user.'
+)]
 class CreateAdministratorCommand extends Command
 {
-    protected static $defaultName = 'app:create-admin';
-    protected static $defaultDescription = 'Create a new Admin user.';
-
     private UserPasswordHasherInterface $hasher;
     private UserRepository $userRepository;
     private EntityManagerInterface $entityManager;
@@ -82,7 +83,7 @@ class CreateAdministratorCommand extends Command
             ->setNom($nom)
             ->setPrenom($prenom)
             ->setEmail($email)
-            ->setUser($user)
+            ->setUsername($prenom.' '.$nom)
             ->setPassword($this->hasher->hashPassword(
                 $user,
                 $plainPassword

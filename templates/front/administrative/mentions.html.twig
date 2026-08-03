@@ -1,46 +1,117 @@
-{% extends "base.html.twig" %}
+{% extends 'base.html.twig' %}
 
-{% block title %} Mentions légales {% endblock %}
+{% block title %}{{ 'legal.title'|trans }}{% endblock %}
 
 {% block content %}
 
-    <div class="container mt-7">
-        <h1 class="display-4 mb-4 text-center">Mentions légales</h1>
-        <p class="lead text-center">En vigueur au 19/08/2023</p>
-
-        <p>Conformément aux dispositions des Subjects 6-III et 19 de la Loi n°2004-575 du 21 juin 2004 pour la Confiance dans l’économie numérique, dite L.C.E.N., il est porté à la connaissance des utilisateurs et visiteurs, ci-après l’Utilisateur", du site https://scriptzenit.fr/ , ci-après le "Site", les présentes mentions légales.</p>
-
-        <p>La connexion et la navigation sur le Site par l’Utilisateur implique acceptation intégrale et sans réserve des présentes mentions légales.</p>
-
-        <p>Ces dernières sont accessibles sur le Site à la rubrique « Mentions légales ».</p>
-
-        <h2 class="mt-5">Subject 1 - L'EDITEUR</h2>
-        <p>L’édition et la direction de la publication du Site est assurée par belbeche walid, domiciliée 2 Les Buissons-cropigny, Chez Mr Stier Pascal, dont le numéro de téléphone est 0762972691, et l'adresse e-mail wbelbeche.s@gmail.com immatriculé au RCS .</p>
-        <p>ci-après l'Editeur.</p>
-
-        <h2 class="mt-4">Subject 2 - L'HEBERGEUR</h2>
-        <p>L'hébergeur du Site est la société PulseHeberg, dont le siège social est situé au 9, Boulevard de Strasbourg 83000 Toulon, contact via le support en ligne 24h/24, 7j/7.</p>
-
-        <h2 class="mt-4">Subject 3 - ACCES AU SITE</h2>
-        <p>Le Site est accessible en tout endroit, 7j/7, 24h/24 sauf cas de force majeure, interruption programmée ou non et pouvant découlant d’une nécessité de maintenance.</p>
-        <p>En cas de modification, interruption ou suspension du Site, l'Editeur ne saurait être tenu responsable.</p>
-
-        <h2 class="mt-4">Subject 4 - COLLECTE DES DONNEES</h2>
-        <p>Le Site assure à l'Utilisateur une collecte et un traitement d'informations personnelles dans le respect de la vie privée conformément à la loi n°78-17 du 6 janvier 1978 relative à l'informatique, aux fichiers et aux libertés.</p>
-        <p>En vertu de la loi Informatique et Libertés, en date du 6 janvier 1978, l'Utilisateur dispose d'un droit d'accès, de rectification, de suppression et d'opposition de ses données personnelles. L'Utilisateur exerce ce droit :</p>
-        <ul>
-            <li>par mail à l'adresse email wbelbeche.s@gmail.com</li>
-            <li>via un formulaire de contact</li>
-            <li>via son espace personnel</li>
-        </ul>
-
-        <p>Toute utilisation, reproduction, diffusion, commercialisation, modification de toute ou partie du Site, sans autorisation de l’Editeur est prohibée et pourra entraînée des actions et poursuites judiciaires telles que notamment prévues par le Code de la propriété intellectuelle et le Code civil.</p>
-
-        <p>Pour plus d’informations, se reporter aux Conditions générales du site <a href="http://scriptzenit.fr/" target="_blank">http://scriptzenit.fr/</a> accessible à la rubrique "CGU"</p>
-
-        <p>Pour plus d'informations en matière de cookies, se reporter à la Charte en matière de cookies du site <a href="https://scriptzenit.fr/conditions-utilisations" target="_blank">http://scriptzenit.fr/</a> accessible à la rubrique "Conditions générales"</p>
-
-        <p class="mt-4"><small>Rédigé sur <a href="http://legalplace.fr/" target="_blank">http://legalplace.fr</a></small></p>
+<section class="wb-hero" data-tone="dark">
+    <div class="container" style="padding-top: 7rem; padding-bottom: 4rem;">
+        <span class="wb-eyebrow">{{ 'legal.eyebrow'|trans }}</span>
+        <h1 class="wb-display" style="font-size: clamp(2rem, 4vw, 3rem);">{{ 'legal.title'|trans }}</h1>
+        <p class="wb-lead wb-lead--on-dark mb-0">
+            {{ 'legal.updated'|trans }}
+        </p>
     </div>
+</section>
+
+<section class="wb-section">
+    <div class="container" style="max-width: 820px;">
+
+        <h2 class="wb-h2">{{ 'legal.publisher'|trans }}</h2>
+        <div class="wb-card mb-4" data-tone="light">
+            <p class="mb-1"><strong>Walid BELBECHE</strong>, entrepreneur individuel</p>
+            <p class="mb-1">SIRET : 848 967 816 00019</p>
+            <p class="mb-1">Code APE : 6201Z, programmation informatique</p>
+            <p class="mb-1">Adresse : 173 rue de Courcelles, 75017 Paris, France</p>
+            <p class="mb-1">Téléphone : +33 6 61 28 77 86</p>
+            <p class="mb-0">Courriel : contact@walidbelbeche.fr</p>
+        </div>
+
+        <h2 class="wb-h2">{{ 'legal.director'|trans }}</h2>
+        <p class="wb-lead">
+            {{ 'legal.director_p'|trans }}
+        </p>
+
+        <h2 class="wb-h2">{{ 'legal.hosting'|trans }}</h2>
+        <div class="wb-card mb-4" data-tone="light">
+            <p class="mb-1"><strong>Shiftek IT</strong></p>
+            <p class="mb-1">39 La Guillaudais, 44170 La Grigonnais, France</p>
+            <p class="mb-0">Prestations : hébergement web, serveurs dédiés, maintenance</p>
+        </div>
+
+        <h2 class="wb-h2">{{ 'legal.ip'|trans }}</h2>
+        <p class="wb-lead">
+            L'ensemble des éléments composant ce site est protégé par le droit de la
+            propriété intellectuelle : code source, algorithmes, conception graphique,
+            logo, marque, textes, images et bases de données.
+        </p>
+        <p class="wb-lead">
+            Toute reproduction, représentation, modification ou exploitation, totale ou
+            partielle, par quelque procédé que ce soit, sans l'autorisation écrite
+            préalable de Walid BELBECHE, est interdite et constitue une contrefaçon au
+            sens des articles L.335-2 et suivants du code de la propriété intellectuelle.
+        </p>
+        <p class="wb-lead">
+            Les projets présentés en réalisation restent la propriété de leurs
+            commanditaires respectifs. Leur affichage est effectué à titre de
+            référence professionnelle.
+        </p>
+
+        <h2 class="wb-h2">{{ 'legal.data'|trans }}</h2>
+        <p class="wb-lead">
+            Conformément au règlement général sur la protection des données et à la loi
+            Informatique et Libertés, vous disposez d'un droit d'accès, de rectification,
+            d'effacement, de limitation, d'opposition et de portabilité sur les données
+            vous concernant.
+        </p>
+        <p class="wb-lead">
+            Les données collectées via les formulaires de contact, de rappel et
+            d'estimation servent uniquement à traiter votre demande. Elles ne sont ni
+            vendues, ni cédées, ni transmises à des tiers à des fins commerciales.
+            <strong>Elles sont hébergées exclusivement en France.</strong>
+        </p>
+        <p class="wb-lead">
+            Pour exercer vos droits : contact@walidbelbeche.fr. Une réponse vous est
+            apportée sous un mois. Vous disposez également du droit d'introduire une
+            réclamation auprès de la CNIL.
+        </p>
+        <p class="wb-lead">
+            Le détail des traitements figure dans la
+            <a href="{{ url('front_pdc') }}">politique de confidentialité</a>.
+        </p>
+
+        <h2 class="wb-h2">Cookies</h2>
+        <p class="wb-lead">
+            Ce site utilise des cookies strictement nécessaires à son fonctionnement,
+            notamment pour la session de connexion et le choix de la langue, ainsi
+            qu'une mesure d'audience. Le détail figure dans la
+            <a href="{{ url('front_pc') }}">politique de cookies</a>.
+        </p>
+
+        <h2 class="wb-h2">{{ 'legal.liability'|trans }}</h2>
+        <p class="wb-lead">
+            Les informations publiées sur ce site sont fournies à titre indicatif et
+            peuvent évoluer. Walid BELBECHE ne saurait être tenu responsable des
+            dommages résultant de l'usage du site ou de l'impossibilité d'y accéder,
+            ni du contenu des sites tiers vers lesquels des liens sont proposés.
+        </p>
+
+        <h2 class="wb-h2">{{ 'legal.law'|trans }}</h2>
+        <p class="wb-lead">
+            Le présent site et les prestations qui en découlent sont régis par le droit
+            français. En cas de litige, et à défaut de résolution amiable, compétence
+            est attribuée aux tribunaux français.
+        </p>
+
+        <div class="wb-card wb-card--accent mt-5" data-tone="light">
+            <h3 class="wb-h3">{{ 'legal.contact_title'|trans }}</h3>
+            <p class="mb-3" style="color: var(--wb-text-2);">
+                {{ 'legal.contact_p'|trans }}
+            </p>
+            <a href="{{ url('front_contact') }}" class="wb-btn wb-btn--ink">{{ 'legal.contact_cta'|trans }}</a>
+        </div>
+
+    </div>
+</section>
 
 {% endblock %}

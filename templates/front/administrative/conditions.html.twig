@@ -4,15 +4,27 @@
 
 {% block content %}
 
-    <div class="container mt-7">
-        <h1 class="display-4 mb-4 text-center">Conditions Générales d'Utilisation</h1>
-        <p class="lead text-center">En vigueur au 19/08/2023</p>
+<section class="wb-hero" data-tone="dark">
+    <div class="container" style="padding-top: 7rem; padding-bottom: 4rem;">
+        <span class="wb-eyebrow">Cadre d'utilisation du site</span>
+        <h1 class="wb-display" style="font-size: clamp(2rem, 4vw, 3rem);">Conditions generales d'utilisation</h1>
+        <p class="wb-lead wb-lead--on-dark mb-0">Ce que vous pouvez faire sur ce site, et ce a quoi je m'engage. En vigueur au 3 aout 2026.</p>
+        {% if app.request.locale != 'fr' %}
+        <p class="wb-lead wb-lead--on-dark mt-3 mb-0" style="font-size: .95rem; opacity: .85;">
+            This page is available in French only. French is the binding language of this document.
+        </p>
+        {% endif %}
+    </div>
+</section>
+
+<section class="wb-section">
+    <div class="container" style="max-width: 820px;">
 
         <section>
-            <h2>Subject 1 : L'objet</h2>
-            <p>
+            <h2 class="wb-h2">Article 1 : L'objet</h2>
+            <p class="wb-lead">
                 Les présentes conditions générales d'utilisation (dites « CGU ») ont pour objet l'encadrement juridique
-                des modalités de mise à disposition du site et des services par <a href="https://scriptzenit.fr">scriptzenit.fr</a> et de définir
+                des modalités de mise à disposition du site et des services par <a href="https://walidbelbeche.fr">walidbelbeche.fr</a> et de définir
                 les conditions d’accès et d’utilisation des services par « l'Utilisateur ».
 
                 Les présentes CGU sont accessibles sur le site à la rubrique «Conditions générales».
@@ -23,23 +35,23 @@
                 « Je reconnais avoir lu et compris les CGU et je les accepte ».
                 En cas de non-acceptation des CGU stipulées dans le présent contrat, l'Utilisateur se doit de renoncer à
                 l'accès des services proposés par le site.
-                <a href="https://scriptzenit.fr">scriptzenit.fr</a> se réserve le droit de modifier unilatéralement et à
+                <a href="https://walidbelbeche.fr">walidbelbeche.fr</a> se réserve le droit de modifier unilatéralement et à
                 tout moment le contenu des présentes CGU.
             </p>
         </section>
 
         <section>
-            <h2>Subject 2 : Mentions légales</h2>
-            <p>Le site <a href="https://scriptzenit.fr">scriptzenit.fr</a> est édité par la société ScriptZenIT, domiciliée à 2 Les Buissons-cropigny, Chez Mr Stier Pascal.</p>
-            <p>Numéro de téléphone est +33762972691 <br>
-                Adresse e-mail wbelbeche.s@gmail.com.
+            <h2 class="wb-h2">Article 2 : Mentions légales</h2>
+            <p class="wb-lead">Le site <a href="https://walidbelbeche.fr">walidbelbeche.fr</a> est édité par la société Walid BELBECHE, domiciliée au 173 rue de Courcelles, 75017 Paris, France.</p>
+            <p class="wb-lead">Téléphone : +33 6 61 28 77 86<br>
+                Courriel : contact@walidbelbeche.fr
             </p>
-            <p>L'hébergeur du site https://scriptzenit.fr est la société PulseHeberg, dont le siège social est situé au 9, Boulevard de Strasbourg 83000 Toulon, accessible via un support en ligne ouvert 24h/24 7j/7.</p>
+            <p class="wb-lead">L'hébergeur du site https://walidbelbeche.fr est la société Shiftek IT, dont le siège social est situé au 39 La Guillaudais, 44170 La Grigonnais, France, accessible via un support en ligne.</p>
         </section>
 
         <section>
-            <h2>Subject 3 : Accès au site</h2>
-            <p>Le site <a href="https://scriptzenit.fr">scriptzenit.fr</a> permet à l'Utilisateur un accès gratuit aux
+            <h2 class="wb-h2">Article 3 : Accès au site</h2>
+            <p class="wb-lead">Le site <a href="https://walidbelbeche.fr">walidbelbeche.fr</a> permet à l'Utilisateur un accès gratuit aux
                 services suivants : La création de compte, d'accéder à son espace personnel, la création de demande de
                 devis, d'avoir une assistance en ligne, la consultation des projets réalisés ou en cours, le
                 téléchargement de devis.
@@ -49,10 +61,10 @@
         </section>
 
         <section>
-            <h2>Subject 4 : Propriété intellectuelle</h2>
-            <p>Les marques, logos, signes ainsi que tous les contenus du site (textes, images, son…) font l'objet
+            <h2 class="wb-h2">Article 4 : Propriété intellectuelle</h2>
+            <p class="wb-lead">Les marques, logos, signes ainsi que tous les contenus du site (textes, images, son…) font l'objet
                 d'une protection par le Code de la propriété intellectuelle et plus particulièrement par le droit d'auteur.
-                La marque ScriptZenIT est une marque déposée par BELBECHE Walid. Toute représentation
+                La marque Walid BELBECHE est une marque déposée par BELBECHE Walid. Toute représentation
                 et/ou reproduction et/ou exploitation partielle ou totale de cette marque, de quelque nature
                 que ce soit, est totalement prohibée.
                 L'Utilisateur doit solliciter l'autorisation préalable du site pour toute reproduction,
@@ -61,26 +73,26 @@
                 est strictement interdite.
                 Toute représentation totale ou partielle de ce site par quelque procédé que ce soit, sans
                 l’autorisation expresse de l’exploitant du site Internet constituerait une contrefaçon
-                sanctionnée par l’Subject L 335-2 et suivants du Code de la propriété intellectuelle.
-                Il est rappelé conformément à l’Subject L122-5 du Code de propriété intellectuelle que
+                sanctionnée par l’Article L 335-2 et suivants du Code de la propriété intellectuelle.
+                Il est rappelé conformément à l’Article L122-5 du Code de propriété intellectuelle que
                 l’Utilisateur qui reproduit, copie ou publie le contenu protégé doit citer l’auteur et sa source.
             </p>
         </section>
 
         <section>
-            <h2>Subject 5 : Responsabilité</h2>
-            <p>Les sources des informations diffusées sur le site https://scriptzenit.fr sont réputées fiables, mais le
+            <h2 class="wb-h2">Article 5 : Responsabilité</h2>
+            <p class="wb-lead">Les sources des informations diffusées sur le site https://walidbelbeche.fr sont réputées fiables, mais le
                 site ne garantit pas qu’il soit exempt de défauts, d’erreurs ou d’omissions.
 
                 Les informations communiquées sont présentées à titre indicatif et général sans valeur contractuelle.
                 Malgré des mises à jour régulières, le site
-                <a href="https://scriptzenit.fr">scriptzenit.fr</a> ne peut être tenu responsable de la modification
+                <a href="https://walidbelbeche.fr">walidbelbeche.fr</a> ne peut être tenu responsable de la modification
                 des dispositions administratives et juridiques survenant après la publication. De même, le site ne
                 peut être tenue responsable de l’utilisation et de l’interprétation de l’information contenue dans ce site.
                 L'Utilisateur s'assure de garder son mot de passe secret. Toute divulgation du mot de passe, quelle
                 que soit sa forme, est interdite. Il assume les risques liés à l'utilisation de son identifiant et
                 mot de passe. Le site décline toute responsabilité.
-                Le site <a href="https://scriptzenit.fr">scriptzenit.fr</a> ne peut être tenu pour responsable
+                Le site <a href="https://walidbelbeche.fr">walidbelbeche.fr</a> ne peut être tenu pour responsable
                 d’éventuels virus qui pourraient infecter l’ordinateur ou tout matériel informatique de l’Internaute, suite à une utilisation, à l’accès, ou au téléchargement provenant de ce site.
 
                 La responsabilité du site ne peut être engagée en cas de force majeure ou du fait imprévisible et
@@ -89,28 +101,28 @@
         </section>
 
         <section>
-            <h2>Subject 6 : Liens hypertextes</h2>
-            <p>Des liens hypertextes peuvent être présents sur le site. L’Utilisateur est informé qu’en cliquant
-                sur ces liens, il sortira du site https://scriptzenit.fr. Ce dernier n’a pas de contrôle sur les
+            <h2 class="wb-h2">Article 6 : Liens hypertextes</h2>
+            <p class="wb-lead">Des liens hypertextes peuvent être présents sur le site. L’Utilisateur est informé qu’en cliquant
+                sur ces liens, il sortira du site https://walidbelbeche.fr. Ce dernier n’a pas de contrôle sur les
                 pages web sur lesquelles aboutissent ces liens et ne saurait, en aucun cas, être responsable de
                 leur contenu.
             </p>
         </section>
 
         <section>
-            <h2>Subject 7 : Cookies</h2>
-            <p>L’Utilisateur est informé que lors de ses visites sur le site, un cookie peut s’installer automatiquement
+            <h2 class="wb-h2">Article 7 : Cookies</h2>
+            <p class="wb-lead">L’Utilisateur est informé que lors de ses visites sur le site, un cookie peut s’installer automatiquement
                 sur son logiciel de navigation.
 
                 Les cookies sont de petits fichiers stockés temporairement sur le disque dur de l’ordinateur de
                 l’Utilisateur par votre navigateur et qui sont nécessaires à l’utilisation du site
-                https://scriptzenit.fr.
+                https://walidbelbeche.fr.
                 Les cookies ne contiennent pas d’information personnelle et ne peuvent pas être utilisés pour identifier
                 quelqu’un. Un cookie contient un identifiant unique, généré aléatoirement et donc anonyme. Certains
                 cookies expirent à la fin de la visite de l’Utilisateur, d’autres restent.
 
                 L’information contenue dans les cookies est utilisée pour améliorer le site
-                <a href="https://scriptzenit.fr">scriptzenit.fr</a>.
+                <a href="https://walidbelbeche.fr">walidbelbeche.fr</a>.
 
                 En naviguant sur le site, L’Utilisateur les accepte.
                 L’Utilisateur doit toutefois donner son consentement quant à l’utilisation de certains cookies.
@@ -122,8 +134,8 @@
         </section>
 
         <section>
-            <h2>Subject 8 : Publication par l’Utilisateur</h2>
-            <p>Le site permet aux membres de publier les contenus suivants :
+            <h2 class="wb-h2">Article 8 : Publication par l’Utilisateur</h2>
+            <p class="wb-lead">Le site permet aux membres de publier les contenus suivants :
                 Création de devis, création de tickets, répondre aux tickets.
                 Dans ses publications, le membre s’engage à respecter les règles de la Netiquette
                 (règles de bonne conduite de l’internet) et les règles de droit en vigueur.
@@ -146,15 +158,25 @@
         </section>
 
         <section>
-            <h2>Subject 9 : Droit applicable et juridiction compétente</h2>
-            <p>La législation française s'applique au présent contrat. En cas d'absence de résolution amiable d'un
+            <h2 class="wb-h2">Article 9 : Droit applicable et juridiction compétente</h2>
+            <p class="wb-lead">La législation française s'applique au présent contrat. En cas d'absence de résolution amiable d'un
                 litige né entre les parties, les tribunaux français seront seuls compétents pour en connaître.
                 Pour toute question relative à l’application des présentes CGU, vous pouvez joindre l’éditeur aux
-                coordonnées inscrites à l’Subject 1.
+                coordonnées inscrites à l'article 1.
             </p>
         </section>
 
-        <p>CGU réalisées sur <a href="http://legalplace.fr/">http://legalplace.fr/</a></p>
+        <p class="wb-lead">CGU réalisées sur <a href="http://legalplace.fr/">http://legalplace.fr/</a></p>
+    
+        <div class="wb-card wb-card--accent mt-5" data-tone="light">
+            <h3 class="wb-h3">Une question sur ce document ?</h3>
+            <p class="mb-3" style="color: var(--wb-text-2);">
+                Ecrivez-moi, je vous reponds en francais courant plutot qu'en formules.
+            </p>
+            <a href="{{ url('front_contact') }}" class="wb-btn wb-btn--ink">Me poser la question</a>
+        </div>
+
     </div>
+</section>
 
 {% endblock %}

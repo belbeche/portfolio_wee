@@ -9,7 +9,7 @@
         <!-- Google Maps -->
         <div class="text-center justify-content-center">
             <h3 class="fw-bold">{{ 'contact_location_title'|trans }}</h3>
-            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d43143.46604590581!2d3.878550477812114!3d47.480822380164234!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47ee04c9f96e6e4d%3A0x409ce34b30d6c10!2s89200%20Avallon!5e0!3m2!1sfr!2sfr!4v1735372967003!5m2!1sfr!2sfr" width="100%" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+            <iframe src="https://www.google.com/maps?q=173+rue+de+Courcelles,+75017+Paris,+France&hl=fr&z=16&output=embed" width="100%" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
             <h4 class="font-weight-light">{{ 'contact_location_subtitle'|trans }}</h4>
             <a class="btn btn-primary" href="https://g.page/r/CSj9BKNjCGCBEAI/review">
                 <img src="{{ asset('img/rating.png') }}" alt="{{ 'contact_rating_alt'|trans }}" style="width: 30px; height: auto; margin-right: 10px;">{{ 'contact_rating_button'|trans }}
@@ -27,7 +27,7 @@
                     </div>
                     <div class="ci-text">
                         <h5 class="fw-bold">{{ 'contact_phone_title'|trans }}</h5>
-                        <p><a href="tel:0762972691">07 62 97 26 91</a></p>
+                        <p><a href="tel:0661287786">06 61 28 77 86</a></p>
                         <small>{{ 'contact_phone_subtext'|trans }}</small>
                     </div>
                 </div>
@@ -49,7 +49,7 @@
                     </div>
                     <div class="ci-text">
                         <h5 class="fw-bold">{{ 'contact_email_title'|trans }}</h5>
-                        <p><a href="mailto:contact@scriptzenit.fr">contact@scriptzenit.fr</a></p>
+                        <p><a href="mailto:contact@walidbelbeche.fr">contact@walidbelbeche.fr</a></p>
                         <small>{{ 'contact_email_subtext'|trans }}</small>
                     </div>
                 </div>
@@ -103,13 +103,13 @@
             const result = await response.json();
 
             if (response.ok) {
-                alert('{{ 'contact_form_success_message'|trans }}'); // Success message
+                alert('contact_form_success_message'|trans); // Success message
                 form.reset();
             } else {
-                alert('{{ 'contact_form_error_message'|trans }}'); // Error message
+                alert('contact_form_error_message'|trans); // Error message
             }
         } catch (error) {
-            alert('{{ 'contact_form_error_message'|trans }}'); // Error message
+            alert('contact_form_error_message'|trans); // Error message
         }
     });
 </script>

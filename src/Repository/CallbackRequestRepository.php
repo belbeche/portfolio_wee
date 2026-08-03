@@ -14,7 +14,7 @@ use Doctrine\Persistence\ManagerRegistry;
  * @method CallbackRequest[]    findAll()
  * @method CallbackRequest[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class CallBackRequestRepository extends ServiceEntityRepository
+class CallbackRequestRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {

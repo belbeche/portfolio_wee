@@ -1,22 +1,25 @@
 {% extends 'base_back.html.twig' %}
 
+{% block title %}Modifier {{ category.name }}{% endblock %}
+
 {% block content %}
+<div class="container py-4">
 
-    <div class="container p-xxl-5">
-        <h1>Editer {{ categorie.name }}</h1>
-
-        {{ form_start(form) }}
-
-        <label for="">Titre : </label>
-        {{ form_widget(form.name) }}
-
-
-
-        {{ form_rest(form) }}
-
-        <button type="submit">Confirmer</button>
-
-        {{ form_end(form) }}
+    <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
+        <div>
+            <h1 class="h3 fw-bold mb-1">Modifier la categorie</h1>
+            <p class="text-muted mb-0 small">Le nouveau nom s'applique partout ou la categorie est utilisee.</p>
+        </div>
+        <a href="{{ url('back_category_index') }}" class="btn btn-outline-secondary">Retour a la liste</a>
     </div>
 
+    <div class="border rounded p-4" style="max-width: 560px;">
+        {{ form_start(categoryForm) }}
+            {{ form_row(categoryForm.name, {'label': 'Nom de la categorie'}) }}
+            {{ form_rest(categoryForm) }}
+            <button type="submit" class="btn btn-primary mt-2">Enregistrer</button>
+        {{ form_end(categoryForm) }}
+    </div>
+
+</div>
 {% endblock %}

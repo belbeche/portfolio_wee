@@ -7,19 +7,26 @@ doctrine:
     orm:
         auto_generate_proxy_classes: true
         naming_strategy: doctrine.orm.naming_strategy.underscore_number_aware
-        auto_mapping: true
+        # auto_mapping DOIT rester a false des lors qu'on declare des mappings
+        # explicites. Avec les deux actifs en meme temps, DoctrineBundle peut
+        # enregistrer le meme jeu d'entites sous deux noms de mapping
+        # differents : chaque entite est alors chargee deux fois, et la
+        # construction du schema echoue sur la premiere collision de table
+        # rencontree (ici ext_translations).
+        auto_mapping: false
         mappings:
             App:
                 is_bundle: false
                 dir: '%kernel.project_dir%/src/Entity'
-                type: annotation # Correct: utiliser "attribute" ou "annotation", mais pas une liste
+                type: annotation
                 prefix: 'App\Entity'
                 alias: App
             GedmoTranslatable:
-                type: annotation
-                prefix: Gedmo\Translatable\Entity
-                dir: "%kernel.project_dir%/vendor/gedmo/doctrine-extensions/src/Translatable/Entity"
                 is_bundle: false
+                dir: '%kernel.project_dir%/vendor/gedmo/doctrine-extensions/src/Translatable/Entity'
+                type: annotation
+                prefix: 'Gedmo\Translatable\Entity'
+                alias: GedmoTranslatable
 
 when@test:
     doctrine:

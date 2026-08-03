@@ -5,6 +5,7 @@ namespace App\Command;
 
 use App\Entity\AttenteDesignWeb;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Input\InputInterface;
@@ -15,10 +16,12 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 /**
  * run : php bin/console import:design
  */
+#[AsCommand(
+    name: 'import:design'
+)]
 class AttentesDesignWebCommand extends Command
 {
     // the name of the command (the part after "bin/console")
-    protected static $defaultName = 'import:design';
 
     /**
      * @param EntityManagerInterface $entityManager

@@ -7,7 +7,7 @@
         <h1>Categorie</h1>
 
         <div class="text-right">
-            <a href="{{ url('back_category_add') }}" class="btn btn-primary mb-4">Ajouter une nouvelle categorie</a>
+            <a href="{{ url('back_category_new') }}" class="btn btn-primary mb-4">Ajouter une nouvelle categorie</a>
         </div>
 
         <table class="table table-responsive">
@@ -24,9 +24,7 @@
                     <td>{{ categorie.id }}</td>
                     <td>{{ categorie.name }}</td>
                     <td>
-                        <a href="{{ url('back_categories_show', {id: categorie.id }) }}">Voir</a>
-                        <a href="{{ url('back_categories_edit', {id: categorie.id }) }}">Editer</a>
-                        <a href="{{ url('back_categories_remove', {id: categorie.id }) }}">Supprimer</a>
+                        <a href="{{ url('back_category_show', {id: categorie.id}) }}">Voir</a>
                     </td>
                 </tr>
             {% endfor %}

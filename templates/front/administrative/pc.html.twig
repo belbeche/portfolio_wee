@@ -1,24 +1,36 @@
 {% extends 'base.html.twig' %}
 
-{% block title %} Politique sur les cookies - ScriptZenIT {% endblock %}
+{% block title %} Politique sur les cookies - Walid BELBECHE {% endblock %}
 
 {% block content %}
 
-<section class="container mt-7">
-    <h1 class="display-4 mb-4 text-center">Politique sur les Cookies</h1>
-    <p class="lead text-center">Dernière mise à jour : 28 décembre 2024</p>
+<section class="wb-hero" data-tone="dark">
+    <div class="container" style="padding-top: 7rem; padding-bottom: 4rem;">
+        <span class="wb-eyebrow">Traceurs et mesure d'audience</span>
+        <h1 class="wb-display" style="font-size: clamp(2rem, 4vw, 3rem);">Politique sur les cookies</h1>
+        <p class="wb-lead wb-lead--on-dark mb-0">Quels traceurs ce site depose, pourquoi, et comment les refuser. Mise a jour le 3 aout 2026.</p>
+        {% if app.request.locale != 'fr' %}
+        <p class="wb-lead wb-lead--on-dark mt-3 mb-0" style="font-size: .95rem; opacity: .85;">
+            This page is available in French only. French is the binding language of this document.
+        </p>
+        {% endif %}
+    </div>
+</section>
 
-    <p>
-        Chez <strong>ScriptZenIT</strong>, nous utilisons des cookies et des technologies similaires pour améliorer votre expérience de navigation sur notre site <a href="https://scriptzenit.fr">scriptzenit.fr</a>, analyser le trafic du site, et personnaliser le contenu. Cette politique explique comment nous utilisons ces technologies et comment vous pouvez gérer vos préférences.
+<section class="wb-section">
+    <div class="container" style="max-width: 820px;">
+
+    <p class="wb-lead">
+        Chez <strong>Walid BELBECHE</strong>, nous utilisons des cookies et des technologies similaires pour améliorer votre expérience de navigation sur notre site <a href="https://walidbelbeche.fr">walidbelbeche.fr</a>, analyser le trafic du site, et personnaliser le contenu. Cette politique explique comment nous utilisons ces technologies et comment vous pouvez gérer vos préférences.
     </p>
 
     <h2 class="mt-5">1. Qu'est-ce qu'un cookie ?</h2>
-    <p>
+    <p class="wb-lead">
         Les cookies sont de petits fichiers texte placés sur votre appareil (ordinateur, tablette ou smartphone) lorsque vous visitez un site web. Ils permettent au site de se souvenir de vos actions et préférences (comme la langue ou les identifiants de connexion) pendant une période donnée.
     </p>
 
     <h2 class="mt-5">2. Types de cookies que nous utilisons</h2>
-    <p>Nous utilisons plusieurs types de cookies pour différentes finalités :</p>
+    <p class="wb-lead">Nous utilisons plusieurs types de cookies pour différentes finalités :</p>
     <ul>
         <li>
             <strong>Cookies essentiels</strong> : Ces cookies sont nécessaires au bon fonctionnement du site. Par exemple, ils permettent de se connecter à un compte ou de sécuriser des zones sensibles.
@@ -35,7 +47,7 @@
     </ul>
 
     <h2 class="mt-5">3. Liste des cookies que nous utilisons</h2>
-    <p>Voici une liste des cookies utilisés sur notre site :</p>
+    <p class="wb-lead">Voici une liste des cookies utilisés sur notre site :</p>
     <ul>
         <li>
             <strong>_session_id</strong> : Identifiant unique de session permettant de stocker vos préférences et paramètres pendant votre visite.
@@ -46,7 +58,7 @@
     </ul>
 
     <h2 class="mt-5">4. Gestion des cookies</h2>
-    <p>
+    <p class="wb-lead">
         Vous pouvez gérer vos préférences en matière de cookies directement dans les paramètres de votre navigateur. Voici comment procéder :
     </p>
     <ul>
@@ -63,28 +75,38 @@
             <strong>Microsoft Edge</strong> : <a href="https://support.microsoft.com/fr-fr/microsoft-edge/supprimer-les-cookies-dans-microsoft-edge-63947406-40ac-c3b8-57b9-2a946a29ae09">Instructions</a>
         </li>
     </ul>
-    <p>
+    <p class="wb-lead">
         Vous pouvez également refuser les cookies publicitaires en utilisant des outils comme le <a href="https://optout.aboutads.info/?c=3&lang=fr">portail de désactivation de la Digital Advertising Alliance</a>.
     </p>
 
     <h2 class="mt-5">5. Cookies tiers</h2>
-    <p>
+    <p class="wb-lead">
         Nous utilisons des cookies tiers, tels que ceux de Google Analytics, pour collecter des données anonymisées sur l'utilisation du site et optimiser nos services. Pour en savoir plus, consultez les <a href="https://www.google.com/intl/fr/policies/privacy/">politiques de confidentialité de Google</a>.
     </p>
 
     <h2 class="mt-5">6. Modification de cette politique</h2>
-    <p>
+    <p class="wb-lead">
         Cette politique sur les cookies peut être mise à jour de temps à autre pour refléter les changements dans nos pratiques ou pour des raisons légales. Nous vous recommandons de la consulter régulièrement.
     </p>
 
     <h2 class="mt-5">7. Contact</h2>
-    <p>
+    <p class="wb-lead">
         Pour toute question concernant notre politique sur les cookies, veuillez nous contacter :
     </p>
     <ul>
-        <li>Email : <a href="mailto:w.belbeche@scriptzenit.fr">w.belbeche@scriptzenit.fr</a></li>
-        <li>Adresse : 4 Ruelle Tour du Magasin, 1er étage, Avallon, Yonne, 58190, France</li>
+        <li>Email : <a href="mailto:contact@walidbelbeche.fr">contact@walidbelbeche.fr</a></li>
+        <li>Adresse : 173 rue de Courcelles, 75017 Paris, France</li>
     </ul>
+
+        <div class="wb-card wb-card--accent mt-5" data-tone="light">
+            <h3 class="wb-h3">Une question sur ce document ?</h3>
+            <p class="mb-3" style="color: var(--wb-text-2);">
+                Ecrivez-moi, je vous reponds en francais courant plutot qu'en formules.
+            </p>
+            <a href="{{ url('front_contact') }}" class="wb-btn wb-btn--ink">Me poser la question</a>
+        </div>
+
+    </div>
 </section>
 
 {% endblock %}

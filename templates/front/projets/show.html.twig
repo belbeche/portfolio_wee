@@ -30,7 +30,7 @@
             </li>
             <li><strong>{{ 'project.categories'|trans }}:</strong> 
                 {% for category in project.categories %}
-                    <a href="{{ url('front_project_by_category') }}" class="badge bg-primary text-light">{{ category.name }}</a>
+                    <a href="{{ url('front_project_by_category') }}" class="badge bg-primary text-light" data-tone="dark">{{ category.name }}</a>
                 {% endfor %}
             </li>
             <li><strong>{{ 'project.client'|trans }}:</strong> 

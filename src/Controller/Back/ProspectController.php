@@ -69,10 +69,10 @@ class ProspectController extends AbstractController
 
             // Prepare email
             $email = (new Email())
-                ->from('contact@scriptzenit.fr')
+                ->from('contact@walidbelbeche.fr')
                 ->to($prospect->getEmail())
                 ->bcc('wbelbeche.s@gmail.com')
-                ->subject('Suite conversation téléphonique - ScriptzenIT.fr')
+                ->subject('Suite conversation téléphonique - Walid BELBECHE.fr')
                 ->html($this->renderView('back/prospect/welcome_prospect.html.twig', [
                     'prospect' => $prospect,
                 ]));
@@ -112,9 +112,9 @@ class ProspectController extends AbstractController
 
             // Envoi d'un email de notification
             $email = (new Email())
-                ->from('contact@scriptzenit.fr')
+                ->from('contact@walidbelbeche.fr')
                 ->to($prospect->getEmail())
-                ->subject('Prospect Modifié - ScriptZenIT.fr')
+                ->subject('Prospect Modifié - Walid BELBECHE.fr')
                 ->text('Le prospect avec l\'email: ' . $prospect->getEmail() . ' a été modifié.');
 
             $mailer->send($email);
@@ -138,9 +138,9 @@ class ProspectController extends AbstractController
 
             // Envoi d'un email de notification
             $email = (new Email())
-                ->from('contact@scriptzenit.fr')
+                ->from('contact@walidbelbeche.fr')
                 ->to($prospect->getEmail())
-                ->subject('Prospect supprimé - ScriptZenIT.fr')
+                ->subject('Prospect supprimé - Walid BELBECHE.fr')
                 ->text('Le prospect avec l\'email : ' . $prospect->getEmail() . ' a bien était supprimé. Merci pour votre temps.');
 
             $mailer->send($email);

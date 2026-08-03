@@ -6,9 +6,12 @@
     <div class="container">
         <h1>Réinitialisation du mot de passe</h1>
         <form method="post">
+            <input type="hidden" name="_csrf_token" value="{{ csrf_token('reset_password') }}">
             <div class="mb-3">
                 <label for="password" class="form-label">Nouveau mot de passe</label>
-                <input type="password" class="form-control" id="password" name="password" required>
+                <input type="password" class="form-control" id="password" name="password"
+                       required minlength="12" autocomplete="new-password">
+                <div class="form-text">12 caracteres minimum.</div>
             </div>
             <button type="submit" class="btn btn-primary">Réinitialiser</button>
         </form>

@@ -255,15 +255,15 @@ class Ticket
     public function addAttachment(Image $attachment): self {
         if (!$this->attachments->contains($attachment)) {
             $this->attachments[] = $attachment;
-            $attachment->setTickets($this);
+            $attachment->setTicket($this);
         }
         return $this;
     }
 
     public function removeAttachment(Image $attachment): self {
         if ($this->attachments->removeElement($attachment)) {
-            if ($attachment->getTickets() === $this) {
-                $attachment->setTickets(null);
+            if ($attachment->getTicket() === $this) {
+                $attachment->setTicket(null);
             }
         }
         return $this;

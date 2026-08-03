@@ -2,71 +2,93 @@
 
 namespace App\Service;
 
+/**
+ * Interrogation de l'API du panneau d'hebergement.
+ *
+ * La version precedente supposait que la reponse contenait toujours la
+ * structure attendue. Des que l'API etait injoignable ou repondait une
+ * erreur, $resources['data'] valait null et le foreach levait une exception
+ * qui remontait jusqu'a l'utilisateur.
+ *
+ * Une dependance externe echoue toujours un jour : le code doit le prevoir.
+ */
 class CurlService
 {
     public function getResources(string $url, string $token): array
     {
-        $resources = $this->connection($url,$token);
-        $resourcesFilter = [];
+        $resources = $this->connection($url, $token);
+
+        if (!is_array($resources['data'] ?? null)) {
+            return [];
+        }
+
+        $filtered = [];
 
         foreach ($resources['data'] as $resource) {
-            foreach ($resource['attributes']['relationships']['servers']['data'] as $server) {
-                $resourcesFilter[] = [
-                    'name' => $server['attributes']['name'],
-                    'description' => $server['attributes']['description'],
-                    'status' => $server['attributes']['status'],
-                    'suspended' => $server['attributes']['suspended'],
-                    'wordpress' => $server['attributes']['container']['environment']['WORDPRESS'],
-                    'updated_at' => $server['attributes']['updated_at'],
-                    'created_at' => $server['attributes']['created_at'],
+            $servers = $resource['attributes']['relationships']['servers']['data'] ?? null;
+
+            if (!is_array($servers)) {
+                continue;
+            }
+
+            foreach ($servers as $server) {
+                $a = $server['attributes'] ?? null;
+
+                if (!is_array($a)) {
+                    continue;
+                }
+
+                $limits = $a['limits'] ?? [];
+
+                $filtered[] = [
+                    'name' => $a['name'] ?? null,
+                    'description' => $a['description'] ?? null,
+                    'status' => $a['status'] ?? null,
+                    'suspended' => $a['suspended'] ?? false,
+                    'wordpress' => $a['container']['environment']['WORDPRESS'] ?? null,
+                    'updated_at' => $a['updated_at'] ?? null,
+                    'created_at' => $a['created_at'] ?? null,
                     'limits' => [
-                        'memory' => $server['attributes']['limits']['memory'],
-                        'swap' => $server['attributes']['limits']['swap'],
-                        'disk' => $server['attributes']['limits']['disk'],
-                        'io' => $server['attributes']['limits']['io'],
-                        'cpu' => $server['attributes']['limits']['cpu'],
-                        'oom_disabled' => $server['attributes']['limits']['oom_disabled'],
-                    ]
+                        'memory' => $limits['memory'] ?? null,
+                        'swap' => $limits['swap'] ?? null,
+                        'disk' => $limits['disk'] ?? null,
+                        'io' => $limits['io'] ?? null,
+                        'cpu' => $limits['cpu'] ?? null,
+                        'oom_disabled' => $limits['oom_disabled'] ?? null,
+                    ],
                 ];
             }
         }
 
-        return $resourcesFilter;
+        return $filtered;
     }
 
-    private function connection(string $url,string $token)
+    private function connection(string $url, string $token): ?array
     {
-        $options = [
-            'Authorization: Bearer '. $token,
-            'Accept: application/json',
-            'Content-Type: application/json'
-        ];
-
-        return $this->callApi(
-            $url,
-            $options
-        );
-    }
-
-    private function callApi(string $url, array $options)
-    {
-        $curl = curl_init($url);
+        $curl = curl_init();
 
         curl_setopt_array($curl, [
-            CURLOPT_SSL_VERIFYPEER => false,
+            CURLOPT_URL => $url,
             CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_HEADER => 0,
-            CURLOPT_HTTPHEADER => $options
+            CURLOPT_TIMEOUT => 10,
+            CURLOPT_CONNECTTIMEOUT => 5,
+            CURLOPT_HTTPHEADER => [
+                'Authorization: Bearer '.$token,
+                'Accept: application/json',
+                'Content-Type: application/json',
+            ],
         ]);
 
-        $data = curl_exec($curl);
-
-        if ($data === false) {
-            curl_error($curl);
-        }
-
+        $response = curl_exec($curl);
+        $status = (int) curl_getinfo($curl, CURLINFO_HTTP_CODE);
         curl_close($curl);
 
-        return json_decode($data, true);
+        if (false === $response || $status < 200 || $status >= 300) {
+            return null;
+        }
+
+        $decoded = json_decode((string) $response, true);
+
+        return is_array($decoded) ? $decoded : null;
     }
 }

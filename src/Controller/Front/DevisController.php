@@ -60,28 +60,14 @@ class DevisController extends AbstractController
                 return $this->redirectToRoute('front_devis_new');
             }
 
-            // Générer le PDF du devis
-            try {
-                $html = $this->renderView('front/devis/show.html.twig', [
-                    'devis' => $devis
-                ]);
-
-                $filename = 'devis_' . $devis->getId() . '.pdf';
-                $mpdf = new Mpdf();
-                $mpdf->WriteHTML($html);
-                $pdfContent = $mpdf->Output('', 'S'); // Générer le PDF en tant que chaîne
-            } catch (\Exception $e) {
-                $this->addFlash('error', 'Impossible de générer le PDF du devis.');
-                return $this->redirectToRoute('front_devis_new');
-            }
-
-            // Envoi de l'e-mail avec le récapitulatif du devis et le PDF en pièce jointe
+            // Accuse de reception uniquement : le chiffrage part plus tard,
+            // depuis l'administration, une fois la demande etudiee.
             try {
                 $email = (new TemplatedEmail())
-                    ->from(new Address('contact@scriptzenit.fr', 'L\'équipe Scriptzenit'))
+                    ->from(new Address('contact@walidbelbeche.fr', 'Walid Belbeche'))
                     ->to($devis->getEmail())
                     ->bcc('wbelbeche.s@gmail.com')
-                    ->subject('Récapitulatif de votre demande de devis')
+                    ->subject('Votre demande est bien reçue, chiffrage sous 48 h')
                     ->htmlTemplate('front/devis/email.html.twig')
                     ->context([
                         'registredNumber' => $devis->getId(),
@@ -91,7 +77,7 @@ class DevisController extends AbstractController
                         'typeWeb' => $devis->getTypeDeSiteWeb(),
                         'message' => $devis->getDescriptionProjet()
                     ])
-                    ->attach($pdfContent, $filename, 'application/pdf');
+;
 
                 $mailer->send($email);
             } catch (\Exception $e) {
@@ -100,7 +86,7 @@ class DevisController extends AbstractController
             }
 
             // Message de confirmation à l'utilisateur
-            $this->addFlash('success', 'Votre demande a bien été prise en compte. Vérifiez votre adresse e-mail.');
+            $this->addFlash('success', 'Votre demande est bien reçue. Vous recevrez votre chiffrage détaillé sous 48 heures ouvrées.');
 
             return $this->redirectToRoute('front_confirmation_estimate', [
                 'id' => $devis->getId()

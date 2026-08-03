@@ -84,10 +84,10 @@ class BackController extends AbstractController
             // Gérer les fichiers joints
             $attachments = $form->get('attachments')->getData();
             $email = (new Email())
-                ->from('contact@scriptzenit.fr')
+                ->from('contact@walidbelbeche.fr')
                 ->to($request->getEmail())
                 ->bcc('wbelbeche.s@gmail.com')
-                ->subject('Relance: ScriptzenIT - Demande de rappel')
+                ->subject('Relance: Walid BELBECHE - Demande de rappel')
                 ->text($form->get('message')->getData());
 
             foreach ($attachments as $file) {

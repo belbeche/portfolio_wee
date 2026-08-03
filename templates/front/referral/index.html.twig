@@ -1,0 +1,133 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ app.request.locale == 'en' ? 'Need an expert? AxisHumain, the platform I built' : "Besoin d'un expert ? AxisHumain, la plateforme que j'ai construite" }}{% endblock %}
+
+{% block content %}
+{% set en = app.request.locale == 'en' %}
+
+<section class="text-white py-5" style="background-color: #0f172a;">
+    <div class="container py-4">
+        <div class="row align-items-center">
+            <div class="col-lg-8">
+                <p class="text-uppercase small fw-bold mb-3" style="letter-spacing: 2px; color: #ffc107;">
+                    {{ 'referral.eyebrow'|trans }}
+                </p>
+                <h1 class="display-5 fw-bold mb-4">
+                    {{ 'referral.title_1'|trans }}<br>
+                    {{ 'referral.title_2'|trans }}
+                </h1>
+                <p class="fs-5 mb-0" style="max-width: 760px; opacity: .9;">
+                    {{ 'referral.lead'|trans }} <strong>AxisHumain</strong> {{ 'referral.lead_end'|trans }}
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="container py-5">
+    <div class="row align-items-center g-5">
+        <div class="col-lg-6">
+            <h2 class="h1 fw-bold mb-4">{{ 'referral.app_title'|trans }}</h2>
+            <p class="fs-5 text-muted mb-4">
+                {{ 'referral.app_p1'|trans }}
+            </p>
+            <p class="text-muted mb-4">
+                {{ 'referral.app_p2'|trans }}
+            </p>
+            <div class="d-flex flex-column flex-md-row gap-3">
+                <a href="{{ url('front_referral_go', {context: 'page_relais'}) }}"
+                   class="btn btn-primary btn-lg" rel="noopener">{{ 'referral.app_cta1'|trans }}</a>
+                <a href="{{ url('front_project') }}" class="btn btn-outline-secondary btn-lg">
+                    {{ 'referral.app_cta2'|trans }}
+                </a>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div class="row g-3">
+                {% set briques = en ? [
+                    { 'titre': 'Two journeys', 'texte': "Client and expert, with distinct interfaces, permissions and notifications." },
+                    { 'titre': 'Built-in payment', 'texte': "Online transactions and options to promote assignments." },
+                    { 'titre': 'Writing assistance', 'texte': "A generator helps the client word their assignment when they do not know where to start." },
+                    { 'titre': 'Reputation', 'texte': "Review system, news feed and events to keep the community alive." }
+                ] : [
+                    { 'titre': 'Deux parcours', 'texte': "Client et expert, avec des interfaces, des droits et des notifications distincts." },
+                    { 'titre': 'Paiement intégré', 'texte': "Transactions en ligne et offres de mise en avant des missions." },
+                    { 'titre': 'Assistance à la rédaction', 'texte': "Un générateur aide le client à formuler sa mission quand il ne sait pas par où commencer." },
+                    { 'titre': 'Réputation', 'texte': "Système d'avis, fil d'actualité et événements pour animer la communauté." }
+                ] %}
+                {% for brique in briques %}
+                    <div class="col-sm-6">
+                        <div class="h-100 p-4 border rounded shadow-sm">
+                            <h3 class="h6 fw-bold">{{ brique.titre }}</h3>
+                            <p class="mb-0 small text-muted">{{ brique.texte }}</p>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="bg-light py-5" data-tone="light">
+    <div class="container">
+        <h2 class="h1 fw-bold text-center mb-2">{{ 'referral.how_title'|trans }}</h2>
+        <p class="text-center text-muted mb-5">{{ 'referral.how_sub'|trans }}</p>
+        <div class="row g-4">
+            {% set etapes = en ? [
+                { 'n': '1', 'titre': 'You describe your need', 'texte': "A few minutes are enough. An assisted generator helps you word the assignment if you get stuck." },
+                { 'n': '2', 'titre': 'You receive proposals', 'texte': "Experts whose skills match answer you directly, with their approach and their rate." },
+                { 'n': '3', 'titre': 'You choose', 'texte': "You compare, you talk, you decide. The review system gives you a track record on every profile." }
+            ] : [
+                { 'n': '1', 'titre': 'Vous décrivez votre besoin', 'texte': "Quelques minutes suffisent. Un générateur assisté vous aide à formuler la mission si vous bloquez sur la rédaction." },
+                { 'n': '2', 'titre': 'Vous recevez des propositions', 'texte': "Les experts dont les compétences correspondent vous répondent directement, avec leur approche et leur tarif." },
+                { 'n': '3', 'titre': 'Vous choisissez', 'texte': "Vous comparez, vous échangez, vous décidez. Le système d'avis vous donne un historique sur chaque profil." }
+            ] %}
+            {% for etape in etapes %}
+                <div class="col-lg-4">
+                    <div class="h-100 bg-white p-4 rounded shadow-sm" data-tone="light">
+                        <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center fw-bold mb-3"
+                             style="width: 40px; height: 40px;" data-tone="dark">{{ etape.n }}</div>
+                        <h3 class="h5 fw-bold">{{ etape.titre }}</h3>
+                        <p class="mb-0 text-muted">{{ etape.texte }}</p>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<section class="container py-5">
+    <h2 class="h1 fw-bold text-center mb-5">{{ 'referral.when_title'|trans }}</h2>
+    <div class="row g-4 justify-content-center">
+        {% set cas = en ? [
+            { 'titre': 'Outside my specialty', 'texte': "Data, artificial intelligence, heavy infrastructure, native Swift or Kotlin applications. Better to talk to someone whose job it is." },
+            { 'titre': 'Incompatible schedule', 'texte': "If your deadline falls in a period where I am already committed, accepting would mean making you take a risk." },
+            { 'titre': 'Budget out of range', 'texte': "A project smaller than my entry ticket will find better value elsewhere. Saying it plainly beats doing it badly." },
+            { 'titre': 'A team, not one person', 'texte': "Some projects need several profiles in parallel. The platform is built for that, I am not." }
+        ] : [
+            { 'titre': 'Hors de ma spécialité', 'texte': "Data, intelligence artificielle, infrastructure lourde, applications natives Swift ou Kotlin. Autant vous adresser à quelqu'un dont c'est le métier." },
+            { 'titre': 'Planning incompatible', 'texte': "Si votre échéance tombe pendant une période où je suis déjà engagé, accepter reviendrait à vous faire prendre un risque." },
+            { 'titre': 'Budget hors cadre', 'texte': "Un projet plus petit que mon ticket d'entrée trouvera un meilleur rapport qualité prix ailleurs. Le dire franchement vaut mieux que de bâcler." },
+            { 'titre': 'Une équipe, pas une personne', 'texte': "Certains projets demandent plusieurs profils en parallèle. La plateforme est faite pour ça, moi non." }
+        ] %}
+        {% for item in cas %}
+            <div class="col-md-6">
+                <div class="h-100 p-4 border rounded shadow-sm">
+                    <h3 class="h6 fw-bold">{{ item.titre }}</h3>
+                    <p class="mb-0 small text-muted">{{ item.texte }}</p>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+    <p class="text-center text-muted mt-5 mb-0 fs-5">
+        {{ 'referral.when_note'|trans }}
+        <a href="{{ url('front_devis_new') }}">{{ 'referral.when_link'|trans }}</a>.
+    </p>
+</section>
+
+{{ include('front/includes/_axishumain.html.twig', {
+    context: 'page_relais_bas',
+    title: 'referral.final_title'|trans
+}) }}
+
+{% endblock %}

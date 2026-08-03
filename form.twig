@@ -1,0 +1,133 @@
+	<!-- Début du formulaire -->
+	<section class="wb-section" data-tone="light" id="formulaire">
+		<div class="container" style="max-width: 900px;">
+
+			<div class="wb-card" data-tone="light" style="padding: 2rem 2rem 2.2rem;">
+
+				{# Reperes d'avancement : un formulaire long sans repere donne
+				   l'impression de ne jamais finir. #}
+				<div class="wb-steps">
+					<span class="wb-steps__item is-current"></span>
+					<span class="wb-steps__item"></span>
+					<span class="wb-steps__item"></span>
+				</div>
+
+				<h2 class="wb-h2" style="font-size: 1.5rem;">Décrivez votre projet</h2>
+				<p class="wb-lead" style="font-size: 1rem; margin-bottom: 2rem;">
+					Quatre questions. Répondez avec vos mots, pas avec du vocabulaire technique.
+				</p>
+
+				<div class="wb-form">
+					{{ form_start(formDevis, {'attr': {'novalidate': 'novalidate'}}) }}
+
+						{# ------------------------------------------------ 1. contact -- #}
+						<fieldset style="border: 0; padding: 0; margin: 0 0 2rem;">
+							<legend class="wb-eyebrow wb-eyebrow--ink" style="float: none; width: auto; font-size: .72rem;">
+								1 · Où vous envoyer le devis
+							</legend>
+
+							{% if not app.user %}
+								{{ form_row(formDevis.email, {
+									'label': 'Votre adresse e-mail',
+									'attr': {'class': 'form-control', 'placeholder': 'vous@votre-entreprise.fr', 'autocomplete': 'email'}
+								}) }}
+								<div class="form-text" style="margin-top: -.5rem;">
+									Elle sert uniquement à vous envoyer le devis. Aucune inscription à une liste.
+								</div>
+							{% else %}
+								{{ form_row(formDevis.email, {'row_attr': {'class': 'd-none'}}) }}
+								<p style="font-size: .9rem; color: var(--wb-text-2); margin: 0;">
+									Le devis partira sur <strong>{{ app.user.email }}</strong>.
+								</p>
+							{% endif %}
+							{{ form_errors(formDevis.email) }}
+						</fieldset>
+
+						{# --------------------------------------------------- 2. type -- #}
+						<fieldset style="border: 0; padding: 0; margin: 0 0 2rem;">
+							<legend class="wb-eyebrow wb-eyebrow--ink" style="float: none; width: auto; font-size: .72rem;">
+								2 · Ce que vous voulez faire construire
+							</legend>
+
+							{{ form_row(formDevis.type_de_site_web, {
+								'label': "Type d'application souhaité",
+								'attr': {'class': 'form-select'}
+							}) }}
+							{{ form_errors(formDevis.type_de_site_web) }}
+
+							<button type="button" class="wb-btn wb-btn--outline"
+							        style="padding: .4rem .85rem; font-size: .82rem; margin-top: .5rem;"
+							        data-bs-toggle="modal" data-bs-target="#combinedModal">
+								Je ne sais pas lequel choisir
+							</button>
+						</fieldset>
+
+						{# ------------------------------------------------- 3. design -- #}
+						<fieldset style="border: 0; padding: 0; margin: 0 0 2rem;">
+							<legend class="wb-eyebrow wb-eyebrow--ink" style="float: none; width: auto; font-size: .72rem;">
+								3 · Vos attentes sur le design
+							</legend>
+
+							<p style="font-size: .9rem; color: var(--wb-text-2); margin-bottom: 1rem;">
+								Plusieurs choix possibles. Si aucun ne vous parle, passez à la suite :
+								on en discutera de vive voix.
+							</p>
+
+							<div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 g-3">
+								{% for option in formDevis.attentes_design_web %}
+									<div class="col">
+										<label class="wb-choice h-100 d-flex align-items-start gap-2">
+											{{ form_widget(option, {'label': false, 'attr': {'class': 'form-check-input mt-1 flex-shrink-0'}}) }}
+											<span style="font-size: .9rem; line-height: 1.4;">{{ option.vars.label }}</span>
+										</label>
+									</div>
+								{% endfor %}
+							</div>
+							{{ form_errors(formDevis.attentes_design_web) }}
+						</fieldset>
+
+						{# --------------------------------------------- 4. description -- #}
+						<fieldset style="border: 0; padding: 0; margin: 0 0 2rem;">
+							<legend class="wb-eyebrow wb-eyebrow--ink" style="float: none; width: auto; font-size: .72rem;">
+								4 · Le contexte, en quelques lignes
+							</legend>
+
+							{{ form_row(formDevis.description_projet, {
+								'label': "Parlez-moi de votre projet",
+								'attr': {
+									'class': 'form-control',
+									'rows': 6,
+									'placeholder': "Que voulez-vous régler ? Pour qui ? Avez-vous une échéance ? Un budget en tête ? Ce que vous utilisez aujourd'hui ?"
+								}
+							}) }}
+							{{ form_errors(formDevis.description_projet) }}
+
+							<div class="form-text">
+								Le problème plutôt que la solution technique. C'est mon métier de traduire.
+							</div>
+						</fieldset>
+
+						{# ------------------------------------------------- validation -- #}
+						<div class="d-flex flex-column flex-sm-row align-items-sm-center gap-3 pt-3"
+						     style="border-top: 1px solid var(--wb-line);">
+							<button type="submit" class="wb-btn wb-btn--gold">
+								Recevoir mon devis détaillé
+							</button>
+							<span style="font-size: .84rem; color: var(--wb-text-3);">
+								Réponse sous 48 h ouvrées · aucune relance commerciale
+							</span>
+						</div>
+
+					{{ form_end(formDevis) }}
+				</div>
+
+			</div>
+
+			<p class="text-center" style="font-size: .84rem; color: var(--wb-text-3); margin-top: 1.5rem;">
+				Vous préférez en parler de vive voix ?
+				<a href="{{ url('front_contact') }}">Écrivez-moi</a> ou appelez le
+				<a href="tel:0661287786">06 61 28 77 86</a>.
+			</p>
+
+		</div>
+	</section>

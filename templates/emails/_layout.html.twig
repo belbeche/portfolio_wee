@@ -1,0 +1,66 @@
+{# =====================================================================
+   Gabarit commun des e-mails. Sobre : une carte blanche sur fond gris,
+   un filet or sous le nom, du texte, rien d'autre. Tout est en ligne
+   pour survivre aux clients mail.
+   ===================================================================== #}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block email_title %}Walid Belbeche{% endblock %}</title>
+</head>
+<body style="margin:0;padding:0;background-color:#f2f4f7;">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:#f2f4f7;">
+        <tr>
+            <td align="center" style="padding:32px 16px;">
+                <table role="presentation" width="100%" cellpadding="0" cellspacing="0"
+                       style="max-width:560px;background-color:#ffffff;border-radius:10px;border:1px solid #e4e7ec;">
+
+                    {# ---------------------------------------------- en-tete #}
+                    <tr>
+                        <td style="padding:28px 40px 0;">
+                            <p style="margin:0;font-family:Georgia,'Times New Roman',serif;font-size:19px;font-weight:bold;color:#141c2e;">
+                                Walid Belbeche
+                            </p>
+                            <p style="margin:2px 0 0;font-family:Arial,Helvetica,sans-serif;font-size:12px;color:#6b7280;">
+                                Consultant informatique · Applications web et mobiles
+                            </p>
+                            <div style="height:2px;width:44px;background-color:#f5b301;margin:16px 0 0;"></div>
+                        </td>
+                    </tr>
+
+                    {# ------------------------------------------------ corps #}
+                    <tr>
+                        <td style="padding:24px 40px 8px;font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:1.65;color:#333c4d;">
+                            {% block email_body %}{% endblock %}
+                        </td>
+                    </tr>
+
+                    {# ------------------------------------------- pied carte #}
+                    <tr>
+                        <td style="padding:20px 40px 28px;">
+                            <p style="margin:0;font-family:Arial,Helvetica,sans-serif;font-size:14px;color:#333c4d;">
+                                Bien cordialement,<br>
+                                <strong style="color:#141c2e;">Walid Belbeche</strong>
+                            </p>
+                        </td>
+                    </tr>
+                </table>
+
+                {# --------------------------------------------- pied de page #}
+                <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:560px;">
+                    <tr>
+                        <td style="padding:18px 8px 0;font-family:Arial,Helvetica,sans-serif;font-size:11px;line-height:1.7;color:#98a2b3;" align="center">
+                            Walid Belbeche · 173 rue de Courcelles, 75017 Paris, France<br>
+                            <a href="mailto:contact@walidbelbeche.fr" style="color:#98a2b3;">contact@walidbelbeche.fr</a> ·
+                            <a href="https://walidbelbeche.fr" style="color:#98a2b3;">walidbelbeche.fr</a><br>
+                            Vous recevez cet e-mail parce que vous avez effectué une démarche sur walidbelbeche.fr.
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>

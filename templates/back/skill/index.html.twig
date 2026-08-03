@@ -1,0 +1,94 @@
+{% extends 'base_back.html.twig' %}
+
+{% block title %}Competences{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+
+    <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
+        <div>
+            <h1 class="h3 fw-bold mb-1">Competences</h1>
+            <p class="text-muted mb-0 small">
+                {{ total }} competence(s) enregistree(s). Elles alimentent l'accueil et la page methode.
+            </p>
+        </div>
+        <a href="{{ url('back_skill_new') }}" class="btn btn-primary">Ajouter une competence</a>
+    </div>
+
+    {% for label, messages in app.flashes %}
+        {% for message in messages %}
+            <div class="alert alert-{{ label }}">{{ message }}</div>
+        {% endfor %}
+    {% endfor %}
+
+    {% if grouped is empty %}
+        <div class="border rounded p-5 text-center">
+            <p class="text-muted mb-3">Aucune competence enregistree pour l'instant.</p>
+            <a href="{{ url('back_skill_new') }}" class="btn btn-outline-primary">Creer la premiere</a>
+        </div>
+    {% endif %}
+
+    {% for group, skills in grouped %}
+        <h2 class="h6 text-uppercase text-muted mt-4 mb-2" style="letter-spacing: 1.5px;">
+            {{ skills|first.groupLabel }}
+        </h2>
+        <div class="table-responsive border rounded mb-3">
+            <table class="table align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th>Competence</th>
+                        <th style="width: 180px;">Niveau</th>
+                        <th style="width: 90px;">Annees</th>
+                        <th style="width: 110px;">Etat</th>
+                        <th style="width: 200px;" class="text-end">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for skill in skills %}
+                    <tr>
+                        <td>
+                            <strong>{{ skill.name }}</strong>
+                            {% if skill.highlighted %}
+                                <span class="badge bg-warning text-dark ms-1">Accueil</span>
+                            {% endif %}
+                            {% if skill.description %}
+                                <div class="small text-muted">{{ skill.description }}</div>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <div class="progress" style="height: 7px;">
+                                <div class="progress-bar" style="width: {{ skill.levelPercent }}%;"></div>
+                            </div>
+                            <span class="small text-muted">{{ skill.levelLabel }}</span>
+                        </td>
+                        <td>{{ skill.yearsOfExperience ?? '-' }}</td>
+                        <td>
+                            {% if skill.visible %}
+                                <span class="badge bg-success">Visible</span>
+                            {% else %}
+                                <span class="badge bg-secondary">Masquee</span>
+                            {% endif %}
+                        </td>
+                        <td class="text-end">
+                            <a href="{{ url('back_skill_edit', {id: skill.id}) }}" class="btn btn-sm btn-outline-secondary">Modifier</a>
+                            <form method="post" action="{{ url('back_skill_toggle', {id: skill.id}) }}" class="d-inline">
+                                <input type="hidden" name="_token" value="{{ csrf_token('toggle_skill_' ~ skill.id) }}">
+                                <button class="btn btn-sm btn-outline-secondary">
+                                    {{ skill.visible ? 'Masquer' : 'Afficher' }}
+                                </button>
+                            </form>
+                            <form method="post" action="{{ url('back_skill_delete', {id: skill.id}) }}" class="d-inline"
+                                  onsubmit="return confirm('Supprimer definitivement cette competence ?');">
+                                <input type="hidden" name="_token" value="{{ csrf_token('delete_skill_' ~ skill.id) }}">
+                                <button class="btn btn-sm btn-outline-danger">Supprimer</button>
+                            </form>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% endfor %}
+
+</div>
+{% endblock %}

@@ -29,7 +29,7 @@
 								<tr>
 									<th scope="row">{{ i }}</th>
 									<td>
-										<a href="mailto:{{ user.email }}">{{ user.email }}</td>
+										<a href="mailto:{{ user.email }}">{{ user.email }}</a>
 									</td>
 									<td>{{ user.username }}</td>
 									<td>
@@ -40,7 +40,7 @@
 										{% endfor %}
 									</td>
 									<td class="text-center">
-										<a href="{{ url('back_users_edit', {username: user.username}) }}" class="text-success">
+										<a href="{{ url('back_user_edit', {id: user.id}) }}" class="text-success">
 											<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewbox="0 0 24 24" stroke="currentColor" width="18">
 												<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
 											</svg>

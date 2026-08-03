@@ -1,40 +1,59 @@
 security:
-    hide_user_not_found: false
+    # Ne jamais révéler si une adresse existe en base : sinon le formulaire
+    # de connexion devient un outil d'énumération de comptes.
+    hide_user_not_found: true
     enable_authenticator_manager: true
-    # https://symfony.com/doc/current/security.html#registering-the-user-hashing-passwords
+
     password_hashers:
         Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: "auto"
-    # https://symfony.com/doc/current/security.html#loading-the-user-the-user-provider
+
     providers:
-        # used to reload user from session & other features (e.g. switch_user)
         app_user_provider:
             entity:
                 class: App\Entity\User
                 property: email
+
     firewalls:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
+
         main:
             lazy: true
             provider: app_user_provider
+
             custom_authenticator:
                 - App\Security\AppCustomAuthenticator
+
+            # Anti force brute, natif Symfony 5.4.
+            # 5 tentatives par tranche de 15 minutes et par couple IP/identifiant,
+            # puis blocage temporaire. Nécessite symfony/rate-limiter.
+            login_throttling:
+                max_attempts: 5
+                interval: '15 minutes'
+
             logout:
                 path: app_logout
-                # where to redirect after logout
-                #target: front_home
+                target: front_home
 
-            # activate different ways to authenticate
-            # https://symfony.com/doc/current/security.html#the-firewall
-
-            # https://symfony.com/doc/current/security/impersonating_user.html
-            # switch_user: true
-
-    # Easy way to control access for large sections of your site
-    # Note: Only the *first* access control that matches will be used
     access_control:
+        - { path: ^/connexion, roles: PUBLIC_ACCESS }
+        - { path: ^/inscription, roles: PUBLIC_ACCESS }
+        - { path: ^/mot-de-passe-oublier, roles: PUBLIC_ACCESS }
+        - { path: ^/reset-password, roles: PUBLIC_ACCESS }
+        - { path: ^/continuer, roles: PUBLIC_ACCESS }
         - { path: ^/admin, roles: ROLE_ADMIN }
+        - { path: ^/back, roles: ROLE_ADMIN }
+        - { path: ^/espace, roles: ROLE_USER }
         - { path: ^/devis/utilisateur, roles: ROLE_USER }
         - { path: ^/assistance, roles: ROLE_USER }
         - { path: ^/profil/, roles: ROLE_USER }
+
+when@test:
+    security:
+        password_hashers:
+            Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface:
+                algorithm: auto
+                cost: 4
+                time_cost: 3
+                memory_cost: 10

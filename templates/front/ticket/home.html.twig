@@ -4,7 +4,17 @@
 {% endblock %}
 
 {% block content %}
-	<div class="container mb-4 main-container mt-7">
+
+<section class="wb-hero" data-tone="dark">
+    <div class="container" style="padding-top: 7rem; padding-bottom: 3rem;">
+        <span class="wb-eyebrow">{{ app.request.locale == 'en' ? 'Client area' : 'Espace client' }}</span>
+        <h1 class="wb-display" style="font-size: clamp(1.8rem, 4vw, 2.6rem);">{{ app.request.locale == 'en' ? 'My quotes and their follow-up' : 'Mes devis et leur suivi' }}</h1>
+        <p class="wb-lead wb-lead--on-dark mb-0" style="max-width:620px;">Chaque demande d'estimation, son état, et le fil d'assistance qui va avec.</p>
+    </div>
+</section>
+
+<section class="wb-section wb-section--paper" data-tone="light">
+	<div class="container">
 		<div class="container">
 			{% for type, messages in app.flashes %}
 				{% for message in messages %}
@@ -51,8 +61,7 @@
 						</tr>
 						</thead>
 						<tbody>
-						<tr>
-							{% for devis in devisList %}
+						{% for devis in devisList %}
 						<tr>
 							<td>{{ devis.id }}</td>
 							<td>{{ devis.createdAt|date('Y-m-d H:i:s') }}</td>
@@ -100,4 +109,5 @@
 			</div>
 		</div>
 	</div>
+</section>
 {% endblock %}

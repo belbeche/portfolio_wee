@@ -1,38 +1,118 @@
 {% extends 'base_back.html.twig' %}
 
-{% block title %}Liste des Prospects{% endblock %}
+{% block title %}Prospects{% endblock %}
+{% block breadcrumb %}Commercial{% endblock %}
+{% block heading %}Prospects{% endblock %}
+
+{% block topActions %}
+	<a href="{{ url('back_prospect_new') }}" class="ad-btn ad-btn--primary">Ajouter un prospect</a>
+{% endblock %}
 
 {% block content %}
 
-<h1>Liste des Prospects</h1>
-<table class="table-responsive">
-    <thead>
-        <tr>
-            <th>Email</th>
-            <th>Services</th>
-            <th>Document</th>
-            <th>Notes</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for prospect in prospects %}
-        <tr>
-            <td>{{ prospect.email }}</td>
-            <td>{{ prospect.services|join(', ') }}</td>
-            <td>{{ prospect.documentFilenames ? prospect.documentFilenames : 'None' }}</td>
-            <td>{{ prospect.notes ? prospect.notes : 'None' }}</td>
-            <td>
-                <a href="{{ path('back_prospect_edit', {'id': prospect.id}) }}">Edit</a>
-                <form action="{{ path('back_prospect_delete', {'id': prospect.id}) }}" method="post" onsubmit="return confirm('ëtes vous sùre de vouloir supprimer le prospect ?');">
-                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ prospect.id) }}">
-                    <button type="submit">Supprimer</button>
-                </form>
-            </td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+{# Compteurs du tunnel, pour savoir ou en est la prospection d'un coup d'oeil. #}
+{% set aContacter = prospects|filter(p => p.status == 'a_contacter')|length %}
+{% set relancesDues = prospects|filter(p => p.isFollowUpDue())|length %}
+{% set enCours = prospects|filter(p => p.status in ['contacte','relance','rdv_pris','proposition'])|length %}
+{% set gagnes = prospects|filter(p => p.status == 'gagne')|length %}
 
-<a href="{{ path('back_prospect_new') }}">Ajouter un nouveau prospect</a>
+<div class="ad-kpis">
+	<div class="ad-kpi" data-tone="light">
+		<div class="ad-kpi__n">{{ prospects|length }}</div>
+		<div class="ad-kpi__l">Au total</div>
+	</div>
+	<div class="ad-kpi ad-kpi--red" data-tone="light">
+		<div class="ad-kpi__n">{{ relancesDues }}</div>
+		<div class="ad-kpi__l">Relances dues</div>
+		<div class="ad-kpi__hint">À traiter en priorité</div>
+	</div>
+	<div class="ad-kpi ad-kpi--gold" data-tone="light">
+		<div class="ad-kpi__n">{{ aContacter }}</div>
+		<div class="ad-kpi__l">À contacter</div>
+	</div>
+	<div class="ad-kpi ad-kpi--violet" data-tone="light">
+		<div class="ad-kpi__n">{{ enCours }}</div>
+		<div class="ad-kpi__l">En cours</div>
+	</div>
+	<div class="ad-kpi ad-kpi--green" data-tone="light">
+		<div class="ad-kpi__n">{{ gagnes }}</div>
+		<div class="ad-kpi__l">Gagnés</div>
+	</div>
+</div>
+
+<section class="ad-card" data-tone="light">
+	<div class="ad-card__head">
+		<h2>Pipeline</h2>
+		<span class="ad-tag">Cadence de relance J+4 puis J+10</span>
+	</div>
+
+	{% if prospects|length > 0 %}
+		<table class="ad-table">
+			<thead>
+				<tr>
+					<th>Société</th>
+					<th>Contact</th>
+					<th>Priorité</th>
+					<th>Statut</th>
+					<th>Échanges</th>
+					<th>Prochaine relance</th>
+					<th style="text-align:right;">Actions</th>
+				</tr>
+			</thead>
+			<tbody>
+			{% for prospect in prospects %}
+				{% set due = prospect.isFollowUpDue() %}
+				<tr>
+					<td>
+						<strong>{{ prospect.company ?: prospect.email }}</strong>
+						{% if prospect.city %}<div style="font-size:.78rem;color:var(--ad-text-3);">{{ prospect.city }}</div>{% endif %}
+					</td>
+					<td>
+						{{ prospect.contactName ?: '-' }}
+						<div style="font-size:.78rem;color:var(--ad-text-3);">{{ prospect.email }}</div>
+					</td>
+					<td>
+						{% if prospect.priority %}
+							<span class="ad-tag ad-tag--{{ prospect.priority == 'P1' ? 'green' : (prospect.priority == 'P2' ? 'gold' : 'muted') }}">{{ prospect.priority }}</span>
+						{% else %}-{% endif %}
+					</td>
+					<td><span class="ad-tag ad-tag--blue">{{ prospect.statusLabel }}</span></td>
+					<td class="num">{{ prospect.prospectNotes|length }}</td>
+					<td>
+						{% if prospect.nextFollowUpAt %}
+							<span class="ad-tag ad-tag--{{ due ? 'red' : 'gold' }}">
+								{{ prospect.nextFollowUpAt|date('d/m/Y') }}
+							</span>
+						{% else %}
+							<span class="ad-tag ad-tag--muted">aucune</span>
+						{% endif %}
+					</td>
+					<td>
+						<div class="ad-actions">
+							<a href="{{ url('back_prospect_notes', {id: prospect.id}) }}" class="ad-btn ad-btn--primary ad-btn--sm">Journal</a>
+							<a href="{{ url('back_prospect_edit', {id: prospect.id}) }}" class="ad-btn ad-btn--ghost ad-btn--sm">Modifier</a>
+						</div>
+					</td>
+				</tr>
+			{% endfor %}
+			</tbody>
+		</table>
+	{% else %}
+		<div class="ad-card__body">
+			<div class="ad-empty">
+				<h3>Aucun prospect en base</h3>
+				<p style="margin:0 0 1rem;font-size:.86rem;">
+					Le pipeline est vide. Commence par les agences de l'Eure :
+					ce sont les plus proches, et les plus faciles à qualifier.
+				</p>
+				<a href="{{ url('back_prospect_new') }}" class="ad-btn ad-btn--primary">Ajouter le premier</a>
+			</div>
+		</div>
+	{% endif %}
+
+	<div class="ad-card__foot" style="color:var(--ad-text-3);">
+		Le point du matin en une commande : <code>php bin/console app:prospection:daily</code>
+	</div>
+</section>
+
 {% endblock %}

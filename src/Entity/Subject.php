@@ -82,7 +82,7 @@ class Subject
     private $categories;
 
     /**
-     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="Subjects")
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="Subject")
      * @ORM\JoinColumn(nullable=true)
      */
     private ?User $user;
@@ -272,7 +272,6 @@ class Subject
 
     public function getPublishedAt(): ?\DateTimeInterface
     {
-        dump($this->publishedAt);
         return $this->publishedAt;
     }
 

@@ -18,7 +18,7 @@
 		<div class="px-4 pt-5 my-5 text-center border-bottom">
 			<h1 class="display-4 fw-bold text-body-emphasis">Oups, vous êtes déjà connecté !</h1>
 			<div class="col-lg-6 mx-auto">
-				<p class="lead mb-4">En tant que {{ app.user.userIdentifier }},
+				<p class="lead mb-4">En tant que {{ app.user.userIdentifier }},</p>
 				<div class="d-grid gap-2 d-sm-flex justify-content-sm-center mb-5">
 					<a href="{{ path('app_logout') }}" class="btn btn-primary btn-lg px-4 me-sm-3">Déconnexion</a>
 					<a href="{{ path('front_project') }}" class="btn btn-primary btn-lg px-4 me-sm-3">Voir nos réalisations</a>
@@ -33,13 +33,13 @@
 		<div class="container col-xl-10 col-xxl-8 px-4 py-5">
 			<div class="row align-items-center g-lg-5 py-5">
 				<div class="col-lg-7 text-center text-lg-start">
-					<div class="d-none d-md-flex col-md-4 col-lg-6 bg-primary"></div>
+					<div class="d-none d-md-flex col-md-4 col-lg-6 bg-primary" data-tone="dark"></div>
 					<h1 class="display-4 fw-bold lh-1 mb-3">Heureux de vous revoir !</h1>
 					<div class="register">
 						<h6>Vous n'êtes pas membre ?</h6>
 						<p>Inscrivez-vous en suivant ce lien <a href="{{ url('app_register') }}">Je m'inscris</a>.</p>
 						<div class="container d-flex justify-content-center">
-							<img src="{{ asset('img/login.png') }}" alt="Connexion ScriptZenIT" width="70%" height="70%">
+							<img src="{{ asset('img/login.png') }}" alt="Connexion Walid BELBECHE" width="70%" height="70%">
 						</div>
 					</div>
 				</div>

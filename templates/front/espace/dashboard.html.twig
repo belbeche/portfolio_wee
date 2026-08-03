@@ -1,0 +1,187 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ app.request.locale == 'en' ? 'My client area' : 'Mon espace client' }}{% endblock %}
+
+{% block content %}
+{% set en = app.request.locale == 'en' %}
+
+<section class="wb-hero wb-hero--compact" data-tone="dark">
+    <div class="container" style="padding-bottom: 3rem;">
+        <div class="d-flex flex-wrap align-items-center gap-3 mb-3">
+            <img src="{{ app.user.avatar ? asset('uploads/avatar/' ~ app.user.avatar) : asset('uploads/avatar/support0.svg') }}"
+                 width="62" height="62" class="rounded-circle border border-2 border-light"
+                 alt="{{ app.user.username }}" style="object-fit: cover;">
+            <div>
+                <span class="wb-eyebrow mb-1">{{ 'space.eyebrow'|trans }}</span>
+                <h1 class="wb-h2 mb-1">{{ en ? 'Hello' : 'Bonjour' }} {{ app.user.prenom ?: app.user.username }}</h1>
+                <p class="mb-0" style="font-size: .9rem;">{{ app.user.email }}</p>
+            </div>
+        </div>
+
+        <div class="d-flex flex-wrap gap-2">
+            <a href="{{ url('front_devis_new') }}" class="wb-btn wb-btn--gold">{{ 'space.cta_new'|trans }}</a>
+            <a href="{{ url('send_message') }}" class="wb-btn wb-btn--ghost">{{ 'space.cta_ticket'|trans }}</a>
+            <a href="{{ url('front_profile_project') }}" class="wb-btn wb-btn--ghost">{{ 'space.cta_hosting'|trans }}</a>
+        </div>
+    </div>
+</section>
+
+<section class="wb-section--tight" style="background: var(--wb-paper);">
+    <div class="container">
+        <div class="wb-stats wb-stats--paper">
+            <div class="wb-stat"><div class="wb-stat__n">{{ countDevis }}</div><div class="wb-stat__l">devis</div></div>
+            <div class="wb-stat"><div class="wb-stat__n">{{ countTickets }}</div><div class="wb-stat__l">tickets</div></div>
+            <div class="wb-stat"><div class="wb-stat__n">{{ countSubjects }}</div><div class="wb-stat__l">sujets ouverts</div></div>
+            <div class="wb-stat"><div class="wb-stat__n">{{ countLikes }}</div><div class="wb-stat__l">favoris</div></div>
+        </div>
+    </div>
+</section>
+
+{{ include('front/includes/_axishumain.html.twig', {variant: 'compact', context: 'espace_client'}) }}
+
+<section class="wb-section">
+    <div class="container">
+        <div class="row g-4">
+
+            <div class="col-lg-6">
+                <div class="wb-card h-100 p-0" style="overflow: hidden;" data-tone="light">
+                    <div class="d-flex align-items-center gap-3 p-3 border-bottom">
+                        <h2 class="wb-h3 mb-0">{{ 'space.quotes_title'|trans }}</h2>
+                        <a href="{{ url('front_devis_new') }}" class="wb-btn wb-btn--ink ms-auto"
+                           style="padding: .4rem .85rem; font-size: .82rem;">{{ 'space.cta_new'|trans }}</a>
+                    </div>
+
+                    {% if devisList|length > 0 %}
+                        <table class="wb-table">
+                            <thead><tr><th>{{ en ? 'Reference' : 'Référence' }}</th><th>{{ en ? 'Status' : 'Statut' }}</th><th style="text-align:right;">Action</th></tr></thead>
+                            <tbody>
+                            {% for devis in devisList %}
+                                <tr>
+                                    <td><strong>{{ en ? 'Quote' : 'Devis' }} n&deg;{{ (devis.id ~ '')|slice(0, 8) }}</strong></td>
+                                    <td>
+                                        {% if devis.status is defined and devis.status %}
+                                            <span class="wb-badge">{{ devis.status }}</span>
+                                        {% else %}
+                                            <span class="wb-badge">{{ en ? "In progress" : "En cours" }}</span>
+                                        {% endif %}
+                                    </td>
+                                    <td style="text-align:right;">
+                                        <a href="{{ url('front_download_devis', {id: devis.id}) }}"
+                                           class="wb-btn wb-btn--outline" style="padding:.3rem .7rem;font-size:.78rem;">PDF</a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    {% else %}
+                        <div class="p-4 text-center">
+                            <p class="mb-3" style="color: var(--wb-text-2);">{{ 'space.quotes_empty'|trans }}</p>
+                            <a href="{{ url('front_devis_new') }}" class="wb-btn wb-btn--gold">{{ 'space.quotes_cta'|trans }}</a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="col-lg-6">
+                <div class="wb-card h-100 p-0" style="overflow: hidden;" data-tone="light">
+                    <div class="d-flex align-items-center gap-3 p-3 border-bottom">
+                        <h2 class="wb-h3 mb-0">{{ 'space.support_title'|trans }}</h2>
+                        <a href="{{ url('send_message') }}" class="wb-btn wb-btn--ink ms-auto"
+                           style="padding: .4rem .85rem; font-size: .82rem;">{{ en ? 'New ticket' : 'Nouveau ticket' }}</a>
+                    </div>
+
+                    {% if ticketList|length > 0 %}
+                        <table class="wb-table">
+                            <thead><tr><th>{{ en ? 'Subject' : 'Sujet' }}</th><th style="text-align:right;">Action</th></tr></thead>
+                            <tbody>
+                            {% for ticket in ticketList %}
+                                <tr>
+                                    <td><strong>{{ ticket.title ?? ('Ticket n°' ~ ticket.id) }}</strong></td>
+                                    <td style="text-align:right;">
+                                        <a href="{{ url('front_ticket_details', {id: ticket.id}) }}"
+                                           class="wb-btn wb-btn--outline" style="padding:.3rem .7rem;font-size:.78rem;">{{ en ? 'Open' : 'Ouvrir' }}</a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    {% else %}
+                        <div class="p-4 text-center">
+                            <p class="mb-3" style="color: var(--wb-text-2);">{{ 'space.support_empty'|trans }}</p>
+                            <a href="{{ url('send_message') }}" class="wb-btn wb-btn--outline">{{ 'space.support_cta'|trans }}</a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="col-lg-7">
+                <div class="wb-card wb-card--accent h-100" data-tone="light">
+                    <h2 class="wb-h3">{{ 'space.how_title'|trans }}</h2>
+                    <p style="color: var(--wb-text-2); font-size: .93rem;">
+                        {{ 'space.how_lead'|trans }}
+                    </p>
+                    <div class="wb-timeline mt-3">
+                        {% set canaux = en ? [
+                            {'c': 'wb-timeline__item--done', 'd': 'DEFECT', 't': 'The support desk', 'p': "With a screenshot. Every report gets a reference and an e-mail follow-up."},
+                            {'c': 'wb-timeline__item--wait', 'd': 'IDEA', 't': 'The weekly review', 'p': "Note them freely. Each one gets an answer: covered, already exists, to be quoted, or advised against."},
+                            {'c': '', 'd': 'DECISION', 't': 'E-mail', 'p': "Budget, scope, dates. So both parties keep a written trace."}
+                        ] : [
+                            {'c': 'wb-timeline__item--done', 'd': 'ANOMALIE', 't': "Le guichet d'assistance", 'p': "Avec une capture d'écran. Chaque signalement reçoit une référence et un suivi par e-mail."},
+                            {'c': 'wb-timeline__item--wait', 'd': 'IDÉE', 't': 'Le point hebdomadaire', 'p': "Notez-les librement. Chacune reçoit une réponse : garantie, existant, à chiffrer, ou déconseillé."},
+                            {'c': '', 'd': 'DÉCISION', 't': "L'e-mail", 'p': "Budget, périmètre, dates. Pour que les deux parties en gardent la trace."}
+                        ] %}
+                        {% for cx in canaux %}
+                        <div class="wb-timeline__item {{ cx.c }}">
+                            <div class="wb-timeline__date">{{ cx.d }}</div>
+                            <div class="wb-timeline__title">{{ cx.t }}</div>
+                            <p class="wb-timeline__desc">{{ cx.p }}</p>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-5">
+                <div class="wb-card h-100" data-tone="light">
+                    <h2 class="wb-h3">{{ 'space.account_title'|trans }}</h2>
+                    <div class="d-flex flex-wrap gap-2 mt-3">
+                        {% set liens = en ? [
+                            {'u': url('front_assistance'),      't': 'Assistance area'},
+                            {'u': url('front_profile_project'), 't': 'space.cta_hosting'|trans},
+                            {'u': url('front_subject_list'),    't': 'The forum'},
+                            {'u': url('front_subjects_new'),    't': 'Write to support'},
+                            {'u': url('front_show_ticket'),     't': 'My tickets'},
+                            {'u': url('front_edit_profile'),    't': 'Edit my profile'}
+                        ] : [
+                            {'u': url('front_assistance'),      't': 'Espace assistance'},
+                            {'u': url('front_profile_project'), 't': 'space.cta_hosting'|trans},
+                            {'u': url('front_subject_list'),    't': 'Le support'},
+                            {'u': url('front_subjects_new'),    't': 'Écrire au support'},
+                            {'u': url('front_show_ticket'),     't': 'Mes tickets'},
+                            {'u': url('front_edit_profile'),    't': 'Modifier mon profil'}
+                        ] %}
+                        {% for lien in liens %}
+                            <a href="{{ lien.u }}" class="wb-btn wb-btn--outline"
+                               style="padding:.4rem .8rem;font-size:.82rem;">{{ lien.t }}</a>
+                        {% endfor %}
+                        {% if is_granted('ROLE_ADMIN') %}
+                            <a href="{{ url('back_index') }}" class="wb-btn wb-btn--ink"
+                               style="padding:.4rem .8rem;font-size:.82rem;">Administration</a>
+                        {% endif %}
+                    </div>
+
+                    <hr style="border-color: var(--wb-line); margin: 1.4rem 0;">
+
+                    <h3 class="wb-h3" style="font-size: .95rem;">{{ 'space.urgent_title'|trans }}</h3>
+                    <p class="mb-2" style="color: var(--wb-text-2); font-size: .9rem;">
+                        {{ 'space.urgent_lead'|trans }}
+                    </p>
+                    <a href="tel:0661287786" class="wb-btn wb-btn--gold w-100">06 61 28 77 86</a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+{% endblock %}

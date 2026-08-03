@@ -32439,7 +32439,6 @@ p {
 
 p {
   font-size: 14px;
-  color: #666;
   margin: 0 0 10px;
 }
 
@@ -32763,7 +32762,6 @@ input[type="submit"]:focus {
   border-color: #d5d5d5;
   background-color: #fff;
   box-shadow: 0px 10px 10px -8px #d5d5d5;
-  color: #666;
 }
 
 .btn-secondary:hover,
@@ -33784,7 +33782,6 @@ td {
   content: '';
   width: 3px;
   height: 3px;
-  background-color: #666;
   position: absolute;
   left: -4px;
   border-radius: 5px;
@@ -34259,7 +34256,6 @@ ul.social-links li:last-child a {
   font-size: 12px;
   font-weight: 500;
   margin: 0 0 5px -40px;
-  color: #666;
   background-color: #fff;
   padding: 0 10px;
   line-height: 23px;
@@ -34270,7 +34266,6 @@ ul.social-links li:last-child a {
 .timeline-item .item-company {
   display: inline-block;
   font-size: 12px;
-  color: #666;
   opacity: 0.7;
   margin-left: 5px;
 }
@@ -35587,7 +35582,6 @@ ul.social-links li:last-child a {
   display: inline-block;
   font-size: 12px;
   line-height: 1.5em;
-  color: #666;
   padding: 2px 7px;
   background-color: #fff;
   border-radius: 3px;

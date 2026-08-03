@@ -1,0 +1,1120 @@
+/* ==========================================================================
+   Walid BELBECHE, systeme visuel 2026
+   --------------------------------------------------------------------------
+   Le site precedent etait plat pour trois raisons precises :
+     1. une seule profondeur, tout au meme niveau, aucune ombre ni relief ;
+     2. une seule taille de titre, donc aucune hierarchie de lecture ;
+     3. aucune couleur d'accent, le bleu servait a tout et donc a rien.
+   Ce fichier corrige les trois. Il se charge apres Bootstrap et ne remplace
+   rien : il ajoute des classes prefixees wb- que les gabarits utilisent.
+   ========================================================================== */
+
+:root {
+    --wb-ink:            #0a1628;
+    --wb-ink-2:          #12233d;
+    --wb-ink-3:          #1b3457;
+    --wb-paper:          #ffffff;
+    --wb-paper-2:        #f6f8fb;
+    --wb-paper-3:        #eef2f8;
+    --wb-line:           #dde5f0;
+
+    --wb-gold:           #f5b301;
+    --wb-gold-soft:      #ffd970;
+    --wb-blue:           #2a78d6;
+    --wb-blue-soft:      #7db2ee;
+    --wb-green:          #1baf7a;
+
+    --wb-text:           #0d1b2a;
+    --wb-text-2:         #4a5a६e;
+    --wb-text-2:         #4a5a6e;
+    --wb-text-3:         #7b8aa0;
+    --wb-on-dark:        #eaf1fb;
+    --wb-on-dark-2:      #a9bdd8;
+
+    --wb-radius:         16px;
+    --wb-radius-sm:      10px;
+    --wb-shadow-1:       0 1px 2px rgba(10,22,40,.06), 0 4px 12px rgba(10,22,40,.06);
+    --wb-shadow-2:       0 8px 24px rgba(10,22,40,.10), 0 2px 6px rgba(10,22,40,.06);
+    --wb-shadow-3:       0 24px 60px rgba(10,22,40,.18);
+    --wb-ease:           cubic-bezier(.22,.61,.36,1);
+}
+
+/* Couleur de base du site : remplace le body,p { color:#666 } du vieux theme.
+   Posee ici a faible specificite, le systeme de tons la surcharge librement. */
+body { color: var(--wb-text-2); }
+h1, h2, h3, h4, h5, h6 { color: var(--wb-text); }
+
+
+
+/* --------------------------------------------------------- typographie -- */
+
+.wb-eyebrow {
+    display: inline-block;
+    font-size: .75rem;
+    font-weight: 800;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    color: var(--wb-gold);
+    margin-bottom: .9rem;
+}
+.wb-eyebrow--ink { color: var(--wb-blue); }
+
+.wb-display {
+    font-size: clamp(2.1rem, 5.2vw, 3.9rem);
+    line-height: 1.04;
+    font-weight: 800;
+    letter-spacing: -.03em;
+    margin: 0 0 1.1rem;
+}
+.wb-h2 {
+    font-size: clamp(1.65rem, 3.4vw, 2.6rem);
+    line-height: 1.14;
+    font-weight: 800;
+    letter-spacing: -.022em;
+    margin: 0 0 .85rem;
+}
+.wb-h3 {
+    font-size: 1.2rem;
+    font-weight: 750;
+    letter-spacing: -.012em;
+    line-height: 1.32;
+    margin: 0 0 .5rem;
+}
+.wb-lead {
+    font-size: clamp(1.02rem, 1.5vw, 1.2rem);
+    line-height: 1.65;
+    color: var(--wb-text-2);
+    max-width: 62ch;
+}
+.wb-lead--on-dark { color: var(--wb-on-dark-2); }
+.wb-muted { color: var(--wb-text-3); }
+
+/* Un mot souligne d'un trait de couleur, pour poser l'accent sans crier. */
+.wb-mark {
+    position: relative;
+    display: inline-block;
+    z-index: 0;
+}
+.wb-mark:after {
+    content: "";
+    position: absolute;
+    left: -.05em; right: -.05em; bottom: .04em;
+    height: .34em;
+    background: linear-gradient(90deg, var(--wb-gold-soft), var(--wb-gold));
+    opacity: .42;
+    border-radius: 3px;
+    z-index: -1;
+}
+
+/* ------------------------------------------------------------ sections -- */
+
+.wb-section        { padding: clamp(3.5rem, 7vw, 6.5rem) 0; }
+.wb-section--tight { padding: clamp(2.5rem, 5vw, 4rem) 0; }
+.wb-section--paper { background: var(--wb-paper-2); }
+.wb-section--ink   { background: var(--wb-ink); color: var(--wb-on-dark); }
+.wb-section--ink .wb-h2,
+.wb-section--ink .wb-display { color: #fff; }
+
+/* Fond sombre avec relief : deux halos et une grille tres discrete. */
+.wb-hero {
+    position: relative;
+    overflow: hidden;
+    background:
+        radial-gradient(1100px 520px at 12% -10%, rgba(42,120,214,.30), transparent 60%),
+        radial-gradient(900px 480px at 92% 8%, rgba(245,179,1,.16), transparent 58%),
+        linear-gradient(168deg, #0a1628 0%, #12233d 52%, #16304f 100%);
+    color: var(--wb-on-dark);
+}
+.wb-hero:before {
+    content: "";
+    position: absolute; inset: 0;
+    background-image:
+        linear-gradient(rgba(255,255,255,.035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.035) 1px, transparent 1px);
+    background-size: 64px 64px;
+    mask-image: radial-gradient(120% 90% at 50% 0%, #000 35%, transparent 78%);
+    -webkit-mask-image: radial-gradient(120% 90% at 50% 0%, #000 35%, transparent 78%);
+    pointer-events: none;
+}
+.wb-hero > * { position: relative; z-index: 1; }
+
+/* Separateur incline, pour casser l'empilement de blocs rectangulaires. */
+.wb-slant { position: relative; }
+.wb-slant:after {
+    content: "";
+    position: absolute; left: 0; right: 0; bottom: -1px;
+    height: 56px;
+    background: var(--wb-paper);
+    clip-path: polygon(0 100%, 100% 24%, 100% 100%);
+}
+
+/* --------------------------------------------------------------- cartes -- */
+
+.wb-card {
+    position: relative;
+    background: var(--wb-paper);
+    border: 1px solid var(--wb-line);
+    border-radius: var(--wb-radius);
+    padding: 1.65rem 1.55rem;
+    height: 100%;
+    box-shadow: var(--wb-shadow-1);
+    transition: transform .28s var(--wb-ease), box-shadow .28s var(--wb-ease), border-color .28s var(--wb-ease);
+}
+.wb-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--wb-shadow-2);
+    border-color: #c6d6ea;
+}
+.wb-card--accent:before {
+    content: "";
+    position: absolute; top: 0; left: 1.55rem; right: 1.55rem;
+    height: 3px; border-radius: 0 0 3px 3px;
+    background: linear-gradient(90deg, var(--wb-gold), var(--wb-blue));
+}
+.wb-card--ink {
+    background: linear-gradient(160deg, var(--wb-ink-2), var(--wb-ink));
+    border-color: rgba(255,255,255,.10);
+    color: var(--wb-on-dark);
+}
+.wb-card--ink .wb-h3 { color: #fff; }
+.wb-card--glass {
+    background: rgba(255,255,255,.06);
+    border: 1px solid rgba(255,255,255,.14);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    color: var(--wb-on-dark);
+}
+
+.wb-card__num {
+    display: inline-flex;
+    align-items: center; justify-content: center;
+    width: 42px; height: 42px;
+    border-radius: 12px;
+    font-weight: 800; font-size: 1.05rem;
+    background: linear-gradient(150deg, var(--wb-ink-3), var(--wb-ink));
+    color: #fff;
+    margin-bottom: .9rem;
+    box-shadow: var(--wb-shadow-1);
+}
+.wb-card--accent .wb-card__num {
+    background: linear-gradient(150deg, var(--wb-gold), #e09b00);
+    color: #1a1205;
+}
+
+/* --------------------------------------------------------------- badges -- */
+
+.wb-badge {
+    display: inline-flex; align-items: center; gap: .45rem;
+    font-size: .78rem; font-weight: 700; letter-spacing: .02em;
+    padding: .34rem .8rem;
+    border-radius: 999px;
+    background: var(--wb-paper-3);
+    color: var(--wb-ink-3);
+    border: 1px solid var(--wb-line);
+}
+.wb-badge--gold  { background: rgba(245,179,1,.14); color: #7a5900; border-color: rgba(245,179,1,.34); }
+.wb-badge--green { background: rgba(27,175,122,.13); color: #0d6b4a; border-color: rgba(27,175,122,.3); }
+.wb-badge--glass { background: rgba(255,255,255,.10); color: var(--wb-on-dark); border-color: rgba(255,255,255,.2); }
+
+/* Le titre RNCP, mis en avant sans clinquant. */
+.wb-credential {
+    display: inline-flex; align-items: center; gap: .8rem;
+    padding: .7rem 1.1rem .7rem .8rem;
+    border-radius: 14px;
+    background: rgba(255,255,255,.07);
+    border: 1px solid rgba(255,255,255,.16);
+}
+.wb-credential__seal {
+    display: flex; align-items: center; justify-content: center;
+    width: 40px; height: 40px; border-radius: 10px; flex: none;
+    background: linear-gradient(150deg, var(--wb-gold), #dd9a00);
+    color: #1a1205; font-weight: 900; font-size: .82rem;
+}
+.wb-credential__txt { line-height: 1.25; }
+.wb-credential__txt b { display: block; font-size: .92rem; color: #fff; }
+.wb-credential__txt span { font-size: .78rem; color: var(--wb-on-dark-2); }
+
+/* --------------------------------------------------------------- boutons -- */
+
+.wb-btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: .55rem;
+    padding: .82rem 1.5rem;
+    border-radius: 12px;
+    font-weight: 700; font-size: .97rem;
+    text-decoration: none;
+    border: 1px solid transparent;
+    transition: transform .18s var(--wb-ease), box-shadow .18s var(--wb-ease), background .18s var(--wb-ease);
+    cursor: pointer;
+}
+.wb-btn:hover { transform: translateY(-2px); }
+.wb-btn--gold {
+    background: linear-gradient(140deg, var(--wb-gold), #e5a400);
+    color: #1a1205;
+    box-shadow: 0 6px 18px rgba(245,179,1,.32);
+}
+.wb-btn--gold:hover { color: #1a1205; box-shadow: 0 10px 26px rgba(245,179,1,.42); }
+.wb-btn--ink   { background: var(--wb-ink); color: #fff; box-shadow: var(--wb-shadow-1); }
+.wb-btn--ink:hover { color: #fff; box-shadow: var(--wb-shadow-2); }
+.wb-btn--ghost { background: transparent; color: var(--wb-on-dark); border-color: rgba(255,255,255,.32); }
+.wb-btn--ghost:hover { background: rgba(255,255,255,.09); color: #fff; }
+.wb-btn--outline { background: transparent; color: var(--wb-ink); border-color: var(--wb-line); }
+.wb-btn--outline:hover { border-color: var(--wb-ink); color: var(--wb-ink); }
+
+/* --------------------------------------------------------------- chiffres -- */
+
+.wb-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 1px;
+    background: rgba(255,255,255,.13);
+    border: 1px solid rgba(255,255,255,.13);
+    border-radius: var(--wb-radius);
+    overflow: hidden;
+}
+.wb-stats--paper { background: var(--wb-line); border-color: var(--wb-line); }
+.wb-stat { background: var(--wb-ink); padding: 1.5rem 1.2rem; text-align: center; }
+.wb-stats--paper .wb-stat { background: var(--wb-paper); }
+.wb-stat__n {
+    font-size: clamp(1.7rem, 3vw, 2.35rem);
+    font-weight: 800; letter-spacing: -.03em; line-height: 1;
+    color: var(--wb-gold);
+    font-variant-numeric: tabular-nums;
+}
+.wb-stats--paper .wb-stat__n { color: var(--wb-blue); }
+.wb-stat__l {
+    font-size: .8rem; margin-top: .5rem; line-height: 1.35;
+    color: var(--wb-on-dark-2);
+}
+.wb-stats--paper .wb-stat__l { color: var(--wb-text-2); }
+
+/* -------------------------------------------------------------- anecdote -- */
+
+.wb-anecdote {
+    position: relative;
+    background: var(--wb-paper);
+    border: 1px solid var(--wb-line);
+    border-left: 4px solid var(--wb-gold);
+    border-radius: var(--wb-radius-sm);
+    padding: 1.7rem 1.8rem;
+    box-shadow: var(--wb-shadow-1);
+}
+.wb-anecdote__label {
+    font-size: .72rem; font-weight: 800; letter-spacing: .16em;
+    text-transform: uppercase; color: var(--wb-gold);
+    display: block; margin-bottom: .7rem;
+}
+.wb-anecdote p { margin-bottom: .8rem; color: var(--wb-text-2); }
+.wb-anecdote p:last-child { margin-bottom: 0; }
+.wb-anecdote strong { color: var(--wb-text); }
+
+/* ------------------------------------------------------------ competences -- */
+
+.wb-skill { margin-bottom: 1.15rem; }
+.wb-skill__head {
+    display: flex; align-items: baseline; justify-content: space-between;
+    gap: 1rem; margin-bottom: .4rem;
+}
+.wb-skill__name { font-weight: 700; font-size: .96rem; }
+.wb-skill__years { font-size: .78rem; color: var(--wb-text-3); white-space: nowrap; }
+.wb-skill__track {
+    height: 7px; border-radius: 99px;
+    background: var(--wb-paper-3);
+    overflow: hidden;
+}
+.wb-skill__fill {
+    height: 100%; border-radius: 99px;
+    background: linear-gradient(90deg, var(--wb-blue), #1a5fb4);
+    transition: width .9s var(--wb-ease);
+}
+.wb-skill--gold .wb-skill__fill { background: linear-gradient(90deg, var(--wb-gold), #d69b00); }
+
+/* --- le niveau se lit en francais, la barre n'est qu'un rappel visuel ------ */
+[data-tone="light"] [data-tone="light"] 
+/* --- la legende qui explique l'echelle ------------------------------------ */
+.wb-scale {
+  border-top: 1px solid rgba(255,255,255,.14);
+  padding-top: 1.1rem;
+}
+.wb-scale__note {
+  font-size: .78rem;
+  line-height: 1.5;
+  color: rgba(255,255,255,.5);
+  margin: 0;
+}
+
+/* ------------------------------------------------------------- parcours --- */
+
+.wb-path { position: relative; padding-left: 2.6rem; }
+.wb-path:before {
+    content: ""; position: absolute; left: .82rem; top: .6rem; bottom: .6rem;
+    width: 2px;
+    background: linear-gradient(180deg, var(--wb-gold), var(--wb-blue), transparent);
+}
+.wb-path__step { position: relative; padding-bottom: 2rem; }
+.wb-path__step:last-child { padding-bottom: 0; }
+.wb-path__step:before {
+    content: ""; position: absolute; left: -2.6rem; top: .35rem;
+    width: 14px; height: 14px; border-radius: 50%;
+    background: var(--wb-paper); border: 3px solid var(--wb-blue);
+}
+.wb-path__step--gold:before { border-color: var(--wb-gold); }
+
+/* ------------------------------------------------------------ tarification -- */
+
+.wb-price {
+    position: relative;
+    border: 1px solid var(--wb-line);
+    border-radius: var(--wb-radius);
+    background: var(--wb-paper);
+    padding: 2rem 1.7rem;
+    height: 100%;
+    display: flex; flex-direction: column;
+    box-shadow: var(--wb-shadow-1);
+    transition: transform .28s var(--wb-ease), box-shadow .28s var(--wb-ease);
+}
+.wb-price:hover { transform: translateY(-5px); box-shadow: var(--wb-shadow-2); }
+.wb-price--featured {
+    border: 2px solid var(--wb-gold);
+    box-shadow: var(--wb-shadow-3);
+}
+.wb-price--featured:before {
+    content: attr(data-tag);
+    position: absolute; top: -13px; left: 50%; transform: translateX(-50%);
+    background: linear-gradient(140deg, var(--wb-gold), #e5a400);
+    color: #1a1205;
+    font-size: .7rem; font-weight: 800; letter-spacing: .1em; text-transform: uppercase;
+    padding: .32rem .9rem; border-radius: 99px;
+    white-space: nowrap;
+    box-shadow: 0 4px 12px rgba(245,179,1,.4);
+}
+.wb-price__amount {
+    font-size: 2.5rem; font-weight: 800; letter-spacing: -.035em; line-height: 1;
+    margin: .5rem 0 .2rem;
+}
+.wb-price__unit { font-size: .85rem; color: var(--wb-text-3); margin-bottom: 1.2rem; }
+.wb-price ul { list-style: none; padding: 0; margin: 0 0 1.5rem; flex: 1; }
+.wb-price li {
+    position: relative; padding-left: 1.6rem; margin-bottom: .6rem;
+    font-size: .92rem; color: var(--wb-text-2);
+}
+.wb-price li:before {
+    content: ""; position: absolute; left: 0; top: .42em;
+    width: 9px; height: 9px; border-radius: 50%;
+    background: var(--wb-green);
+    box-shadow: 0 0 0 3px rgba(27,175,122,.16);
+}
+
+/* ------------------------------------------------------------ realisation -- */
+
+.wb-work {
+    display: block;
+    position: relative;
+    border-radius: var(--wb-radius);
+    overflow: hidden;
+    background: var(--wb-ink);
+    text-decoration: none;
+    height: 100%;
+    min-height: 260px;
+    box-shadow: var(--wb-shadow-1);
+    transition: transform .32s var(--wb-ease), box-shadow .32s var(--wb-ease);
+}
+.wb-work:hover { transform: translateY(-6px); box-shadow: var(--wb-shadow-3); }
+.wb-work__img {
+    position: absolute; inset: 0;
+    width: 100%; height: 100%; object-fit: cover;
+    opacity: .48;
+    transition: transform .6s var(--wb-ease), opacity .35s var(--wb-ease);
+}
+.wb-work:hover .wb-work__img { transform: scale(1.06); opacity: .62; }
+.wb-work__veil {
+    position: absolute; inset: 0;
+    background: linear-gradient(180deg, rgba(10,22,40,.15) 0%, rgba(10,22,40,.88) 68%, rgba(10,22,40,.97) 100%);
+}
+.wb-work__body {
+    position: relative; z-index: 1;
+    padding: 1.5rem;
+    display: flex; flex-direction: column; justify-content: flex-end;
+    height: 100%; min-height: 260px;
+    color: #fff;
+}
+.wb-work__title { font-size: 1.15rem; font-weight: 750; margin: .45rem 0 .35rem; }
+.wb-work__desc  { font-size: .87rem; color: var(--wb-on-dark-2); margin: 0; }
+
+/* ------------------------------------------------------------ accessibilite -- */
+
+@media (prefers-reduced-motion: reduce) {
+    .wb-card, .wb-btn, .wb-work, .wb-price, .wb-work__img, .wb-skill__fill {
+        transition: none !important;
+    }
+    .wb-card:hover, .wb-btn:hover, .wb-work:hover, .wb-price:hover { transform: none; }
+}
+
+.wb-btn:focus-visible,
+.wb-work:focus-visible {
+    outline: 3px solid var(--wb-gold);
+    outline-offset: 3px;
+}
+
+/* ==========================================================================
+   Correctifs d'integration, 3 aout 2026
+   --------------------------------------------------------------------------
+   Ce bloc est charge en dernier et corrige les conflits avec le theme
+   historique, qui imposait ses propres couleurs de titres et de paragraphes.
+   ========================================================================== */
+
+/* ------------------------------------------ 1. La barre de navigation ---- */
+/* Elle est en position fixe : sans compensation, le premier bloc de chaque
+   page passe dessous. Le bricolage margin-top: 58px page par page est
+   remplace par une regle unique. */
+
+body.page #page_container > section:first-of-type,
+body.page #page_container > .wb-hero:first-of-type {
+    margin-top: 0 !important;
+}
+.wb-hero,
+.wb-page-top {
+    padding-top: clamp(7rem, 12vh, 10rem);
+}
+.wb-hero.wb-hero--compact { padding-top: clamp(6rem, 10vh, 8rem); }
+
+/* Les ancres internes ne se cachent plus sous la barre. */
+:target { scroll-margin-top: 96px; }
+html { scroll-behavior: smooth; }
+
+/* ------------------------------------------ 2. Couleurs de texte -------- */
+/* Le theme forcait une couleur sombre sur h1 a h6 et sur p. Sur un fond
+   sombre, le texte devenait illisible. On reprend la main explicitement. */
+
+.wb-hero,
+.wb-section--ink,
+.wb-card--ink,
+.wb-card--glass { color: var(--wb-on-dark); }
+
+.wb-hero h1, .wb-hero h2, .wb-hero h3, .wb-hero h4, .wb-hero h5, .wb-hero h6,
+.wb-section--ink h1, .wb-section--ink h2, .wb-section--ink h3,
+.wb-section--ink h4, .wb-section--ink h5, .wb-section--ink h6,
+.wb-card--ink h1, .wb-card--ink h2, .wb-card--ink h3,
+.wb-card--ink h4, .wb-card--ink h5, .wb-card--ink h6,
+.wb-card--glass h1, .wb-card--glass h2, .wb-card--glass h3,
+.wb-card--glass h4, .wb-card--glass h5, .wb-card--glass h6,
+.wb-hero .wb-display, .wb-hero .wb-h2, .wb-hero .wb-h3,
+.wb-section--ink .wb-display, .wb-section--ink .wb-h2, .wb-section--ink .wb-h3 {
+    color: #ffffff !important;
+}
+
+.wb-hero p, .wb-hero li, .wb-hero dt, .wb-hero dd, .wb-hero span,
+.wb-section--ink p, .wb-section--ink li,
+.wb-card--ink p, .wb-card--ink li,
+.wb-card--glass p, .wb-card--glass li {
+    color: var(--wb-on-dark-2);
+}
+.wb-hero .wb-eyebrow, .wb-section--ink .wb-eyebrow { color: var(--wb-gold) !important; }
+.wb-hero a:not(.wb-btn):not(.wb-badge), .wb-section--ink a:not(.wb-btn):not(.wb-badge) { color: var(--wb-gold-soft); }
+.wb-hero strong, .wb-section--ink strong, .wb-card--ink strong, .wb-card--glass strong { color: #fff; }
+
+/* Sur fond clair, on impose aussi la couleur, pour la meme raison. */
+.wb-section h1, .wb-section h2, .wb-section h3,
+.wb-section .wb-display, .wb-section .wb-h2, .wb-section .wb-h3,
+.wb-card h3, .wb-card h2, .wb-price h2, .wb-price h3, .wb-anecdote h3 {
+    color: var(--wb-text);
+}
+.wb-section--ink .wb-card:not(.wb-card--ink):not(.wb-card--glass) h2,
+.wb-section--ink .wb-card:not(.wb-card--ink):not(.wb-card--glass) h3,
+.wb-section--ink .wb-card:not(.wb-card--ink):not(.wb-card--glass) p {
+    color: var(--wb-text);
+}
+
+/* ------------------------------------------ 3. Le surlignage ------------ */
+/* La version precedente posait un bloc plein qui masquait le texte.
+   Un trait plus fin, cale sous la ligne de base, suffit a accentuer. */
+
+.wb-mark:after {
+    height: .18em;
+    bottom: .06em;
+    opacity: .9;
+    border-radius: 2px;
+    background: linear-gradient(90deg, var(--wb-gold), var(--wb-gold-soft));
+}
+
+/* ------------------------------------------ 4. Formulaires modernes ----- */
+
+.wb-form .form-label,
+.wb-card--glass label,
+.wb-hero label {
+    font-size: .8rem;
+    font-weight: 700;
+    letter-spacing: .02em;
+    color: var(--wb-on-dark-2);
+    margin-bottom: .35rem;
+}
+.wb-section .wb-form .form-label { color: var(--wb-text-2); }
+
+.wb-form .form-control,
+.wb-form .form-select,
+.wb-form textarea,
+.wb-form input[type="text"],
+.wb-form input[type="email"],
+.wb-form input[type="tel"],
+.wb-form input[type="password"] {
+    border-radius: 11px;
+    border: 1px solid var(--wb-line);
+    padding: .78rem 1rem;
+    font-size: .96rem;
+    background: #fff;
+    color: var(--wb-text);
+    box-shadow: none;
+    transition: border-color .18s var(--wb-ease), box-shadow .18s var(--wb-ease);
+}
+.wb-form .form-control::placeholder { color: #a7b2c2; }
+.wb-form .form-control:focus,
+.wb-form .form-select:focus,
+.wb-form textarea:focus {
+    border-color: var(--wb-blue);
+    box-shadow: 0 0 0 4px rgba(42,120,214,.16);
+    outline: none;
+}
+.wb-form .form-control.is-invalid,
+.wb-form .form-control:user-invalid {
+    border-color: #e34948;
+    box-shadow: 0 0 0 4px rgba(227,73,72,.14);
+}
+.wb-form .invalid-feedback,
+.wb-form ul.list-unstyled li { color: #ffb4b3; font-size: .82rem; }
+.wb-section .wb-form .invalid-feedback { color: #c0272d; }
+
+.wb-form .mb-3, .wb-form .form-group { margin-bottom: 1rem; }
+
+/* Le select2 du prefixe telephonique, aligne sur le reste. */
+.wb-form .select2-container .select2-selection--single,
+.select2-container .select2-selection--single {
+    height: 46px !important;
+    border-radius: 11px !important;
+    border: 1px solid var(--wb-line) !important;
+    padding-top: 5px !important;
+}
+
+/* Cases a cocher et boutons radio sous forme de cartes cliquables. */
+.wb-choice {
+    display: block;
+    border: 1px solid var(--wb-line);
+    border-radius: 12px;
+    padding: 1rem;
+    cursor: pointer;
+    background: #fff;
+    transition: border-color .18s var(--wb-ease), box-shadow .18s var(--wb-ease), transform .18s var(--wb-ease);
+}
+.wb-choice:hover { border-color: var(--wb-blue-soft); transform: translateY(-2px); }
+.wb-choice input:checked ~ * { color: var(--wb-blue); }
+.wb-choice:has(input:checked) {
+    border-color: var(--wb-blue);
+    box-shadow: 0 0 0 3px rgba(42,120,214,.14);
+}
+
+/* Progression d'un formulaire en plusieurs etapes. */
+.wb-steps { display: flex; gap: .5rem; margin-bottom: 2rem; }
+.wb-steps__item {
+    flex: 1; height: 5px; border-radius: 99px; background: var(--wb-paper-3);
+}
+.wb-steps__item.is-done { background: var(--wb-green); }
+.wb-steps__item.is-current { background: var(--wb-gold); }
+
+/* ------------------------------------------ 5. Messages flash ----------- */
+
+.wb-flash {
+    border-radius: 12px;
+    border: 1px solid var(--wb-line);
+    border-left: 4px solid var(--wb-blue);
+    background: #fff;
+    color: var(--wb-text);
+    padding: .9rem 1.1rem;
+    font-size: .93rem;
+    box-shadow: var(--wb-shadow-1);
+}
+.wb-flash--success { border-left-color: var(--wb-green); }
+.wb-flash--error, .wb-flash--danger { border-left-color: #e34948; }
+.wb-flash--warning { border-left-color: var(--wb-gold); }
+
+/* ------------------------------------------ 6. Tableaux et listes ------- */
+
+.wb-table { width: 100%; border-collapse: separate; border-spacing: 0; }
+.wb-table thead th {
+    font-size: .72rem; text-transform: uppercase; letter-spacing: .12em;
+    color: var(--wb-text-3); font-weight: 800;
+    padding: .8rem 1rem; background: var(--wb-paper-2);
+    border-bottom: 1px solid var(--wb-line);
+}
+.wb-table tbody td {
+    padding: .95rem 1rem; border-bottom: 1px solid var(--wb-line);
+    font-size: .93rem; color: var(--wb-text-2);
+}
+.wb-table tbody tr:hover td { background: var(--wb-paper-2); }
+.wb-table tbody td strong { color: var(--wb-text); }
+
+/* Fil d'activite, pour le suivi d'un ticket ou d'un devis. */
+.wb-timeline { position: relative; padding-left: 2.2rem; }
+.wb-timeline:before {
+    content: ""; position: absolute; left: .55rem; top: .4rem; bottom: .4rem;
+    width: 2px; background: var(--wb-line);
+}
+.wb-timeline__item { position: relative; padding-bottom: 1.4rem; }
+.wb-timeline__item:last-child { padding-bottom: 0; }
+.wb-timeline__item:before {
+    content: ""; position: absolute; left: -2.2rem; top: .3rem;
+    width: 12px; height: 12px; border-radius: 50%;
+    background: #fff; border: 3px solid var(--wb-blue);
+}
+.wb-timeline__item--done:before { border-color: var(--wb-green); background: var(--wb-green); }
+.wb-timeline__item--wait:before { border-color: var(--wb-gold); }
+.wb-timeline__date { font-size: .76rem; color: var(--wb-text-3); font-weight: 700; letter-spacing: .04em; }
+.wb-timeline__title { font-weight: 700; font-size: .96rem; margin: .1rem 0 .2rem; color: var(--wb-text); }
+.wb-timeline__desc { font-size: .88rem; color: var(--wb-text-2); margin: 0; }
+
+/* ------------------------------------------ 7. Superposition ------------ */
+/* Les halos et la grille du hero passaient parfois devant le contenu. */
+
+.wb-hero { isolation: isolate; }
+.wb-hero:before { z-index: 0; }
+.wb-hero > .container,
+.wb-hero > * { position: relative; z-index: 2; }
+.wb-slant:after { z-index: 3; }
+
+/* Le bouton de retour en haut ne doit pas passer sous la barre. */
+.lmpixels-scroll-to-top { z-index: 1030; }
+
+/* ==========================================================================
+   Reprise de main definitive sur les couleurs
+   --------------------------------------------------------------------------
+   Le theme compile impose, entre autres :
+       h1,h2,h3,h4,h5,h6 { color: #333 }
+       p                 { color: #666 }
+       label             { color: rgba(var(--bs-body-color-rgb), .65) }
+   Ces regles gagnaient sur les miennes des qu'un selecteur du theme etait
+   plus specifique. Sur fond sombre, le texte devenait gris fonce sur bleu
+   nuit. On tranche ici avec !important, uniquement dans les contextes
+   sombres, ou aucune autre couleur n'a de sens.
+   ========================================================================== */
+
+.wb-hero, .wb-hero *,
+.wb-section--ink, .wb-section--ink *,
+.wb-card--ink, .wb-card--ink *,
+.wb-card--glass, .wb-card--glass * {
+    border-color: rgba(255,255,255,.14);
+}
+
+/* --- titres ------------------------------------------------------------- */
+.wb-hero h1, .wb-hero h2, .wb-hero h3, .wb-hero h4, .wb-hero h5, .wb-hero h6,
+.wb-hero .h1, .wb-hero .h2, .wb-hero .h3,
+.wb-hero .wb-display, .wb-hero .wb-h2, .wb-hero .wb-h3,
+.wb-section--ink h1, .wb-section--ink h2, .wb-section--ink h3,
+.wb-section--ink h4, .wb-section--ink h5, .wb-section--ink h6,
+.wb-section--ink .wb-display, .wb-section--ink .wb-h2, .wb-section--ink .wb-h3,
+.wb-card--ink h2, .wb-card--ink h3, .wb-card--ink .wb-h2, .wb-card--ink .wb-h3,
+.wb-card--glass h2, .wb-card--glass h3, .wb-card--glass .wb-h2, .wb-card--glass .wb-h3 {
+    color: #ffffff !important;
+}
+
+/* --- textes courants ---------------------------------------------------- */
+.wb-hero p, .wb-hero li, .wb-hero span:not(.wb-eyebrow):not(.wb-badge):not(.wb-credential__seal),
+.wb-hero dt, .wb-hero dd, .wb-hero small, .wb-hero label, .wb-hero .form-label,
+.wb-section--ink p, .wb-section--ink li, .wb-section--ink dt, .wb-section--ink dd,
+.wb-section--ink small, .wb-section--ink label,
+.wb-card--ink p, .wb-card--ink li, .wb-card--ink small,
+.wb-card--glass p, .wb-card--glass li, .wb-card--glass small,
+.wb-card--glass label, .wb-card--glass .form-label {
+    color: var(--wb-on-dark-2) !important;
+}
+
+.wb-hero strong, .wb-hero b,
+.wb-section--ink strong, .wb-section--ink b,
+.wb-card--ink strong, .wb-card--glass strong {
+    color: #ffffff !important;
+}
+
+.wb-hero .wb-eyebrow, .wb-section--ink .wb-eyebrow { color: var(--wb-gold) !important; }
+.wb-hero .wb-lead, .wb-section--ink .wb-lead { color: var(--wb-on-dark-2) !important; }
+
+/* --- liens -------------------------------------------------------------- */
+.wb-hero a:not(.wb-btn):not(.wb-badge):not(.wb-work),
+.wb-section--ink a:not(.wb-btn):not(.wb-badge):not(.wb-work),
+.wb-card--ink a:not(.wb-btn), .wb-card--glass a:not(.wb-btn) {
+    color: var(--wb-gold-soft) !important;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+}
+
+/* --- boutons : la couleur du bouton prime toujours ---------------------- */
+.wb-btn, .wb-btn * { text-decoration: none !important; }
+.wb-btn--gold, .wb-btn--gold * { color: #1a1205 !important; }
+.wb-btn--ink, .wb-btn--ink *   { color: #ffffff !important; }
+.wb-btn--ghost, .wb-btn--ghost * { color: var(--wb-on-dark) !important; }
+.wb-btn--outline, .wb-btn--outline * { color: var(--wb-ink) !important; }
+
+/* --- badges ------------------------------------------------------------- */
+.wb-badge--gold,  .wb-badge--gold *  { color: #7a5900 !important; }
+.wb-badge--green, .wb-badge--green * { color: #0d6b4a !important; }
+.wb-badge--glass, .wb-badge--glass * { color: var(--wb-on-dark) !important; }
+.wb-credential__txt b { color: #ffffff !important; }
+.wb-credential__txt span { color: var(--wb-on-dark-2) !important; }
+
+/* --- cartes claires posees sur fond sombre ------------------------------ */
+/* Une carte blanche dans une section sombre doit retrouver l'encre sombre. */
+.wb-section--ink .wb-card:not(.wb-card--ink):not(.wb-card--glass),
+.wb-section--ink .wb-card:not(.wb-card--ink):not(.wb-card--glass) *,
+.wb-hero .bg-white, .wb-hero .bg-white *,
+.wb-hero .wb-card:not(.wb-card--ink):not(.wb-card--glass),
+.wb-hero .wb-card:not(.wb-card--ink):not(.wb-card--glass) * {
+    color: var(--wb-text-2) !important;
+}
+.wb-section--ink .wb-card:not(.wb-card--ink):not(.wb-card--glass) h2,
+.wb-section--ink .wb-card:not(.wb-card--ink):not(.wb-card--glass) h3,
+.wb-section--ink .wb-card:not(.wb-card--ink):not(.wb-card--glass) strong,
+.wb-hero .bg-white h2, .wb-hero .bg-white h3, .wb-hero .bg-white strong,
+.wb-hero .wb-card:not(.wb-card--ink):not(.wb-card--glass) h2,
+.wb-hero .wb-card:not(.wb-card--ink):not(.wb-card--glass) h3 {
+    color: var(--wb-text) !important;
+}
+
+/* --- champs de formulaire sur fond sombre ------------------------------- */
+/* Le champ reste blanc avec un texte sombre : c'est ce qu'attend l'oeil. */
+.wb-hero .form-control, .wb-hero .form-select,
+.wb-card--glass .form-control, .wb-card--glass .form-select,
+.wb-hero input, .wb-hero textarea, .wb-hero select {
+    color: var(--wb-text) !important;
+    background: #ffffff !important;
+}
+.wb-hero .form-control::placeholder { color: #98a4b6 !important; }
+
+/* --- sections claires --------------------------------------------------- */
+.wb-section h1, .wb-section h2, .wb-section h3,
+.wb-section .wb-display, .wb-section .wb-h2, .wb-section .wb-h3,
+.wb-section--paper h1, .wb-section--paper h2, .wb-section--paper h3,
+.wb-section--paper .wb-h2, .wb-section--paper .wb-h3,
+.wb-price h2, .wb-price h3, .wb-anecdote h3, .wb-card h3 {
+    color: var(--wb-text) !important;
+}
+.wb-section p, .wb-section--paper p, .wb-section li, .wb-section--paper li {
+    color: var(--wb-text-2);
+}
+.wb-section .wb-eyebrow--ink, .wb-section--paper .wb-eyebrow--ink { color: var(--wb-blue) !important; }
+.wb-anecdote__label { color: var(--wb-gold) !important; }
+
+/* --- realisations en vignette ------------------------------------------- */
+.wb-work, .wb-work * { color: #ffffff !important; text-decoration: none !important; }
+.wb-work__desc { color: var(--wb-on-dark-2) !important; }
+
+/* --- listes de tarifs --------------------------------------------------- */
+.wb-price li, .wb-price li * { color: var(--wb-text-2) !important; }
+.wb-price li strong { color: var(--wb-text) !important; }
+.wb-price__amount { color: var(--wb-text) !important; }
+.wb-price__unit { color: var(--wb-text-3) !important; }
+
+/* ==========================================================================
+   Ordre de cascade : le dernier mot revient aux contextes sombres
+   --------------------------------------------------------------------------
+   Bloc precedent, j'avais ecrit dans cet ordre :
+       .wb-hero h2      { color: #fff !important }
+       .wb-section h2   { color: var(--wb-text) !important }
+   Or plusieurs sections portent les DEUX classes, par exemple le bandeau
+   d'appel a l'action de l'accueil : <section class="wb-hero wb-section">.
+   A specificite egale, la derniere regle gagne : le titre repassait donc en
+   encre sombre sur fond sombre. C'est exactement ce qu'on voyait.
+
+   On repose donc les regles claires en excluant les contextes sombres, puis
+   on redonne le dernier mot aux contextes sombres.
+   ========================================================================== */
+
+/* --- 1. Les sections claires n'agissent plus sur les blocs sombres ------- */
+.wb-section:not(.wb-hero):not(.wb-section--ink) h1,
+.wb-section:not(.wb-hero):not(.wb-section--ink) h2,
+.wb-section:not(.wb-hero):not(.wb-section--ink) h3,
+.wb-section:not(.wb-hero):not(.wb-section--ink) .wb-display,
+.wb-section:not(.wb-hero):not(.wb-section--ink) .wb-h2,
+.wb-section:not(.wb-hero):not(.wb-section--ink) .wb-h3 {
+    color: var(--wb-text) !important;
+}
+
+/* --- 2. Les contextes sombres reprennent la main, en dernier ------------- */
+.wb-hero h1, .wb-hero h2, .wb-hero h3, .wb-hero h4, .wb-hero h5, .wb-hero h6,
+.wb-hero .wb-display, .wb-hero .wb-h2, .wb-hero .wb-h3,
+.wb-section--ink h1, .wb-section--ink h2, .wb-section--ink h3,
+.wb-section--ink .wb-display, .wb-section--ink .wb-h2, .wb-section--ink .wb-h3 {
+    color: #ffffff !important;
+}
+.wb-hero p, .wb-hero li, .wb-hero .wb-lead,
+.wb-section--ink p, .wb-section--ink li, .wb-section--ink .wb-lead {
+    color: var(--wb-on-dark-2) !important;
+}
+/* Sauf a l'interieur d'une carte claire posee sur le fond sombre. */
+.wb-hero .wb-card:not(.wb-card--ink):not(.wb-card--glass) h1,
+.wb-hero .wb-card:not(.wb-card--ink):not(.wb-card--glass) h2,
+.wb-hero .wb-card:not(.wb-card--ink):not(.wb-card--glass) h3,
+.wb-hero .bg-white h1, .wb-hero .bg-white h2, .wb-hero .bg-white h3,
+.wb-section--ink .wb-card:not(.wb-card--ink):not(.wb-card--glass) h2,
+.wb-section--ink .wb-card:not(.wb-card--ink):not(.wb-card--glass) h3,
+.wb-section--ink .bg-white h2, .wb-section--ink .bg-white h3 {
+    color: var(--wb-text) !important;
+}
+.wb-hero .wb-card:not(.wb-card--ink):not(.wb-card--glass) p,
+.wb-hero .wb-card:not(.wb-card--ink):not(.wb-card--glass) li,
+.wb-hero .bg-white p, .wb-hero .bg-white li,
+.wb-section--ink .wb-card:not(.wb-card--ink):not(.wb-card--glass) p,
+.wb-section--ink .bg-white p, .wb-section--ink .bg-white li {
+    color: var(--wb-text-2) !important;
+}
+
+/* ==========================================================================
+   Sections sombres heritees de Bootstrap
+   --------------------------------------------------------------------------
+   Les pages Agences et Ma methode utilisent encore les classes d'origine :
+       <section class="bg-primary text-white">
+       <section class="bg-dark text-white">
+   La classe text-white pose la couleur sur la SECTION, mais le theme cible
+   directement l'element avec p { color: #666 }. Une regle qui vise l'element
+   bat toujours une couleur heritee : les paragraphes restaient gris.
+   ========================================================================== */
+
+.bg-dark.text-white, .bg-primary.text-white,
+section.bg-dark, section.bg-primary {
+    color: #ffffff;
+}
+
+.bg-dark.text-white h1, .bg-dark.text-white h2, .bg-dark.text-white h3,
+.bg-dark.text-white h4, .bg-dark.text-white h5, .bg-dark.text-white h6,
+.bg-primary.text-white h1, .bg-primary.text-white h2, .bg-primary.text-white h3,
+.bg-primary.text-white h4, .bg-primary.text-white h5, .bg-primary.text-white h6,
+section.bg-dark h1, section.bg-dark h2, section.bg-dark h3,
+section.bg-primary h1, section.bg-primary h2, section.bg-primary h3 {
+    color: #ffffff !important;
+}
+
+.bg-dark.text-white p, .bg-dark.text-white li, .bg-dark.text-white span,
+.bg-primary.text-white p, .bg-primary.text-white li, .bg-primary.text-white span,
+section.bg-dark p, section.bg-dark li,
+section.bg-primary p, section.bg-primary li {
+    color: rgba(255, 255, 255, .88) !important;
+}
+
+.bg-dark.text-white strong, .bg-primary.text-white strong,
+section.bg-dark strong, section.bg-primary strong {
+    color: #ffffff !important;
+}
+
+/* Une carte blanche posee sur ces sections retrouve l'encre sombre. */
+section.bg-dark .bg-white, section.bg-primary .bg-white,
+section.bg-dark .bg-white *, section.bg-primary .bg-white *,
+section.bg-dark .card, section.bg-primary .card,
+section.bg-dark .card *, section.bg-primary .card * {
+    color: var(--wb-text-2) !important;
+}
+section.bg-dark .bg-white h1, section.bg-dark .bg-white h2, section.bg-dark .bg-white h3,
+section.bg-primary .bg-white h1, section.bg-primary .bg-white h2, section.bg-primary .bg-white h3,
+section.bg-dark .bg-white strong, section.bg-primary .bg-white strong {
+    color: var(--wb-text) !important;
+}
+
+/* Les boutons gardent toujours leur propre couleur. */
+section.bg-dark .btn-warning, section.bg-primary .btn-warning,
+.bg-dark .btn-warning, .bg-primary .btn-warning,
+section.bg-dark .btn-warning *, section.bg-primary .btn-warning * {
+    color: #1a1205 !important;
+}
+section.bg-dark .btn-outline-light, section.bg-primary .btn-outline-light {
+    color: #ffffff !important;
+}
+section.bg-light h1, section.bg-light h2, section.bg-light h3 { color: var(--wb-text) !important; }
+section.bg-light p, section.bg-light li { color: var(--wb-text-2) !important; }
+
+/* Le petit texte de mention legale sous un appel a l'action reste lisible. */
+section.bg-dark .small, section.bg-primary .small,
+.wb-hero .small, .wb-section--ink .small {
+    color: rgba(255, 255, 255, .72) !important;
+}
+
+/* ==========================================================================
+   Systeme de tons
+   --------------------------------------------------------------------------
+   Jusqu'ici je corrigeais les couleurs bloc par bloc, en empilant des
+   !important. Chaque nouveau composant relancait le probleme, parce que la
+   cause n'etait jamais traitee : le theme cible les elements eux-memes
+   (h1..h6, p, label), ce qui neutralise toute couleur heritee du conteneur.
+
+   La solution tient en deux idees.
+
+   1. On rend aux elements leur comportement naturel : color: inherit.
+      Un selecteur en 0,1,1 suffit a battre le 0,0,1 du theme, sans
+      !important. A partir de la, la couleur redescend normalement.
+
+   2. Le conteneur declare son ton avec data-tone, qui definit deux
+      variables : une pour le texte courant, une pour les titres. Comme les
+      variables CSS sont heritees, une carte claire posee dans une section
+      sombre redefinit simplement les siennes pour son sous-arbre.
+      L'imbrication fonctionne dans les deux sens, sans regle supplementaire.
+
+   Usage :
+       <section data-tone="dark">   fond sombre
+       <div class="card" data-tone="light">  carte claire dedans
+   ========================================================================== */
+
+[data-tone="dark"] {
+    --tone-text:   var(--wb-on-dark-2);
+    --tone-strong: #ffffff;
+    --tone-mute:   rgba(255, 255, 255, .62);
+    --tone-link:   var(--wb-gold-soft);
+    --tone-accent: var(--wb-gold);
+    --tone-rule:   rgba(255, 255, 255, .14);
+    color: var(--tone-text);
+}
+
+[data-tone="light"] {
+    --tone-text:   var(--wb-text-2);
+    --tone-strong: var(--wb-text);
+    --tone-mute:   var(--wb-text-3);
+    --tone-link:   var(--wb-blue);
+    --tone-accent: var(--wb-blue);
+    --tone-rule:   var(--wb-line);
+    color: var(--tone-text);
+}
+
+/* 1. On rend la main a l'heritage. Sans !important : la specificite 0,1,1
+      suffit a passer devant les regles du theme, qui sont en 0,0,1. */
+[data-tone] :is(p, li, span, div, dd, dt, small, td, th, figcaption,
+                blockquote, label, legend, time, address, cite) {
+    color: inherit;
+}
+
+/* 2. Les titres et les mises en valeur prennent la couleur forte du ton. */
+[data-tone] :is(h1, h2, h3, h4, h5, h6, strong, b, dt, summary),
+[data-tone] :is(.wb-display, .wb-h2, .wb-h3, .h1, .h2, .h3, .h4, .h5, .h6) {
+    color: var(--tone-strong);
+}
+
+/* 3. Textes secondaires et liens. */
+[data-tone] :is(.small, .text-muted, .wb-muted, figcaption, .form-text) { color: var(--tone-mute); }
+[data-tone] .wb-lead { color: var(--tone-text); }
+[data-tone] .wb-eyebrow { color: var(--tone-accent); }
+
+[data-tone] a:not(.wb-btn):not(.btn):not(.wb-badge):not(.wb-work):not(.ad-btn):not(.cat-chip) {
+    color: var(--tone-link);
+}
+
+/* 4. Filets, bordures et separateurs suivent le ton. */
+[data-tone] :is(hr, .border-top, .border-bottom, .border) { border-color: var(--tone-rule); }
+[data-tone] table :is(td, th) { border-color: var(--tone-rule); }
+
+/* --------------------------------------------------------- exceptions --- */
+/* Ces composants portent leur propre couleur, quelle que soit l'ambiance. */
+
+[data-tone] .wb-btn--gold,   [data-tone] .wb-btn--gold *   { color: #1a1205; }
+[data-tone] .wb-btn--ink,    [data-tone] .wb-btn--ink *    { color: #ffffff; }
+[data-tone] .wb-btn--ghost,  [data-tone] .wb-btn--ghost *  { color: var(--wb-on-dark); }
+[data-tone] .wb-btn--outline,[data-tone] .wb-btn--outline *{ color: var(--wb-ink); }
+[data-tone] .btn-warning,    [data-tone] .btn-warning *    { color: #1a1205; }
+[data-tone] .btn-primary,    [data-tone] .btn-primary *,
+[data-tone] .btn-dark,       [data-tone] .btn-dark *,
+[data-tone] .btn-success,    [data-tone] .btn-success *,
+[data-tone] .btn-danger,     [data-tone] .btn-danger *     { color: #ffffff; }
+[data-tone] .btn-outline-light, [data-tone] .btn-outline-light * { color: #ffffff; }
+[data-tone] .btn-outline-primary,[data-tone] .btn-outline-primary * { color: var(--wb-blue); }
+
+[data-tone] .wb-badge--gold,  [data-tone] .wb-badge--gold *  { color: #7a5900; }
+[data-tone] .wb-badge--green, [data-tone] .wb-badge--green * { color: #0d6b4a; }
+[data-tone] .wb-badge--glass, [data-tone] .wb-badge--glass * { color: var(--wb-on-dark); }
+[data-tone] .wb-badge:not([class*="--"]) { color: var(--wb-ink-3); }
+
+[data-tone] .wb-work, [data-tone] .wb-work * { color: #ffffff; }
+[data-tone] .wb-work__desc { color: var(--wb-on-dark-2); }
+
+[data-tone] .wb-anecdote__label { color: var(--wb-gold); }
+[data-tone] .ad-tag { color: inherit; }
+
+/* Les champs de saisie restent blancs avec une encre sombre, quel que soit
+   le fond : c'est ce que l'oeil attend d'un formulaire. */
+[data-tone] :is(input, textarea, select, .form-control, .form-select) {
+    color: var(--wb-text);
+    background-color: #ffffff;
+}
+[data-tone] :is(input, textarea, .form-control)::placeholder { color: #98a4b6; }
+
+/* Un bouton conserve son fond meme dans un conteneur tone. */
+[data-tone] button.wb-btn, [data-tone] a.wb-btn { background-clip: padding-box; }
+
+/* --------------------------------------------- compatibilite ascendante -- */
+/* Les sections qui n'ont pas encore d'attribut data-tone continuent de
+   fonctionner grace aux regles precedentes. Celles-ci sont conservees. */
+
+
+/* ==========================================================================
+   Demandes d'assistance : une fiche par fil, pas une ligne de tableau
+   ========================================================================== */
+.wb-btn--sm { padding: .5rem 1.05rem; font-size: .85rem; }
+.wb-btn--ghost-ink {
+  background: transparent;
+  color: var(--wb-ink);
+  border-color: rgba(20,28,46,.22);
+}
+.wb-btn--ghost-ink:hover { background: rgba(20,28,46,.06); color: var(--wb-ink); }
+[data-tone] .wb-btn--ghost-ink, [data-tone] .wb-btn--ghost-ink * { color: var(--wb-ink); }
+
+.wb-tag {
+  display: inline-block;
+  padding: .3rem .72rem;
+  border-radius: 99px;
+  font-size: .74rem;
+  font-weight: 700;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.wb-tag--blue  { background: rgba(37,99,235,.12);  color: #1d4ed8; }
+.wb-tag--gold  { background: rgba(245,179,1,.18);  color: #8a6200; }
+.wb-tag--green { background: rgba(16,150,90,.13);  color: #0d7a4a; }
+.wb-tag--grey  { background: rgba(20,28,46,.08);   color: var(--wb-text-2); }
+
+.wb-tickets { display: grid; gap: 1.1rem; }
+@media (min-width: 900px) { .wb-tickets { grid-template-columns: repeat(2, 1fr); } }
+
+.wb-ticket {
+  background: #fff;
+  border: 1px solid rgba(20,28,46,.09);
+  border-left: 4px solid var(--wb-gold);
+  border-radius: 14px;
+  padding: 1.4rem 1.5rem;
+  box-shadow: var(--wb-shadow-1);
+  transition: transform .18s ease, box-shadow .18s ease;
+  display: flex;
+  flex-direction: column;
+}
+.wb-ticket:hover { transform: translateY(-3px); box-shadow: var(--wb-shadow-2); }
+.wb-ticket--done { border-left-color: rgba(13,122,74,.55); opacity: .88; }
+.wb-ticket__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: .75rem;
+  margin-bottom: .8rem;
+}
+.wb-ticket__ref {
+  font-size: .78rem;
+  font-weight: 800;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--wb-text-3);
+}
+.wb-ticket__extract {
+  font-size: .95rem;
+  line-height: 1.6;
+  color: var(--wb-text);
+  margin: 0 0 1rem;
+}
+.wb-ticket__meta { margin: 0 0 1.1rem; display: grid; gap: .35rem; }
+.wb-ticket__meta > div { display: flex; gap: .5rem; font-size: .84rem; }
+.wb-ticket__meta dt {
+  flex: 0 0 88px;
+  font-weight: 700;
+  color: var(--wb-text-3);
+  margin: 0;
+}
+.wb-ticket__meta dd { margin: 0; color: var(--wb-text-2); }
+.wb-ticket__actions { display: flex; flex-wrap: wrap; gap: .6rem; margin-top: auto; }
+
+@media (prefers-reduced-motion: reduce) { .wb-ticket { transition: none; } }

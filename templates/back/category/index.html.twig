@@ -1,42 +1,66 @@
 {% extends "base_back.html.twig" %}
 
-{% block title %}
-	back Categorie index
-{% endblock %}
+{% block title %}Categories{% endblock %}
 
 {% block content %}
+<div class="container py-4">
 
-	<a href="{{ url('back_category_new') }}" class="ml-auto btn btn-primary">Créer une nouvelle categorie</a>
+    <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
+        <div>
+            <h1 class="h3 fw-bold mb-1">Categories</h1>
+            <p class="text-muted mb-0 small">{{ categories|length }} categorie(s). Elles classent les realisations, les articles et les sujets du forum.</p>
+        </div>
+        <a href="{{ url('back_category_new') }}" class="btn btn-primary">Creer une categorie</a>
+    </div>
 
-	{% for type, messages in app.flashes %}
-		{% for message in messages %}
-			<div class="alert alert-{{ type }}">{{ message }}</div>
-		{% endfor %}
-	{% endfor %}
+    {% for type, messages in app.flashes %}
+        {% for message in messages %}
+            <div class="alert alert-{{ type }}">{{ message }}</div>
+        {% endfor %}
+    {% endfor %}
 
-	<table class="table-light">
-		<thead>
-			<tr>
-				<th>#</th>
-				<th>Nom</th>
-				<th>Actions</th>
-			</tr>
-		</thead>
-		<tbody>
-			{% for category in categories %}
-				<tr>
-					<td>{{ category.id }}</td>
-					<td>
-						<a href="{{ url('back_category_show', {id: category.id}) }}">{{ category.name }}</a>
-					</td>
-					<td>
-						<a href="{{ url('back_category_show', {id: category.id}) }}">Voir</a>
-						<a href="#">Editer</a>
-						<a href="#">Supprimer</a>
-					</td>
-				</tr>
-			{% endfor %}
-		</tbody>
-	</table>
+    {% if categories is empty %}
+        <div class="border rounded p-5 text-center">
+            <p class="text-muted mb-3">Aucune categorie pour l'instant.</p>
+            <a href="{{ url('back_category_new') }}" class="btn btn-outline-primary">Creer la premiere</a>
+        </div>
+    {% else %}
+        <div class="table-responsive border rounded">
+            <table class="table align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th>Nom</th>
+                        <th style="width: 160px;">Contenus lies</th>
+                        <th style="width: 240px;" class="text-end">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for category in categories %}
+                    {% set liees = category.projects|length + category.subjects|length + category.posts|length %}
+                    <tr>
+                        <td><strong>{{ category.name }}</strong></td>
+                        <td>
+                            {% if liees > 0 %}
+                                <span class="badge bg-primary">{{ liees }}</span>
+                            {% else %}
+                                <span class="badge bg-secondary">0</span>
+                            {% endif %}
+                        </td>
+                        <td class="text-end">
+                            <a href="{{ url('back_category_show', {id: category.id}) }}" class="btn btn-outline-secondary btn-sm">Voir</a>
+                            <a href="{{ url('back_categories_edit', {id: category.id}) }}" class="btn btn-outline-primary btn-sm">Modifier</a>
+                            <form action="{{ url('back_categories_remove', {id: category.id}) }}" method="post" class="d-inline"
+                                  onsubmit="return confirm('Supprimer la categorie {{ category.name|e('js') }} ?');">
+                                <input type="hidden" name="_token" value="{{ csrf_token('delete_category' ~ category.id) }}">
+                                <button type="submit" class="btn btn-outline-danger btn-sm" {{ liees > 0 ? 'title="Reclassez d\'abord les contenus lies"' }}>Supprimer</button>
+                            </form>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% endif %}
 
+</div>
 {% endblock %}
