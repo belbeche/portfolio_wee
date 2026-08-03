@@ -6,6 +6,9 @@ doctrine:
 
     orm:
         auto_generate_proxy_classes: true
+        # Mode moderne des proxys Doctrine (defaut a partir de doctrine-bundle 3).
+        # Poser la valeur eteint la depreciation au demarrage.
+        enable_lazy_ghost_objects: true
         naming_strategy: doctrine.orm.naming_strategy.underscore_number_aware
         # auto_mapping DOIT rester a false des lors qu'on declare des mappings
         # explicites. Avec les deux actifs en meme temps, DoctrineBundle peut

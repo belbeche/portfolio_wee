@@ -55,7 +55,11 @@ when@prod:
                 type: console
                 process_psr_3_messages: false
                 channels: ["!event", "!doctrine"]
+            # En production, les depreciations ne sont pas des incidents :
+            # elles viennent surtout de bundles tiers (sensio/framework-extra,
+            # webpack-encore-bundle, knp-paginator) et seront reglees par la
+            # migration Symfony 6.4. On ne les journalise plus en prod pour
+            # garder un prod.log lisible ; le mode dev les affiche toujours.
             deprecation:
-                type: stream
+                type: 'null'
                 channels: [deprecation]
-                path: "%kernel.logs_dir%/%kernel.environment%.log"

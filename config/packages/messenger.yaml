@@ -1,6 +1,10 @@
 framework:
     messenger:
         failure_transport: failed
+        # Valeur par defaut de Symfony 6 : les services sont reinitialises
+        # entre deux messages. Poser la valeur explicitement eteint la
+        # depreciation au demarrage.
+        reset_on_message: true
 
         transports:
             # https://symfony.com/doc/current/messenger.html#transport-configuration
