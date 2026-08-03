@@ -148,14 +148,24 @@ class FrontController extends AbstractController
      * @Route("/api/resources", name="api_resources")
      * @return Response
      */
-    public function getResources(CurlService $curlService, \App\Service\Settings $settings): Response
+    public function getResources(CurlService $curlService, \App\Service\Settings $settings, \App\Service\PterodactylService $pterodactyl): Response
     {
         if(!$this->getUser()){
             return $this->redirectToRoute('app_login');
         }
 
-        // Les identifiants du panneau viennent de la base (administrables
-        // sur /admin/parametres), avec l'ancien .env en repli.
+        // 1. L'API officielle Pterodactyl, si elle est configuree sur /admin/parametres.
+        //    L'administrateur voit tous les serveurs de la cle ; un client voit
+        //    les serveurs dont la description contient son adresse e-mail.
+        if ($pterodactyl->isConfigured()) {
+            $resources = $this->isGranted('ROLE_ADMIN')
+                ? $pterodactyl->getServersWithUsage()
+                : $pterodactyl->getServersForEmail($this->getUser()->getUserIdentifier());
+
+            return new jsonResponse(['resources' => $resources]);
+        }
+
+        // 2. L'ancien relais personnalise, en repli.
         $url = (string) $settings->get('pterodactyl_api_url', '');
         $token = (string) $settings->get('pterodactyl_api_token', '');
 

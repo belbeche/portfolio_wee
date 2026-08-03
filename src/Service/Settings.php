@@ -28,14 +28,26 @@ class Settings
      *  secret : true = valeur masquee a l'affichage
      */
     public const CATALOG = [
+        'pterodactyl_panel_url' => [
+            'label' => "URL du panneau Pterodactyl",
+            'help' => "L'adresse de base du panneau, sans /api ni barre finale. Exemple : https://panel.mondomaine.fr",
+            'env' => null,
+            'secret' => false,
+        ],
+        'pterodactyl_client_key' => [
+            'label' => "Clé d'API client Pterodactyl",
+            'help' => "Une clé personnelle commençant par ptlc_, à créer dans le panneau sur Paramètres du compte puis Identifiants API (/account/api). Jamais affichée en clair une fois enregistrée.",
+            'env' => null,
+            'secret' => true,
+        ],
         'pterodactyl_api_url' => [
-            'label' => "URL de l'API du panneau d'hébergement",
-            'help' => "L'adresse de l'API Pterodactyl, telle que l'application la concatène avec l'e-mail du client. Exemple : https://panel.mondomaine.fr/api/resources?email=",
+            'label' => "Ancien relais d'hébergement : URL (repli)",
+            'help' => "Utilisé seulement si le panneau officiel ci-dessus n'est pas renseigné. Exemple : https://panel.mondomaine.fr/api/resources?email=",
             'env' => 'API_RESOURCE_URL',
             'secret' => false,
         ],
         'pterodactyl_api_token' => [
-            'label' => "Jeton de l'API du panneau d'hébergement",
+            'label' => "Ancien relais d'hébergement : jeton (repli)",
             'help' => "Le jeton d'application Pterodactyl. Il n'est jamais affiché en clair une fois enregistré.",
             'env' => 'API_RESOURCE_TOKEN',
             'secret' => true,
