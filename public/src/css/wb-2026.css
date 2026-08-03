@@ -1274,3 +1274,11 @@ section.bg-dark .small, section.bg-primary .small,
   font-size: .87rem; color: var(--wb-text-2); margin-bottom: .35rem;
 }
 .wb-door__list li::before { content: '✓'; position: absolute; left: 0; color: var(--wb-gold); font-weight: 800; }
+
+/* --- plafond des utilitaires d'espacement 8rem du vieux theme -------------- */
+.p-7, .p-xl, .p-sm-7, .p-sm-xl, .p-md-7, .p-md-xl, .p-lg-7, .p-lg-xl, .p-xl-7 { padding: 3rem !important; }
+.pt-7, .py-7, .pt-xl, .py-xl { padding-top: 3rem !important; }
+.pb-7, .py-7, .pb-xl, .py-xl { padding-bottom: 3rem !important; }
+/* mt-7 sert aussi a passer sous la barre de navigation fixe : 5rem suffit */
+.mt-7, .my-7 { margin-top: 5rem !important; }
+.mb-7, .my-7 { margin-bottom: 3rem !important; }

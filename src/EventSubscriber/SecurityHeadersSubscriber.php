@@ -146,8 +146,13 @@ final class SecurityHeadersSubscriber implements EventSubscriberInterface
             "base-uri 'self'",
             "form-action 'self'",
             "frame-ancestors 'none'",
-            'upgrade-insecure-requests',
         ];
+
+        // Ignoree (et signalee) par les navigateurs en Report-Only :
+        // on ne l'ajoute qu'en mode application.
+        if ($this->cspEnforce) {
+            $directives[] = 'upgrade-insecure-requests';
+        }
 
         if (null !== $this->reportUri) {
             $directives[] = 'report-uri '.$this->reportUri;
