@@ -203,7 +203,7 @@
     function load() {
         hide(errorBox); hide(emptyBox); hide(list); show(loading);
 
-        fetch('{{ url('api_resources') }}', {
+        fetch('{{ path('api_resources') }}', {
             headers: { 'X-Requested-With': 'XMLHttpRequest', 'Accept': 'application/json' },
             credentials: 'same-origin'
         })
