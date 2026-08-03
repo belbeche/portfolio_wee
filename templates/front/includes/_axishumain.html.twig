@@ -106,7 +106,7 @@
                             Décrivez votre besoin, recevez des propositions, comparez.
                             Vous gardez la main du premier message jusqu'au choix final.
                         </p>
-                        <a href="{{ url('front_referral_go', {context: context}) }}"
+                        <a href="{{ url('front_referral_go', {context: context}) }}?profil=client"
                            class="btn btn-sm btn-warning fw-semibold" rel="noopener">
                             Publier une mission
                         </a>
@@ -121,7 +121,7 @@
                             correspondent à vos compétences. Inscription et
                             candidatures gratuites.
                         </p>
-                        <a href="{{ url('front_referral_go', {context: context ~ '_expert'}) }}"
+                        <a href="{{ url('front_referral_go', {context: context ~ '_expert'}) }}?profil=expert"
                            class="btn btn-sm btn-dark" rel="noopener">
                             Créer mon profil expert
                         </a>

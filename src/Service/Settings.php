@@ -40,6 +40,24 @@ class Settings
             'env' => 'API_RESOURCE_TOKEN',
             'secret' => true,
         ],
+        'axishumain_url' => [
+            'label' => "URL de la plateforme AxisHumain",
+            'help' => "L'adresse de base, sans barre finale. Exemple : https://axishumain.fr",
+            'env' => 'AXISHUMAIN_URL',
+            'secret' => false,
+        ],
+        'axishumain_client_path' => [
+            'label' => "Chemin d'inscription client sur AxisHumain",
+            'help' => "Ajouté à l'URL de base pour le bouton « Publier une mission ». Exemple : /inscription?type=client",
+            'env' => null,
+            'secret' => false,
+        ],
+        'axishumain_expert_path' => [
+            'label' => "Chemin d'inscription expert sur AxisHumain",
+            'help' => "Ajouté à l'URL de base pour le bouton « Créer mon profil expert ». Exemple : /inscription?type=expert",
+            'env' => null,
+            'secret' => false,
+        ],
         'calendly_url' => [
             'label' => 'Lien de réservation d\'appel',
             'help' => 'Le lien Calendly proposé aux prospects et clients.',

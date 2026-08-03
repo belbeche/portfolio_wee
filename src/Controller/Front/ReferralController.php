@@ -39,11 +39,28 @@ class ReferralController extends AbstractController
      *
      * @Route("/vers-axishumain/{context}", name="front_referral_go", requirements={"context"="[a-z0-9_-]{1,40}"})
      */
-    public function go(string $context = 'portfolio'): RedirectResponse
+    public function go(\App\Service\Settings $settings, \Symfony\Component\HttpFoundation\Request $request, string $context = 'portfolio'): RedirectResponse
     {
+        // L'URL vient des parametres administrables, avec un defaut sur :
+        // meme sans aucune configuration, le lien fonctionne.
+        $base = rtrim((string) $settings->get('axishumain_url', 'https://axishumain.fr'), '/');
+
+        // ?profil=client ou ?profil=expert oriente vers la bonne inscription.
+        $profil = (string) $request->query->get('profil', '');
+        $path = '';
+        if ('client' === $profil) {
+            $path = (string) $settings->get('axishumain_client_path', '');
+        } elseif ('expert' === $profil) {
+            $path = (string) $settings->get('axishumain_expert_path', '');
+        }
+
+        $separator = str_contains($path, '?') ? '&' : '?';
+
         $url = sprintf(
-            '%s?utm_source=walidbelbeche&utm_medium=referral&utm_campaign=%s',
-            rtrim($this->getParameter('axishumain_url'), '/'),
+            '%s%s%sutm_source=walidbelbeche&utm_medium=referral&utm_campaign=%s',
+            $base,
+            $path,
+            $separator,
             urlencode($context)
         );
 

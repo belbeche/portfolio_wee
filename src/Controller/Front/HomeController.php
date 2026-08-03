@@ -67,7 +67,15 @@ class HomeController extends AbstractController
                     'contact' => $entityManager->getRepository(Contact::class)->findOneBy(['email' => $callbackRequest->getEmail()]),
                 ]);
 
-            $mailer->send($email);
+            // La demande est deja enregistree en base : un serveur mail en
+            // panne ne doit pas faire echouer le parcours du prospect.
+            try {
+                $mailer->send($email);
+            } catch (\Throwable $e) {
+                // Visible dans var/log, invisible pour le visiteur : sa
+                // demande est bien arrivee, seul l'accuse par e-mail manque.
+                error_log('[callback] envoi e-mail impossible : '.$e->getMessage());
+            }
 
             $this->addFlash('success', $this->translator->trans('flash.success.callback_request'));
 
