@@ -253,10 +253,11 @@
 									? 'Registered in France? Find your company in the public directory: it helps me quote accurately, and you type nothing.'
 									: "Immatriculée en France ? Retrouvez votre société dans l'annuaire public : ça m'aide à chiffrer juste, et vous n'avez rien à saisir." }}
 							</p>
-							<div class="d-flex gap-2">
+							<div class="d-flex gap-2 flex-wrap">
 								<input type="text" id="wb-siren-q" class="form-control"
+								       style="flex: 1 1 220px; min-width: 0;"
 								       placeholder="{{ app.request.locale == 'en' ? 'Company name, SIREN or SIRET' : 'Nom, SIREN ou SIRET, ex : Boulangerie Martin Évreux' }}">
-								<button type="button" id="wb-siren-go" class="wb-btn wb-btn--ink" style="white-space:nowrap;">
+								<button type="button" id="wb-siren-go" class="wb-btn wb-btn--ink" style="white-space:nowrap; flex: 0 0 auto;">
 									{{ app.request.locale == 'en' ? 'Search' : 'Chercher' }}
 								</button>
 							</div>

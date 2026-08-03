@@ -56,6 +56,19 @@
         </nav>
         {% endif %}
 
+        {% if categories|length > 0 %}
+        {% set keepSector = currentSector != '' ? 'secteur=' ~ currentSector|url_encode ~ '&' : '' %}
+        <nav class="wb-filter wb-filter--sub mb-5" aria-label="{{ en ? 'Filter by technology' : 'Filtrer par technologie' }}">
+            <span class="wb-filter__label">{{ en ? 'Technology' : 'Technologie' }}</span>
+            <a href="{{ url('front_project') }}?{{ keepSector }}"
+               class="cat-chip cat-chip--sm {{ currentCategory == '' ? 'cat-chip--active' : '' }}">{{ en ? 'All' : 'Toutes' }}</a>
+            {% for cat in categories %}
+                <a href="{{ url('front_project') }}?{{ keepSector }}categorie={{ cat|url_encode }}"
+                   class="cat-chip cat-chip--sm {{ currentCategory|lower == cat|lower ? 'cat-chip--active' : '' }}">{{ cat }}</a>
+            {% endfor %}
+        </nav>
+        {% endif %}
+
         {% if projects|length > 0 %}
         <div class="row g-4">
             {% for project in projects %}
@@ -76,9 +89,13 @@
                             <p class="wb-product__desc">
                                 {{ (project.result ?: project.description)|striptags|slice(0, 130) }}{{ (project.result ?: project.description)|striptags|length > 130 ? '…' : '' }}
                             </p>
-                            {% if project.stack|length %}
+                            {# La stack si elle est remplie, sinon les categories de la fiche. #}
+                            {% set techs = project.stack|length
+                                ? project.stack|slice(0, 4)
+                                : project.categories|slice(0, 4)|map(c => c.name) %}
+                            {% if techs|length %}
                                 <p class="wb-product__stack">
-                                    {% for tech in project.stack|slice(0, 4) %}<span>{{ tech }}</span>{% endfor %}
+                                    {% for tech in techs %}<span>{{ tech }}</span>{% endfor %}
                                 </p>
                             {% endif %}
                             <div class="wb-product__foot">

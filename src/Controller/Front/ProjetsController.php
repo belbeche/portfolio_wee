@@ -43,6 +43,18 @@ class ProjetsController extends AbstractController
         sort($sectors);
         $totalCount = count($projects);
 
+        // La liste fermee des technologies (categories) reellement utilisees.
+        $categories = [];
+        foreach ($projects as $project) {
+            foreach ($project->getCategories() as $cat) {
+                $name = trim((string) $cat->getName());
+                if ('' !== $name && !in_array($name, $categories, true)) {
+                    $categories[] = $name;
+                }
+            }
+        }
+        sort($categories);
+
         // Filtre par secteur : /realisations?secteur=Association
         $current = trim((string) ($request->query->get('secteur') ?? $category ?? ''));
         if ('' !== $current) {
@@ -52,12 +64,28 @@ class ProjetsController extends AbstractController
             ));
         }
 
+        // Filtre par technologie : /realisations?categorie=Symfony%205.4
+        $currentCategory = trim((string) $request->query->get('categorie', ''));
+        if ('' !== $currentCategory) {
+            $projects = array_values(array_filter($projects, static function (Project $p) use ($currentCategory) {
+                foreach ($p->getCategories() as $cat) {
+                    if (0 === strcasecmp(trim((string) $cat->getName()), $currentCategory)) {
+                        return true;
+                    }
+                }
+
+                return false;
+            }));
+        }
+
         return $this->render('front/projets/index.html.twig', [
             'projects' => $projects,
             'sectors' => $sectors,
             'sectorCounts' => $sectorCounts,
             'totalCount' => $totalCount,
             'currentSector' => $current,
+            'categories' => $categories,
+            'currentCategory' => $currentCategory,
         ]);
     }
 

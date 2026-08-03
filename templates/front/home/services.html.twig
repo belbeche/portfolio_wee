@@ -32,21 +32,24 @@
                     <h2 class="wb-h3 mt-3 mb-0">{{ 'offer.t1_name'|trans }}</h2>
                     <div class="wb-price__amount">290 €</div>
                     <div class="wb-price__unit">{{ 'offer.t1_unit'|trans }}</div>
+                    <p class="wb-price__hook">{{ en
+                        ? 'Risk-free: the 290 € is deducted from the Project price if we continue together.'
+                        : 'Sans risque : les 290 € sont déduits du prix du Projet si on continue ensemble.' }}</p>
                     {% set t1_items = en ? [
-                        "An audit of your site, your tools and your files",
-                        "What quietly costs you time without you seeing it",
-                        "The real risks: backups, security, dependencies",
-                        "A prioritised action plan, priced line by line",
-                        "A document you own, to hand to whoever you choose"
+                        {s: 'Full audit', r: 'your site, your tools and your files reviewed'},
+                        {s: 'The time leaks', r: 'what quietly costs you hours without you seeing it'},
+                        {s: 'The real risks', r: 'backups, security, dependencies'},
+                        {s: 'A priced plan', r: 'prioritised line by line, no jargon'},
+                        {s: 'The document is yours', r: 'hand it to any provider you choose'}
                     ] : [
-                        "Audit de votre site, de vos outils et de vos fichiers",
-                        "Ce qui vous coûte du temps sans que vous le voyiez",
-                        "Les risques réels : sauvegardes, sécurité, dépendances",
-                        "Un plan d'action priorisé, chiffré ligne par ligne",
-                        "Un document qui vous appartient, remettable à qui vous voulez"
+                        {s: 'Audit complet', r: 'votre site, vos outils et vos fichiers passés en revue'},
+                        {s: 'Les fuites de temps', r: 'ce qui vous coûte des heures sans que vous le voyiez'},
+                        {s: 'Les risques réels', r: 'sauvegardes, sécurité, dépendances'},
+                        {s: 'Un plan chiffré', r: 'priorisé ligne par ligne, sans jargon'},
+                        {s: 'Le document vous appartient', r: 'remettable à n\'importe quel prestataire'}
                     ] %}
                     <ul>
-                        {% for item in t1_items %}<li>{{ item }}</li>{% endfor %}
+                        {% for item in t1_items %}<li><strong>{{ item.s }}</strong> · {{ item.r }}</li>{% endfor %}
                     </ul>
                     <a href="{{ url('front_devis_new') }}" class="wb-btn wb-btn--outline w-100">{{ 'offer.t1_cta'|trans }}</a>
                 </div>
@@ -58,21 +61,24 @@
                     <h2 class="wb-h3 mt-3 mb-0">{{ 'offer.t2_name'|trans }}</h2>
                     <div class="wb-price__amount">{{ 'offer.t2_price'|trans }}</div>
                     <div class="wb-price__unit">{{ 'offer.t2_unit'|trans }}</div>
+                    <p class="wb-price__hook">{{ en
+                        ? 'Fixed price agreed before we start: no surprises along the way.'
+                        : 'Prix fixé avant de commencer : aucune surprise en cours de route.' }}</p>
                     {% set t2_items = en ? [
-                        "Specification and user stories approved before any code",
-                        "Website, business application or mobile app",
-                        "API, back office and production release included",
-                        "Payment in three milestones, you approve before you pay",
-                        "Source code, documentation and rights handed over at the end"
+                        {s: 'Approved before any code', r: 'specification and user stories signed off'},
+                        {s: 'Web or mobile', r: 'website, business application or mobile app'},
+                        {s: 'Everything included', r: 'API, back office and production release'},
+                        {s: 'Three milestones', r: 'you approve each step before you pay'},
+                        {s: 'Everything is yours', r: 'source code, documentation and rights handed over'}
                     ] : [
-                        "Cahier des charges et user stories validés avant le code",
-                        "Site web, application métier ou application mobile",
-                        "API, back-office et mise en production incluses",
-                        "Paiement en trois jalons, vous validez avant de régler",
-                        "Code source, documentation et droits cédés à la fin"
+                        {s: 'Validé avant le code', r: 'cahier des charges et user stories signés'},
+                        {s: 'Web ou mobile', r: 'site, application métier ou application mobile'},
+                        {s: 'Tout est inclus', r: 'API, back-office et mise en production'},
+                        {s: 'Trois jalons', r: 'vous validez chaque étape avant de régler'},
+                        {s: 'Tout est à vous', r: 'code source, documentation et droits cédés à la fin'}
                     ] %}
                     <ul>
-                        {% for item in t2_items %}<li>{{ item }}</li>{% endfor %}
+                        {% for item in t2_items %}<li><strong>{{ item.s }}</strong> · {{ item.r }}</li>{% endfor %}
                     </ul>
                     <a href="{{ url('front_devis_new') }}" class="wb-btn wb-btn--outline w-100">{{ 'method.frame_cta'|trans }}</a>
                 </div>
@@ -84,24 +90,26 @@
                     <h2 class="wb-h3 mt-3 mb-0">{{ 'offer.t3_name'|trans }}</h2>
                     <div class="wb-price__amount">390 €</div>
                     <div class="wb-price__unit">{{ 'offer.t3_unit'|trans }}</div>
-                    {% set t3_first = en ? "One person, one number" : "Une personne, un numéro" %}
-                    {% set t3_first_rest = en ? ", answer within 4 working hours" : ", réponse sous 4 heures ouvrées" %}
+                    <p class="wb-price__hook">{{ en
+                        ? 'No commitment: you stop whenever you want, everything stays yours.'
+                        : 'Sans engagement : vous arrêtez quand vous voulez, tout reste à vous.' }}</p>
                     {% set t3_items = en ? [
-                        "Monitoring, verified backups, security patches",
-                        "4 hours of improvements included monthly, carried over 3 months",
-                        "A written report every month: what was done, what comes next",
-                        "Your third-party providers managed by me, not by you",
-                        "Reduced hourly rate beyond the quota"
+                        {s: 'One person, one number', r: 'answer within 4 working hours'},
+                        {s: 'You sleep at night', r: 'monitoring, verified backups, security patches'},
+                        {s: '4 hours of improvements monthly', r: 'carried over up to 3 months'},
+                        {s: 'A written report every month', r: 'what was done, what comes next'},
+                        {s: 'Your providers handled', r: 'hosting, domain, e-mails: I deal with them'},
+                        {s: 'Beyond the quota', r: 'reduced hourly rate'}
                     ] : [
-                        "Supervision, sauvegardes vérifiées, correctifs de sécurité",
-                        "4 heures d'évolutions incluses chaque mois, cumulables sur 3 mois",
-                        "Un rapport écrit chaque mois : ce qui a été fait, ce qui vient",
-                        "Vos prestataires tiers gérés par moi, pas par vous",
-                        "Tarif horaire réduit au-delà du quota"
+                        {s: 'Une personne, un numéro', r: 'réponse sous 4 heures ouvrées'},
+                        {s: 'Vous dormez tranquille', r: 'supervision, sauvegardes vérifiées, correctifs de sécurité'},
+                        {s: '4 h d\'évolutions chaque mois', r: 'cumulables sur 3 mois'},
+                        {s: 'Un rapport écrit mensuel', r: 'ce qui a été fait, ce qui vient'},
+                        {s: 'Vos prestataires gérés', r: 'hébergeur, domaine, e-mails : je m\'en charge'},
+                        {s: 'Au-delà du quota', r: 'tarif horaire réduit'}
                     ] %}
                     <ul>
-                        <li><strong>{{ t3_first }}</strong>{{ t3_first_rest }}</li>
-                        {% for item in t3_items %}<li>{{ item }}</li>{% endfor %}
+                        {% for item in t3_items %}<li><strong>{{ item.s }}</strong> · {{ item.r }}</li>{% endfor %}
                     </ul>
                     <a href="{{ url('front_contact') }}" class="wb-btn wb-btn--gold w-100">{{ 'offer.t3_cta'|trans }}</a>
                 </div>

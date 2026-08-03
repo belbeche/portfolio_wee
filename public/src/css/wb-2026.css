@@ -391,6 +391,11 @@ h1, h2, h3, h4, h5, h6 { color: var(--wb-text); }
     margin: .5rem 0 .2rem;
 }
 .wb-price__unit { font-size: .85rem; color: var(--wb-text-3); margin-bottom: 1.2rem; }
+.wb-price__hook {
+    background: var(--wb-paper-3); border-left: 3px solid var(--wb-gold);
+    border-radius: 8px; padding: .6rem .85rem; margin: 0 0 1rem;
+    font-size: .85rem; font-weight: 600; color: var(--wb-text);
+}
 .wb-price ul { list-style: none; padding: 0; margin: 0 0 1.5rem; flex: 1; }
 .wb-price li {
     position: relative; padding-left: 1.6rem; margin-bottom: .6rem;
@@ -1311,4 +1316,10 @@ section.bg-dark .small, section.bg-primary .small,
 .wb-checks li { position: relative; padding: .3rem 0 .3rem 1.5rem; color: var(--wb-text-2); font-size: .92rem; }
 .wb-checks li::before { content: '\2713'; position: absolute; left: 0; color: var(--wb-green); font-weight: 700; }
 .cat-chip small { font-weight: 600; opacity: .65; margin-left: .25rem; }
+.wb-filter--sub { margin-top: -1.6rem; }
+.wb-filter__label {
+  font-size: .72rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase;
+  color: var(--wb-text-3); align-self: center; margin-right: .35rem;
+}
+.cat-chip--sm { font-size: .78rem; padding: .3rem .75rem; }
 @media (max-width: 991px) { .wb-case-aside { position: static; } }

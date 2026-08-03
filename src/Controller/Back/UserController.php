@@ -99,8 +99,24 @@ class UserController extends AbstractController
     {
         $user = $entityManager->getRepository(User::class)->find($id);
 
-        $entityManager->remove($user);
-        $entityManager->flush();
+        if (null === $user) {
+            $this->addFlash('error', 'Utilisateur introuvable.');
+
+            return $this->redirectToRoute('back_user_index');
+        }
+
+        try {
+            $entityManager->remove($user);
+            $entityManager->flush();
+            $this->addFlash('success', 'Utilisateur supprimé.');
+        } catch (\Doctrine\DBAL\Exception\ForeignKeyConstraintViolationException $e) {
+            // Des tickets, devis ou sujets pointent encore vers ce compte :
+            // supprimer casserait l'historique. On explique au lieu de crasher.
+            $this->addFlash('error', sprintf(
+                'Impossible de supprimer %s : des données lui sont encore liées (tickets, devis ou messages). Supprime ou réattribue ces éléments d\'abord.',
+                $user->getUserIdentifier()
+            ));
+        }
 
         return $this->redirectToRoute('back_user_index');
     }
