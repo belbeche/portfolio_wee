@@ -37,17 +37,21 @@ class UserController extends AbstractController
     {
         $user = new User();
         $form = $this->createForm(UserType::class, $user);
-        $user->setPassword($hasher->hashpassword(
-            $user,
-            $form->get('password')->getData()
-        ));
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->persist($user);
-            $entityManager->flush();
+            $plain = (string) $form->get('password')->getData();
 
-            return $this->redirectToRoute('back_user_index');
+            if ('' === $plain) {
+                $this->addFlash('error', 'Le mot de passe est obligatoire pour créer un utilisateur.');
+            } else {
+                $user->setPassword($hasher->hashPassword($user, $plain));
+                $entityManager->persist($user);
+                $entityManager->flush();
+                $this->addFlash('success', 'Utilisateur créé.');
+
+                return $this->redirectToRoute('back_user_index');
+            }
         }
 
         return $this->render('back/user/new.html.twig', [

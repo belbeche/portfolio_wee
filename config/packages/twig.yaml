@@ -2,6 +2,10 @@ twig:
     default_path: "%kernel.project_dir%/templates"
     form_themes:
         - "bootstrap_5_layout.html.twig"
+    globals:
+        # Reglages administrables (asset_version, telephone...), lisibles
+        # dans tous les gabarits : {{ settings.get('asset_version', '12') }}
+        settings: '@App\Service\Settings'
 
 
 when@test:

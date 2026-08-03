@@ -21,6 +21,10 @@
 		<link rel="manifest" href="{{ asset('medias/favicon/site.webmanifest') }}">
 		<link rel="icon" href="{{ asset('medias/favicon/favicon.ico') }}">
 
+		{# Application installable (PWA) et notifications #}
+		<link rel="manifest" href="{{ asset('manifest.webmanifest') }}">
+		<meta name="theme-color" content="#0a1628">
+
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css">
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css">
 		
@@ -36,7 +40,7 @@
 		   Il DOIT etre charge en dernier : le theme historique impose ses
 		   propres couleurs de titres. Charge avant lui, il etait ecrase,
 		   ce qui rendait les titres sombres sur fond sombre. #}
-		<link rel="stylesheet" href="{{ asset('src/css/wb-2026.css') }}?v=11">
+		<link rel="stylesheet" href="{{ asset('src/css/wb-2026.css') }}?v={{ settings.get('asset_version', '12') }}">
 	</head>
 	<body class="page">
 
@@ -193,6 +197,13 @@
 			// 	})
 			</script>#}
 
+			<script>
+				if ('serviceWorker' in navigator) {
+					window.addEventListener('load', function () {
+						navigator.serviceWorker.register('/sw.js').catch(function () {});
+					});
+				}
+			</script>
 			<script defer src="https://stats.youss.dev/script.js" data-website-id="2f81360d-92bc-460b-bcd6-81ba64683e42" data-domains="walidbelbeche.fr,www.walidbelbeche.fr"></script>
 			<script type="application/ld+json">
 			{

@@ -28,6 +28,12 @@ class Settings
      *  secret : true = valeur masquee a l'affichage
      */
     public const CATALOG = [
+        'asset_version' => [
+            'label' => 'Version des fichiers statiques (cache)',
+            'help' => "Ajoutée aux adresses des CSS et scripts. Le bouton « Forcer l'actualisation » l'incrémente : tous les visiteurs rechargent alors les derniers fichiers, sans vider leur cache à la main.",
+            'env' => null,
+            'secret' => false,
+        ],
         'pterodactyl_panel_url' => [
             'label' => "URL du panneau Pterodactyl",
             'help' => "L'adresse de base du panneau, sans /api ni barre finale. Exemple : https://panel.mondomaine.fr",

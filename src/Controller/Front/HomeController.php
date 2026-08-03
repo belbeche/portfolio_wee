@@ -88,7 +88,8 @@ class HomeController extends AbstractController
         if ($category) {
             $projects = $entityManager->getRepository(Project::class)->findBy(['category' => $category]);
         } else {
-            $projects = $entityManager->getRepository(Project::class)->findAll();
+            $projects = $entityManager->getRepository(Project::class)
+                ->findBy([], ['featured' => 'DESC', 'position' => 'ASC', 'id' => 'DESC']);
         }
 
         return $this->render('front/home/index.html.twig', [

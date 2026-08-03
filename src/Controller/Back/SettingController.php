@@ -73,4 +73,30 @@ class SettingController extends AbstractController
             'rows' => $rows,
         ]);
     }
+
+    /**
+     * Force l'actualisation chez tous les visiteurs : incremente la version
+     * des fichiers statiques, donc les adresses CSS et scripts changent et
+     * les caches navigateurs comme Cloudflare vont rechercher les fichiers.
+     *
+     * @Route("/purger-cache", name="back_settings_purge", methods={"POST"})
+     */
+    public function purgeCache(Request $request, Settings $settings): Response
+    {
+        if (!$this->isCsrfTokenValid('settings_purge', (string) $request->request->get('_token'))) {
+            $this->addFlash('error', 'Session expiree, reessaie.');
+
+            return $this->redirectToRoute('back_settings');
+        }
+
+        $version = (int) $settings->get('asset_version', '12');
+        $settings->set('asset_version', (string) ($version + 1));
+
+        $this->addFlash('success', sprintf(
+            'Version des fichiers statiques passee a %d. Tous les visiteurs rechargeront les derniers CSS et scripts a leur prochaine visite.',
+            $version + 1
+        ));
+
+        return $this->redirectToRoute('back_settings');
+    }
 }

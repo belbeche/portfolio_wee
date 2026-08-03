@@ -1323,3 +1323,36 @@ section.bg-dark .small, section.bg-primary .small,
 }
 .cat-chip--sm { font-size: .78rem; padding: .3rem .75rem; }
 @media (max-width: 991px) { .wb-case-aside { position: static; } }
+
+
+/* ===== introduction premiere visite ==================================== */
+.wb-intro {
+  position: fixed; inset: 0; z-index: 1200;
+  background: rgba(10,22,40,.66); backdrop-filter: blur(4px);
+  display: flex; align-items: center; justify-content: center; padding: 1rem;
+}
+.wb-intro__card {
+  position: relative; background: #fff; border-radius: var(--wb-radius);
+  box-shadow: var(--wb-shadow-3); padding: 1.8rem 1.9rem;
+  width: min(560px, 100%); max-height: 92vh; overflow: auto;
+}
+.wb-intro__close {
+  position: absolute; top: .6rem; right: .8rem; border: 0; background: none;
+  font-size: 1.6rem; line-height: 1; color: var(--wb-text-3); cursor: pointer;
+}
+.wb-intro__close:hover { color: var(--wb-text); }
+.wb-intro__doors { display: grid; gap: .7rem; }
+.wb-intro__door {
+  display: block; border: 1px solid var(--wb-line); border-radius: var(--wb-radius-sm);
+  padding: .85rem 1rem; text-decoration: none; background: var(--wb-paper-2);
+  transition: border-color .2s var(--wb-ease), transform .2s var(--wb-ease);
+}
+.wb-intro__door:hover { border-color: var(--wb-gold); transform: translateY(-2px); }
+.wb-intro__door strong { display: block; color: var(--wb-text); font-size: .98rem; }
+.wb-intro__door span { display: block; color: var(--wb-text-2); font-size: .84rem; margin-top: .15rem; }
+.wb-intro__skip {
+  border: 0; background: none; margin-top: 1rem; cursor: pointer;
+  font-size: .82rem; color: var(--wb-text-3); text-decoration: underline;
+}
+.wb-intro__skip:hover { color: var(--wb-text); }
+@media (prefers-reduced-motion: reduce) { .wb-intro__door { transition: none; } }

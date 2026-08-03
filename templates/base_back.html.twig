@@ -16,7 +16,7 @@
 
 	{% block stylesheets %}{% endblock %}
 
-	<link rel="stylesheet" href="{{ asset('src/css/wb-admin.css') }}?v=11">
+	<link rel="stylesheet" href="{{ asset('src/css/wb-admin.css') }}?v={{ settings.get('asset_version', '12') }}">
 </head>
 <body class="admin">
 

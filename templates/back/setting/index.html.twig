@@ -46,4 +46,20 @@
         <button type="submit" class="ad-btn ad-btn--primary">Enregistrer</button>
     </form>
 </div>
+
+<div class="ad-card" style="margin-top:1rem;" data-tone="light">
+    <div class="ad-card__head"><h2>Cache des visiteurs</h2></div>
+    <div class="ad-card__body">
+        <p style="margin:0 0 .8rem;font-size:.85rem;color:var(--ad-text-3);">
+            Après un déploiement, les navigateurs et Cloudflare peuvent garder les anciens
+            CSS et scripts. Ce bouton change la version des fichiers statiques : tout le monde
+            recharge les derniers fichiers à sa prochaine visite, sans rien faire de son côté.
+        </p>
+        <form method="post" action="{{ url('back_settings_purge') }}"
+              onsubmit="return confirm('Forcer tous les visiteurs à recharger les fichiers statiques ?');">
+            <input type="hidden" name="_token" value="{{ csrf_token('settings_purge') }}">
+            <button class="ad-btn ad-btn--primary">Forcer l'actualisation des visiteurs</button>
+        </form>
+    </div>
+</div>
 {% endblock %}

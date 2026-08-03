@@ -3,6 +3,54 @@
 {% block title %}Walid BELBECHE | Consultant informatique, interlocuteur unique{% endblock %}
 
 {% block content %}
+{% set en = app.request.locale == 'en' %}
+
+{# Premiere visite : trois portes pour orienter sans jargon. Montree une
+   seule fois par navigateur (memorisee en localStorage). #}
+<div id="wb-intro" class="wb-intro" hidden>
+    <div class="wb-intro__card" data-tone="light" role="dialog" aria-modal="true" aria-label="{{ en ? 'Welcome' : 'Bienvenue' }}">
+        <button type="button" id="wb-intro-close" class="wb-intro__close" aria-label="{{ en ? 'Close' : 'Fermer' }}">&times;</button>
+        <span class="wb-eyebrow wb-eyebrow--ink">{{ en ? 'Welcome' : 'Bienvenue' }}</span>
+        <h2 class="wb-h3" style="margin:.4rem 0 .5rem;">{{ en ? 'What brings you here?' : "Qu'est-ce qui vous amène ?" }}</h2>
+        <p style="color: var(--wb-text-2); font-size:.92rem; margin-bottom:1.1rem;">
+            {{ en ? 'One person, from first sketch to production. Pick your door, the rest is guided.'
+                  : "Une seule personne, de l'idée à la mise en production. Choisissez votre porte, la suite est guidée." }}
+        </p>
+        <div class="wb-intro__doors">
+            <a href="{{ url('front_project') }}" class="wb-intro__door">
+                <strong>{{ en ? 'See real projects' : 'Voir du concret' }}</strong>
+                <span>{{ en ? 'Delivered projects, sorted by your line of business.' : 'Des projets livrés, triés par secteur.' }}</span>
+            </a>
+            <a href="{{ url('front_devis_new') }}" class="wb-intro__door">
+                <strong>{{ en ? 'Price my idea' : 'Chiffrer mon idée' }}</strong>
+                <span>{{ en ? 'Two minutes, an answer within 48 working hours.' : 'Deux minutes, une réponse sous 48 h ouvrées.' }}</span>
+            </a>
+            <a href="{{ url('front_commencer') }}" class="wb-intro__door">
+                <strong>{{ en ? 'Guide me' : 'Me laisser guider' }}</strong>
+                <span>{{ en ? 'Not sure where to start? One minute tour.' : 'Pas sûr de par où commencer ? Visite en une minute.' }}</span>
+            </a>
+        </div>
+        <button type="button" id="wb-intro-skip" class="wb-intro__skip">{{ en ? 'Just browse the site' : 'Je préfère juste visiter le site' }}</button>
+    </div>
+</div>
+<script>
+(function () {
+    try {
+        if (localStorage.getItem('wb_intro_vue')) { return; }
+    } catch (e) { return; }
+    var box = document.getElementById('wb-intro');
+    if (!box) { return; }
+    var fermer = function () {
+        box.hidden = true;
+        try { localStorage.setItem('wb_intro_vue', '1'); } catch (e) {}
+    };
+    box.hidden = false;
+    document.getElementById('wb-intro-close').addEventListener('click', fermer);
+    document.getElementById('wb-intro-skip').addEventListener('click', fermer);
+    box.addEventListener('click', function (e) { if (e.target === box) { fermer(); } });
+    box.querySelectorAll('a').forEach(function (a) { a.addEventListener('click', fermer); });
+})();
+</script>
 
 {# =====================================================================
    Accueil.
@@ -83,7 +131,7 @@
     <div class="container">
         <div class="wb-stats wb-stats--paper">
             <div class="wb-stat"><div class="wb-stat__n">12</div><div class="wb-stat__l">{{ 'home.stat_years'|trans }}<br>{{ 'home.stat_years_2'|trans }}</div></div>
-            <div class="wb-stat"><div class="wb-stat__n">3</div><div class="wb-stat__l">{{ 'home.stat_platforms'|trans }}<br>{{ 'home.stat_platforms_2'|trans }}</div></div>
+            <div class="wb-stat"><div class="wb-stat__n">{{ projects|length }}</div><div class="wb-stat__l">{{ en ? 'projects delivered,' : 'réalisations livrées,' }}<br>{{ en ? 'in production' : 'et en production' }}</div></div>
             <div class="wb-stat"><div class="wb-stat__n">1</div><div class="wb-stat__l">{{ 'home.stat_contact'|trans }}<br>{{ 'home.stat_contact_2'|trans }}</div></div>
             <div class="wb-stat"><div class="wb-stat__n">100 %</div><div class="wb-stat__l">{{ 'home.stat_rights'|trans }}<br>{{ 'home.stat_rights_2'|trans }}</div></div>
         </div>
@@ -308,56 +356,32 @@
         <div class="d-flex flex-wrap justify-content-between align-items-end gap-3 mb-5">
             <div>
                 <span class="wb-eyebrow wb-eyebrow--ink">{{ 'home.work_eyebrow'|trans }}</span>
-                <h2 class="wb-h2 mb-0">{{ 'home.work_title'|trans }}</h2>
+                <h2 class="wb-h2 mb-0">{{ en ? 'Delivered projects, in production' : 'Des projets livrés, en production' }}</h2>
             </div>
-            <a href="{{ url('front_project') }}" class="wb-btn wb-btn--outline">{{ 'home.work_all'|trans }}</a>
+            <a href="{{ url('front_project') }}" class="wb-btn wb-btn--outline">{{ 'home.work_all'|trans }} ({{ projects|length }})</a>
         </div>
 
         <div class="row g-4">
-            <div class="col-lg-4">
-                <a href="{{ url('front_referral_go', {context: 'accueil_axishumain'}) }}" class="wb-work" rel="noopener">
-                    <span class="wb-work__veil"></span>
-                    <span class="wb-work__body">
-                        <span class="wb-badge wb-badge--gold align-self-start">Place de marché</span>
-                        <span class="wb-work__title">AxisHumain</span>
-                        <span class="wb-work__desc">
-                            Mise en relation entre entreprises et experts IT. Deux parcours
-                            utilisateurs, paiement en ligne, système d'avis, générateur de
-                            mission assisté. Symfony 6.4.
+            {% for project in projects|slice(0, 6) %}
+                <div class="col-md-6 col-lg-4">
+                    <a href="{{ url('front_project_show', {id: project.id}) }}" class="wb-work">
+                        {% set cover = project.images|first %}
+                        {% if cover %}
+                            <img class="wb-work__img" src="{{ asset('image_project/' ~ cover.name) }}" alt="" loading="lazy">
+                        {% endif %}
+                        <span class="wb-work__veil"></span>
+                        <span class="wb-work__body">
+                            {% if project.sector %}
+                                <span class="wb-badge wb-badge--gold align-self-start">{{ project.sector }}</span>
+                            {% endif %}
+                            <span class="wb-work__title">{{ project.title }}</span>
+                            <span class="wb-work__desc">
+                                {{ (project.result ?: project.description)|striptags|slice(0, 130) }}{{ (project.result ?: project.description)|striptags|length > 130 ? '…' : '' }}
+                            </span>
                         </span>
-                    </span>
-                </a>
-            </div>
-
-            <div class="col-lg-4">
-                <a href="https://reves.walidbelbeche.fr" class="wb-work" target="_blank" rel="noopener">
-                    <span class="wb-work__veil"></span>
-                    <span class="wb-work__body">
-                        <span class="wb-badge wb-badge--green align-self-start">Plateforme familiale</span>
-                        <span class="wb-work__title">Rêves</span>
-                        <span class="wb-work__desc">
-                            Les enfants créent leurs listes de rêves, la famille contribue.
-                            Défis mensuels, badges et points côté enfant, contributions
-                            sécurisées côté proches.
-                        </span>
-                    </span>
-                </a>
-            </div>
-
-            <div class="col-lg-4">
-                <a href="{{ url('front_project') }}" class="wb-work">
-                    <span class="wb-work__veil"></span>
-                    <span class="wb-work__body">
-                        <span class="wb-badge wb-badge--glass align-self-start">Application mobile</span>
-                        <span class="wb-work__title">SUSPENSION</span>
-                        <span class="wb-work__desc">
-                            Entraide de quartier : stationnement partagé, dons entre voisins,
-                            alerte de proximité. React Native iOS et Android, API, publication
-                            sur les deux magasins.
-                        </span>
-                    </span>
-                </a>
-            </div>
+                    </a>
+                </div>
+            {% endfor %}
         </div>
     </div>
 </section>
