@@ -22,6 +22,9 @@
             <a href="{{ url('front_devis_new') }}" class="wb-btn wb-btn--gold">{{ 'space.cta_new'|trans }}</a>
             <a href="{{ url('send_message') }}" class="wb-btn wb-btn--ghost">{{ 'space.cta_ticket'|trans }}</a>
             <a href="{{ url('front_profile_project') }}" class="wb-btn wb-btn--ghost">{{ 'space.cta_hosting'|trans }}</a>
+            <button type="button" class="wb-btn wb-btn--ghost" onclick="wbPushSubscribe(this)">
+                {{ app.request.locale == 'en' ? 'Enable notifications' : 'Activer les notifications' }}
+            </button>
         </div>
     </div>
 </section>

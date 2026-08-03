@@ -58,6 +58,18 @@ class Settings
             'env' => 'API_RESOURCE_TOKEN',
             'secret' => true,
         ],
+        'vapid_public_key' => [
+            'label' => 'Notifications push : clé publique VAPID',
+            'help' => "Générée automatiquement au premier abonnement. Ne pas modifier à la main.",
+            'env' => null,
+            'secret' => false,
+        ],
+        'vapid_private_key' => [
+            'label' => 'Notifications push : clé privée VAPID',
+            'help' => "Générée automatiquement, jamais affichée. La vider force une nouvelle paire (les abonnés devront se réabonner).",
+            'env' => null,
+            'secret' => true,
+        ],
         'axishumain_url' => [
             'label' => "URL de la plateforme AxisHumain",
             'help' => "L'adresse de base, sans barre finale. Exemple : https://axishumain.fr",

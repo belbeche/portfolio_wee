@@ -62,4 +62,20 @@
         </form>
     </div>
 </div>
+
+<div class="ad-card" style="margin-top:1rem;" data-tone="light">
+    <div class="ad-card__head"><h2>Notifications push</h2></div>
+    <div class="ad-card__body">
+        <p style="margin:0 0 .8rem;font-size:.85rem;color:var(--ad-text-3);">
+            Les clés VAPID se génèrent toutes seules au premier abonnement. Pour t'abonner :
+            ouvre l'espace client et clique « Activer les notifications ». Ensuite ce bouton
+            envoie un essai à tous les navigateurs abonnés. Envoi manuel possible aussi :
+            <code style="font-size:.78rem;">php bin/console app:push:envoyer "Titre" "Message" --url=/espace</code>
+        </p>
+        <form method="post" action="{{ url('back_settings_push_test') }}">
+            <input type="hidden" name="_token" value="{{ csrf_token('settings_push_test') }}">
+            <button class="ad-btn ad-btn--primary">M'envoyer une notification d'essai</button>
+        </form>
+    </div>
+</div>
 {% endblock %}

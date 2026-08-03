@@ -2,7 +2,10 @@
 
 namespace App\Controller\Back;
 
+use App\Entity\PushSubscription;
 use App\Service\Settings;
+use App\Service\WebPush;
+use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -96,6 +99,51 @@ class SettingController extends AbstractController
             'Version des fichiers statiques passee a %d. Tous les visiteurs rechargeront les derniers CSS et scripts a leur prochaine visite.',
             $version + 1
         ));
+
+        return $this->redirectToRoute('back_settings');
+    }
+
+    /**
+     * Envoie une notification d'essai a tous les navigateurs abonnes.
+     *
+     * @Route("/push-essai", name="back_settings_push_test", methods={"POST"})
+     */
+    public function pushTest(Request $request, WebPush $webPush, EntityManagerInterface $em): Response
+    {
+        if (!$this->isCsrfTokenValid('settings_push_test', (string) $request->request->get('_token'))) {
+            $this->addFlash('error', 'Session expiree, reessaie.');
+
+            return $this->redirectToRoute('back_settings');
+        }
+
+        $abonnements = $em->getRepository(PushSubscription::class)->findAll();
+        if ([] === $abonnements) {
+            $this->addFlash('info', "Aucun navigateur abonne pour l'instant. Clique « Activer les notifications » sur l'espace client, puis reviens ici.");
+
+            return $this->redirectToRoute('back_settings');
+        }
+
+        $envoyes = 0;
+        $erreurs = [];
+        foreach ($abonnements as $abonnement) {
+            $erreur = $webPush->send($abonnement, [
+                'title' => 'walidbelbeche.fr',
+                'body' => "Notification d'essai : le canal push fonctionne.",
+                'url' => '/espace',
+            ]);
+            if (null === $erreur) {
+                ++$envoyes;
+            } else {
+                $erreurs[] = $erreur;
+            }
+        }
+
+        if ($envoyes > 0) {
+            $this->addFlash('success', sprintf('%d notification(s) d\'essai envoyee(s) sur %d abonnement(s).', $envoyes, count($abonnements)));
+        }
+        foreach (array_slice(array_unique($erreurs), 0, 3) as $e) {
+            $this->addFlash('error', 'Push : '.$e);
+        }
 
         return $this->redirectToRoute('back_settings');
     }
