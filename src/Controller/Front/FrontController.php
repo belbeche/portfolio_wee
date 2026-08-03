@@ -148,16 +148,25 @@ class FrontController extends AbstractController
      * @Route("/api/resources", name="api_resources")
      * @return Response
      */
-    public function getResources(CurlService $curlService): Response
+    public function getResources(CurlService $curlService, \App\Service\Settings $settings): Response
     {
         if(!$this->getUser()){
             return $this->redirectToRoute('app_login');
         }
 
+        // Les identifiants du panneau viennent de la base (administrables
+        // sur /admin/parametres), avec l'ancien .env en repli.
+        $url = (string) $settings->get('pterodactyl_api_url', '');
+        $token = (string) $settings->get('pterodactyl_api_token', '');
+
+        if ('' === $url || '' === $token) {
+            return new jsonResponse(['resources' => []]);
+        }
+
         return new jsonResponse([
             'resources' => $curlService->getResources(
-                $this->getParameter('api_resource_url').$this->getUser()->getUserIdentifier(),
-                $this->getParameter('api_resource_token')
+                $url.$this->getUser()->getUserIdentifier(),
+                $token
             )
         ]);
     }

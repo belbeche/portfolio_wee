@@ -1,0 +1,49 @@
+{% extends 'base_back.html.twig' %}
+
+{% block title %}Paramètres{% endblock %}
+
+{% block content %}
+<div class="ad-head">
+    <div>
+        <h1 class="ad-title">Paramètres de l'application</h1>
+        <p class="ad-sub">
+            Ces valeurs vivent en base de données : un déploiement ne peut pas les écraser,
+            et une modification prend effet immédiatement.
+        </p>
+    </div>
+</div>
+
+<div class="ad-card" style="max-width: 860px;">
+    <form method="post">
+        <input type="hidden" name="_token" value="{{ csrf_token('app_settings') }}">
+
+        {% for row in rows %}
+            <div style="margin-bottom: 1.6rem;">
+                <label class="form-label fw-bold" for="set-{{ row.name }}">
+                    {{ row.label }}
+                    {% if row.hasValue %}
+                        <span class="badge {{ row.fromEnv ? 'bg-secondary' : 'bg-success' }}" style="font-size:.68rem;">
+                            {{ row.fromEnv ? 'valeur du .env (repli)' : 'enregistré en base' }}
+                        </span>
+                    {% else %}
+                        <span class="badge bg-warning text-dark" style="font-size:.68rem;">à renseigner</span>
+                    {% endif %}
+                </label>
+
+                {% if row.secret %}
+                    <input type="password" class="form-control" id="set-{{ row.name }}" name="{{ row.name }}"
+                           value="" autocomplete="new-password"
+                           placeholder="{{ row.hasValue ? '••••••••  (laisser vide pour conserver la valeur actuelle)' : 'Saisir le jeton' }}">
+                {% else %}
+                    <input type="text" class="form-control" id="set-{{ row.name }}" name="{{ row.name }}"
+                           value="{{ row.stored ?? '' }}">
+                {% endif %}
+
+                <div class="form-text">{{ row.help }}</div>
+            </div>
+        {% endfor %}
+
+        <button type="submit" class="ad-btn ad-btn--primary">Enregistrer</button>
+    </form>
+</div>
+{% endblock %}
