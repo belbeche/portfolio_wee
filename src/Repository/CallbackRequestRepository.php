@@ -10,9 +10,9 @@ use Doctrine\Persistence\ManagerRegistry;
  * @extends ServiceEntityRepository<CallbackRequest>
  *
  * @method CallbackRequest|null find($id, $lockMode = null, $lockVersion = null)
- * @method CallbackRequest|null findOneBy(array $criteria, array $orderBy = null)
+ * @method CallbackRequest|null findOneBy(array $criteria, ?array $orderBy = null)
  * @method CallbackRequest[]    findAll()
- * @method CallbackRequest[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method CallbackRequest[]    findBy(array $criteria, ?array $orderBy = null, $limit = null, $offset = null)
  */
 class CallbackRequestRepository extends ServiceEntityRepository
 {

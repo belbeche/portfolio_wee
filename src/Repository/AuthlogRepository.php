@@ -10,9 +10,9 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
  * @extends ServiceEntityRepository<Authlog>
  *
  * @method Authlog|null find($id, $lockMode = null, $lockVersion = null)
- * @method Authlog|null findOneBy(array $criteria, array $orderBy = null)
+ * @method Authlog|null findOneBy(array $criteria, ?array $orderBy = null)
  * @method Authlog[]    findAll()
- * @method Authlog[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method Authlog[]    findBy(array $criteria, ?array $orderBy = null, $limit = null, $offset = null)
  */
 class AuthlogRepository extends ServiceEntityRepository
 {

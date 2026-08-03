@@ -17,16 +17,40 @@ class ProjetsController extends AbstractController
      * @Route("/realisations", name="front_project")
      * @Route("/realisations/{category}", name="front_project_by_category")
      */
-    public function index(EntityManagerInterface $entityManager, string $category = null): Response
+    public function index(EntityManagerInterface $entityManager, Request $request, ?string $category = null): Response
     {
-        if ($category) {
-            $projects = $entityManager->getRepository(Project::class)->findBy(['category' => $category]);
-        } else {
-            $projects = $entityManager->getRepository(Project::class)->findAll();
+        $repo = $entityManager->getRepository(Project::class);
+
+        // Tous les projets, les mis en avant d'abord, puis par position.
+        $projects = $repo->createQueryBuilder('p')
+            ->orderBy('p.featured', 'DESC')
+            ->addOrderBy('p.position', 'ASC')
+            ->addOrderBy('p.id', 'DESC')
+            ->getQuery()->getResult();
+
+        // La liste fermee des secteurs reellement presents en base.
+        $sectors = [];
+        foreach ($projects as $project) {
+            $sector = trim((string) $project->getSector());
+            if ('' !== $sector && !in_array($sector, $sectors, true)) {
+                $sectors[] = $sector;
+            }
+        }
+        sort($sectors);
+
+        // Filtre par secteur : /realisations?secteur=Association
+        $current = trim((string) ($request->query->get('secteur') ?? $category ?? ''));
+        if ('' !== $current) {
+            $projects = array_values(array_filter(
+                $projects,
+                fn (Project $p) => 0 === strcasecmp(trim((string) $p->getSector()), $current)
+            ));
         }
 
         return $this->render('front/projets/index.html.twig', [
             'projects' => $projects,
+            'sectors' => $sectors,
+            'currentSector' => $current,
         ]);
     }
 

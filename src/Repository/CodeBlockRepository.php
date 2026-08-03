@@ -10,9 +10,9 @@ use Doctrine\Persistence\ManagerRegistry;
  * @extends ServiceEntityRepository<CodeBlock>
  *
  * @method CodeBlock|null find($id, $lockMode = null, $lockVersion = null)
- * @method CodeBlock|null findOneBy(array $criteria, array $orderBy = null)
+ * @method CodeBlock|null findOneBy(array $criteria, ?array $orderBy = null)
  * @method CodeBlock[]    findAll()
- * @method CodeBlock[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method CodeBlock[]    findBy(array $criteria, ?array $orderBy = null, $limit = null, $offset = null)
  */
 class CodeBlockRepository extends ServiceEntityRepository
 {

@@ -243,6 +243,31 @@
 							{{ form_errors(formDevis.attentes_design_web) }}
 						</fieldset>
 
+						{# ------------------------------------ 3bis. votre entreprise -- #}
+						<fieldset style="border: 0; padding: 0; margin: 0 0 2rem;">
+							<legend class="wb-eyebrow wb-eyebrow--ink" style="float: none; width: auto; font-size: .72rem;">
+								{{ app.request.locale == 'en' ? 'Your company (optional)' : 'Votre entreprise (facultatif)' }}
+							</legend>
+							<p class="form-text mb-2">
+								{{ app.request.locale == 'en'
+									? 'Registered in France? Find your company in the public directory: it helps me quote accurately, and you type nothing.'
+									: "Immatriculée en France ? Retrouvez votre société dans l'annuaire public : ça m'aide à chiffrer juste, et vous n'avez rien à saisir." }}
+							</p>
+							<div class="d-flex gap-2">
+								<input type="text" id="wb-siren-q" class="form-control"
+								       placeholder="{{ app.request.locale == 'en' ? 'Company name, SIREN or SIRET' : 'Nom, SIREN ou SIRET, ex : Boulangerie Martin Évreux' }}">
+								<button type="button" id="wb-siren-go" class="wb-btn wb-btn--ink" style="white-space:nowrap;">
+									{{ app.request.locale == 'en' ? 'Search' : 'Chercher' }}
+								</button>
+							</div>
+							<div id="wb-siren-results" class="mt-2" hidden></div>
+							<p class="form-text mt-2 mb-0" style="font-size: .78rem;">
+								{{ app.request.locale == 'en'
+									? 'Source: recherche-entreprises.api.gouv.fr, public data. Nothing is stored before you send the form.'
+									: 'Source : recherche-entreprises.api.gouv.fr, données publiques. Rien n\'est enregistré avant l\'envoi du formulaire.' }}
+							</p>
+						</fieldset>
+
 						{# --------------------------------------------- 4. description -- #}
 						<fieldset style="border: 0; padding: 0; margin: 0 0 2rem;">
 							<legend class="wb-eyebrow wb-eyebrow--ink" style="float: none; width: auto; font-size: .72rem;">
@@ -288,5 +313,74 @@
 
 		</div>
 	</section>
+
+
+<script nonce="{{ csp_nonce() }}">
+(function () {
+    var q = document.getElementById('wb-siren-q');
+    var go = document.getElementById('wb-siren-go');
+    var out = document.getElementById('wb-siren-results');
+    if (!q || !go || !out) { return; }
+
+    var desc = document.querySelector('textarea[name$="[description_projet]"]');
+    var enLocale = document.documentElement.lang === 'en';
+
+    function esc(v) {
+        var d = document.createElement('div');
+        d.textContent = v == null ? '' : String(v);
+        return d.innerHTML;
+    }
+
+    function search() {
+        var term = q.value.trim();
+        if (term.length < 3) { return; }
+        out.hidden = false;
+        out.innerHTML = '<span class="form-text">' + (enLocale ? 'Searching…' : 'Recherche…') + '</span>';
+
+        fetch('https://recherche-entreprises.api.gouv.fr/search?per_page=5&q=' + encodeURIComponent(term))
+            .then(function (r) { return r.json(); })
+            .then(function (data) {
+                var list = (data && data.results) || [];
+                if (!list.length) {
+                    out.innerHTML = '<span class="form-text">' + (enLocale ? 'No company found.' : 'Aucune entreprise trouvée.') + '</span>';
+                    return;
+                }
+                out.innerHTML = list.map(function (e) {
+                    var siege = e.siege || {};
+                    return '<button type="button" class="wb-siren-pick" '
+                        + 'data-nom="' + esc(e.nom_complet) + '" '
+                        + 'data-siren="' + esc(e.siren) + '" '
+                        + 'data-ville="' + esc(siege.libelle_commune || '') + '" '
+                        + 'data-ape="' + esc(e.activite_principale || '') + '">'
+                        + '<strong>' + esc(e.nom_complet) + '</strong> '
+                        + '<span>' + esc(siege.libelle_commune || '') + ' · SIREN ' + esc(e.siren) + '</span>'
+                        + '</button>';
+                }).join('');
+                out.querySelectorAll('.wb-siren-pick').forEach(function (btn) {
+                    btn.addEventListener('click', function () {
+                        var bloc = (enLocale
+                            ? 'Company: ' + btn.dataset.nom + '\nSIREN: ' + btn.dataset.siren + '\nCity: ' + btn.dataset.ville + (btn.dataset.ape ? '\nAPE: ' + btn.dataset.ape : '')
+                            : 'Entreprise : ' + btn.dataset.nom + '\nSIREN : ' + btn.dataset.siren + '\nVille : ' + btn.dataset.ville + (btn.dataset.ape ? '\nAPE : ' + btn.dataset.ape : ''));
+                        if (desc) {
+                            var sep = desc.value.trim() ? '\n\n' : '';
+                            if (desc.value.indexOf('SIREN') === -1) {
+                                desc.value = bloc + sep + desc.value;
+                            }
+                        }
+                        out.innerHTML = '<span class="form-text" style="color:#0d7a4a;">'
+                            + (enLocale ? 'Added to your request: ' : 'Ajouté à votre demande : ')
+                            + esc(btn.dataset.nom) + '</span>';
+                    });
+                });
+            })
+            .catch(function () {
+                out.innerHTML = '<span class="form-text">' + (enLocale ? 'The directory is not responding, try again.' : "L'annuaire ne répond pas, réessayez.") + '</span>';
+            });
+    }
+
+    go.addEventListener('click', search);
+    q.addEventListener('keydown', function (e) { if (e.key === 'Enter') { e.preventDefault(); search(); } });
+})();
+</script>
 
 {% endblock %}

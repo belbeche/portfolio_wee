@@ -1,0 +1,85 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ app.request.locale == 'en' ? 'Where to start?' : 'Par où commencer ?' }}{% endblock %}
+
+{% block content %}
+{% set en = app.request.locale == 'en' %}
+
+<section class="wb-hero" data-tone="dark">
+    <div class="container" style="padding-top: 7rem; padding-bottom: 3.5rem;">
+        <span class="wb-eyebrow">{{ en ? 'Orientation' : 'Orientation' }}</span>
+        <h1 class="wb-display" style="font-size: clamp(2rem, 4.5vw, 3rem);">
+            {{ en ? 'Thirty seconds to find your door' : 'Trente secondes pour trouver votre porte' }}
+        </h1>
+        <p class="wb-lead wb-lead--on-dark mb-0" style="max-width: 660px;">
+            {{ en ? 'Three situations, three paths. Pick the sentence that sounds like you, the rest follows.'
+                  : "Trois situations, trois chemins. Choisissez la phrase qui vous ressemble, la suite en découle." }}
+        </p>
+    </div>
+</section>
+
+<section class="wb-section wb-section--paper" data-tone="light">
+    <div class="container">
+        <div class="row g-4">
+
+            <div class="col-lg-4 d-flex">
+                <div class="wb-door w-100" data-tone="light">
+                    <span class="wb-door__num">1</span>
+                    <h2 class="wb-h3">{{ en ? '“I have an idea or a need, I want a price.”' : '« J\'ai une idée ou un besoin, je veux un prix. »' }}</h2>
+                    <p style="color: var(--wb-text-2);">
+                        {{ en ? 'Describe it in your own words, no technical vocabulary needed. You get an itemised written estimate within 48 working hours, and my honest opinion on what is worth building first.'
+                              : "Décrivez-le avec vos mots, aucun vocabulaire technique n'est requis. Vous recevez un chiffrage écrit ligne par ligne sous 48 heures ouvrées, et mon avis franc sur ce qui vaut la peine d'être construit en premier." }}
+                    </p>
+                    <ul class="wb-door__list">
+                        <li>{{ en ? 'Free, no commitment' : 'Gratuit, sans engagement' }}</li>
+                        <li>{{ en ? 'A real quote, not a range' : 'Un vrai devis, pas une fourchette' }}</li>
+                        <li>{{ en ? 'No sales follow-up calls' : 'Aucune relance commerciale' }}</li>
+                    </ul>
+                    <a href="{{ url('front_devis_new') }}" class="wb-btn wb-btn--gold w-100">{{ en ? 'Describe my project' : 'Décrire mon projet' }}</a>
+                </div>
+            </div>
+
+            <div class="col-lg-4 d-flex">
+                <div class="wb-door w-100" data-tone="light">
+                    <span class="wb-door__num">2</span>
+                    <h2 class="wb-h3">{{ en ? '“I already have a tool, someone must take care of it.”' : '« J\'ai déjà un outil, il faut que quelqu\'un s\'en occupe. »' }}</h2>
+                    <p style="color: var(--wb-text-2);">
+                        {{ en ? 'A site or application already exists, but nobody watches it: no backups checked, no security patches, nobody to call. That is exactly what the Single Point of Contact plan covers, 390 € per month, cancel any time.'
+                              : "Un site ou une application existe déjà, mais personne ne la surveille : sauvegardes non vérifiées, correctifs jamais passés, personne à appeler. C'est exactement ce que couvre la formule Interlocuteur Unique, 390 € par mois, résiliable à tout moment." }}
+                    </p>
+                    <ul class="wb-door__list">
+                        <li>{{ en ? 'Answer within 4 working hours' : 'Réponse sous 4 heures ouvrées' }}</li>
+                        <li>{{ en ? 'Monitoring and verified backups' : 'Supervision et sauvegardes vérifiées' }}</li>
+                        <li>{{ en ? 'A written report every month' : 'Un rapport écrit chaque mois' }}</li>
+                    </ul>
+                    <a href="{{ url('front_services') }}" class="wb-btn wb-btn--ink w-100">{{ en ? 'See the plans' : 'Voir les formules' }}</a>
+                </div>
+            </div>
+
+            <div class="col-lg-4 d-flex">
+                <div class="wb-door w-100" data-tone="light">
+                    <span class="wb-door__num">3</span>
+                    <h2 class="wb-h3">{{ en ? '“My need is outside your specialty.”' : '« Mon besoin sort de votre spécialité. »' }}</h2>
+                    <p style="color: var(--wb-text-2);">
+                        {{ en ? 'Data, AI, heavy infrastructure, a whole team? I built AxisHumain for that: post your assignment, receive proposals from vetted independent experts within days.'
+                              : "Data, intelligence artificielle, grosse infrastructure, une équipe entière ? J'ai construit AxisHumain pour ça : publiez votre mission, recevez des propositions d'experts indépendants en quelques jours." }}
+                    </p>
+                    <ul class="wb-door__list">
+                        <li>{{ en ? 'Client and expert journeys' : 'Parcours client et expert' }}</li>
+                        <li>{{ en ? 'Reviews and track record' : 'Avis et historique des profils' }}</li>
+                        <li>{{ en ? 'Writing assistance included' : 'Aide à la rédaction incluse' }}</li>
+                    </ul>
+                    <a href="{{ url('front_referral_go', {context: 'commencer'}) }}" class="wb-btn wb-btn--outline w-100" rel="noopener">{{ en ? 'Discover AxisHumain' : 'Découvrir AxisHumain' }}</a>
+                </div>
+            </div>
+
+        </div>
+
+        <p class="text-center mt-5 mb-0" style="color: var(--wb-text-2);">
+            {{ en ? 'Still unsure? Fifteen minutes on the phone settle it:' : 'Toujours pas sûr ? Quinze minutes au téléphone tranchent la question :' }}
+            <a href="https://calendly.com/walid_belbeche/expertise-offerte" rel="noopener">{{ en ? 'book a free call' : 'réservez un appel offert' }}</a>.
+        </p>
+    </div>
+</section>
+
+{% endblock %}

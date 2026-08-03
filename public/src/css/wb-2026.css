@@ -824,12 +824,12 @@ html { scroll-behavior: smooth; }
    ========================================================================== */
 
 /* --- 1. Les sections claires n'agissent plus sur les blocs sombres ------- */
-.wb-section:not(.wb-hero):not(.wb-section--ink) h1,
-.wb-section:not(.wb-hero):not(.wb-section--ink) h2,
-.wb-section:not(.wb-hero):not(.wb-section--ink) h3,
-.wb-section:not(.wb-hero):not(.wb-section--ink) .wb-display,
-.wb-section:not(.wb-hero):not(.wb-section--ink) .wb-h2,
-.wb-section:not(.wb-hero):not(.wb-section--ink) .wb-h3 {
+.wb-section:not(.wb-hero):not(.wb-section--ink) h1:not([data-tone="dark"] *),
+.wb-section:not(.wb-hero):not(.wb-section--ink) h2:not([data-tone="dark"] *),
+.wb-section:not(.wb-hero):not(.wb-section--ink) h3:not([data-tone="dark"] *),
+.wb-section:not(.wb-hero):not(.wb-section--ink) .wb-display:not([data-tone="dark"] *),
+.wb-section:not(.wb-hero):not(.wb-section--ink) .wb-h2:not([data-tone="dark"] *),
+.wb-section:not(.wb-hero):not(.wb-section--ink) .wb-h3:not([data-tone="dark"] *) {
     color: var(--wb-text) !important;
 }
 
@@ -1118,3 +1118,159 @@ section.bg-dark .small, section.bg-primary .small,
 .wb-ticket__actions { display: flex; flex-wrap: wrap; gap: .6rem; margin-top: auto; }
 
 @media (prefers-reduced-motion: reduce) { .wb-ticket { transition: none; } }
+
+/* ==========================================================================
+   Le ton local a le dernier mot
+   --------------------------------------------------------------------------
+   Quoi que fassent les couches correctives plus haut, un bloc marque
+   data-tone="dark" a ses titres blancs, un bloc data-tone="light" a ses
+   titres encre. Les imbrications croisees sont exclues d'ici et resolues
+   par l'heritage des variables du systeme de tons.
+   ========================================================================== */
+[data-tone="dark"] :is(h1, h2, h3, h4, h5, h6, .wb-display, .wb-h2, .wb-h3):not([data-tone="light"] *) {
+    color: #ffffff !important;
+}
+[data-tone="dark"] :is(p, li, dd):not([data-tone="light"] *):not(.wb-eyebrow):not(.wb-badge) {
+    color: var(--wb-on-dark-2) !important;
+}
+[data-tone="dark"] .wb-eyebrow:not([data-tone="light"] *) { color: var(--wb-gold) !important; }
+[data-tone="light"] :is(h1, h2, h3, h4, h5, h6, .wb-h2, .wb-h3):not([data-tone="dark"] *) {
+    color: var(--wb-text) !important;
+}
+
+/* --- fil de discussion d'une demande -------------------------------------- */
+.wb-thread { display: flex; flex-direction: column; gap: .9rem; }
+.wb-thread__msg {
+  background: #fff;
+  border: 1px solid rgba(20,28,46,.09);
+  border-radius: 14px;
+  padding: 1rem 1.2rem;
+  max-width: 88%;
+  box-shadow: var(--wb-shadow-1);
+}
+.wb-thread__msg--me { align-self: flex-end; border-left: 4px solid var(--wb-gold); }
+.wb-thread__msg--support { align-self: flex-start; border-left: 4px solid var(--wb-blue); }
+.wb-thread__head {
+  display: flex;
+  align-items: center;
+  gap: .55rem;
+  margin-bottom: .5rem;
+  font-size: .88rem;
+}
+.wb-thread__date { margin-left: auto; font-size: .76rem; color: var(--wb-text-3); }
+.wb-thread__msg p { font-size: .93rem; line-height: 1.6; color: var(--wb-text); }
+
+/* --- catalogue des realisations ------------------------------------------- */
+.wb-filter { display: flex; flex-wrap: wrap; gap: .5rem; }
+
+.wb-product {
+  background: #fff;
+  border: 1px solid rgba(20,28,46,.09);
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: var(--wb-shadow-1);
+  display: flex;
+  flex-direction: column;
+  transition: transform .18s ease, box-shadow .18s ease;
+}
+.wb-product:hover { transform: translateY(-4px); box-shadow: var(--wb-shadow-2); }
+.wb-product__media {
+  position: relative;
+  display: block;
+  aspect-ratio: 16 / 10;
+  background: linear-gradient(135deg, var(--wb-ink), var(--wb-ink-3));
+  overflow: hidden;
+}
+.wb-product__media img {
+  width: 100%; height: 100%;
+  object-fit: cover; object-position: top center;
+  transition: transform .3s ease;
+}
+.wb-product:hover .wb-product__media img { transform: scale(1.04); }
+.wb-product__initials {
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 2.6rem; font-weight: 800; color: rgba(255,255,255,.35);
+}
+.wb-product__flag {
+  position: absolute; top: .8rem; left: .8rem;
+  background: var(--wb-gold); color: #1a1205;
+  font-size: .7rem; font-weight: 800; letter-spacing: .06em; text-transform: uppercase;
+  padding: .25rem .6rem; border-radius: 99px;
+}
+.wb-product__body { padding: 1.25rem 1.4rem 1.4rem; display: flex; flex-direction: column; flex: 1; }
+.wb-product__sector {
+  font-size: .72rem; font-weight: 800; letter-spacing: .1em; text-transform: uppercase;
+  color: var(--wb-blue); margin-bottom: .3rem;
+}
+.wb-product__title { font-size: 1.12rem; font-weight: 800; color: var(--wb-text); margin: 0 0 .5rem; }
+.wb-product__desc { font-size: .89rem; line-height: 1.55; color: var(--wb-text-2); margin: 0 0 .8rem; }
+.wb-product__stack { display: flex; flex-wrap: wrap; gap: .4rem; margin: 0 0 1rem; }
+.wb-product__stack span {
+  font-size: .72rem; font-weight: 600;
+  background: rgba(20,28,46,.06); color: var(--wb-text-2);
+  padding: .2rem .55rem; border-radius: 99px;
+}
+.wb-product__foot { margin-top: auto; display: flex; align-items: center; justify-content: space-between; gap: .6rem; }
+.wb-product__stores { font-size: .74rem; color: var(--wb-text-3); }
+@media (prefers-reduced-motion: reduce) {
+  .wb-product, .wb-product__media img { transition: none; }
+}
+
+/* --- cartes du parcours par secteur ---------------------------------------- */
+.wb-sector {
+  display: flex; flex-direction: column; gap: .45rem;
+  background: #fff;
+  border: 1px solid rgba(20,28,46,.09);
+  border-radius: 16px;
+  padding: 1.5rem 1.4rem;
+  box-shadow: var(--wb-shadow-1);
+  text-decoration: none !important;
+  transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+}
+.wb-sector:hover { transform: translateY(-4px); box-shadow: var(--wb-shadow-2); border-color: var(--wb-gold); }
+.wb-sector__ico { font-size: 1.7rem; line-height: 1; }
+.wb-sector__title { font-weight: 800; color: var(--wb-text); font-size: 1.02rem; }
+.wb-sector__desc { font-size: .87rem; line-height: 1.5; color: var(--wb-text-2); flex: 1; }
+.wb-sector__go { font-size: .84rem; font-weight: 700; color: var(--wb-blue); }
+
+/* --- avis clients ---------------------------------------------------------- */
+.wb-review {
+  background: #fff;
+  border: 1px solid rgba(20,28,46,.09);
+  border-radius: 16px;
+  padding: 1.4rem 1.5rem;
+  box-shadow: var(--wb-shadow-1);
+  display: flex; flex-direction: column;
+}
+.wb-review__stars span { color: rgba(20,28,46,.18); font-size: 1rem; }
+.wb-review__stars .is-on { color: var(--wb-gold); }
+.wb-review__text { font-size: .93rem; line-height: 1.6; color: var(--wb-text); margin: .6rem 0 .9rem; flex: 1; }
+.wb-review__author { font-size: .84rem; font-weight: 700; color: var(--wb-text-2); margin: 0; }
+.wb-review__author time { font-weight: 400; color: var(--wb-text-3); }
+@media (prefers-reduced-motion: reduce) { .wb-sector { transition: none; } }
+
+/* --- les trois portes de /commencer ---------------------------------------- */
+.wb-door {
+  position: relative;
+  background: #fff;
+  border: 1px solid rgba(20,28,46,.09);
+  border-radius: 16px;
+  padding: 2rem 1.6rem 1.6rem;
+  box-shadow: var(--wb-shadow-1);
+  display: flex; flex-direction: column;
+}
+.wb-door__num {
+  position: absolute; top: -1rem; left: 1.4rem;
+  width: 2.1rem; height: 2.1rem;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--wb-gold); color: #1a1205;
+  font-weight: 800; border-radius: 99px;
+  box-shadow: 0 4px 12px rgba(245,179,1,.4);
+}
+.wb-door__list { list-style: none; padding: 0; margin: 0 0 1.2rem; flex: 1; }
+.wb-door__list li {
+  position: relative; padding-left: 1.2rem;
+  font-size: .87rem; color: var(--wb-text-2); margin-bottom: .35rem;
+}
+.wb-door__list li::before { content: '✓'; position: absolute; left: 0; color: var(--wb-gold); font-weight: 800; }

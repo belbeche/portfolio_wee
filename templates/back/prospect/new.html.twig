@@ -1,39 +1,127 @@
 {% extends 'base_back.html.twig' %}
 
-{% block title %}Ajouter un Prospect{% endblock %}
+{% block title %}Ajouter un prospect{% endblock %}
 
 {% block content %}
-<h1>Ajouter un Prospect</h1>
-
-{{ form_start(form) }}
-
-    <div class="form-group">
-        {{ form_label(form.email) }}
-        {{ form_widget(form.email) }}
+<div class="ad-head">
+    <div>
+        <h1 class="ad-title">Ajouter un prospect</h1>
+        <p class="ad-sub">Cherchez l'entreprise dans l'annuaire public : les champs se remplissent seuls.</p>
     </div>
+    <form method="post" action="{{ path('back_prospect_test_email') }}" style="margin-left:auto;">
+        <input type="hidden" name="_token" value="{{ csrf_token('prospect_test_email') }}">
+        <input type="hidden" name="message" id="test-email-message" value="">
+        <button type="submit" class="ad-btn ad-btn--ghost" id="test-email-btn"
+                title="Envoie l'e-mail prospect à ta propre adresse pour vérifier le rendu">
+            M'envoyer un e-mail test
+        </button>
+    </form>
+</div>
 
-    <div class="form-group">
-        {{ form_label(form.services) }}
-        {{ form_widget(form.services) }}
+<div class="ad-card" style="margin-bottom: 1.2rem;">
+    <label class="form-label fw-bold" for="siren-q">Recherche entreprise (annuaire SIREN, gratuit)</label>
+    <div class="d-flex gap-2">
+        <input type="text" id="siren-q" class="form-control" placeholder="Nom, SIREN ou SIRET, ex : agence web evreux">
+        <button type="button" id="siren-go" class="ad-btn ad-btn--primary" style="white-space:nowrap;">Chercher</button>
     </div>
+    <div id="siren-results" class="mt-3" hidden></div>
+    <p class="small text-muted mt-2 mb-0">Source : recherche-entreprises.api.gouv.fr, donnees publiques, aucune cle requise.</p>
+</div>
 
-    <div class="form-group">
-        {{ form_label(form.document) }}
-        <div class="custom-file">
-            {{ form_widget(form.document, { 'attr': {'class': 'custom-file-input'} }) }}
-            <label class="custom-file-label" for="{{ form.document.vars.id }}">Choisir des fichiers</label>
+<div class="ad-card">
+    {{ form_start(form) }}
+        <div class="row g-3">
+            <div class="col-md-6">{{ form_row(form.company) }}</div>
+            <div class="col-md-6">{{ form_row(form.contactName) }}</div>
+            <div class="col-md-6">{{ form_row(form.email) }}</div>
+            <div class="col-md-6">{{ form_row(form.phone) }}</div>
+            <div class="col-md-6">{{ form_row(form.website) }}</div>
+            <div class="col-md-6">{{ form_row(form.city) }}</div>
+            <div class="col-12 ad-choices">{{ form_row(form.services) }}</div>
+            <div class="col-12">
+                {{ form_label(form.document) }}
+                {{ form_widget(form.document, { 'attr': {'class': 'form-control'} }) }}
+            </div>
+            <div class="col-12">{{ form_row(form.notes) }}</div>
+            <div class="col-12">{{ form_row(form.message) }}</div>
         </div>
-    </div>
+        <div class="d-flex gap-2 mt-4">
+            <button type="submit" class="ad-btn ad-btn--primary">Enregistrer</button>
+            <a href="{{ path('back_prospect_index') }}" class="ad-btn ad-btn--ghost">Retour</a>
+        </div>
+    {{ form_end(form) }}
+</div>
 
-    <div class="form-group">
-        {{ form_label(form.notes) }}
-        {{ form_widget(form.notes) }}
-    </div>
+<script nonce="{{ csp_nonce() }}">
+(function () {
+    var q = document.getElementById('siren-q');
+    var go = document.getElementById('siren-go');
+    var out = document.getElementById('siren-results');
 
-    <button type="submit" class="btn btn-primary">Enregistrer</button>
+    function fill(id, value) {
+        var field = document.querySelector('[id$="_' + id + '"]');
+        if (field && value) { field.value = value; }
+    }
 
-{{ form_end(form) }}
+    function esc(s) {
+        var d = document.createElement('div');
+        d.textContent = s == null ? '' : String(s);
+        return d.innerHTML;
+    }
 
-<a href="{{ path('back_prospect_index') }}" class="btn btn-secondary mt-3">Retour</a>
+    function search() {
+        var term = q.value.trim();
+        if (term.length < 3) { return; }
+        out.hidden = false;
+        out.innerHTML = '<span class="text-muted small">Recherche…</span>';
 
+        fetch('https://recherche-entreprises.api.gouv.fr/search?per_page=6&q=' + encodeURIComponent(term))
+            .then(function (r) { return r.json(); })
+            .then(function (data) {
+                var list = (data && data.results) || [];
+                if (!list.length) {
+                    out.innerHTML = '<span class="text-muted small">Aucune entreprise trouvée.</span>';
+                    return;
+                }
+                out.innerHTML = list.map(function (e, i) {
+                    var siege = e.siege || {};
+                    var dirigeant = (e.dirigeants && e.dirigeants[0]) || null;
+                    var nomDirigeant = dirigeant ? ((dirigeant.prenoms || '') + ' ' + (dirigeant.nom || '')).trim() : '';
+                    return '<button type="button" class="ad-btn ad-btn--ghost w-100 text-start mb-1 siren-pick"'
+                        + ' data-nom="' + esc(e.nom_complet) + '"'
+                        + ' data-ville="' + esc(siege.libelle_commune || '') + '"'
+                        + ' data-dirigeant="' + esc(nomDirigeant) + '"'
+                        + ' style="display:block;">'
+                        + '<strong>' + esc(e.nom_complet) + '</strong>'
+                        + ' <span class="small text-muted">' + esc(siege.libelle_commune || '') + ' · SIREN ' + esc(e.siren)
+                        + (e.activite_principale ? ' · APE ' + esc(e.activite_principale) : '') + '</span>'
+                        + (nomDirigeant ? '<br><span class="small text-muted">Dirigeant : ' + esc(nomDirigeant) + '</span>' : '')
+                        + '</button>';
+                }).join('');
+                out.querySelectorAll('.siren-pick').forEach(function (btn) {
+                    btn.addEventListener('click', function () {
+                        fill('company', btn.dataset.nom);
+                        fill('city', btn.dataset.ville);
+                        fill('contactName', btn.dataset.dirigeant);
+                        out.innerHTML = '<span class="small" style="color:#0d7a4a;">Fiche remplie avec ' + esc(btn.dataset.nom) + '. Vérifiez et complétez l\'e-mail.</span>';
+                    });
+                });
+            })
+            .catch(function () {
+                out.innerHTML = '<span class="text-muted small">L\'annuaire ne répond pas, réessayez.</span>';
+            });
+    }
+
+    var testBtn = document.getElementById('test-email-btn');
+    if (testBtn) {
+        testBtn.closest('form').addEventListener('submit', function () {
+            var msg = document.querySelector('textarea[id$="_message"]');
+            document.getElementById('test-email-message').value = msg ? msg.value : '';
+        });
+    }
+
+    go.addEventListener('click', search);
+    q.addEventListener('keydown', function (e) { if (e.key === 'Enter') { e.preventDefault(); search(); } });
+})();
+</script>
 {% endblock %}

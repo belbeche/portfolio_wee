@@ -106,7 +106,7 @@
 							<strong title="{{ devis.id }}">#{{ (devis.id ~ '')|slice(0, 8) }}</strong>
 							<div class="ad-hint">{{ devis.createdAt|date('d/m/Y') }}</div>
 						</td>
-						<td style="max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">
+						<td class="ad-cell-clip">
 							{{ devis.email ?? (devis.user ? devis.user.email : 'Non renseigné') }}
 						</td>
 						<td class="ad-actions" style="white-space:nowrap;">
@@ -158,7 +158,7 @@
 				{% for ticket in derniersTickets %}
 					<tr>
 						<td><strong>{{ ticket.title ?? ('Ticket #' ~ ticket.id) }}</strong></td>
-						<td>{{ ticket.sender ? ticket.sender.email : '-' }}</td>
+						<td class="ad-cell-clip">{{ ticket.sender ? ticket.sender.email : '-' }}</td>
 						<td class="ad-actions">
 							<a href="{{ url('back_show_ticket', {id: ticket.id}) }}" class="ad-btn ad-btn--ghost ad-btn--sm">Ouvrir</a>
 						</td>

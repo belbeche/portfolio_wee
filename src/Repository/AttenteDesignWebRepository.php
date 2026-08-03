@@ -10,9 +10,9 @@ use Doctrine\Persistence\ManagerRegistry;
  * @extends ServiceEntityRepository<AttenteDesignWeb>
  *
  * @method AttenteDesignWeb|null find($id, $lockMode = null, $lockVersion = null)
- * @method AttenteDesignWeb|null findOneBy(array $criteria, array $orderBy = null)
+ * @method AttenteDesignWeb|null findOneBy(array $criteria, ?array $orderBy = null)
  * @method AttenteDesignWeb[]    findAll()
- * @method AttenteDesignWeb[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method AttenteDesignWeb[]    findBy(array $criteria, ?array $orderBy = null, $limit = null, $offset = null)
  */
 class AttenteDesignWebRepository extends ServiceEntityRepository
 {

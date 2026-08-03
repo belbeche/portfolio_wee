@@ -40,8 +40,8 @@
                     <a href="{{ url('front_devis_new') }}" class="wb-btn wb-btn--gold">
                         {{ 'home.cta_estimate'|trans }}
                     </a>
-                    <a href="{{ url('front_methode') }}" class="wb-btn wb-btn--ghost">
-                        {{ 'home.cta_method'|trans }}
+                    <a href="{{ url('front_commencer') }}" class="wb-btn wb-btn--ghost">
+                        {{ app.request.locale == 'en' ? 'Where to start?' : 'Par où commencer ?' }}
                     </a>
                 </div>
 
@@ -225,6 +225,82 @@
     </div>
 </section>
 {% endif %}
+
+{# -------------------------------------------------------------- avis ------- #}
+{% if reviews is defined and reviews|length > 0 %}
+<section class="wb-section" data-tone="light">
+    <div class="container">
+        <div class="d-flex flex-wrap justify-content-between align-items-end gap-3 mb-4">
+            <div>
+                <span class="wb-eyebrow wb-eyebrow--ink">{{ en is defined and en ? 'Reviews' : 'Avis' }}</span>
+                <h2 class="wb-h2 mb-0">{{ en is defined and en ? 'They worked with me' : 'Ils ont travaillé avec moi' }}</h2>
+            </div>
+            <a href="{{ url('front_review') }}" class="wb-btn wb-btn--ghost-ink wb-btn--sm">
+                {{ en is defined and en ? 'All reviews, and leave yours' : 'Tous les avis, et laisser le vôtre' }}
+            </a>
+        </div>
+        <div class="row g-4">
+            {% for review in reviews %}
+                <div class="col-md-4 d-flex">
+                    <article class="wb-review w-100" data-tone="light">
+                        <div class="wb-review__stars" aria-label="{{ review.rating }}/5">
+                            {% for i in 1..5 %}<span class="{{ i <= review.rating ? 'is-on' : '' }}">★</span>{% endfor %}
+                        </div>
+                        <p class="wb-review__text">{{ review.content|slice(0, 220) }}{{ review.content|length > 220 ? '…' : '' }}</p>
+                        <p class="wb-review__author">{{ review.authorName }}{% if review.company %}, {{ review.company }}{% endif %}</p>
+                    </article>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+{# ---------------------------------------------- parcours par secteur ------- #}
+{% set en = en is defined ? en : app.request.locale == 'en' %}
+<section class="wb-section" data-tone="light">
+    <div class="container">
+        <div class="text-center mb-5">
+            <span class="wb-eyebrow wb-eyebrow--ink">{{ en ? 'Where do you come from?' : "Vous venez d'où ?" }}</span>
+            <h2 class="wb-h2">{{ en ? 'Tell me your world, I show you the way' : 'Dites-moi votre univers, je vous montre le chemin' }}</h2>
+            <p class="wb-lead mx-auto" style="max-width: 640px;">
+                {{ en ? 'You do not need to know what an API is. Pick the situation that looks like yours: I show you what I built for people like you, and where to start.'
+                      : "Pas besoin de savoir ce qu'est une API. Choisissez la situation qui vous ressemble : je vous montre ce que j'ai construit pour des gens comme vous, et par où commencer." }}
+            </p>
+        </div>
+
+        {% set secteurs = en ? [
+            {'ico': '🏛', 't': "Association or local authority", 'd': "A service for your members or citizens, plus the written file your grant applications need.", 'q': 'Association'},
+            {'ico': '🏪', 't': "Shop or local business", 'd': "Be found, take bookings or orders, stop losing evenings on paperwork.", 'q': 'Commerce'},
+            {'ico': '🏢', 't': "Company with an internal tool", 'd': "The Excel that runs everything becomes a real application your team can rely on.", 'q': 'Entreprise'},
+            {'ico': '🚀', 't': "Project owner with an idea", 'd': "From the idea to an application people can install, with a budget you approve step by step.", 'q': 'Startup'}
+        ] : [
+            {'ico': '🏛', 't': "Association ou collectivité", 'd': "Un service pour vos adhérents ou administrés, plus le dossier écrit qu'exigent vos demandes de subvention.", 'q': 'Association'},
+            {'ico': '🏪', 't': "Commerce ou artisan", 'd': "Être trouvé, prendre des réservations ou des commandes, arrêter de perdre vos soirées en paperasse.", 'q': 'Commerce'},
+            {'ico': '🏢', 't': "Entreprise avec un outil interne", 'd': "Le fichier Excel qui fait tourner la boîte devient une vraie application sur laquelle l'équipe peut compter.", 'q': 'Entreprise'},
+            {'ico': '🚀', 't': "Porteur de projet avec une idée", 'd': "De l'idée à une application qu'on installe, avec un budget que vous validez étape par étape.", 'q': 'Startup'}
+        ] %}
+
+        <div class="row g-4">
+            {% for sect in secteurs %}
+                <div class="col-md-6 col-lg-3 d-flex">
+                    <a href="{{ url('front_project') }}?secteur={{ sect.q|url_encode }}" class="wb-sector w-100">
+                        <span class="wb-sector__ico" aria-hidden="true">{{ sect.ico }}</span>
+                        <span class="wb-sector__title">{{ sect.t }}</span>
+                        <span class="wb-sector__desc">{{ sect.d }}</span>
+                        <span class="wb-sector__go">{{ en ? 'See what I built' : 'Voir ce que j\'ai construit' }} →</span>
+                    </a>
+                </div>
+            {% endfor %}
+        </div>
+
+        <p class="text-center mt-4 mb-0" style="color: var(--wb-text-2);">
+            {{ en ? 'None of these fits?' : 'Aucune ne vous ressemble ?' }}
+            <a href="{{ url('front_devis_new') }}">{{ en ? 'Describe your need in your own words' : 'Décrivez votre besoin avec vos mots' }}</a>,
+            {{ en ? 'I answer within 48 working hours.' : 'je réponds sous 48 heures ouvrées.' }}
+        </p>
+    </div>
+</section>
 
 {# ---------------------------------------------------------- realisations -- #}
 <section class="wb-section wb-section--paper" data-tone="light">

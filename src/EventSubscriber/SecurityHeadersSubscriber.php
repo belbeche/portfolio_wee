@@ -138,8 +138,9 @@ final class SecurityHeadersSubscriber implements EventSubscriberInterface
             sprintf("style-src 'self' 'unsafe-inline' %s %s", $cdn, $fonts),
             sprintf("font-src 'self' data: %s %s", $cdn, $fonts),
             "img-src 'self' data: https:",
-            sprintf("connect-src 'self' %s", $analytics),
-            'frame-src https://calendly.com https://*.calendly.com',
+            // recherche-entreprises : l'annuaire public des entreprises (SIREN)
+            sprintf("connect-src 'self' https://recherche-entreprises.api.gouv.fr %s", $analytics),
+            'frame-src https://calendly.com https://*.calendly.com https://www.google.com',
             "media-src 'self'",
             "object-src 'none'",
             "base-uri 'self'",

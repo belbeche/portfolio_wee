@@ -10,9 +10,9 @@ use Doctrine\Persistence\ManagerRegistry;
  * @extends ServiceEntityRepository<SuiviDemande>
  *
  * @method SuiviDemande|null find($id, $lockMode = null, $lockVersion = null)
- * @method SuiviDemande|null findOneBy(array $criteria, array $orderBy = null)
+ * @method SuiviDemande|null findOneBy(array $criteria, ?array $orderBy = null)
  * @method SuiviDemande[]    findAll()
- * @method SuiviDemande[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method SuiviDemande[]    findBy(array $criteria, ?array $orderBy = null, $limit = null, $offset = null)
  */
 class SuiviDemandeRepository extends ServiceEntityRepository
 {

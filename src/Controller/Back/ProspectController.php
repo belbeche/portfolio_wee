@@ -67,6 +67,20 @@ class ProspectController extends AbstractController
             $entityManager->persist($prospect);
             $entityManager->flush();
 
+            // Message personnalise : il remplace le paragraphe generique de
+            // l'e-mail et il est archive dans le journal du prospect.
+            $customMessage = trim((string) $form->get('message')->getData());
+
+            if ('' !== $customMessage) {
+                $note = new \App\Entity\ProspectNote();
+                $note->setProspect($prospect)
+                    ->setType('email')
+                    ->setContent($customMessage);
+                $entityManager->persist($note);
+                $prospect->registerContact();
+                $entityManager->flush();
+            }
+
             // Prepare email
             $email = (new Email())
                 ->from('contact@walidbelbeche.fr')
@@ -75,11 +89,18 @@ class ProspectController extends AbstractController
                 ->subject('Suite conversation téléphonique - Walid BELBECHE.fr')
                 ->html($this->renderView('back/prospect/welcome_prospect.html.twig', [
                     'prospect' => $prospect,
+                    'customMessage' => $customMessage,
                 ]));
 
             // Attach files if any
             foreach ($filenames as $filename) {
                 $email->attachFromPath($this->getParameter('prospects_directory') . '/' . $filename);
+            }
+
+            // L'offre une page accompagne systematiquement le premier contact.
+            $offre = $this->getParameter('kernel.project_dir').'/public/docs/offre-walid-belbeche.pdf';
+            if (is_file($offre)) {
+                $email->attachFromPath($offre, 'Offre - Walid Belbeche.pdf');
             }
 
             try {
@@ -96,6 +117,47 @@ class ProspectController extends AbstractController
             'prospect' => $prospect,
             'form' => $form->createView(),
         ]);
+    }
+
+    /**
+     * Envoie l'e-mail prospect a ta propre adresse, avec des donnees
+     * d'exemple, pour verifier le rendu avant un vrai envoi.
+     *
+     * @Route("/admin/prospect/test-email", name="back_prospect_test_email", methods={"POST"})
+     * @IsGranted("ROLE_ADMIN")
+     */
+    public function testEmail(Request $request, MailerInterface $mailer): Response
+    {
+        if (!$this->isCsrfTokenValid('prospect_test_email', (string) $request->request->get('_token'))) {
+            $this->addFlash('error', 'Jeton de securite invalide.');
+
+            return $this->redirectToRoute('back_prospect_new');
+        }
+
+        $exemple = (new Prospect())
+            ->setEmail('wbelbeche.s@gmail.com')
+            ->setCompany('Entreprise Exemple')
+            ->setContactName('Client de test');
+
+        $message = trim((string) $request->request->get('message'));
+
+        $email = (new Email())
+            ->from('contact@walidbelbeche.fr')
+            ->to('wbelbeche.s@gmail.com')
+            ->subject('[TEST] Suite conversation téléphonique - Walid BELBECHE.fr')
+            ->html($this->renderView('back/prospect/welcome_prospect.html.twig', [
+                'prospect' => $exemple,
+                'customMessage' => $message,
+            ]));
+
+        try {
+            $mailer->send($email);
+            $this->addFlash('success', 'E-mail test envoyé à wbelbeche.s@gmail.com. Regarde ta boîte, spams compris.');
+        } catch (\Exception $e) {
+            $this->addFlash('error', 'Envoi impossible : '.$e->getMessage());
+        }
+
+        return $this->redirectToRoute('back_prospect_new');
     }
 
     /**

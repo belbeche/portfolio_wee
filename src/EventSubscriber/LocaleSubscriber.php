@@ -32,13 +32,19 @@ class LocaleSubscriber implements EventSubscriberInterface
 
         $request = $event->getRequest();
 
-        if (!$request->hasPreviousSession()) {
-            return;
+        // 1. La session, si elle existe.
+        $locale = null;
+        if ($request->hasPreviousSession()) {
+            $locale = $request->getSession()->get('_locale');
         }
 
-        $locale = (string) $request->getSession()->get('_locale', $this->defaultLocale);
+        // 2. Sinon le cookie longue duree : c'est lui qui rend le choix
+        //    fiable quand la session est perdue ou pas encore creee.
+        if (null === $locale) {
+            $locale = $request->cookies->get(LocaleController::COOKIE_NAME);
+        }
 
-        if (!in_array($locale, LocaleController::SUPPORTED_LOCALES, true)) {
+        if (!is_string($locale) || !in_array($locale, LocaleController::SUPPORTED_LOCALES, true)) {
             $locale = $this->defaultLocale;
         }
 

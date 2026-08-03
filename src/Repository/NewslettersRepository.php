@@ -10,9 +10,9 @@ use Doctrine\Persistence\ManagerRegistry;
  * @extends ServiceEntityRepository<Newsletters>
  *
  * @method Newsletters|null find($id, $lockMode = null, $lockVersion = null)
- * @method Newsletters|null findOneBy(array $criteria, array $orderBy = null)
+ * @method Newsletters|null findOneBy(array $criteria, ?array $orderBy = null)
  * @method Newsletters[]    findAll()
- * @method Newsletters[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method Newsletters[]    findBy(array $criteria, ?array $orderBy = null, $limit = null, $offset = null)
  */
 class NewslettersRepository extends ServiceEntityRepository
 {

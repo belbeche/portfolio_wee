@@ -9,6 +9,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\String\Slugger\SluggerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
@@ -31,7 +32,7 @@ class CategoryController extends AbstractController
      * @Route("/admin/categorie/new", name="back_category_new")
      * @IsGranted("ROLE_ADMIN")
      */
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
+    public function new(Request $request, EntityManagerInterface $entityManager, SluggerInterface $slugger): Response
     {
 
         $category = new Category();
@@ -43,7 +44,19 @@ class CategoryController extends AbstractController
         if ($request->isMethod('POST')) {
             $form->handleRequest($request);
             if ($form->isSubmitted() && $form->isValid()) {
-                
+
+                // Le slug est obligatoire en base mais absent du formulaire :
+                // on le derive du titre, en garantissant l'unicite.
+                if (!$category->getSlug()) {
+                    $base = strtolower($slugger->slug((string) $category->getName())->toString());
+                    $slug = $base !== '' ? $base : 'categorie';
+                    $i = 2;
+                    while ($entityManager->getRepository(Category::class)->findOneBy(['slug' => $slug])) {
+                        $slug = $base.'-'.$i++;
+                    }
+                    $category->setSlug($slug);
+                }
+
                 $entityManager->persist($category);
                 $entityManager->flush();
 

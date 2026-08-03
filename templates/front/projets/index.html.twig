@@ -1,80 +1,103 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}{{ 'projects_title'|trans }}{% endblock %}
+{% block title %}{{ app.request.locale == 'en' ? 'Delivered projects' : 'Mes réalisations' }}{% endblock %}
 
 {% block content %}
+{% set en = app.request.locale == 'en' %}
 
-<div class="container-fluid text-center jumbotron mt-5">
-	<h1>{{ 'projects_heading'|trans }}</h1>
-	<div class="page-subtitle">
-		<br>
-		<a href="#devis" class="btn btn-primary">{{ 'projects_cta_button'|trans }}</a>
-		<h4></h4>
-	</div>
-</div>
+<section class="wb-hero" data-tone="dark">
+    <div class="container" style="padding-top: 7rem; padding-bottom: 4rem;">
+        <span class="wb-eyebrow">{{ en ? 'Case studies' : 'Réalisations' }}</span>
+        <h1 class="wb-display" style="font-size: clamp(2.1rem, 4.5vw, 3.2rem);">
+            {{ en ? 'Delivered projects,' : 'Des projets livrés,' }}<br>
+            <span class="wb-mark">{{ en ? 'not mock-ups' : 'pas des maquettes' }}</span>
+        </h1>
+        <p class="wb-lead wb-lead--on-dark mb-0" style="max-width: 680px;">
+            {{ en ? 'Each entry below is a real product, built and put in production. Filter by your line of business to see what I did for people like you.'
+                  : "Chaque fiche ci-dessous est un produit réel, construit et mis en production. Filtrez par votre secteur pour voir ce que j'ai fait pour des gens comme vous." }}
+        </p>
+    </div>
+</section>
 
-<div id="main" class="site-main container">
-	<div id="main-content" class="single-page-content">
-		<div id="primary" class="content-area">
+<section class="wb-section wb-section--paper" data-tone="light">
+    <div class="container">
 
-			{% include "front/includes/project.html.twig" %}
+        {% if sectors|length > 0 %}
+        <nav class="wb-filter mb-5" aria-label="{{ en ? 'Filter by sector' : 'Filtrer par secteur' }}">
+            <a href="{{ url('front_project') }}"
+               class="cat-chip {{ currentSector == '' ? 'cat-chip--active' : '' }}">{{ en ? 'All' : 'Tout' }}</a>
+            {% for sector in sectors %}
+                <a href="{{ url('front_project') }}?secteur={{ sector|url_encode }}"
+                   class="cat-chip {{ currentSector|lower == sector|lower ? 'cat-chip--active' : '' }}">{{ sector }}</a>
+            {% endfor %}
+        </nav>
+        {% endif %}
 
-			<h1 class="pb-4"></h1>
-			<div class="page-title" id="devis">
-				<h1>{{ 'projects_section_heading'|trans }}</h1>
-			</div>
+        {% if projects|length > 0 %}
+        <div class="row g-4">
+            {% for project in projects %}
+                <div class="col-md-6 col-lg-4 d-flex">
+                    <article class="wb-product w-100">
+                        <a href="{{ url('front_project_show', {id: project.id}) }}" class="wb-product__media">
+                            {% set cover = project.images|first %}
+                            {% if cover %}
+                                <img src="{{ asset('image_project/' ~ cover.name) }}" loading="lazy" alt="{{ project.title }}">
+                            {% else %}
+                                <span class="wb-product__initials">{{ project.title|slice(0, 2)|upper }}</span>
+                            {% endif %}
+                            {% if project.featured %}<span class="wb-product__flag">{{ en ? 'Highlight' : 'À la une' }}</span>{% endif %}
+                        </a>
+                        <div class="wb-product__body">
+                            {% if project.sector %}<span class="wb-product__sector">{{ project.sector }}</span>{% endif %}
+                            <h2 class="wb-product__title">{{ project.title }}</h2>
+                            <p class="wb-product__desc">
+                                {{ (project.result ?: project.description)|striptags|slice(0, 130) }}{{ (project.result ?: project.description)|striptags|length > 130 ? '…' : '' }}
+                            </p>
+                            {% if project.stack|length %}
+                                <p class="wb-product__stack">
+                                    {% for tech in project.stack|slice(0, 4) %}<span>{{ tech }}</span>{% endfor %}
+                                </p>
+                            {% endif %}
+                            <div class="wb-product__foot">
+                                <a href="{{ url('front_project_show', {id: project.id}) }}" class="wb-btn wb-btn--ink wb-btn--sm">
+                                    {{ en ? 'Read the case study' : "Lire l'étude de cas" }}
+                                </a>
+                                {% if project.storeUrlIos or project.storeUrlAndroid %}
+                                    <span class="wb-product__stores">{{ en ? 'On the app stores' : 'Sur les stores' }}</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </article>
+                </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="wb-card" data-tone="light" style="max-width: 640px;">
+            <h2 class="wb-h3">{{ en ? 'Nothing in this sector yet' : 'Rien dans ce secteur pour le moment' }}</h2>
+            <p style="color: var(--wb-text-2);">
+                {{ en ? 'That does not mean I cannot do it: describe your project and I will tell you honestly whether it fits my scope.'
+                      : "Ça ne veut pas dire que je ne sais pas le faire : décrivez votre projet, je vous dirai franchement s'il entre dans mon périmètre." }}
+            </p>
+            <a href="{{ url('front_devis_new') }}" class="wb-btn wb-btn--ink">{{ en ? 'Describe my project' : 'Décrire mon projet' }}</a>
+        </div>
+        {% endif %}
 
-			<div class="container">
-				<div class="row">
+        <div class="wb-card wb-card--ink mt-5 p-4 p-lg-5" data-tone="dark">
+            <div class="row align-items-center g-4">
+                <div class="col-lg-8">
+                    <h2 class="wb-h3">{{ en ? 'Your project could be the next entry' : 'Votre projet peut être la prochaine fiche' }}</h2>
+                    <p class="mb-0" style="color: var(--wb-on-dark-2);">
+                        {{ en ? 'Describe your need in two minutes, you get a priced answer within 48 working hours.'
+                              : 'Décrivez votre besoin en deux minutes, vous recevez une réponse chiffrée sous 48 heures ouvrées.' }}
+                    </p>
+                </div>
+                <div class="col-lg-4 text-lg-end">
+                    <a href="{{ url('front_devis_new') }}" class="wb-btn wb-btn--gold">{{ en ? 'Get my estimate' : 'Estimer mon projet' }}</a>
+                </div>
+            </div>
+        </div>
 
-					<!-- Rélisation d'un site d'agence -->
-					<div class="col-md-3 col-xs-12 mb-5 mt-2">
-						<div class="card">
-							<img src="{{ asset('img/quote/agency.svg') }}" alt="{{ 'project_agency_alt'|trans }}"/>
-							<div class="card-body">
-								<h5 class="card-title">{{ 'project_agency_title'|trans }}</h5>
-								<p class="card-text">{{ 'project_agency_description'|trans }}</p>
-							</div>
-						</div>
-					</div>
-
-					<!-- Réalisation de site d'annonce immobilière -->
-					<div class="col-md-3 col-xs-12 mb-5 mt-2">
-						<div class="card">
-							<img src="{{ asset('img/quote/real_estate_or_travel.svg') }}" alt="{{ 'project_real_estate_alt'|trans }}"/>
-							<div class="card-body">
-								<h5 class="card-title">{{ 'project_real_estate_title'|trans }}</h5>
-								<p class="card-text">{{ 'project_real_estate_description'|trans }}</p>
-							</div>
-						</div>
-					</div>
-
-					<!-- Rélisation de site eCommerce -->
-					<div class="col-md-3 col-xs-12 mb-5 mt-2">
-						<div class="card">
-							<img src="{{ asset('img/quote/Ecommerce.svg') }}" alt="{{ 'project_ecommerce_alt'|trans }}"/>
-							<div class="card-body">
-								<h5 class="card-title">{{ 'project_ecommerce_title'|trans }}</h5>
-								<p class="card-text">{{ 'project_ecommerce_description'|trans }}</p>
-							</div>
-						</div>
-					</div>
-
-					<!-- Réalisation de site portfolio -->
-					<div class="col-md-3 col-xs-12 mb-5 mt-2">
-						<div class="card">
-							<img src="{{ asset('img/quote/portfolio.svg') }}" alt="{{ 'project_portfolio_alt'|trans }}"/>
-							<div class="card-body">
-								<h5 class="card-title">{{ 'project_portfolio_title'|trans }}</h5>
-								<p class="card-text">{{ 'project_portfolio_description'|trans }}</p>
-							</div>
-						</div>
-					</div>
-
-				</div>
-			</div>
-		</div>
-	</div>
-</div>
+    </div>
+</section>
 
 {% endblock %}

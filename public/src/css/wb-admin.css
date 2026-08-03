@@ -58,15 +58,15 @@ body.admin {
     flex: none;
     background: linear-gradient(180deg, var(--ad-side) 0%, var(--ad-side-2) 100%);
     color: var(--ad-on-side);
-    position: fixed;
-    top: 0; bottom: 0; left: 0;
+    position: relative;
+    min-height: 100vh;
     display: flex; flex-direction: column;
     z-index: 1040;
     transition: transform .28s cubic-bezier(.22,.61,.36,1);
 }
 .ad-main {
     flex: 1;
-    margin-left: var(--ad-side-w);
+    min-width: 0;
     min-width: 0;
     display: flex; flex-direction: column;
 }
@@ -143,7 +143,7 @@ body.admin {
     border-bottom: 1px solid var(--ad-line);
     padding: .85rem 1.6rem;
     display: flex; align-items: center; gap: 1rem;
-    position: sticky; top: 0; z-index: 1020;
+    position: relative; z-index: 1020;
 }
 .ad-top__title { font-size: 1.02rem; font-weight: 750; margin: 0; }
 .ad-top__crumb { font-size: .76rem; color: var(--ad-text-3); }
@@ -360,7 +360,7 @@ a.ad-kpi:hover { transform: translateY(-3px); box-shadow: var(--ad-shadow-2); bo
 /* ------------------------------------------------------------- responsive -- */
 
 @media (max-width: 991px) {
-    .ad-side { transform: translateX(-100%); box-shadow: var(--ad-shadow-2); }
+    .ad-side { position: fixed; top: 0; bottom: 0; left: 0; height: auto; transform: translateX(-100%); box-shadow: var(--ad-shadow-2); }
     .ad-side.is-open { transform: translateX(0); }
     .ad-main { margin-left: 0; }
     .ad-burger { display: inline-flex; }
@@ -585,3 +585,134 @@ body.admin .site-footer,
 body.admin #site_header.top-fixed { display: none !important; }
 
 .ad-hint { font-size: .74rem; color: var(--ad-text-3); margin-top: .1rem; }
+
+/* Le texte des boutons d'action ne peut jamais etre efface par le theme */
+.ad-btn--primary, .ad-btn--primary * { color: #ffffff !important; }
+.ad-btn--ghost, .ad-btn--ghost *     { color: var(--ad-text-2) !important; }
+.ad-btn--ghost:hover, .ad-btn--ghost:hover * { color: var(--ad-text) !important; }
+.ad-btn--danger, .ad-btn--danger *   { color: var(--ad-red) !important; }
+.ad-btn--danger:hover, .ad-btn--danger:hover * { color: #ffffff !important; }
+
+/* Groupes de cases a cocher : deux colonnes des ecrans moyens */
+@media (min-width: 768px) {
+    .ad-choices > div > div:last-child,
+    .ad-choices fieldset > div:last-child {
+        column-count: 2;
+        column-gap: 2.5rem;
+    }
+    .ad-choices .form-check { break-inside: avoid; }
+}
+
+/* --- respiration des formulaires ------------------------------------------- */
+.ad-card { padding: 1.9rem 2.1rem; }
+.ad-card form .form-label,
+.ad-card form label { margin-top: .35rem; margin-bottom: .45rem; font-weight: 600; }
+.ad-card .form-control, .ad-card .form-select { padding: .6rem .8rem; }
+.ad-card form .row { row-gap: 1.15rem; }
+.ad-card .form-check { margin-bottom: .5rem; }
+.ad-card .form-text, .ad-card .help-text { margin-top: .45rem; }
+.ad-head { margin-bottom: 1.3rem; }
+.ad-head .ad-sub { margin-top: .3rem; }
+
+/* ==========================================================================
+   Habillage automatique des anciennes pages
+   --------------------------------------------------------------------------
+   Beaucoup de pages du back office datent d'avant le systeme ad-. Plutot
+   que de les reecrire une par une, cette couche habille leur balisage brut
+   des qu'il est dans .ad-body : titres, tableaux, boutons, formulaires.
+   Une page reecrite avec ad-card ignore simplement cette couche.
+   ========================================================================== */
+
+/* Titres de page */
+.ad-body > h1, .ad-body > div > h1:first-child {
+    font-size: 1.35rem; font-weight: 800; color: var(--ad-text);
+    margin: 0 0 1.2rem;
+}
+.ad-body h2:not([class]), .ad-body h3:not([class]) {
+    font-size: 1.05rem; font-weight: 700; color: var(--ad-text);
+    margin: 1.4rem 0 .8rem;
+}
+
+/* Tous les tableaux prennent l'apparence carte, avec ou sans classe */
+.ad-body table {
+    width: 100%;
+    background: var(--ad-surface);
+    border-radius: 12px;
+    box-shadow: var(--ad-shadow-1);
+    border-collapse: separate;
+    border-spacing: 0;
+    overflow: hidden;
+    margin-bottom: 1.4rem;
+}
+.ad-body table th, .ad-body table td {
+    padding: .8rem 1rem;
+    border-bottom: 1px solid var(--ad-line);
+    vertical-align: middle;
+    text-align: left;
+}
+.ad-body table thead th, .ad-body table > tbody:first-child > tr:first-child > th[scope="col"] {
+    font-size: .74rem; font-weight: 800; letter-spacing: .08em; text-transform: uppercase;
+    color: var(--ad-text-3); background: var(--ad-bg);
+}
+.ad-body table tr:last-child > th, .ad-body table tr:last-child > td { border-bottom: 0; }
+.ad-body table th[scope="row"], .ad-body table tbody th { color: var(--ad-text-2); font-weight: 700; }
+.ad-body table ul { margin: 0; padding-left: 1.1rem; }
+
+/* Les boutons Bootstrap et les boutons nus prennent la charte */
+.ad-body .btn, .ad-body button:not([class]), .ad-body button[type="submit"]:not([class]) {
+    display: inline-flex; align-items: center; gap: .4rem;
+    padding: .48rem .95rem; border-radius: 9px;
+    font-size: .85rem; font-weight: 700; line-height: 1.2;
+    border: 1px solid transparent; cursor: pointer;
+    text-decoration: none !important;
+    transition: transform .12s ease, box-shadow .12s ease;
+}
+.ad-body .btn:hover, .ad-body button:not([class]):hover { transform: translateY(-1px); }
+.ad-body .btn-primary, .ad-body .btn-info, .ad-body .btn-success,
+.ad-body button[type="submit"]:not([class]) {
+    background: var(--ad-primary) !important; color: #fff !important;
+    box-shadow: 0 2px 8px rgba(42,120,214,.28);
+}
+.ad-body .btn-secondary, .ad-body .btn-light, .ad-body .btn-outline-secondary,
+.ad-body a.btn:not([class*="btn-"]) {
+    background: var(--ad-surface) !important; color: var(--ad-text-2) !important;
+    border-color: var(--ad-line) !important;
+}
+.ad-body .btn-danger, .ad-body .btn-outline-danger,
+.ad-body form[onsubmit*="confirm"] button {
+    background: var(--ad-surface) !important; color: var(--ad-red) !important;
+    border-color: #f3c9c9 !important; box-shadow: none;
+}
+.ad-body .btn-danger:hover, .ad-body form[onsubmit*="confirm"] button:hover {
+    background: var(--ad-red) !important; color: #fff !important;
+}
+
+/* Groupes d'actions en bas de page : espaces, plus d'ecartelement */
+.ad-body .d-flex.justify-content-between { gap: .6rem; justify-content: flex-start !important; }
+
+/* Formulaires sans classes */
+.ad-body input:not([type="checkbox"]):not([type="radio"]):not([type="file"]):not([class]),
+.ad-body textarea:not([class]), .ad-body select:not([class]) {
+    display: block; width: 100%;
+    padding: .6rem .8rem;
+    border: 1px solid var(--ad-line-2); border-radius: 9px;
+    background: var(--ad-surface); color: var(--ad-text);
+    font-size: .92rem;
+}
+.ad-body form label { font-weight: 600; margin: .6rem 0 .4rem; display: inline-block; }
+.ad-body .form-group { margin-bottom: 1rem; }
+
+/* Listes de definition (fiches details) */
+.ad-body dl.row dt { color: var(--ad-text-3); font-weight: 700; }
+.ad-body dl.row dd { color: var(--ad-text); }
+
+/* --- les tableaux ne debordent plus de leur carte --------------------------- */
+.ad-grid > * { min-width: 0; }          /* une carte de grille peut retrecir */
+.ad-card { overflow: hidden; }
+.ad-cell-clip {
+    width: 100%;
+    max-width: 0;                        /* l'astuce qui autorise l'ellipse    */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}

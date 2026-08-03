@@ -3,11 +3,15 @@
 {% block email_title %}Suite à notre échange{% endblock %}
 
 {% block email_body %}
-    <p style="margin:0 0 14px;">Bonjour{% if prospect.username is defined and prospect.username %} {{ prospect.username }}{% endif %},</p>
+    <p style="margin:0 0 14px;">Bonjour{% if prospect.contactName is defined and prospect.contactName %} {{ prospect.contactName }}{% elseif prospect.company is defined and prospect.company %}, l'équipe {{ prospect.company }}{% endif %},</p>
+    {% if customMessage is defined and customMessage %}
+        <p style="margin:0 0 14px; white-space: pre-line;">{{ customMessage }}</p>
+    {% else %}
     <p style="margin:0 0 14px;">
         Merci pour notre échange téléphonique. Comme promis, voici mes coordonnées
         et, le cas échéant, les documents évoqués en pièce jointe.
     </p>
+    {% endif %}
     <p style="margin:0 0 14px;">
         Pour situer mon travail en deux lignes : je conçois et développe des
         applications web et mobiles de bout en bout, seul interlocuteur du cahier

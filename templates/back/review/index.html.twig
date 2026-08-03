@@ -1,0 +1,54 @@
+{% extends 'base_back.html.twig' %}
+
+{% block title %}Avis clients{% endblock %}
+
+{% block content %}
+<div class="ad-head">
+    <div>
+        <h1 class="ad-title">Avis clients</h1>
+        <p class="ad-sub">Un avis n'apparaît sur le site qu'une fois approuvé ici.</p>
+    </div>
+</div>
+
+<div class="ad-card">
+    {% if reviews|length > 0 %}
+        <table class="table align-middle">
+            <thead>
+                <tr><th>Date</th><th>Auteur</th><th>Note</th><th>Contenu</th><th>État</th><th></th></tr>
+            </thead>
+            <tbody>
+            {% for review in reviews %}
+                <tr>
+                    <td class="small text-muted">{{ review.createdAt|date('d/m/Y') }}</td>
+                    <td><strong>{{ review.authorName }}</strong>{% if review.company %}<br><span class="small text-muted">{{ review.company }}</span>{% endif %}</td>
+                    <td>{{ review.rating }}/5</td>
+                    <td class="small" style="max-width: 380px;">{{ review.content|slice(0, 180) }}{{ review.content|length > 180 ? '…' : '' }}</td>
+                    <td>
+                        {% if review.approved %}
+                            <span class="badge bg-success">Publié</span>
+                        {% else %}
+                            <span class="badge bg-warning text-dark">En attente</span>
+                        {% endif %}
+                    </td>
+                    <td class="text-end" style="white-space: nowrap;">
+                        <form method="post" action="{{ path('back_review_toggle', {id: review.id}) }}" style="display:inline;">
+                            <input type="hidden" name="_token" value="{{ csrf_token('review' ~ review.id) }}">
+                            <button class="btn btn-sm {{ review.approved ? 'btn-outline-secondary' : 'btn-success' }}">
+                                {{ review.approved ? 'Retirer' : 'Publier' }}
+                            </button>
+                        </form>
+                        <form method="post" action="{{ path('back_review_delete', {id: review.id}) }}" style="display:inline;"
+                              onsubmit="return confirm('Supprimer cet avis ?');">
+                            <input type="hidden" name="_token" value="{{ csrf_token('review' ~ review.id) }}">
+                            <button class="btn btn-sm btn-outline-danger">Supprimer</button>
+                        </form>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p class="text-muted mb-0">Aucun avis reçu pour le moment.</p>
+    {% endif %}
+</div>
+{% endblock %}

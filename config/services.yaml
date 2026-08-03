@@ -18,6 +18,8 @@ services:
     _defaults:
         autowire: true
         autoconfigure: true
+        bind:
+            string $projectDir: '%kernel.project_dir%'
 
     Gedmo\Translatable\TranslatableListener:
         tags:

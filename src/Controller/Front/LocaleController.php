@@ -3,6 +3,7 @@
 namespace App\Controller\Front;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -25,6 +26,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class LocaleController extends AbstractController
 {
     public const SUPPORTED_LOCALES = ['fr', 'en'];
+    public const COOKIE_NAME = 'wb_locale';
 
     /**
      * @Route("/change-locale/{_locale}", name="switch_locale", requirements={"_locale"="fr|en"})
@@ -37,7 +39,23 @@ class LocaleController extends AbstractController
 
         $request->getSession()->set('_locale', $_locale);
 
-        return new RedirectResponse($this->safeReferer($request));
+        $response = new RedirectResponse($this->safeReferer($request));
+
+        // Cookie d'un an : la preference survit a la perte de session
+        // (session expiree, passage www/apex, navigateur qui purge).
+        $response->headers->setCookie(Cookie::create(
+            self::COOKIE_NAME,
+            $_locale,
+            new \DateTimeImmutable('+1 year'),
+            '/',
+            null,
+            $request->isSecure(),
+            false, // lisible cote client si besoin d'affichage
+            false,
+            Cookie::SAMESITE_LAX
+        ));
+
+        return $response;
     }
 
     /**

@@ -1,126 +1,88 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Détails du Ticket{% endblock %}
+{% block title %}{{ app.request.locale == 'en' ? 'Request thread' : 'Fil de la demande' }} n° {{ ticket.id }}{% endblock %}
 
 {% block content %}
+{% set en = app.request.locale == 'en' %}
 
-<section class="wb-hero" data-tone="dark">
-    <div class="container" style="padding-top: 7rem; padding-bottom: 3rem;">
-        <span class="wb-eyebrow">{{ app.request.locale == 'en' ? 'Client area' : 'Espace client' }}</span>
-        <h1 class="wb-display" style="font-size: clamp(1.8rem, 4vw, 2.6rem);">{{ app.request.locale == 'en' ? 'The request thread' : 'Le fil de la demande' }}</h1>
-        <p class="wb-lead wb-lead--on-dark mb-0" style="max-width:620px;">Tout l'échange, daté, au même endroit. La réponse arrive sous 4 heures ouvrées.</p>
-    </div>
-</section>
+<section class="wb-section wb-section--paper" data-tone="light" style="padding-top: 7rem;">
+    <div class="container" style="max-width: 880px;">
 
-<section class="wb-section wb-section--paper" data-tone="light">
-<div class="container">
-    <div class="container">
-		{% for type, messages in app.flashes %}
-			{% for message in messages %}
-				<div class="alert alert-{{ type }}">{{ message }}</div>
-			{% endfor %}
-		{% endfor %}
-	</div>
-    <!-- Header Section -->
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1 class="h4 fw-bold">Détails du Ticket #{{ ticket.devis.id }}</h1>
-        <a href="{{ path('front_show_ticket', {'id': ticket.devis.id}) }}" class="btn btn-outline-secondary">
-            <i class="bi bi-arrow-left"></i> Retour à la liste des tickets
-        </a>
-    </div>
+        {% for type, messages in app.flashes %}
+            {% for message in messages %}
+                <div class="alert alert-{{ type }}">{{ message }}</div>
+            {% endfor %}
+        {% endfor %}
 
-    <!-- Ticket Details -->
-    <div class="card shadow-sm mb-4">
-        <div class="card-header bg-primary text-white" data-tone="dark">
-            <h5 class="mb-0">Informations sur le Ticket</h5>
+        <div class="d-flex flex-wrap justify-content-between align-items-end gap-3 mb-4">
+            <div>
+                <span class="wb-eyebrow wb-eyebrow--ink">{{ en ? 'Client area' : 'Espace client' }}</span>
+                <h1 class="wb-h2 mb-1">{{ en ? 'The request thread' : 'Le fil de la demande' }}</h1>
+                <p class="mb-0" style="color: var(--wb-text-2);">
+                    {{ en ? 'The whole exchange, dated, in one place. Answer within 4 working hours.'
+                          : "Tout l'échange, daté, au même endroit. La réponse arrive sous 4 heures ouvrées." }}
+                </p>
+            </div>
+            <a href="{{ path('front_show_ticket', {'id': ticket.devis.id}) }}" class="wb-btn wb-btn--ghost-ink wb-btn--sm">
+                {{ en ? 'Back to my requests' : 'Retour à mes demandes' }}
+            </a>
         </div>
-        <div class="card-body">
-            <dl class="row">
-                <dt class="col-sm-3">Numéro</dt>
-                <dd class="col-sm-9">#{{ ticket.id }}</dd>
 
-                <dt class="col-sm-3">Statut</dt>
-                <dd class="col-sm-9">
-                    <div>
-                        {% if ticket.status == 'en_cours' %}
-                            <h1 class="text-body-emphasis badge bg-primary text-white">Réponse du support</h1>
-                        {% elseif ticket.status == 'en_attente' %}
-                            <h1 class="text-body-emphasis badge bg-warning">Message du client</h1>
-                        {% elseif ticket.status == 'termine' %}
-                            <h1 class="text-body-emphasis badge bg-success">Clôture du ticket</h1>
-                        {% elseif ticket.status == 'livre' %}
-                            <h1 class="text-body-emphasis badge bg-info">Service livré</h1>
-                        {% else %}
-                            <h1 class="text-body-emphasis badge bg-secondary">{{ ticket.status|capitalize }}</h1>
-                        {% endif %}
-                    </div>
-                </dd>
+        {% set etat = {
+            'en_cours':   {'l': en ? 'Support replied' : 'Réponse du support', 'c': 'wb-tag--blue'},
+            'en_attente': {'l': en ? 'Waiting for my reply' : 'En attente de ma réponse', 'c': 'wb-tag--gold'},
+            'termine':    {'l': en ? 'Closed' : 'Clôturé', 'c': 'wb-tag--green'},
+            'livre':      {'l': en ? 'Delivered' : 'Service livré', 'c': 'wb-tag--green'}
+        }[ticket.status]|default({'l': ticket.status|capitalize, 'c': 'wb-tag--grey'}) %}
 
-                <dt class="col-sm-3">Type de site web</dt>
-                <dd class="col-sm-9">{{ ticket.devis.typeDeSiteWeb }}</dd>
-
-                <dt class="col-sm-3">Type de design</dt>
-                <dd class="col-sm-9">
-                    {% for design in ticket.devis.attentesDesignWeb %}
-                        <span class="badge bg-info">{{ design.label }}</span>
-                    {% endfor %}
-                </dd>
-
-                <dt class="col-sm-3">Créé le</dt>
-                <dd class="col-sm-9">{{ ticket.createdAt|date('d/m/Y H:i') }}</dd>
-
-                <dt class="col-sm-3">Description</dt>
-                <dd class="col-sm-9">{{ ticket.content }}</dd>
+        <div class="wb-card mb-4" data-tone="light">
+            <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+                <h2 class="wb-h3 mb-0">{{ en ? 'Request' : 'Demande' }} n° {{ (ticket.id ~ '')|slice(0, 8) }}</h2>
+                <span class="wb-tag {{ etat.c }}">{{ etat.l }}</span>
+            </div>
+            <dl class="wb-ticket__meta mb-0">
+                <div><dt>{{ en ? 'Opened on' : 'Ouverte le' }}</dt><dd>{{ ticket.createdAt|date('d/m/Y à H\\hi') }}</dd></div>
+                {% if ticket.devis is not null %}
+                    <div><dt>{{ en ? 'Project' : 'Projet' }}</dt><dd>{{ ticket.devis.typeDeSiteWeb }}</dd></div>
+                    {% if ticket.devis.attentesDesignWeb|length %}
+                        <div><dt>{{ en ? 'Design' : 'Attentes' }}</dt><dd>{% for design in ticket.devis.attentesDesignWeb %}{{ design.label }}{{ not loop.last ? ', ' : '' }}{% endfor %}</dd></div>
+                    {% endif %}
+                {% endif %}
+                <div><dt>{{ en ? 'Subject' : 'Objet' }}</dt><dd>{{ ticket.content }}</dd></div>
             </dl>
         </div>
-    </div>
 
-    <!-- Messages Section -->
-    <div class="card shadow-sm mb-4">
-        <div class="card-header bg-secondary text-white">
-            <h5 class="mb-0">Messages</h5>
-        </div>
-        <div class="card-body">
-            {% if ticket.messages|length > 0 %}
-                <ul class="list-unstyled">
-                    {% for message in ticket.messages %}
-                        <li class="mb-4">
-                            <div class="d-flex align-items-center mb-2">
-                                <img src="{{ asset('uploads/avatar/' ~ message.sender.avatar) }}" 
-                                     alt="{{ message.sender.username }}" 
-                                     class="rounded-circle me-2" width="40" height="40">
-                                <strong>{{ message.sender.username }}</strong> 
-                                <span class="text-muted small ms-2">{{ message.createdAt|date('d/m/Y H:i') }}</span>
-                            </div>
-                            <p class="mb-0">{{ message.content }}</p>
-                        </li>
-                        <a href="{{ path('respond_to_ticket', {'id': message.id}) }}" class="btn btn-outline-primary btn-sm" title="Répondre">
-                            <i class="bi bi-reply"></i> Répondre
-                        </a>
-                    {% endfor %}
-                </ul>
-            {% else %}
-                <div class="alert alert-info">Aucun message pour ce ticket pour le moment.</div>
-            {% endif %}
-        </div>
-    </div>
+        <h2 class="wb-h3 mb-3">{{ en ? 'Messages' : 'Messages' }}</h2>
 
-    <!-- Response Form -->
-    {# <div class="card shadow-sm">
-        <div class="card-header bg-light" data-tone="light">
-            <h5 class="mb-0">Envoyer une Réponse</h5>
-        </div>
-        <div class="card-body">
-            {{ form_start(responseForm) }}
-            <div class="mb-3">
-                {{ form_label(responseForm.content, 'Message :', {'label_attr': {'class': 'form-label'}}) }}
-                {{ form_widget(responseForm.content, {'attr': {'class': 'form-control', 'placeholder': 'Écrivez votre réponse ici...'}}) }}
+        {% if ticket.messages|length > 0 %}
+            <div class="wb-thread mb-4">
+                {% for message in ticket.messages %}
+                    <article class="wb-thread__msg {{ message.sender.email == app.user.email ? 'wb-thread__msg--me' : 'wb-thread__msg--support' }}">
+                        <div class="wb-thread__head">
+                            <img src="{{ asset('uploads/avatar/' ~ (message.sender.avatar ?: 'support0.svg')) }}"
+                                 alt="" width="34" height="34" class="rounded-circle" style="object-fit: cover;">
+                            <strong>{{ message.sender.username }}</strong>
+                            <time class="wb-thread__date">{{ message.createdAt|date('d/m/Y H:i') }}</time>
+                        </div>
+                        <p class="mb-0">{{ message.content|nl2br }}</p>
+                    </article>
+                {% endfor %}
             </div>
-            {{ form_rest(responseForm )}}
-            <button type="submit" class="btn btn-primary">Envoyer</button>
-            {{ form_end(responseForm) }}
-        </div>
-    </div> #}
-</div>
+        {% else %}
+            <div class="wb-card mb-4" data-tone="light">
+                <p class="mb-0" style="color: var(--wb-text-2);">
+                    {{ en ? 'No message yet on this request.' : 'Aucun message pour cette demande pour le moment.' }}
+                </p>
+            </div>
+        {% endif %}
+
+        {% if ticket.status != 'termine' %}
+            <a href="{{ path('respond_to_ticket', {'id': ticket.id}) }}" class="wb-btn wb-btn--ink">
+                {{ en ? 'Reply' : 'Répondre' }}
+            </a>
+        {% endif %}
+
+    </div>
 </section>
+
 {% endblock %}

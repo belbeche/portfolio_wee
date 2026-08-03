@@ -1,0 +1,83 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ app.request.locale == 'en' ? 'Client reviews' : 'Avis clients' }}{% endblock %}
+
+{% block content %}
+{% set en = app.request.locale == 'en' %}
+
+<section class="wb-hero" data-tone="dark">
+    <div class="container" style="padding-top: 7rem; padding-bottom: 3.5rem;">
+        <span class="wb-eyebrow">{{ en ? 'Reviews' : 'Avis' }}</span>
+        <h1 class="wb-display" style="font-size: clamp(2rem, 4vw, 3rem);">
+            {{ en ? 'What clients say' : 'Ce que disent les clients' }}
+        </h1>
+        <p class="wb-lead wb-lead--on-dark mb-0" style="max-width: 640px;">
+            {{ en ? 'Every review below was written by a real client and published as is, after a simple moderation against spam.'
+                  : "Chaque avis ci-dessous a été écrit par un vrai client et publié tel quel, après une simple modération anti-spam." }}
+        </p>
+    </div>
+</section>
+
+<section class="wb-section wb-section--paper" data-tone="light">
+    <div class="container">
+
+        {% for type, messages in app.flashes %}
+            {% for message in messages %}
+                <div class="alert alert-{{ type }}">{{ message }}</div>
+            {% endfor %}
+        {% endfor %}
+
+        <div class="row g-4">
+            <div class="col-lg-7">
+                {% if reviews|length > 0 %}
+                    <div class="d-flex flex-column gap-3">
+                        {% for review in reviews %}
+                            <article class="wb-review" data-tone="light">
+                                <div class="wb-review__stars" aria-label="{{ review.rating }}/5">
+                                    {% for i in 1..5 %}<span class="{{ i <= review.rating ? 'is-on' : '' }}">★</span>{% endfor %}
+                                </div>
+                                <p class="wb-review__text">{{ review.content|nl2br }}</p>
+                                <p class="wb-review__author">
+                                    {{ review.authorName }}{% if review.company %}, {{ review.company }}{% endif %}
+                                    <time>· {{ review.createdAt|date('m/Y') }}</time>
+                                </p>
+                            </article>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="wb-card" data-tone="light">
+                        <p class="mb-0" style="color: var(--wb-text-2);">
+                            {{ en ? 'No published review yet. Yours can be the first.'
+                                  : "Aucun avis publié pour le moment. Le vôtre peut être le premier." }}
+                        </p>
+                    </div>
+                {% endif %}
+            </div>
+
+            <div class="col-lg-5">
+                <div class="wb-card wb-card--accent" data-tone="light">
+                    <h2 class="wb-h3">{{ en ? 'Leave a review' : 'Laisser un avis' }}</h2>
+                    <p class="mb-3" style="color: var(--wb-text-2); font-size: .9rem;">
+                        {{ en ? 'Two minutes, no account needed. It appears once moderated.'
+                              : "Deux minutes, sans compte. Il apparaît une fois modéré." }}
+                    </p>
+                    {{ form_start(form) }}
+                        {{ form_row(form.authorName, {'attr': {'class': 'form-control'}}) }}
+                        {{ form_row(form.company, {'attr': {'class': 'form-control'}}) }}
+                        {{ form_row(form.rating, {'attr': {'class': 'form-select'}}) }}
+                        {{ form_row(form.content, {'attr': {'class': 'form-control'}}) }}
+                        <button type="submit" class="wb-btn wb-btn--gold mt-3">{{ en ? 'Send my review' : 'Envoyer mon avis' }}</button>
+                    {{ form_end(form) }}
+
+                    <hr style="border-color: var(--wb-line); margin: 1.3rem 0;">
+                    <a class="wb-btn wb-btn--ghost-ink w-100" href="https://g.page/r/CSj9BKNjCGCBEAI/review" rel="noopener">
+                        {{ en ? 'Or leave it on Google' : 'Ou le déposer sur Google' }}
+                    </a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+{% endblock %}

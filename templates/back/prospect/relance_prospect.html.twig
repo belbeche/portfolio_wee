@@ -1,0 +1,23 @@
+{% extends 'emails/_layout.html.twig' %}
+
+{% block email_title %}Je reviens vers vous{% endblock %}
+
+{% block email_body %}
+    <p style="margin:0 0 14px;">Bonjour{% if prospect.contactName %} {{ prospect.contactName }}{% endif %},</p>
+    <p style="margin:0 0 14px;">
+        Je me permets de revenir vers vous suite à mon message
+        {% if prospect.lastContactedAt %}du {{ prospect.lastContactedAt|date('d/m') }}{% endif %} :
+        je propose aux structures comme la vôtre un développement web et mobile
+        en marque blanche ou en direct, avec un seul interlocuteur du cahier des
+        charges à la mise en ligne.
+    </p>
+    <p style="margin:0 0 14px;">
+        Si le sujet n'est pas d'actualité, un simple « pas maintenant » me suffit
+        et je ne reviendrai pas vers vous. S'il l'est, quinze minutes au téléphone
+        suffisent pour voir si nous pouvons travailler ensemble.
+    </p>
+    <p style="margin:0 0 14px;">
+        Mes réalisations : <a href="https://walidbelbeche.fr" style="color:#141c2e;font-weight:bold;">walidbelbeche.fr</a>
+        · 06 61 28 77 86
+    </p>
+{% endblock %}
