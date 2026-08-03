@@ -1,0 +1,69 @@
+{
+  "entrypoints": {
+    "app": {
+      "js": [
+        "/build/runtime.fc46f4c3.js",
+        "/build/807.eaa34bba.js",
+        "/build/652.cf2f7439.js",
+        "/build/823.8af9cc8a.js",
+        "/build/app.f2cc5faf.js"
+      ],
+      "css": [
+        "/build/app.debcdd0d.css"
+      ]
+    },
+    "jquery": {
+      "js": [
+        "/build/runtime.fc46f4c3.js",
+        "/build/807.eaa34bba.js",
+        "/build/652.cf2f7439.js",
+        "/build/19.558de782.js",
+        "/build/333.d1ce46dd.js",
+        "/build/jquery.5a122075.js"
+      ]
+    },
+    "imagesloaded": {
+      "js": [
+        "/build/runtime.fc46f4c3.js",
+        "/build/807.eaa34bba.js",
+        "/build/652.cf2f7439.js",
+        "/build/imagesloaded.0f4b3683.js"
+      ]
+    },
+    "owl.carousel": {
+      "js": [
+        "/build/runtime.fc46f4c3.js",
+        "/build/807.eaa34bba.js",
+        "/build/652.cf2f7439.js",
+        "/build/19.558de782.js",
+        "/build/333.d1ce46dd.js",
+        "/build/145.70d92d69.js",
+        "/build/owl.carousel.f115fe05.js"
+      ]
+    },
+    "jquery.googlemap": {
+      "js": [
+        "/build/runtime.fc46f4c3.js",
+        "/build/807.eaa34bba.js",
+        "/build/652.cf2f7439.js",
+        "/build/jquery.googlemap.2ec14b62.js"
+      ]
+    },
+    "validator": {
+      "js": [
+        "/build/runtime.fc46f4c3.js",
+        "/build/807.eaa34bba.js",
+        "/build/652.cf2f7439.js",
+        "/build/19.558de782.js",
+        "/build/validator.cfa316b0.js"
+      ]
+    },
+    "main": {
+      "js": [
+        "/build/runtime.fc46f4c3.js",
+        "/build/807.eaa34bba.js",
+        "/build/main.8eed6ce3.js"
+      ]
+    }
+  }
+}

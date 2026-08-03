@@ -13,7 +13,7 @@ webpack.config.js
 /vendor/
 /node_modules/
 /.idea/
-/public/build
+# /public/build  (versionne : le serveur n'a pas Node, le build est fait sur le PC)
 /public/image_project
 /public/uploads/prospects/*
 
