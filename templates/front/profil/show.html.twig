@@ -214,6 +214,12 @@
         .then(function (data) {
             hide(loading);
             var resources = (data && data.resources) || [];
+            if (data && data.error === true && resources.length === 0) {
+                show(errorBox);
+                document.getElementById('stat-total').textContent = '-';
+                document.getElementById('stat-online').textContent = '-';
+                return;
+            }
             if (resources.length === 0) { show(emptyBox); return; }
             render(resources);
         })

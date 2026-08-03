@@ -22,9 +22,17 @@ class PterodactylService
 {
     private Settings $settings;
 
+    /** Vrai si au moins un appel au panneau a echoue (reseau, jeton refuse). */
+    private bool $failed = false;
+
     public function __construct(Settings $settings)
     {
         $this->settings = $settings;
+    }
+
+    public function hasFailed(): bool
+    {
+        return $this->failed;
     }
 
     public function isConfigured(): bool
@@ -45,6 +53,7 @@ class PterodactylService
             return [];
         }
 
+        $this->failed = false;
         $servers = [];
         $page = 1;
 
@@ -147,9 +156,12 @@ class PterodactylService
 
         $body = curl_exec($curl);
         $status = (int) curl_getinfo($curl, CURLINFO_HTTP_CODE);
+        $error = curl_error($curl);
         curl_close($curl);
 
         if (false === $body || $status >= 400) {
+            $this->failed = true;
+            error_log(sprintf('[pterodactyl] echec %s : HTTP %d, curl "%s"', $path, $status, $error));
             return null;
         }
 

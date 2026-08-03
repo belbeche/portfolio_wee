@@ -162,7 +162,11 @@ class FrontController extends AbstractController
                 ? $pterodactyl->getServersWithUsage()
                 : $pterodactyl->getServersForEmail($this->getUser()->getUserIdentifier());
 
-            return new jsonResponse(['resources' => $resources]);
+            return new jsonResponse([
+                'resources' => $resources,
+                'source' => 'pterodactyl',
+                'error' => $pterodactyl->hasFailed(),
+            ]);
         }
 
         // 2. L'ancien relais personnalise, en repli.
@@ -170,7 +174,7 @@ class FrontController extends AbstractController
         $token = (string) $settings->get('pterodactyl_api_token', '');
 
         if ('' === $url || '' === $token) {
-            return new jsonResponse(['resources' => []]);
+            return new jsonResponse(['resources' => [], 'source' => 'non-configure', 'error' => false]);
         }
 
         return new jsonResponse([
