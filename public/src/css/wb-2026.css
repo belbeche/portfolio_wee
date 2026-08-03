@@ -1297,6 +1297,10 @@ section.bg-dark .small, section.bg-primary .small,
 .wb-case-quote { background: var(--wb-paper-3); border-radius: var(--wb-radius-sm); padding: 1.4rem 1.6rem; margin: 0 0 1.8rem; }
 .wb-case-quote p { font-size: 1.02rem; font-style: italic; color: var(--wb-text); margin: 0 0 .6rem; }
 .wb-case-quote footer { font-size: .85rem; color: var(--wb-text-3); font-weight: 600; }
+/* .wb-card impose height:100% pour egaliser les grilles ; empilees dans
+   une colonne, les cartes s'etireraient sur toute sa hauteur et la
+   deuxieme deborderait sur la section suivante. */
+.wb-case-aside, .wb-case-cta { height: auto; }
 .wb-case-aside { position: sticky; top: 96px; }
 .wb-case-subtitle { font-size: .78rem; letter-spacing: .08em; text-transform: uppercase; color: var(--wb-text-3); margin: 1.4rem 0 .6rem; font-weight: 700; }
 .wb-facts { list-style: none; margin: 0; padding: 0; }

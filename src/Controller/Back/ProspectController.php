@@ -6,6 +6,7 @@ use App\Entity\Prospect;
 use App\Form\ProspectType;
 use Symfony\Component\Mime\Email;
 use App\Repository\ProspectRepository;
+use App\Service\ProspectOutreach;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Mailer\MailerInterface;
@@ -21,11 +22,102 @@ class ProspectController extends AbstractController
     /**
      * @Route("/admin/prospects", name="back_prospect_index", methods={"GET"})
      */
-    public function index(ProspectRepository $prospectRepository): Response
+    public function index(ProspectRepository $prospectRepository, ProspectOutreach $outreach): Response
     {
         return $this->render('back/prospect/index.html.twig', [
             'prospects' => $prospectRepository->findAll(),
+            'waveCandidates' => $outreach->firstContactCandidates(),
+            'dueFollowUps' => $outreach->dueFollowUps(),
+            'waveMax' => ProspectOutreach::MAX_PAR_VAGUE,
         ]);
+    }
+
+    /**
+     * Envoie la vague de premiers contacts depuis le back office.
+     * Memes garde-fous que la commande : 15 maximum, adresses verifiees
+     * uniquement, journal alimente, cadence de relance posee.
+     *
+     * @Route("/admin/prospects/envoyer-vague", name="back_prospect_send_wave", methods={"POST"})
+     * @IsGranted("ROLE_ADMIN")
+     */
+    public function sendWave(Request $request, ProspectOutreach $outreach): Response
+    {
+        if (!$this->isCsrfTokenValid('prospect_send_wave', (string) $request->request->get('_token'))) {
+            $this->addFlash('error', 'Session expiree, reessaie.');
+
+            return $this->redirectToRoute('back_prospect_index');
+        }
+
+        $resultat = $outreach->sendWave($outreach->firstContactCandidates());
+        $this->flashWaveResult($resultat, 'premier(s) contact(s)');
+
+        return $this->redirectToRoute('back_prospect_index');
+    }
+
+    /**
+     * Envoie les relances dues (cadence J+4 puis J+10) depuis le back office.
+     *
+     * @Route("/admin/prospects/envoyer-relances", name="back_prospect_send_followups", methods={"POST"})
+     * @IsGranted("ROLE_ADMIN")
+     */
+    public function sendFollowUps(Request $request, ProspectOutreach $outreach): Response
+    {
+        if (!$this->isCsrfTokenValid('prospect_send_followups', (string) $request->request->get('_token'))) {
+            $this->addFlash('error', 'Session expiree, reessaie.');
+
+            return $this->redirectToRoute('back_prospect_index');
+        }
+
+        $resultat = $outreach->sendWave($outreach->dueFollowUps(), true);
+        $this->flashWaveResult($resultat, 'relance(s)');
+
+        return $this->redirectToRoute('back_prospect_index');
+    }
+
+    /**
+     * Envoi individuel : premier contact si le prospect est "A contacter",
+     * relance sinon. Accessible depuis le journal du prospect.
+     *
+     * @Route("/admin/prospects/{id}/envoyer", name="back_prospect_send_one", methods={"POST"})
+     * @IsGranted("ROLE_ADMIN")
+     */
+    public function sendOne(Request $request, Prospect $prospect, ProspectOutreach $outreach, EntityManagerInterface $entityManager): Response
+    {
+        if (!$this->isCsrfTokenValid('prospect_send_one_'.$prospect->getId(), (string) $request->request->get('_token'))) {
+            $this->addFlash('error', 'Session expiree, reessaie.');
+
+            return $this->redirectToRoute('back_prospect_notes', ['id' => $prospect->getId()]);
+        }
+
+        $relance = Prospect::STATUS_TO_CONTACT !== $prospect->getStatus();
+        $erreur = $outreach->send($prospect, $relance);
+
+        if (null === $erreur) {
+            $entityManager->flush();
+            $this->addFlash('success', sprintf('%s envoye a %s. Journal mis a jour, relance posee automatiquement.',
+                $relance ? 'Relance envoyee' : 'Premier contact envoye', $prospect->getEmail()));
+        } else {
+            $this->addFlash('error', sprintf('Envoi impossible : %s', $erreur));
+        }
+
+        return $this->redirectToRoute('back_prospect_notes', ['id' => $prospect->getId()]);
+    }
+
+    /** @param array{sent: int, errors: array<string, string>} $resultat */
+    private function flashWaveResult(array $resultat, string $libelle): void
+    {
+        if ($resultat['sent'] > 0) {
+            $this->addFlash('success', sprintf('%d %s envoye(s). Journal mis a jour, cadence de relance posee (J+4 puis J+10).',
+                $resultat['sent'], $libelle));
+        }
+        if ([] !== $resultat['errors']) {
+            foreach ($resultat['errors'] as $societe => $message) {
+                $this->addFlash('error', sprintf('%s : %s', $societe, $message));
+            }
+        }
+        if (0 === $resultat['sent'] && [] === $resultat['errors']) {
+            $this->addFlash('info', 'Rien a envoyer : aucun candidat avec une adresse verifiee.');
+        }
     }
     
    /**

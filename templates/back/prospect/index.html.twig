@@ -40,6 +40,42 @@
 	</div>
 </div>
 
+{# ------------------------------------------------ envois depuis le back office #}
+<section class="ad-card" style="margin-bottom:1rem;" data-tone="light">
+	<div class="ad-card__head">
+		<h2>Envois</h2>
+		<span class="ad-tag">Maximum {{ waveMax }} par vague · adresses vérifiées uniquement</span>
+	</div>
+	<div class="ad-card__body">
+		<div style="display:flex;flex-wrap:wrap;gap:.8rem;align-items:center;">
+
+			<form method="post" action="{{ url('back_prospect_send_wave') }}"
+			      onsubmit="return confirm('Envoyer maintenant {{ min(waveCandidates|length, waveMax) }} premier(s) contact(s) avec l\'offre PDF en pièce jointe ?');">
+				<input type="hidden" name="_token" value="{{ csrf_token('prospect_send_wave') }}">
+				<button class="ad-btn ad-btn--primary" {{ waveCandidates|length == 0 ? 'disabled' : '' }}>
+					Envoyer la vague de premiers contacts
+					({{ min(waveCandidates|length, waveMax) }}{{ waveCandidates|length > waveMax ? ' sur ' ~ waveCandidates|length : '' }})
+				</button>
+			</form>
+
+			<form method="post" action="{{ url('back_prospect_send_followups') }}"
+			      onsubmit="return confirm('Envoyer maintenant {{ min(dueFollowUps|length, waveMax) }} relance(s) due(s) ?');">
+				<input type="hidden" name="_token" value="{{ csrf_token('prospect_send_followups') }}">
+				<button class="ad-btn ad-btn--ghost" {{ dueFollowUps|length == 0 ? 'disabled' : '' }}>
+					Envoyer les relances dues ({{ min(dueFollowUps|length, waveMax) }})
+				</button>
+			</form>
+
+		</div>
+		<p style="margin:.8rem 0 0;font-size:.78rem;color:var(--ad-text-3);">
+			Chaque envoi part de contact@walidbelbeche.fr avec une copie cachée vers ta boîte,
+			alimente le journal du prospect et pose la cadence de relance J+4 puis J+10.
+			Les adresses en « a-completer » sont toujours ignorées : complète-les depuis Modifier.
+			L'envoi individuel se fait depuis le Journal de chaque prospect.
+		</p>
+	</div>
+</section>
+
 <section class="ad-card" data-tone="light">
 	<div class="ad-card__head">
 		<h2>Pipeline</h2>

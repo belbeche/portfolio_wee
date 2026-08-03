@@ -79,6 +79,38 @@
 
 	{# ----------------------------------------------------- colonne fiche -- #}
 	<div>
+		{% set adresseVerifiee = 'a-completer' not in prospect.email %}
+		{% set cloture = prospect.status in ['gagne', 'perdu', 'hors_cible'] %}
+		<section class="ad-card" style="margin-bottom:1rem;" data-tone="light">
+			<div class="ad-card__head"><h2>Envoyer</h2></div>
+			<div class="ad-card__body">
+				{% if cloture %}
+					<p style="margin:0;font-size:.85rem;color:var(--ad-text-3);">
+						Prospect clôturé ({{ prospect.statusLabel|lower }}) : plus d'envoi automatique.
+					</p>
+				{% elseif not adresseVerifiee %}
+					<p style="margin:0;font-size:.85rem;color:var(--ad-text-3);">
+						Adresse non vérifiée ({{ prospect.email }}).
+						<a href="{{ url('back_prospect_edit', {id: prospect.id}) }}">Complète l'e-mail</a> pour pouvoir envoyer.
+					</p>
+				{% else %}
+					{% set premier = prospect.status == 'a_contacter' %}
+					<form method="post" action="{{ url('back_prospect_send_one', {id: prospect.id}) }}"
+					      onsubmit="return confirm('{{ premier ? 'Envoyer le premier contact, offre PDF jointe ?' : 'Envoyer une relance maintenant ?' }}');">
+						<input type="hidden" name="_token" value="{{ csrf_token('prospect_send_one_' ~ prospect.id) }}">
+						<button class="ad-btn ad-btn--primary" style="width:100%;">
+							{{ premier ? 'Envoyer le premier contact' : 'Envoyer une relance maintenant' }}
+						</button>
+					</form>
+					<p style="margin:.6rem 0 0;font-size:.78rem;color:var(--ad-text-3);">
+						{{ premier
+							? "Offre PDF jointe, copie cachée vers ta boîte, journal mis à jour, relance J+4 posée."
+							: "Copie cachée vers ta boîte, journal mis à jour, la cadence se recale automatiquement." }}
+					</p>
+				{% endif %}
+			</div>
+		</section>
+
 		<section class="ad-card" style="margin-bottom:1rem;" data-tone="light">
 			<div class="ad-card__head"><h2>La fiche</h2></div>
 			<table class="ad-table">
