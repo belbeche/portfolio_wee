@@ -5,17 +5,40 @@
 {% block content %}
 {% set en = app.request.locale == 'en' %}
 
+{% set sectorLabels = en ? {
+    'Association': 'associations and local authorities',
+    'Commerce': 'shops and local businesses',
+    'Entreprise': 'companies and their internal tools',
+    'Startup': 'project owners with an idea'
+} : {
+    'Association': 'les associations et collectivités',
+    'Commerce': 'les commerces et artisans',
+    'Entreprise': 'les entreprises et leurs outils internes',
+    'Startup': 'les porteurs de projet'
+} %}
+
 <section class="wb-hero" data-tone="dark">
     <div class="container" style="padding-top: 1rem; padding-bottom: 4rem;">
         <span class="wb-eyebrow">{{ en ? 'Case studies' : 'Réalisations' }}</span>
-        <h1 class="wb-display" style="font-size: clamp(2.1rem, 4.5vw, 3.2rem);">
-            {{ en ? 'Delivered projects,' : 'Des projets livrés,' }}<br>
-            <span class="wb-mark">{{ en ? 'not mock-ups' : 'pas des maquettes' }}</span>
-        </h1>
-        <p class="wb-lead wb-lead--on-dark mb-0" style="max-width: 680px;">
-            {{ en ? 'Each entry below is a real product, built and put in production. Filter by your line of business to see what I did for people like you.'
-                  : "Chaque fiche ci-dessous est un produit réel, construit et mis en production. Filtrez par votre secteur pour voir ce que j'ai fait pour des gens comme vous." }}
-        </p>
+        {% if currentSector != '' %}
+            <h1 class="wb-display" style="font-size: clamp(2.1rem, 4.5vw, 3.2rem);">
+                {{ en ? 'Built for' : 'Construit pour' }}<br>
+                <span class="wb-mark">{{ sectorLabels[currentSector]|default(currentSector|lower) }}</span>
+            </h1>
+            <p class="wb-lead wb-lead--on-dark mb-0" style="max-width: 680px;">
+                {{ en ? 'These are real projects, delivered for people in your situation. Each entry tells the starting problem, what was built and what it changed.'
+                      : "Voici des projets réels, livrés pour des gens dans votre situation. Chaque fiche raconte le problème de départ, ce qui a été construit et ce que ça a changé." }}
+            </p>
+        {% else %}
+            <h1 class="wb-display" style="font-size: clamp(2.1rem, 4.5vw, 3.2rem);">
+                {{ en ? 'Delivered projects,' : 'Des projets livrés,' }}<br>
+                <span class="wb-mark">{{ en ? 'not mock-ups' : 'pas des maquettes' }}</span>
+            </h1>
+            <p class="wb-lead wb-lead--on-dark mb-0" style="max-width: 680px;">
+                {{ en ? 'Each entry below is a real product, built and put in production. Filter by your line of business to see what I did for people like you.'
+                      : "Chaque fiche ci-dessous est un produit réel, construit et mis en production. Filtrez par votre secteur pour voir ce que j'ai fait pour des gens comme vous." }}
+            </p>
+        {% endif %}
     </div>
 </section>
 
@@ -25,10 +48,10 @@
         {% if sectors|length > 0 %}
         <nav class="wb-filter mb-5" aria-label="{{ en ? 'Filter by sector' : 'Filtrer par secteur' }}">
             <a href="{{ url('front_project') }}"
-               class="cat-chip {{ currentSector == '' ? 'cat-chip--active' : '' }}">{{ en ? 'All' : 'Tout' }}</a>
+               class="cat-chip {{ currentSector == '' ? 'cat-chip--active' : '' }}">{{ en ? 'All' : 'Tout' }}<small>{{ totalCount }}</small></a>
             {% for sector in sectors %}
                 <a href="{{ url('front_project') }}?secteur={{ sector|url_encode }}"
-                   class="cat-chip {{ currentSector|lower == sector|lower ? 'cat-chip--active' : '' }}">{{ sector }}</a>
+                   class="cat-chip {{ currentSector|lower == sector|lower ? 'cat-chip--active' : '' }}">{{ sector }}<small>{{ sectorCounts[sector]|default(0) }}</small></a>
             {% endfor %}
         </nav>
         {% endif %}

@@ -63,6 +63,13 @@ class PterodactylService
                 return $servers; // ce qu'on a deja, plutot que rien
             }
 
+            error_log(sprintf(
+                '[pterodactyl] page %d : %d serveur(s), total annonce %s',
+                $page,
+                count($data['data'] ?? []),
+                (string) ($data['meta']['pagination']['total'] ?? '?')
+            ));
+
             foreach (($data['data'] ?? []) as $item) {
                 $servers[] = $item['attributes'] ?? [];
                 if (count($servers) >= $maxServers) {

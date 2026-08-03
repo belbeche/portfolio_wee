@@ -30,13 +30,18 @@ class ProjetsController extends AbstractController
 
         // La liste fermee des secteurs reellement presents en base.
         $sectors = [];
+        $sectorCounts = [];
         foreach ($projects as $project) {
             $sector = trim((string) $project->getSector());
-            if ('' !== $sector && !in_array($sector, $sectors, true)) {
-                $sectors[] = $sector;
+            if ('' !== $sector) {
+                if (!in_array($sector, $sectors, true)) {
+                    $sectors[] = $sector;
+                }
+                $sectorCounts[$sector] = ($sectorCounts[$sector] ?? 0) + 1;
             }
         }
         sort($sectors);
+        $totalCount = count($projects);
 
         // Filtre par secteur : /realisations?secteur=Association
         $current = trim((string) ($request->query->get('secteur') ?? $category ?? ''));
@@ -50,6 +55,8 @@ class ProjetsController extends AbstractController
         return $this->render('front/projets/index.html.twig', [
             'projects' => $projects,
             'sectors' => $sectors,
+            'sectorCounts' => $sectorCounts,
+            'totalCount' => $totalCount,
             'currentSector' => $current,
         ]);
     }

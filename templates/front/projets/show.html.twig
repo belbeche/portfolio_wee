@@ -1,63 +1,186 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}
-    {{ project.title }}
-{% endblock %}
+{% block title %}{{ project.title }}{% endblock %}
 
 {% block content %}
-<div class="container">
+{% set en = app.request.locale == 'en' %}
 
-<!-- Portfolio Item Heading -->
-<h1 class="mt-6 my-4">{{ project.title }}
-    <small>{{ 'project.by'|trans }} {{ project.developer }}</small>
-</h1>
+{# ------------------------------------------------------------------ hero #}
+<section class="wb-hero" data-tone="dark">
+    <div class="container" style="padding-top: 1rem; padding-bottom: 3.5rem;">
 
-<!-- Portfolio Item Row -->
-<div class="row">
-    <div class="col-md-8">
-        {% for image in project.images %}
-            <img class="img-fluid mb-4" src="{{ asset('image_project/' ~ image.name) }}" alt="{{ image.name }}" loading="lazy">
-        {% endfor %}
-    </div>
-    <div class="col-md-4">
-        <h3 class="my-3">{{ 'project.description_title'|trans }}</h3>
-        <p>{{ project.description|nl2br }}</p>
-        <h3 class="my-3">{{ 'project.details_title'|trans }}</h3>
-        <ul>
-            <li><strong>{{ 'project.creation_date'|trans }}:</strong> {{ project.createdAt|date('d/m/Y') }}</li>
-            <li><strong>{{ 'project.link'|trans }}:</strong> 
-                <a href="{{ project.link }}" target="_blank" rel="noopener noreferrer">{{ project.title }}</a>
-            </li>
-            <li><strong>{{ 'project.categories'|trans }}:</strong> 
-                {% for category in project.categories %}
-                    <a href="{{ url('front_project_by_category') }}" class="badge bg-primary text-light" data-tone="dark">{{ category.name }}</a>
-                {% endfor %}
-            </li>
-            <li><strong>{{ 'project.client'|trans }}:</strong> 
-                <strong>{{ project.client }}</strong>
-            </li>
-        </ul>
-    </div>
-</div>
-<!-- /.row -->
+        <nav class="wb-crumb" aria-label="{{ en ? 'You are here' : 'Vous êtes ici' }}">
+            <a href="{{ url('front_project') }}">{{ en ? 'Case studies' : 'Réalisations' }}</a>
+            {% if project.sector %}
+                <span aria-hidden="true">/</span>
+                <a href="{{ url('front_project') }}?secteur={{ project.sector|url_encode }}">{{ project.sector }}</a>
+            {% endif %}
+        </nav>
 
-<!-- Related Projects Row -->
-<h3 class="my-4">{{ 'project.related_projects'|trans }}</h3>
-<div class="row">
-    {% for relatedProject in relatedProjects %}
-        <div class="col-md-3 col-sm-6 mb-4">
-            <a href="{{ url('front_project_show', { id: relatedProject.id }) }}">
-                {% if relatedProject.images|length > 0 %}
-                    <img class="img-fluid" src="{{ asset('image_project/' ~ relatedProject.images[0].name) }}" alt="{{ relatedProject.title }}">
-                {% else %}
-                    <img class="img-fluid" src="https://via.placeholder.com/500x300" alt="{{ relatedProject.title }}">
-                {% endif %}
+        <span class="wb-eyebrow">{{ en ? 'Case study' : 'Étude de cas' }}</span>
+        <h1 class="wb-display" style="font-size: clamp(2rem, 4vw, 2.9rem);">{{ project.title }}</h1>
+
+        {% set intro = project.audience ?: project.result ?: project.description %}
+        {% if intro %}
+            <p class="wb-lead wb-lead--on-dark mb-0" style="max-width: 680px;">
+                {{ intro|striptags|slice(0, 220) }}{{ intro|striptags|length > 220 ? '…' : '' }}
+            </p>
+        {% endif %}
+
+        <div class="wb-case-meta">
+            {% if project.client %}<span>{{ en ? 'For' : 'Pour' }} {{ project.client }}</span>{% endif %}
+            {% if project.duration %}<span>{{ project.duration }}</span>{% endif %}
+            {% if project.createdAt %}<span>{{ en ? 'Delivered in' : 'Livré en' }} {{ project.createdAt|date('Y') }}</span>{% endif %}
+            {% if project.storeUrlIos or project.storeUrlAndroid %}<span>{{ en ? 'On the app stores' : 'Sur les stores' }}</span>{% endif %}
+        </div>
+
+        <div class="d-flex flex-wrap gap-2 mt-4">
+            {% if project.link %}
+                <a class="wb-btn wb-btn--gold" href="{{ project.link }}" target="_blank" rel="noopener noreferrer">
+                    {{ en ? 'See it live' : 'Voir le projet en ligne' }}
+                </a>
+            {% endif %}
+            <a class="wb-btn wb-btn--outline" href="{{ url('front_devis_new') }}">
+                {{ en ? 'I need something similar' : "J'ai un besoin similaire" }}
             </a>
         </div>
-    {% endfor %}
-</div>
-<!-- /.row -->
 
-</div>
-<!-- /.container -->
+    </div>
+</section>
+
+{# ------------------------------------------------------- corps de la fiche #}
+<section class="wb-section wb-section--paper" data-tone="light">
+    <div class="container">
+        <div class="row g-4 g-lg-5">
+
+            <div class="col-lg-7">
+
+                {% if project.images|length %}
+                    {% for image in project.images %}
+                        <figure class="wb-case-media">
+                            <img src="{{ asset('image_project/' ~ image.name) }}" alt="{{ project.title }}" loading="{{ loop.first ? 'eager' : 'lazy' }}">
+                        </figure>
+                    {% endfor %}
+                {% endif %}
+
+                {% set blocks = [
+                    { t: en ? 'Where it started' : 'Le point de départ', c: project.context },
+                    { t: en ? 'The problem to solve' : 'Le problème à résoudre', c: project.problem },
+                    { t: en ? 'What I built' : "Ce que j'ai construit", c: project.approach ?: project.description }
+                ] %}
+                {% for b in blocks %}
+                    {% if b.c %}
+                        <div class="wb-case-block">
+                            <h2 class="wb-h3">{{ b.t }}</h2>
+                            <p>{{ b.c|nl2br }}</p>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+
+                {% if project.result %}
+                    <div class="wb-case-result">
+                        <h2 class="wb-h3">{{ en ? 'The result, in plain words' : 'Le résultat, concrètement' }}</h2>
+                        <p class="mb-0">{{ project.result|nl2br }}</p>
+                    </div>
+                {% endif %}
+
+                {% if project.testimonial %}
+                    <blockquote class="wb-case-quote">
+                        <p>« {{ project.testimonial }} »</p>
+                        {% if project.testimonialAuthor %}<footer>{{ project.testimonialAuthor }}</footer>{% endif %}
+                    </blockquote>
+                {% endif %}
+
+            </div>
+
+            <div class="col-lg-5">
+
+                <aside class="wb-card wb-case-aside" data-tone="light">
+                    <h2 class="wb-h3">{{ en ? 'At a glance' : 'La fiche en bref' }}</h2>
+
+                    <ul class="wb-facts">
+                        {% if project.client %}<li><span>Client</span><strong>{{ project.client }}</strong></li>{% endif %}
+                        {% if project.sector %}<li><span>{{ en ? 'Sector' : 'Secteur' }}</span><strong>{{ project.sector }}</strong></li>{% endif %}
+                        {% if project.duration %}<li><span>{{ en ? 'Timeline' : 'Durée' }}</span><strong>{{ project.duration }}</strong></li>{% endif %}
+                        {% if project.createdAt %}<li><span>{{ en ? 'Delivered' : 'Livraison' }}</span><strong>{{ project.createdAt|date('m/Y') }}</strong></li>{% endif %}
+                    </ul>
+
+                    {% if project.deliverables %}
+                        <h3 class="wb-case-subtitle">{{ en ? 'What was delivered' : 'Ce qui a été livré' }}</h3>
+                        <ul class="wb-checks">
+                            {% for d in project.deliverables %}<li>{{ d }}</li>{% endfor %}
+                        </ul>
+                    {% endif %}
+
+                    {% if project.stack|length %}
+                        <h3 class="wb-case-subtitle">{{ en ? 'Under the hood' : 'Sous le capot' }}</h3>
+                        <p class="wb-product__stack mb-0">
+                            {% for tech in project.stack %}<span>{{ tech }}</span>{% endfor %}
+                        </p>
+                    {% endif %}
+
+                    {% if project.link or project.storeUrlIos or project.storeUrlAndroid %}
+                        <div class="d-grid gap-2 mt-4">
+                            {% if project.link %}
+                                <a class="wb-btn wb-btn--ink" href="{{ project.link }}" target="_blank" rel="noopener noreferrer">
+                                    {{ en ? 'Open the live site' : 'Ouvrir le site en ligne' }}
+                                </a>
+                            {% endif %}
+                            {% if project.storeUrlIos %}
+                                <a class="wb-btn wb-btn--outline" href="{{ project.storeUrlIos }}" target="_blank" rel="noopener noreferrer">App Store</a>
+                            {% endif %}
+                            {% if project.storeUrlAndroid %}
+                                <a class="wb-btn wb-btn--outline" href="{{ project.storeUrlAndroid }}" target="_blank" rel="noopener noreferrer">Google Play</a>
+                            {% endif %}
+                        </div>
+                    {% endif %}
+                </aside>
+
+                <div class="wb-card wb-card--ink mt-4" data-tone="dark">
+                    <h2 class="wb-h3">{{ en ? 'You recognise your situation?' : 'Vous vous reconnaissez ?' }}</h2>
+                    <p style="color: var(--wb-on-dark-2);">
+                        {{ en ? 'Describe your need in two minutes, you get a priced answer within 48 working hours.'
+                              : 'Décrivez votre besoin en deux minutes, vous recevez une réponse chiffrée sous 48 heures ouvrées.' }}
+                    </p>
+                    <a class="wb-btn wb-btn--gold" href="{{ url('front_devis_new') }}">{{ en ? 'Get my estimate' : 'Estimer mon projet' }}</a>
+                </div>
+
+            </div>
+        </div>
+
+        {# ------------------------------------------------- projets connexes #}
+        {% if relatedProjects|length %}
+            <div class="mt-5 pt-3">
+                <h2 class="wb-h3 mb-4">{{ en ? 'In the same spirit' : 'Dans le même esprit' }}</h2>
+                <div class="row g-4">
+                    {% for related in relatedProjects %}
+                        <div class="col-md-6 col-lg-3 d-flex">
+                            <article class="wb-product w-100">
+                                <a href="{{ url('front_project_show', {id: related.id}) }}" class="wb-product__media">
+                                    {% set cover = related.images|first %}
+                                    {% if cover %}
+                                        <img src="{{ asset('image_project/' ~ cover.name) }}" loading="lazy" alt="{{ related.title }}">
+                                    {% else %}
+                                        <span class="wb-product__initials">{{ related.title|slice(0, 2)|upper }}</span>
+                                    {% endif %}
+                                </a>
+                                <div class="wb-product__body">
+                                    {% if related.sector %}<span class="wb-product__sector">{{ related.sector }}</span>{% endif %}
+                                    <h3 class="wb-product__title">{{ related.title }}</h3>
+                                    <div class="wb-product__foot">
+                                        <a href="{{ url('front_project_show', {id: related.id}) }}" class="wb-btn wb-btn--ink wb-btn--sm">
+                                            {{ en ? 'See the project' : 'Voir le projet' }}
+                                        </a>
+                                    </div>
+                                </div>
+                            </article>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        {% endif %}
+
+    </div>
+</section>
+
 {% endblock %}

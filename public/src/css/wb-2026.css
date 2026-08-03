@@ -25,7 +25,6 @@
     --wb-green:          #1baf7a;
 
     --wb-text:           #0d1b2a;
-    --wb-text-2:         #4a5a६e;
     --wb-text-2:         #4a5a6e;
     --wb-text-3:         #7b8aa0;
     --wb-on-dark:        #eaf1fb;
@@ -1275,3 +1274,37 @@ section.bg-dark .small, section.bg-primary .small,
 /* mt-7 sert aussi a passer sous la barre de navigation fixe : 5rem suffit */
 .mt-7, .my-7 { margin-top: 5rem !important; }
 .mb-7, .my-7 { margin-bottom: 3rem !important; }
+
+
+/* ===== fiche realisation : etude de cas ================================ */
+.wb-crumb { display: flex; flex-wrap: wrap; gap: .5rem; font-size: .85rem; margin-bottom: 1.1rem; color: var(--wb-on-dark-2); }
+.wb-crumb a { color: var(--wb-on-dark-2); text-decoration: none; }
+.wb-crumb a:hover { color: #fff; text-decoration: underline; }
+.wb-case-meta { display: flex; flex-wrap: wrap; gap: .5rem; margin-top: 1.2rem; }
+.wb-case-meta span {
+  border: 1px solid rgba(255,255,255,.28); color: var(--wb-on-dark);
+  border-radius: 999px; padding: .32rem .85rem; font-size: .8rem; font-weight: 600;
+}
+.wb-case-media { border-radius: var(--wb-radius); overflow: hidden; box-shadow: var(--wb-shadow-1); margin: 0 0 1.1rem; background: #fff; }
+.wb-case-media img { width: 100%; display: block; }
+.wb-case-block { margin-bottom: 1.8rem; }
+.wb-case-block p { color: var(--wb-text-2); line-height: 1.7; margin: 0; }
+.wb-case-result {
+  background: #fff; border: 1px solid var(--wb-line); border-left: 4px solid var(--wb-gold);
+  border-radius: var(--wb-radius-sm); padding: 1.4rem 1.6rem; margin-bottom: 1.8rem; box-shadow: var(--wb-shadow-1);
+}
+.wb-case-result p { color: var(--wb-text-2); line-height: 1.7; }
+.wb-case-quote { background: var(--wb-paper-3); border-radius: var(--wb-radius-sm); padding: 1.4rem 1.6rem; margin: 0 0 1.8rem; }
+.wb-case-quote p { font-size: 1.02rem; font-style: italic; color: var(--wb-text); margin: 0 0 .6rem; }
+.wb-case-quote footer { font-size: .85rem; color: var(--wb-text-3); font-weight: 600; }
+.wb-case-aside { position: sticky; top: 96px; }
+.wb-case-subtitle { font-size: .78rem; letter-spacing: .08em; text-transform: uppercase; color: var(--wb-text-3); margin: 1.4rem 0 .6rem; font-weight: 700; }
+.wb-facts { list-style: none; margin: 0; padding: 0; }
+.wb-facts li { display: flex; justify-content: space-between; gap: 1rem; padding: .55rem 0; border-bottom: 1px dashed var(--wb-line); font-size: .92rem; }
+.wb-facts li span { color: var(--wb-text-3); }
+.wb-facts li strong { color: var(--wb-text); text-align: right; }
+.wb-checks { list-style: none; margin: 0; padding: 0; }
+.wb-checks li { position: relative; padding: .3rem 0 .3rem 1.5rem; color: var(--wb-text-2); font-size: .92rem; }
+.wb-checks li::before { content: '\2713'; position: absolute; left: 0; color: var(--wb-green); font-weight: 700; }
+.cat-chip small { font-weight: 600; opacity: .65; margin-left: .25rem; }
+@media (max-width: 991px) { .wb-case-aside { position: static; } }
