@@ -785,13 +785,6 @@ html { scroll-behavior: smooth; }
 .wb-hero .form-control::placeholder { color: #98a4b6 !important; }
 
 /* --- sections claires --------------------------------------------------- */
-.wb-section h1, .wb-section h2, .wb-section h3,
-.wb-section .wb-display, .wb-section .wb-h2, .wb-section .wb-h3,
-.wb-section--paper h1, .wb-section--paper h2, .wb-section--paper h3,
-.wb-section--paper .wb-h2, .wb-section--paper .wb-h3,
-.wb-price h2, .wb-price h3, .wb-anecdote h3, .wb-card h3 {
-    color: var(--wb-text) !important;
-}
 .wb-section p, .wb-section--paper p, .wb-section li, .wb-section--paper li {
     color: var(--wb-text-2);
 }
