@@ -147,6 +147,8 @@ class PterodactylService
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_TIMEOUT => 10,
             CURLOPT_CONNECTTIMEOUT => 5,
+            // Sans User-Agent, les pare-feux applicatifs (Cloudflare) repondent 403.
+            CURLOPT_USERAGENT => 'walidbelbeche.fr-supervision/1.0',
             CURLOPT_HTTPHEADER => [
                 'Authorization: Bearer '.$this->clientKey(),
                 'Accept: Application/vnd.pterodactyl.v1+json',
@@ -161,7 +163,8 @@ class PterodactylService
 
         if (false === $body || $status >= 400) {
             $this->failed = true;
-            error_log(sprintf('[pterodactyl] echec %s : HTTP %d, curl "%s"', $path, $status, $error));
+            $extrait = is_string($body) ? mb_substr(preg_replace('/\s+/', ' ', strip_tags($body)), 0, 200) : '';
+            error_log(sprintf('[pterodactyl] echec %s : HTTP %d, curl "%s", reponse "%s"', $path, $status, $error, $extrait));
             return null;
         }
 
