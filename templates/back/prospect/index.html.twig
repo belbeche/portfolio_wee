@@ -53,8 +53,7 @@
 			      onsubmit="return confirm('Envoyer maintenant {{ min(waveCandidates|length, waveMax) }} premier(s) contact(s) avec l\'offre PDF en pièce jointe ?');">
 				<input type="hidden" name="_token" value="{{ csrf_token('prospect_send_wave') }}">
 				<button class="ad-btn ad-btn--primary" {{ waveCandidates|length == 0 ? 'disabled' : '' }}>
-					Envoyer la vague de premiers contacts
-					({{ min(waveCandidates|length, waveMax) }}{{ waveCandidates|length > waveMax ? ' sur ' ~ waveCandidates|length : '' }})
+					Envoyer {{ min(waveCandidates|length, waveMax) }} premier(s) contact(s){{ waveCandidates|length > waveMax ? ' (sur ' ~ waveCandidates|length ~ ' en attente)' : '' }}
 				</button>
 			</form>
 
@@ -68,8 +67,11 @@
 
 		</div>
 		<p style="margin:.8rem 0 0;font-size:.78rem;color:var(--ad-text-3);">
+			Chaque clic envoie au maximum {{ waveMax }} e-mails, puis la page revient : c'est voulu,
+			une vague plus longue serait coupée par le pare-feu en cours de route. Reclique
+			simplement pour la vague suivante, les prospects déjà contactés ne repartent jamais.
 			Chaque envoi part de contact@walidbelbeche.fr avec une copie cachée vers ta boîte,
-			alimente le journal du prospect et pose la cadence de relance J+4 puis J+10.
+			alimente le journal du prospect dès la seconde où il part, et pose la cadence J+4 puis J+10.
 			Les adresses en « a-completer » sont toujours ignorées : complète-les depuis Modifier.
 			L'envoi individuel se fait depuis le Journal de chaque prospect.
 		</p>
