@@ -134,6 +134,14 @@ class ProspectOutreach
      */
     public function sendWave(array $candidats, bool $relance = false, int $limit = self::MAX_PAR_VAGUE): array
     {
+        // Une vague de 15 envois avec piece jointe peut depasser le delai des
+        // proxys (Cloudflare coupe vers 100 s, nginx journalise alors un 499).
+        // On continue donc meme si le navigateur decroche, et on enregistre
+        // le journal APRES CHAQUE envoi : une interruption ne peut plus
+        // laisser d'e-mail parti sans trace, donc jamais de doublon.
+        ignore_user_abort(true);
+        @set_time_limit(600);
+
         $limit = max(1, min(self::MAX_PAR_VAGUE, $limit));
         $candidats = array_slice($candidats, 0, $limit);
 
@@ -143,13 +151,10 @@ class ProspectOutreach
             $erreur = $this->send($prospect, $relance);
             if (null === $erreur) {
                 ++$sent;
+                $this->em->flush(); // trace immediatement cet envoi
             } else {
                 $errors[(string) $prospect->getCompany()] = $erreur;
             }
-        }
-
-        if ($sent > 0) {
-            $this->em->flush();
         }
 
         return ['sent' => $sent, 'errors' => $errors];
