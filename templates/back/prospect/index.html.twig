@@ -44,39 +44,111 @@
 <section class="ad-card" style="margin-bottom:1rem;" data-tone="light">
 	<div class="ad-card__head">
 		<h2>Envois</h2>
-		<span class="ad-tag">Maximum {{ waveMax }} par vague · adresses vérifiées uniquement</span>
+		<span class="ad-tag">Un e-mail à la fois · adresses vérifiées uniquement</span>
 	</div>
 	<div class="ad-card__body">
 		<div style="display:flex;flex-wrap:wrap;gap:.8rem;align-items:center;">
+			<button type="button" id="wb-envoi-premiers" class="ad-btn ad-btn--primary"
+			        data-relances="0" {{ waveCandidates|length == 0 ? 'disabled' : '' }}>
+				Envoyer les premiers contacts ({{ waveCandidates|length }})
+			</button>
 
-			<form method="post" action="{{ url('back_prospect_send_wave') }}"
-			      onsubmit="return confirm('Envoyer maintenant {{ min(waveCandidates|length, waveMax) }} premier(s) contact(s) avec l\'offre PDF en pièce jointe ?');">
-				<input type="hidden" name="_token" value="{{ csrf_token('prospect_send_wave') }}">
-				<button class="ad-btn ad-btn--primary" {{ waveCandidates|length == 0 ? 'disabled' : '' }}>
-					Envoyer {{ min(waveCandidates|length, waveMax) }} premier(s) contact(s){{ waveCandidates|length > waveMax ? ' (sur ' ~ waveCandidates|length ~ ' en attente)' : '' }}
-				</button>
+			<button type="button" id="wb-envoi-relances" class="ad-btn ad-btn--ghost"
+			        data-relances="1" {{ dueFollowUps|length == 0 ? 'disabled' : '' }}>
+				Envoyer les relances dues ({{ dueFollowUps|length }})
+			</button>
+
+			<button type="button" id="wb-envoi-stop" class="ad-btn ad-btn--danger" hidden>Arrêter</button>
+
+			<form method="post" action="{{ url('back_prospect_smtp_check') }}" style="margin-left:auto;">
+				<input type="hidden" name="_token" value="{{ csrf_token('prospect_smtp_check') }}">
+				<button class="ad-btn ad-btn--ghost ad-btn--sm">Tester le serveur d'envoi</button>
 			</form>
-
-			<form method="post" action="{{ url('back_prospect_send_followups') }}"
-			      onsubmit="return confirm('Envoyer maintenant {{ min(dueFollowUps|length, waveMax) }} relance(s) due(s) ?');">
-				<input type="hidden" name="_token" value="{{ csrf_token('prospect_send_followups') }}">
-				<button class="ad-btn ad-btn--ghost" {{ dueFollowUps|length == 0 ? 'disabled' : '' }}>
-					Envoyer les relances dues ({{ min(dueFollowUps|length, waveMax) }})
-				</button>
-			</form>
-
 		</div>
+
+		<div id="wb-envoi-etat" hidden style="margin-top:1rem;padding:1rem;background:var(--ad-paper-2, #f6f8fb);border-radius:10px;">
+			<div id="wb-envoi-ligne" style="font-weight:600;font-size:.92rem;"></div>
+			<div id="wb-envoi-detail" style="font-size:.82rem;color:var(--ad-text-3);margin-top:.3rem;"></div>
+			<div id="wb-envoi-echecs" style="font-size:.82rem;color:#c0392b;margin-top:.5rem;white-space:pre-line;"></div>
+		</div>
+
 		<p style="margin:.8rem 0 0;font-size:.78rem;color:var(--ad-text-3);">
-			Chaque clic envoie au maximum {{ waveMax }} e-mails, puis la page revient : c'est voulu,
-			une vague plus longue serait coupée par le pare-feu en cours de route. Reclique
-			simplement pour la vague suivante, les prospects déjà contactés ne repartent jamais.
-			Chaque envoi part de contact@walidbelbeche.fr avec une copie cachée vers ta boîte,
-			alimente le journal du prospect dès la seconde où il part, et pose la cadence J+4 puis J+10.
-			Les adresses en « a-completer » sont toujours ignorées : complète-les depuis Modifier.
-			L'envoi individuel se fait depuis le Journal de chaque prospect.
+			Les e-mails partent un par un, la page suit la progression en direct : plus aucun envoi
+			ne peut être coupé en cours de route. Chaque envoi part de contact@walidbelbeche.fr avec
+			une copie cachée vers ta boîte, alimente le journal du prospect à la seconde où il part,
+			et pose la cadence J+4 puis J+10. Tu peux arrêter à tout moment, ce qui est parti reste tracé.
+			Les adresses en « a-completer » sont toujours ignorées. Si rien ne part, clique
+			« Tester le serveur d'envoi » : il dira précisément ce qui bloque.
 		</p>
 	</div>
 </section>
+
+<script>
+(function () {
+	var etat = document.getElementById('wb-envoi-etat');
+	var ligne = document.getElementById('wb-envoi-ligne');
+	var detail = document.getElementById('wb-envoi-detail');
+	var echecs = document.getElementById('wb-envoi-echecs');
+	var stop = document.getElementById('wb-envoi-stop');
+	var arrete = false;
+
+	function lancer(relances, bouton) {
+		var total = 0, envoyes = 0, rates = 0;
+		arrete = false;
+		etat.hidden = false;
+		stop.hidden = false;
+		bouton.disabled = true;
+		echecs.textContent = '';
+		ligne.textContent = 'Préparation…';
+
+		function suivant() {
+			if (arrete) {
+				ligne.textContent = 'Arrêté. ' + envoyes + ' envoyé(s), ' + rates + ' échec(s).';
+				stop.hidden = true; bouton.disabled = false;
+				return;
+			}
+			var corps = new URLSearchParams();
+			corps.set('_token', {{ csrf_token('prospect_send_wave')|json_encode|raw }});
+			corps.set('relances', relances);
+
+			fetch({{ url('back_prospect_send_next')|json_encode|raw }}, {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+				credentials: 'same-origin',
+				body: corps.toString()
+			}).then(function (r) { return r.json(); }).then(function (d) {
+				if (d.fini) {
+					ligne.textContent = 'Terminé : ' + envoyes + ' envoyé(s)' + (rates ? ', ' + rates + ' échec(s)' : '') + '.';
+					detail.textContent = 'Recharge la page pour voir les statuts à jour.';
+					stop.hidden = true; bouton.disabled = false;
+					return;
+				}
+				if (d.ok) { envoyes++; } else { rates++; echecs.textContent += d.societe + ' : ' + (d.message || 'échec') + '\n'; }
+				total = envoyes + rates + d.restants;
+				ligne.textContent = 'Envoi ' + (envoyes + rates) + ' sur ' + total + ' · ' + d.societe;
+				detail.textContent = envoyes + ' parti(s), ' + rates + ' échec(s), ' + d.restants + ' restant(s).';
+				setTimeout(suivant, 400);
+			}).catch(function (e) {
+				ligne.textContent = 'Interrompu : ' + e.message;
+				detail.textContent = envoyes + ' e-mail(s) déjà partis et tracés. Recharge puis reclique pour continuer.';
+				stop.hidden = true; bouton.disabled = false;
+			});
+		}
+		suivant();
+	}
+
+	['wb-envoi-premiers', 'wb-envoi-relances'].forEach(function (id) {
+		var b = document.getElementById(id);
+		if (!b) { return; }
+		b.addEventListener('click', function () {
+			var quoi = b.dataset.relances === '1' ? 'les relances dues' : 'les premiers contacts avec l\'offre PDF jointe';
+			if (!confirm('Envoyer ' + quoi + ' ? Tu peux arrêter à tout moment.')) { return; }
+			lancer(b.dataset.relances, b);
+		});
+	});
+	stop.addEventListener('click', function () { arrete = true; stop.hidden = true; });
+})();
+</script>
 
 <section class="ad-card" data-tone="light">
 	<div class="ad-card__head">

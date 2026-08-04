@@ -10,6 +10,7 @@ use App\Service\ProspectOutreach;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -113,6 +114,98 @@ class ProspectController extends AbstractController
         }
 
         return $this->redirectToRoute('back_prospect_notes', ['id' => $prospect->getId()]);
+    }
+
+    /**
+     * Envoie UN SEUL prospect et repond en JSON. La page appelle cette route
+     * en boucle : chaque requete est courte, donc jamais coupee par le
+     * pare-feu, et la progression s'affiche en direct.
+     *
+     * @Route("/admin/prospects/envoyer-suivant", name="back_prospect_send_next", methods={"POST"})
+     * @IsGranted("ROLE_ADMIN")
+     */
+    public function sendNext(Request $request, ProspectOutreach $outreach): JsonResponse
+    {
+        if (!$this->isCsrfTokenValid('prospect_send_wave', (string) $request->request->get('_token'))) {
+            return new JsonResponse(['ok' => false, 'fini' => true, 'message' => 'Session expiree, recharge la page.'], 403);
+        }
+
+        // Le verrou de session est libere : le reste de l'administration
+        // reste utilisable pendant que la vague tourne.
+        $request->getSession()->save();
+
+        $relance = '1' === (string) $request->request->get('relances');
+        $candidats = $relance ? $outreach->dueFollowUps() : $outreach->firstContactCandidates();
+
+        if ([] === $candidats) {
+            return new JsonResponse(['ok' => true, 'fini' => true, 'restants' => 0, 'message' => 'Termine.']);
+        }
+
+        $prospect = $candidats[0];
+        $erreur = $outreach->send($prospect, $relance);
+
+        return new JsonResponse([
+            'ok' => null === $erreur,
+            'fini' => false,
+            'societe' => (string) ($prospect->getCompany() ?: $prospect->getEmail()),
+            'restants' => count($candidats) - 1,
+            'message' => $erreur,
+        ]);
+    }
+
+    /**
+     * Teste la connexion au serveur d'envoi et dit franchement ce qui bloque.
+     *
+     * @Route("/admin/prospects/diagnostic-smtp", name="back_prospect_smtp_check", methods={"POST"})
+     * @IsGranted("ROLE_ADMIN")
+     */
+    public function smtpCheck(Request $request): Response
+    {
+        if (!$this->isCsrfTokenValid('prospect_smtp_check', (string) $request->request->get('_token'))) {
+            $this->addFlash('error', 'Session expiree, reessaie.');
+
+            return $this->redirectToRoute('back_prospect_index');
+        }
+
+        $dsn = (string) ($_ENV['MAILER_DSN'] ?? $_SERVER['MAILER_DSN'] ?? '');
+        if ('' === $dsn) {
+            $this->addFlash('error', "MAILER_DSN n'est pas defini : aucun e-mail ne peut partir.");
+
+            return $this->redirectToRoute('back_prospect_index');
+        }
+
+        $parts = parse_url($dsn);
+        $hote = (string) ($parts['host'] ?? '');
+        $port = (int) ($parts['port'] ?? 587);
+        if ('' === $hote) {
+            $this->addFlash('error', 'MAILER_DSN illisible : '.preg_replace('#://[^@]*@#', '://***@', $dsn));
+
+            return $this->redirectToRoute('back_prospect_index');
+        }
+
+        $debut = microtime(true);
+        $flux = @fsockopen(('465' === (string) $port ? 'ssl://' : '').$hote, $port, $errNo, $errStr, 10);
+        $duree = round((microtime(true) - $debut) * 1000);
+
+        if (false === $flux) {
+            $this->addFlash('error', sprintf(
+                'Connexion a %s:%d impossible apres %d ms (%s). Le port est probablement bloque par l\'hebergeur : demande l\'ouverture, ou passe par le port 587 en TLS.',
+                $hote, $port, $duree, $errStr ?: 'erreur '.$errNo
+            ));
+
+            return $this->redirectToRoute('back_prospect_index');
+        }
+
+        stream_set_timeout($flux, 10);
+        $banniere = trim((string) fgets($flux, 512));
+        fclose($flux);
+
+        $this->addFlash('success', sprintf(
+            'Serveur d\'envoi joignable : %s:%d a repondu en %d ms. Reponse : %s',
+            $hote, $port, $duree, mb_substr($banniere, 0, 90) ?: '(aucune banniere)'
+        ));
+
+        return $this->redirectToRoute('back_prospect_index');
     }
 
     /** @param array{sent: int, errors: array<string, string>} $resultat */
