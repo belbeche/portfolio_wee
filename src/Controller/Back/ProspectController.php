@@ -154,7 +154,13 @@ class ProspectController extends AbstractController
     }
 
     /**
-     * Teste la connexion au serveur d'envoi et dit franchement ce qui bloque.
+     * Diagnostic reseau du canal d'envoi.
+     *
+     * Teste le serveur configure sur plusieurs ports, PUIS un serveur tiers
+     * connu. La comparaison tranche la question sans discussion possible :
+     *   - tout ferme, y compris Gmail  -> l'hebergeur bloque le SMTP sortant
+     *   - Gmail ouvert, le tien ferme  -> le probleme est chez ton fournisseur mail
+     *   - un port ouvert               -> il suffit de basculer MAILER_DSN dessus
      *
      * @Route("/admin/prospects/diagnostic-smtp", name="back_prospect_smtp_check", methods={"POST"})
      * @IsGranted("ROLE_ADMIN")
@@ -167,43 +173,66 @@ class ProspectController extends AbstractController
             return $this->redirectToRoute('back_prospect_index');
         }
 
+        @set_time_limit(120);
+
         $dsn = (string) ($_ENV['MAILER_DSN'] ?? $_SERVER['MAILER_DSN'] ?? '');
-        if ('' === $dsn) {
-            $this->addFlash('error', "MAILER_DSN n'est pas defini : aucun e-mail ne peut partir.");
-
-            return $this->redirectToRoute('back_prospect_index');
-        }
-
-        $parts = parse_url($dsn);
+        $parts = '' !== $dsn ? parse_url($dsn) : [];
         $hote = (string) ($parts['host'] ?? '');
-        $port = (int) ($parts['port'] ?? 587);
+
         if ('' === $hote) {
-            $this->addFlash('error', 'MAILER_DSN illisible : '.preg_replace('#://[^@]*@#', '://***@', $dsn));
+            $this->addFlash('error', "MAILER_DSN absent ou illisible : aucun e-mail ne peut partir.");
 
             return $this->redirectToRoute('back_prospect_index');
         }
 
-        $debut = microtime(true);
-        $flux = @fsockopen(('465' === (string) $port ? 'ssl://' : '').$hote, $port, $errNo, $errStr, 10);
-        $duree = round((microtime(true) - $debut) * 1000);
+        $tester = static function (string $h, int $port): array {
+            $debut = microtime(true);
+            $flux = @fsockopen(465 === $port ? 'ssl://'.$h : $h, $port, $errNo, $errStr, 6);
+            $ms = (int) round((microtime(true) - $debut) * 1000);
 
-        if (false === $flux) {
-            $this->addFlash('error', sprintf(
-                'Connexion a %s:%d impossible apres %d ms (%s). Le port est probablement bloque par l\'hebergeur : demande l\'ouverture, ou passe par le port 587 en TLS.',
-                $hote, $port, $duree, $errStr ?: 'erreur '.$errNo
+            if (false === $flux) {
+                return ['ouvert' => false, 'ms' => $ms, 'info' => $errStr ?: 'erreur '.$errNo];
+            }
+
+            stream_set_timeout($flux, 6);
+            $banniere = trim((string) fgets($flux, 256));
+            fclose($flux);
+
+            return ['ouvert' => true, 'ms' => $ms, 'info' => mb_substr($banniere, 0, 60)];
+        };
+
+        $lignes = [];
+        $unOuvert = null;
+        foreach ([587, 465, 25, 2525] as $port) {
+            $r = $tester($hote, $port);
+            $lignes[] = sprintf('%s:%d %s (%d ms) %s', $hote, $port, $r['ouvert'] ? 'OUVERT' : 'ferme', $r['ms'], $r['info']);
+            if ($r['ouvert'] && null === $unOuvert) {
+                $unOuvert = $port;
+            }
+        }
+
+        // Le temoin : un serveur tiers dont on sait qu'il ecoute.
+        $temoin = $tester('smtp.gmail.com', 587);
+        $lignes[] = sprintf('TEMOIN smtp.gmail.com:587 %s (%d ms)', $temoin['ouvert'] ? 'OUVERT' : 'ferme', $temoin['ms']);
+
+        $rapport = implode(' | ', $lignes);
+
+        if (null !== $unOuvert) {
+            $this->addFlash('success', sprintf(
+                'Port %d joignable. Bascule MAILER_DSN sur ce port et les envois repartiront. Detail : %s',
+                $unOuvert, $rapport
             ));
-
-            return $this->redirectToRoute('back_prospect_index');
+        } elseif (!$temoin['ouvert']) {
+            $this->addFlash('error', sprintf(
+                "Aucun port SMTP ne sort de ce serveur, meme vers Gmail : c'est l'hebergeur du conteneur qui bloque les connexions sortantes SMTP, pas ton fournisseur mail. Solution : demander l'ouverture du port 587 sortant, ou passer par une API d'envoi en HTTPS. Detail : %s",
+                $rapport
+            ));
+        } else {
+            $this->addFlash('error', sprintf(
+                "Gmail repond mais pas %s : le blocage vient de ton fournisseur mail ou du nom d'hote. Detail : %s",
+                $hote, $rapport
+            ));
         }
-
-        stream_set_timeout($flux, 10);
-        $banniere = trim((string) fgets($flux, 512));
-        fclose($flux);
-
-        $this->addFlash('success', sprintf(
-            'Serveur d\'envoi joignable : %s:%d a repondu en %d ms. Reponse : %s',
-            $hote, $port, $duree, mb_substr($banniere, 0, 90) ?: '(aucune banniere)'
-        ));
 
         return $this->redirectToRoute('back_prospect_index');
     }
