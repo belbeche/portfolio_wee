@@ -1,32 +1,92 @@
-{% extends 'emails/_layout.html.twig' %}
+{% extends 'emails/_campagne.html.twig' %}
 
 {% block email_title %}Un renfort de développement, sans embaucher{% endblock %}
+{% block email_preview %}Vos clients, votre nom, mon code. Prix fixé avant de commencer.{% endblock %}
+{% block email_kicker %}Marque blanche{% endblock %}
+
+{# ================================================== accroche sur fond sombre #}
+{% block email_hero %}
+    <p style="margin:0 0 10px;font-family:Arial,Helvetica,sans-serif;font-size:26px;line-height:1.22;font-weight:bold;color:#ffffff;">
+        Vous refusez des projets<br>
+        <span style="color:#f5b301;">faute de développeur ?</span>
+    </p>
+    <p style="margin:0;font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:1.6;color:#a9bdd8;">
+        Je développe en marque blanche pour les agences : vos clients, votre nom, mon code.
+        Vous encaissez la mission au lieu de la refuser.
+    </p>
+{% endblock %}
 
 {% block email_body %}
-    <p style="margin:0 0 14px;">Bonjour{% if prospect.contactName is defined and prospect.contactName %} {{ prospect.contactName }}{% elseif prospect.company is defined and prospect.company %}, l'équipe {{ prospect.company }}{% endif %},</p>
+    <p style="margin:0 0 16px;">
+        Bonjour{% if prospect.contactName is defined and prospect.contactName %} {{ prospect.contactName }}{% elseif prospect.company is defined and prospect.company %}, l'équipe {{ prospect.company }}{% endif %},
+    </p>
+
     {% if customMessage is defined and customMessage %}
-        <p style="margin:0 0 14px; white-space: pre-line;">{{ customMessage }}</p>
+        <p style="margin:0 0 18px;white-space:pre-line;">{{ customMessage }}</p>
     {% else %}
-    <p style="margin:0 0 14px;">
-        Je suis développeur web et mobile indépendant, et je travaille en
-        <strong style="color:#141c2e;">marque blanche</strong> pour des agences
-        comme la vôtre : vos clients, votre nom, mon code.
-    </p>
-    <p style="margin:0 0 6px;">Concrètement, ce que vous y gagnez :</p>
-    <table role="presentation" cellpadding="0" cellspacing="0" style="margin:0 0 14px;">
-        <tr><td style="padding:3px 8px 3px 0;color:#1baf7a;font-weight:bold;">&#10003;</td><td style="padding:3px 0;font-family:Arial,Helvetica,sans-serif;font-size:14px;color:#333c4d;">Un renfort ponctuel ou régulier, sans embauche ni engagement</td></tr>
-        <tr><td style="padding:3px 8px 3px 0;color:#1baf7a;font-weight:bold;">&#10003;</td><td style="padding:3px 0;font-family:Arial,Helvetica,sans-serif;font-size:14px;color:#333c4d;">Prix fixé avant de commencer, validation à chaque jalon</td></tr>
-        <tr><td style="padding:3px 8px 3px 0;color:#1baf7a;font-weight:bold;">&#10003;</td><td style="padding:3px 0;font-family:Arial,Helvetica,sans-serif;font-size:14px;color:#333c4d;">Code, documentation et droits intégralement cédés à la fin</td></tr>
-    </table>
-    <p style="margin:0 0 14px;">
-        Le détail de l'offre est en pièce jointe, une page, deux minutes de lecture.
-        Mes réalisations sont visibles sur
-        <a href="https://walidbelbeche.fr/realisations" style="color:#141c2e;font-weight:bold;">walidbelbeche.fr</a>.
-    </p>
-    <p style="margin:0 0 14px;">
-        Si le sujet vous parle, répondez à cet e-mail ou appelez-moi au
-        <strong style="color:#141c2e;">06 61 28 77 86</strong> : quinze minutes
-        suffisent pour voir si nous pouvons travailler ensemble.
-    </p>
+        <p style="margin:0 0 18px;">
+            Je suis développeur web et mobile indépendant, en Normandie et à distance.
+            Concrètement, je prends en charge la partie technique de vos projets, du
+            cahier des charges à la mise en production, sans jamais apparaître devant
+            votre client.
+        </p>
+
+        {# ------------------------------------------- trois engagements chiffres #}
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:0 0 20px;">
+            {% for point in [
+                {t: 'Prix fixé avant de commencer', d: 'Vous savez ce que ça coûte avant la première ligne de code. Aucun dépassement en cours de route.'},
+                {t: 'Trois jalons, vous validez avant de régler', d: 'Vous voyez le travail avancer, vous payez ce qui est livré.'},
+                {t: 'Code, documentation et droits cédés', d: 'À la fin, tout vous appartient. Vous n\'êtes lié à personne, pas même à moi.'}
+            ] %}
+            <tr>
+                <td width="26" valign="top" style="padding:0 0 12px;font-family:Arial,Helvetica,sans-serif;font-size:15px;font-weight:bold;color:#1baf7a;line-height:1.5;">&#10003;</td>
+                <td style="padding:0 0 12px;font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:1.55;color:#3a465c;">
+                    <strong style="color:#0a1628;">{{ point.t }}</strong><br>
+                    <span style="color:#6b7a90;">{{ point.d }}</span>
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+
+        {# ------------------------------------------------------ preuve chiffree #}
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"
+               style="margin:0 0 22px;background-color:#f6f8fb;border-radius:10px;">
+            <tr>
+                {% for stat in [
+                    {n: '12', l: 'réalisations livrées'},
+                    {n: '48 h', l: 'pour un chiffrage'},
+                    {n: '100 %', l: 'des droits cédés'}
+                ] %}
+                <td align="center" style="padding:16px 8px;font-family:Arial,Helvetica,sans-serif;">
+                    <div style="font-size:21px;font-weight:bold;color:#0a1628;">{{ stat.n }}</div>
+                    <div style="font-size:11px;color:#7b8aa0;line-height:1.4;">{{ stat.l }}</div>
+                </td>
+                {% endfor %}
+            </tr>
+        </table>
+
+        <p style="margin:0 0 22px;">
+            Le détail de l'offre est en pièce jointe : une page, deux minutes de lecture.
+            Mes réalisations sont visibles sur le site.
+        </p>
     {% endif %}
+
+    {# --------------------------------------------------------------- bouton #}
+    <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin:0 0 18px;">
+        <tr>
+            <td align="center" bgcolor="#f5b301" style="border-radius:8px;">
+                <a href="https://walidbelbeche.fr/realisations"
+                   style="display:inline-block;padding:13px 26px;font-family:Arial,Helvetica,sans-serif;font-size:14px;font-weight:bold;color:#0a1628;text-decoration:none;">
+                    Voir mes réalisations &rarr;
+                </a>
+            </td>
+        </tr>
+    </table>
+
+    <p style="margin:0 0 6px;font-size:14px;color:#6b7a90;">
+        Si le sujet vous parle, répondez à cet e-mail ou appelez le
+        <strong style="color:#0a1628;">06 61 28 77 86</strong> : quinze minutes suffisent
+        pour voir si nous pouvons travailler ensemble. Si ce n'est pas le moment,
+        un simple « pas maintenant » et je ne reviendrai pas vers vous.
+    </p>
 {% endblock %}

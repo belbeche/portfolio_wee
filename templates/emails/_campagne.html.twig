@@ -1,0 +1,85 @@
+{# =====================================================================
+   Gabarit des e-mails de campagne : bandeau sombre plein cadre, accroche
+   typographique, preuves, bouton dore. Meme identite que le site et le
+   tableau de bord. Tout en tables et styles en ligne : c'est la seule
+   chose que Outlook, Gmail et Apple Mail affichent pareil.
+   ===================================================================== #}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="x-apple-disable-message-reformatting">
+    <title>{% block email_title %}Walid Belbeche{% endblock %}</title>
+</head>
+<body style="margin:0;padding:0;background-color:#eef2f8;-webkit-font-smoothing:antialiased;">
+
+    {# Texte d'apercu : ce que la boite de reception montre avant l'ouverture. #}
+    <div style="display:none;max-height:0;overflow:hidden;opacity:0;">
+        {% block email_preview %}Un renfort de développement, sans embaucher.{% endblock %}
+        &#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;
+    </div>
+
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:#eef2f8;">
+        <tr>
+            <td align="center" style="padding:28px 12px;">
+                <table role="presentation" width="600" cellpadding="0" cellspacing="0" border="0"
+                       style="width:600px;max-width:100%;background-color:#ffffff;border-radius:14px;overflow:hidden;box-shadow:0 2px 14px rgba(10,22,40,.08);">
+
+                    {# ============================================ bandeau sombre #}
+                    <tr>
+                        <td style="background-color:#0a1628;padding:30px 34px 28px;">
+                            <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+                                <tr>
+                                    <td style="font-family:Georgia,'Times New Roman',serif;font-size:17px;font-weight:bold;color:#ffffff;">
+                                        Walid Belbeche
+                                    </td>
+                                    <td align="right" style="font-family:Arial,Helvetica,sans-serif;font-size:11px;font-weight:bold;letter-spacing:1.4px;color:#f5b301;text-transform:uppercase;">
+                                        {% block email_kicker %}Développement web &amp; mobile{% endblock %}
+                                    </td>
+                                </tr>
+                            </table>
+
+                            <div style="height:1px;background-color:rgba(255,255,255,.14);margin:20px 0 22px;"></div>
+
+                            {% block email_hero %}{% endblock %}
+                        </td>
+                    </tr>
+
+                    {# ================================================== corps #}
+                    <tr>
+                        <td style="padding:30px 34px 8px;font-family:Arial,Helvetica,sans-serif;font-size:15px;line-height:1.68;color:#3a465c;">
+                            {% block email_body %}{% endblock %}
+                        </td>
+                    </tr>
+
+                    {# ============================================== signature #}
+                    <tr>
+                        <td style="padding:8px 34px 30px;font-family:Arial,Helvetica,sans-serif;font-size:15px;line-height:1.68;color:#3a465c;">
+                            Bien cordialement,<br>
+                            <strong style="color:#0a1628;">Walid Belbeche</strong><br>
+                            <span style="font-size:13px;color:#7b8aa0;">
+                                06 61 28 77 86 ·
+                                <a href="mailto:contact@walidbelbeche.fr" style="color:#7b8aa0;">contact@walidbelbeche.fr</a>
+                            </span>
+                        </td>
+                    </tr>
+                </table>
+
+                {# ============================================== pied de page #}
+                <table role="presentation" width="600" cellpadding="0" cellspacing="0" border="0" style="width:600px;max-width:100%;">
+                    <tr>
+                        <td align="center" style="padding:18px 14px 0;font-family:Arial,Helvetica,sans-serif;font-size:11px;line-height:1.75;color:#8b98ad;">
+                            Walid Belbeche · 173 rue de Courcelles, 75017 Paris · SIREN 848967816<br>
+                            <a href="https://walidbelbeche.fr" style="color:#8b98ad;">walidbelbeche.fr</a>
+                            {% block email_footer_note %}
+                                <br>Message professionnel adressé à une entreprise. Une réponse « stop » suffit pour ne plus être contacté.
+                            {% endblock %}
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>
