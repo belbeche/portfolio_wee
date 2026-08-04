@@ -28,7 +28,7 @@ class ProspectController extends AbstractController
             'prospects' => $prospectRepository->findAll(),
             'waveCandidates' => $outreach->firstContactCandidates(),
             'dueFollowUps' => $outreach->dueFollowUps(),
-            'waveMax' => ProspectOutreach::MAX_PAR_VAGUE,
+            'waveMax' => 5,
         ]);
     }
 
@@ -48,8 +48,18 @@ class ProspectController extends AbstractController
             return $this->redirectToRoute('back_prospect_index');
         }
 
-        $resultat = $outreach->sendWave($outreach->firstContactCandidates());
+        // Libere le verrou de session : pendant l'envoi, le reste de
+        // l'administration reste utilisable au lieu d'attendre derriere.
+        $request->getSession()->save();
+
+        // 5 envois par clic : la page repond avant que Cloudflare ne coupe.
+        $resultat = $outreach->sendWave($outreach->firstContactCandidates(), false, 5);
         $this->flashWaveResult($resultat, 'premier(s) contact(s)');
+
+        $restants = count($outreach->firstContactCandidates());
+        if ($restants > 0) {
+            $this->addFlash('info', sprintf('%d prospect(s) restent a contacter : reclique le bouton pour la vague suivante.', $restants));
+        }
 
         return $this->redirectToRoute('back_prospect_index');
     }
@@ -68,7 +78,9 @@ class ProspectController extends AbstractController
             return $this->redirectToRoute('back_prospect_index');
         }
 
-        $resultat = $outreach->sendWave($outreach->dueFollowUps(), true);
+        $request->getSession()->save();
+
+        $resultat = $outreach->sendWave($outreach->dueFollowUps(), true, 5);
         $this->flashWaveResult($resultat, 'relance(s)');
 
         return $this->redirectToRoute('back_prospect_index');

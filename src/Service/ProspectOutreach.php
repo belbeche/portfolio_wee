@@ -141,6 +141,10 @@ class ProspectOutreach
         // laisser d'e-mail parti sans trace, donc jamais de doublon.
         ignore_user_abort(true);
         @set_time_limit(600);
+        // Un serveur SMTP qui ne repond pas doit echouer vite : sans ceci il
+        // retient le worker PHP jusqu'a 60 s par operation et le site entier
+        // finit par saturer (pm.max_children).
+        @ini_set('default_socket_timeout', '15');
 
         $limit = max(1, min(self::MAX_PAR_VAGUE, $limit));
         $candidats = array_slice($candidats, 0, $limit);
