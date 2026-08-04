@@ -16,7 +16,7 @@
 			{% endfor %}
 
 
-			<div class="col text-right">
+			<div class="col text-end">
 				<a href="{{ url('back_subjects_new') }}" class="btn btn-primary">Ajouter un subject</a>
 			</div>
 			<div class="col-12">
@@ -43,9 +43,9 @@
 									</td>
 									<td>
 										{% if subject.isPublished %}
-											<small class="badge badge-success">publier</small>
+											<small class="badge text-bg-success">publier</small>
 										{% else %}
-											<small class="badge badge-warning">brouillon</small>
+											<small class="badge text-bg-warning">brouillon</small>
 										{% endif %}
 									</td>
 									{#<td>{{ subject.isPublished ? subject.createdAt|format_datetime('full', 'short', locale='fr') }}</td>#}

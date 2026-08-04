@@ -65,7 +65,7 @@
 						<tr>
 							<td>{{ devis.id }}</td>
 							<td>{{ devis.createdAt|date('Y-m-d H:i:s') }}</td>
-							<td><span class="{#badge badge-danger m-0#}">{{ devis.statut }}</span></td>
+							<td><span class="{#badge text-bg-danger m-0#}">{{ devis.statut }}</span></td>
 							<td><span>{{ devis.prix }} €</span></td>
 							<td>
 								{% if app.user.id %}

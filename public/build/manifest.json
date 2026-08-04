@@ -1,5 +1,5 @@
 {
-  "build/app.css": "/build/app.debcdd0d.css",
+  "build/app.css": "/build/app.996e662c.css",
   "build/app.js": "/build/app.f2cc5faf.js",
   "build/jquery.js": "/build/jquery.5a122075.js",
   "build/imagesloaded.js": "/build/imagesloaded.0f4b3683.js",
@@ -25,7 +25,6 @@
   "build/images/fa-regular-400.svg": "/build/images/fa-regular-400.a88636f4.svg",
   "build/fonts/fa-brands-400.eot": "/build/fonts/fa-brands-400.3825c40f.eot",
   "build/fonts/fa-brands-400.ttf": "/build/fonts/fa-brands-400.1437eef4.ttf",
-  "build/images/nucleo-icons.svg": "/build/images/nucleo-icons.95fa360c.svg",
   "build/fonts/fa-solid-900.woff": "/build/fonts/fa-solid-900.afbdcbcc.woff",
   "build/fonts/fontawesome-webfont.woff?v=4.7.0": "/build/fonts/fontawesome-webfont.f691f37e.woff",
   "build/fonts/fa-brands-400.woff": "/build/fonts/fa-brands-400.e1c1a88e.woff",
@@ -39,11 +38,7 @@
   "build/fonts/fa-regular-400.eot": "/build/fonts/fa-regular-400.eb99d507.eot",
   "build/fonts/fa-regular-400.ttf": "/build/fonts/fa-regular-400.814c2c57.ttf",
   "build/fonts/Linearicons-Free.woff2?w118d": "/build/fonts/Linearicons-Free.857c65d6.woff2",
-  "build/fonts/nucleo-icons.eot": "/build/fonts/nucleo-icons.19abb540.eot",
-  "build/fonts/nucleo-icons.ttf": "/build/fonts/nucleo-icons.d6a66724.ttf",
   "build/fonts/fa-regular-400.woff": "/build/fonts/fa-regular-400.acdccc05.woff",
   "build/fonts/linecons.eot": "/build/fonts/linecons.029e7672.eot",
-  "build/fonts/fa-regular-400.woff2": "/build/fonts/fa-regular-400.5fab4ed5.woff2",
-  "build/fonts/nucleo-icons.woff": "/build/fonts/nucleo-icons.c82c9b7c.woff",
-  "build/fonts/nucleo-icons.woff2": "/build/fonts/nucleo-icons.cba26748.woff2"
+  "build/fonts/fa-regular-400.woff2": "/build/fonts/fa-regular-400.5fab4ed5.woff2"
 }

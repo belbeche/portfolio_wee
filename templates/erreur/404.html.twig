@@ -1,29 +1,25 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Une erreur s'est produite
-{% endblock %}
+{% block title %}{{ app.request.locale == 'en' ? 'Page not found' : 'Page introuvable' }}{% endblock %}
 
 {% block content %}
+{% set en = app.request.locale == 'en' %}
 
-	<div id="main" class="site-main">
-		<div id="main-content" class="single-page-content nothing-found">
-			<div id="primary" class="content-area">
-
-				<div id="content" class="page-content site-content single-post" role="main">
-
-					<div class="page-content">
-						<h1 class="nf-page-title">404</h1>
-						<p>Il semble que rien n'ait été trouvé à cet endroit.</p>
-						<div class="d-block">
-							<a href="{{ url('front_home')}}">Revenir à l'Accueil</a>
-							|
-							<a href="{{ url('front_project')}}">Voir mes réalisations</a>
-						</div>
-					</div>
-
-				</div>
-			</div>
-		</div>
-	</div>
+<section class="wb-section wb-section--paper" data-tone="light" style="min-height:62vh;">
+    <div class="container" style="max-width:680px;padding-top:4rem;">
+        <div class="wb-card text-center" data-tone="light" style="padding:2.6rem 2rem;">
+            <span class="wb-eyebrow wb-eyebrow--ink">{{ en ? 'Error 404' : 'Erreur 404' }}</span>
+            <h1 class="wb-h2" style="margin:.5rem 0 .8rem;">{{ en ? 'This page does not exist' : "Cette page n'existe pas" }}</h1>
+            <p style="color:var(--wb-text-2);max-width:520px;margin:0 auto 1.6rem;">
+                {{ en ? 'The address may be mistyped, or the page has moved. Everything else is still where you left it.' : "L'adresse est peut-être mal orthographiée, ou la page a été déplacée. Le reste du site fonctionne normalement." }}
+            </p>
+            <div class="d-flex flex-wrap gap-2 justify-content-center">
+                <a href="{{ url('front_home') }}" class="wb-btn wb-btn--ink">{{ en ? 'Back to home' : "Retour à l'accueil" }}</a>
+                <a href="{{ url('front_project') }}" class="wb-btn wb-btn--outline">{{ en ? 'See my work' : 'Voir mes réalisations' }}</a>
+                <a href="{{ url('front_contact') }}" class="wb-btn wb-btn--outline">{{ en ? 'Contact me' : 'Me contacter' }}</a>
+            </div>
+        </div>
+    </div>
+</section>
 
 {% endblock %}

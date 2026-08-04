@@ -121,11 +121,18 @@ class ProspectController extends AbstractController
      * en boucle : chaque requete est courte, donc jamais coupee par le
      * pare-feu, et la progression s'affiche en direct.
      *
-     * @Route("/admin/prospects/envoyer-suivant", name="back_prospect_send_next", methods={"POST"})
+     * Un GET (URL ouverte a la main, retour arriere, prefetch) ne doit pas
+     * produire une page d'erreur 405 : on renvoie simplement sur la liste.
+     *
+     * @Route("/admin/prospects/envoyer-suivant", name="back_prospect_send_next", methods={"POST", "GET"})
      * @IsGranted("ROLE_ADMIN")
      */
-    public function sendNext(Request $request, ProspectOutreach $outreach): JsonResponse
+    public function sendNext(Request $request, ProspectOutreach $outreach): Response
     {
+        if (!$request->isMethod('POST')) {
+            return $this->redirectToRoute('back_prospect_index');
+        }
+
         if (!$this->isCsrfTokenValid('prospect_send_wave', (string) $request->request->get('_token'))) {
             return new JsonResponse(['ok' => false, 'fini' => true, 'message' => 'Session expiree, recharge la page.'], 403);
         }
