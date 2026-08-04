@@ -49,7 +49,7 @@
 									{% if note.author %}
 										<span style="font-size:.75rem;color:var(--ad-text-3);">par {{ note.author }}</span>
 									{% endif %}
-									<form method="post" action="{{ url('back_prospect_note_delete', {id: note.id}) }}"
+									<form method="post" action="{{ path('back_prospect_note_delete', {id: note.id}) }}"
 									      style="margin-left:auto;"
 									      onsubmit="return confirm('Supprimer cet échange ?');">
 										<input type="hidden" name="_token" value="{{ csrf_token('delete_note_' ~ note.id) }}">
@@ -95,7 +95,7 @@
 					</p>
 				{% else %}
 					{% set premier = prospect.status == 'a_contacter' %}
-					<form method="post" action="{{ url('back_prospect_send_one', {id: prospect.id}) }}"
+					<form method="post" action="{{ path('back_prospect_send_one', {id: prospect.id}) }}"
 					      onsubmit="return confirm('{{ premier ? 'Envoyer le premier contact, offre PDF jointe ?' : 'Envoyer une relance maintenant ?' }}');">
 						<input type="hidden" name="_token" value="{{ csrf_token('prospect_send_one_' ~ prospect.id) }}">
 						<button class="ad-btn ad-btn--primary" style="width:100%;">

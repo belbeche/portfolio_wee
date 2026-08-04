@@ -2,19 +2,31 @@
 
 {% block email_title %}Votre demande est bien reçue{% endblock %}
 
+{% block email_preview %}Votre demande est arrivée. Réponse chiffrée sous 48 heures ouvrées.{% endblock %}
+{% block email_kicker %}Devis{% endblock %}
+
+{% block email_hero %}
+    <p style="margin:0 0 10px;font-family:Arial,Helvetica,sans-serif;font-size:25px;line-height:1.22;font-weight:bold;color:#ffffff;">
+        Votre demande<br><span style="color:#f5b301;">est bien arrivée</span>
+    </p>
+    <p style="margin:0;font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:1.6;color:#a9bdd8;">
+        Je la lis personnellement et je reviens vers vous avec un chiffrage détaillé, ligne par ligne.
+    </p>
+{% endblock %}
+
 {% block email_body %}
     <p style="margin:0 0 14px;">Bonjour,</p>
     <p style="margin:0 0 14px;">
         Votre demande d'estimation est bien arrivée. Je la lis personnellement et je
         reviens vers vous avec un chiffrage détaillé, ligne par ligne,
-        <strong style="color:#141c2e;">sous 48 heures ouvrées</strong>.
+        <strong style="color:#0a1628;">sous 48 heures ouvrées</strong>.
     </p>
 
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:14px 0;border:1px solid #e4e7ec;border-radius:8px;background-color:#f8fafc;">
-        <tr><td style="padding:7px 14px;font-family:Arial,Helvetica,sans-serif;font-size:13px;color:#6b7280;white-space:nowrap;">Référence</td><td style="padding:7px 14px;font-family:Arial,Helvetica,sans-serif;font-size:13px;color:#141c2e;">{{ (registredNumber ~ '')|slice(0, 8) }}</td></tr>
-        <tr><td style="padding:7px 14px;font-family:Arial,Helvetica,sans-serif;font-size:13px;color:#6b7280;white-space:nowrap;">Projet</td><td style="padding:7px 14px;font-family:Arial,Helvetica,sans-serif;font-size:13px;color:#141c2e;">{{ typeWeb }}</td></tr>
+        <tr><td style="padding:7px 14px;font-family:Arial,Helvetica,sans-serif;font-size:13px;color:#6b7280;white-space:nowrap;">Référence</td><td style="padding:7px 14px;font-family:Arial,Helvetica,sans-serif;font-size:13px;color:#0a1628;">{{ (registredNumber ~ '')|slice(0, 8) }}</td></tr>
+        <tr><td style="padding:7px 14px;font-family:Arial,Helvetica,sans-serif;font-size:13px;color:#6b7280;white-space:nowrap;">Projet</td><td style="padding:7px 14px;font-family:Arial,Helvetica,sans-serif;font-size:13px;color:#0a1628;">{{ typeWeb }}</td></tr>
         {% if designWebsite is defined and designWebsite|length > 0 %}
-        <tr><td style="padding:7px 14px;font-family:Arial,Helvetica,sans-serif;font-size:13px;color:#6b7280;white-space:nowrap;">Attentes</td><td style="padding:7px 14px;font-family:Arial,Helvetica,sans-serif;font-size:13px;color:#141c2e;">{% for d in designWebsite %}{{ d.label }}{{ not loop.last ? ', ' : '' }}{% endfor %}</td></tr>
+        <tr><td style="padding:7px 14px;font-family:Arial,Helvetica,sans-serif;font-size:13px;color:#6b7280;white-space:nowrap;">Attentes</td><td style="padding:7px 14px;font-family:Arial,Helvetica,sans-serif;font-size:13px;color:#0a1628;">{% for d in designWebsite %}{{ d.label }}{{ not loop.last ? ', ' : '' }}{% endfor %}</td></tr>
         {% endif %}
     </table>
 

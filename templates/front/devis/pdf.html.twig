@@ -1,20 +1,92 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <title>Devis</title>
-    <style>
-        body { font-family: Arial, sans-serif; line-height: 1.6; }
-        h1 { color: #333; }
-        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
-    </style>
+<meta charset="UTF-8">
+<title>Demande d'estimation {{ devis.id }}</title>
+<style>
+    @page { size: A4; margin: 14mm 14mm 16mm; }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'DejaVu Sans', Arial, sans-serif; color: #0d1b2a; font-size: 10pt; line-height: 1.55; }
+
+    .tete { background: #0a1628; color: #fff; border-radius: 10px; padding: 7mm 8mm; margin-bottom: 6mm; }
+    .tete .rang { width: 100%; }
+    .tete .nom { font-size: 13pt; font-weight: bold; }
+    .tete .etiq { color: #f5b301; font-size: 7.5pt; letter-spacing: 2px; text-transform: uppercase; font-weight: bold; text-align: right; }
+    .tete h1 { font-size: 19pt; margin: 5mm 0 1.5mm; line-height: 1.15; }
+    .tete h1 span { color: #f5b301; }
+    .tete p { color: #a9bdd8; font-size: 9pt; }
+
+    .ref { width: 100%; border-collapse: separate; border-spacing: 3mm 0; margin-bottom: 5mm; }
+    .ref td { border: 1px solid #dde5f0; border-radius: 8px; padding: 3mm 3.5mm; width: 33%; vertical-align: top; }
+    .ref .l { font-size: 7.5pt; letter-spacing: .5px; text-transform: uppercase; color: #7b8aa0; font-weight: bold; }
+    .ref .v { font-size: 10.5pt; font-weight: bold; color: #0a1628; margin-top: 1mm; }
+
+    h2 { font-size: 10pt; margin: 5mm 0 2mm; color: #0a1628; }
+    .bloc { border: 1px solid #dde5f0; border-radius: 8px; padding: 3.5mm 4mm; margin-bottom: 3.5mm; }
+    .bloc p { color: #4a5a6e; white-space: pre-line; }
+    .puces { list-style: none; }
+    .puces li { position: relative; padding: .7mm 0 .7mm 5mm; color: #4a5a6e; }
+    .puces li:before { content: "\2713"; position: absolute; left: 0; color: #1baf7a; font-weight: bold; }
+
+    .suite { background: #0a1628; color: #fff; border-radius: 8px; padding: 4mm 5mm; margin-top: 5mm; }
+    .suite b { color: #f5b301; }
+    .suite p { color: #a9bdd8; font-size: 8.8pt; margin-top: 1.5mm; }
+
+    .pied { margin-top: 4mm; font-size: 7.6pt; color: #7b8aa0; text-align: center; }
+</style>
 </head>
 <body>
-    <h1>Devis #{{ devis.id }}</h1>
-    <p><strong>Email :</strong> {{ devis.email }}</p>
-    <p><strong>Type de site :</strong> {{ devis.type_de_site_web }}</p>
-    <p><strong>Attentes en design :</strong> {{ devis.attentes_design_web|join(', ') }}</p>
-    <p><strong>Description :</strong> {{ devis.description_projet }}</p>
+
+<div class="tete">
+    <table class="rang"><tr>
+        <td class="nom">Walid Belbeche</td>
+        <td class="etiq">Demande d'estimation</td>
+    </tr></table>
+    <h1>Votre projet,<br><span>tel que je l'ai compris</span></h1>
+    <p>Ce document reprend ce que vous m'avez transmis. Il sert de base au chiffrage
+       détaillé que vous recevrez sous 48 heures ouvrées.</p>
+</div>
+
+<table class="ref"><tr>
+    <td>
+        <div class="l">Référence</div>
+        <div class="v">{{ devis.id|slice(0, 8)|upper }}</div>
+    </td>
+    <td>
+        <div class="l">Contact</div>
+        <div class="v" style="font-size:9pt;">{{ devis.email }}</div>
+    </td>
+    <td>
+        <div class="l">Type de projet</div>
+        <div class="v" style="font-size:9pt;">{{ devis.type_de_site_web }}</div>
+    </td>
+</tr></table>
+
+{% if devis.attentes_design_web is defined and devis.attentes_design_web|length %}
+    <h2>Vos attentes en design</h2>
+    <div class="bloc">
+        <ul class="puces">
+            {% for attente in devis.attentes_design_web %}<li>{{ attente }}</li>{% endfor %}
+        </ul>
+    </div>
+{% endif %}
+
+<h2>Votre projet, avec vos mots</h2>
+<div class="bloc">
+    <p>{{ devis.description_projet ?: 'Aucune description transmise.' }}</p>
+</div>
+
+<div class="suite">
+    <b>La suite, en trois temps.</b>
+    <p>1. Je lis votre demande et je reviens vers vous sous 48 heures ouvrées avec un chiffrage ligne par ligne.
+       2. Nous ajustons ensemble ce qui doit l'être : vous ne payez que ce dont vous avez besoin.
+       3. Vous validez, et seulement alors le travail commence. Paiement en trois jalons, code et droits cédés à la fin.</p>
+</div>
+
+<div class="pied">
+    Walid Belbeche · 173 rue de Courcelles, 75017 Paris · SIREN 848967816 ·
+    contact@walidbelbeche.fr · 06 61 28 77 86 · walidbelbeche.fr
+</div>
+
 </body>
 </html>

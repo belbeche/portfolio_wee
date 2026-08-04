@@ -71,13 +71,13 @@
                         </td>
                         <td class="text-end">
                             <a href="{{ url('back_skill_edit', {id: skill.id}) }}" class="btn btn-sm btn-outline-secondary">Modifier</a>
-                            <form method="post" action="{{ url('back_skill_toggle', {id: skill.id}) }}" class="d-inline">
+                            <form method="post" action="{{ path('back_skill_toggle', {id: skill.id}) }}" class="d-inline">
                                 <input type="hidden" name="_token" value="{{ csrf_token('toggle_skill_' ~ skill.id) }}">
                                 <button class="btn btn-sm btn-outline-secondary">
                                     {{ skill.visible ? 'Masquer' : 'Afficher' }}
                                 </button>
                             </form>
-                            <form method="post" action="{{ url('back_skill_delete', {id: skill.id}) }}" class="d-inline"
+                            <form method="post" action="{{ path('back_skill_delete', {id: skill.id}) }}" class="d-inline"
                                   onsubmit="return confirm('Supprimer definitivement cette competence ?');">
                                 <input type="hidden" name="_token" value="{{ csrf_token('delete_skill_' ~ skill.id) }}">
                                 <button class="btn btn-sm btn-outline-danger">Supprimer</button>

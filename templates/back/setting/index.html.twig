@@ -55,7 +55,7 @@
             CSS et scripts. Ce bouton change la version des fichiers statiques : tout le monde
             recharge les derniers fichiers à sa prochaine visite, sans rien faire de son côté.
         </p>
-        <form method="post" action="{{ url('back_settings_purge') }}"
+        <form method="post" action="{{ path('back_settings_purge') }}"
               onsubmit="return confirm('Forcer tous les visiteurs à recharger les fichiers statiques ?');">
             <input type="hidden" name="_token" value="{{ csrf_token('settings_purge') }}">
             <button class="ad-btn ad-btn--primary">Forcer l'actualisation des visiteurs</button>
@@ -72,7 +72,7 @@
             envoie un essai à tous les navigateurs abonnés. Envoi manuel possible aussi :
             <code style="font-size:.78rem;">php bin/console app:push:envoyer "Titre" "Message" --url=/espace</code>
         </p>
-        <form method="post" action="{{ url('back_settings_push_test') }}">
+        <form method="post" action="{{ path('back_settings_push_test') }}">
             <input type="hidden" name="_token" value="{{ csrf_token('settings_push_test') }}">
             <button class="ad-btn ad-btn--primary">M'envoyer une notification d'essai</button>
         </form>

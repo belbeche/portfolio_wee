@@ -2,6 +2,18 @@
 
 {% block email_title %}Votre message est bien reçu{% endblock %}
 
+{% block email_preview %}Votre message est bien arrivé.{% endblock %}
+{% block email_kicker %}Contact{% endblock %}
+
+{% block email_hero %}
+    <p style="margin:0 0 10px;font-family:Arial,Helvetica,sans-serif;font-size:25px;line-height:1.22;font-weight:bold;color:#ffffff;">
+        Votre message<br><span style="color:#f5b301;">est bien arrivé</span>
+    </p>
+    <p style="margin:0;font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:1.6;color:#a9bdd8;">
+        Je lis chaque message personnellement et je réponds sous 48 heures ouvrées.
+    </p>
+{% endblock %}
+
 {% block email_body %}
     <p style="margin:0 0 14px;">Bonjour{% if contact.firstname is defined and contact.firstname %} {{ contact.firstname }}{% endif %},</p>
     <p style="margin:0 0 14px;">
@@ -10,7 +22,7 @@
     </p>
     <p style="margin:0 0 14px;">
         Si c'est urgent, appelez-moi directement au
-        <strong style="color:#141c2e;">+33 6 61 28 77 86</strong>.
+        <strong style="color:#0a1628;">+33 6 61 28 77 86</strong>.
     </p>
     <p style="margin:0;font-size:13px;color:#6b7280;">
         Cet e-mail est un accusé de réception, vous n'avez pas à y répondre.

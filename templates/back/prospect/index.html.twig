@@ -60,7 +60,7 @@
 
 			<button type="button" id="wb-envoi-stop" class="ad-btn ad-btn--danger" hidden>Arrêter</button>
 
-			<form method="post" action="{{ url('back_prospect_smtp_check') }}" style="margin-left:auto;">
+			<form method="post" action="{{ path('back_prospect_smtp_check') }}" style="margin-left:auto;">
 				<input type="hidden" name="_token" value="{{ csrf_token('prospect_smtp_check') }}">
 				<button class="ad-btn ad-btn--ghost ad-btn--sm">Tester le serveur d'envoi</button>
 			</form>
@@ -111,7 +111,7 @@
 			corps.set('_token', {{ csrf_token('prospect_send_wave')|json_encode|raw }});
 			corps.set('relances', relances);
 
-			fetch({{ url('back_prospect_send_next')|json_encode|raw }}, {
+			fetch({{ path('back_prospect_send_next')|json_encode|raw }}, {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
 				credentials: 'same-origin',

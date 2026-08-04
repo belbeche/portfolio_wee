@@ -3,7 +3,11 @@ framework:
     # Derriere le nginx du conteneur (TLS termine en amont), PHP ne voit que
     # du http. En faisant confiance aux proxys des plages privees, Symfony
     # lit X-Forwarded-Proto et reconstruit les URL absolues en https.
-    trusted_proxies: '127.0.0.1,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16'
+    # REMOTE_ADDR : faire confiance au proxy immediat, quelle que soit son IP.
+    # Indispensable ici : la requete arrive de Cloudflare, dont les IP ne sont
+    # ni privees ni fixes. Sans cela X-Forwarded-Proto etait ignore et toutes
+    # les URL absolues sortaient en http, donc bloquees par le navigateur.
+    trusted_proxies: '127.0.0.1,REMOTE_ADDR,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16'
     trusted_headers: ['x-forwarded-for', 'x-forwarded-proto', 'x-forwarded-port', 'x-forwarded-host']
     secret: "%env(APP_SECRET)%"
 
@@ -16,6 +20,11 @@ framework:
     # Le site s'adresse d'abord a un public francophone : la langue par
     # defaut doit etre le francais, pas l'anglais.
     default_locale: fr
+
+    router:
+        # Utilise par les commandes console, qui n'ont pas de requete HTTP :
+        # sans cela les liens des e-mails partaient en http://localhost.
+        default_uri: 'https://walidbelbeche.fr'
 
     translator:
         default_path: '%kernel.project_dir%/translations'

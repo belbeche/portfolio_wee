@@ -2,11 +2,23 @@
 
 {% block email_title %}Je vous rappelle très vite{% endblock %}
 
+{% block email_preview %}Je vous rappelle très vite, à vous de choisir le moment.{% endblock %}
+{% block email_kicker %}Rappel{% endblock %}
+
+{% block email_hero %}
+    <p style="margin:0 0 10px;font-family:Arial,Helvetica,sans-serif;font-size:25px;line-height:1.22;font-weight:bold;color:#ffffff;">
+        Je vous rappelle<br><span style="color:#f5b301;">très vite</span>
+    </p>
+    <p style="margin:0;font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:1.6;color:#a9bdd8;">
+        Votre demande de rappel est enregistrée. Je vous joins au numéro indiqué.
+    </p>
+{% endblock %}
+
 {% block email_body %}
     <p style="margin:0 0 14px;">Bonjour{% if name %} {{ name }}{% endif %},</p>
     <p style="margin:0 0 14px;">
         Votre demande de rappel est bien notée. Je vous appelle au
-        <strong style="color:#141c2e;">{{ phone }}</strong> sous 24 heures ouvrées.
+        <strong style="color:#0a1628;">{{ phone }}</strong> sous 24 heures ouvrées.
     </p>
     <p style="margin:0 0 14px;">
         Pas besoin de préparer quoi que ce soit : quelques minutes suffisent pour
