@@ -205,34 +205,44 @@
 				}
 
 				// Abonnement aux notifications : appele par les boutons data-wb-push.
-				window.wbPushSubscribe = function (btn) {
-					if (!('serviceWorker' in navigator) || !('PushManager' in window) || !('Notification' in window)) {
-						if (btn) { btn.textContent = 'Non pris en charge par ce navigateur'; btn.disabled = true; }
-						return;
-					}
-					Notification.requestPermission().then(function (perm) {
-						if (perm !== 'granted') { return; }
-						return navigator.serviceWorker.ready.then(function (reg) {
-							return fetch('/push/cle-publique').then(function (r) { return r.json(); }).then(function (data) {
-								if (!data.key) { throw new Error('cle absente'); }
-								var brut = atob(data.key.replace(/-/g, '+').replace(/_/g, '/'));
-								var cle = new Uint8Array(brut.length);
-								for (var i = 0; i < brut.length; i++) { cle[i] = brut.charCodeAt(i); }
-								return reg.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: cle });
-							}).then(function (sub) {
-								return fetch('/push/abonnement', {
-									method: 'POST',
-									headers: { 'Content-Type': 'application/json' },
-									credentials: 'same-origin',
-									body: JSON.stringify(sub)
-								});
-							}).then(function () {
-								if (btn) { btn.textContent = 'Notifications activées ✓'; btn.disabled = true; }
-							});
+				window.wbPushSubscribe = async function (btn) {
+					var dire = function (t) { if (btn) { btn.textContent = t; } };
+					try {
+						if (!('serviceWorker' in navigator) || !('PushManager' in window) || !('Notification' in window)) {
+							dire('Non pris en charge par ce navigateur'); if (btn) { btn.disabled = true; } return;
+						}
+						var perm = await Notification.requestPermission();
+						if (perm !== 'granted') { dire('Permission refusée dans le navigateur'); return; }
+
+						dire('Activation…');
+						// Enregistrement explicite : ne depend pas de celui du chargement.
+						var reg = await navigator.serviceWorker.register('/sw.js');
+						await navigator.serviceWorker.ready;
+
+						var sub = await reg.pushManager.getSubscription();
+						if (!sub) {
+							var r = await fetch('/push/cle-publique', { credentials: 'same-origin' });
+							var data = await r.json();
+							if (!data.key) { throw new Error('clé publique absente (HTTP ' + r.status + ')'); }
+							var brut = atob(data.key.replace(/-/g, '+').replace(/_/g, '/'));
+							var cle = new Uint8Array(brut.length);
+							for (var i = 0; i < brut.length; i++) { cle[i] = brut.charCodeAt(i); }
+							sub = await reg.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: cle });
+						}
+
+						var post = await fetch('/push/abonnement', {
+							method: 'POST',
+							headers: { 'Content-Type': 'application/json' },
+							credentials: 'same-origin',
+							body: JSON.stringify(sub)
 						});
-					}).catch(function () {
-						if (btn) { btn.textContent = 'Activation impossible, réessayez'; }
-					});
+						if (!post.ok) { throw new Error('enregistrement refusé (HTTP ' + post.status + ')'); }
+
+						dire('Notifications activées ✓'); if (btn) { btn.disabled = true; }
+					} catch (e) {
+						console.error('[push]', e);
+						dire('Échec : ' + (e && e.message ? e.message : e));
+					}
 				};
 			</script>
 			<script defer src="https://stats.youss.dev/script.js" data-website-id="2f81360d-92bc-460b-bcd6-81ba64683e42" data-domains="walidbelbeche.fr,www.walidbelbeche.fr"></script>
