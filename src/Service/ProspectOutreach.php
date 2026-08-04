@@ -126,6 +126,59 @@ class ProspectOutreach
     }
 
     /**
+     * Envoi d'essai vers ta propre adresse : les deux gabarits, avec des
+     * donnees d'exemple et la piece jointe reelle.
+     *
+     * Ne touche a AUCUN prospect : rien n'est enregistre, aucun statut ne
+     * bouge, aucune cadence n'est posee. C'est fait pour verifier le rendu
+     * dans une vraie boite mail avant le premier envoi reel.
+     *
+     * @return array{sent: int, errors: array<string, string>}
+     */
+    public function sendPreview(string $destinataire): array
+    {
+        $exemple = new Prospect();
+        $exemple->setEmail($destinataire)
+            ->setCompany('Agence Exemple')
+            ->setContactName('Marie Dupont')
+            ->setCity('Rouen')
+            ->setLastContactedAt(new \DateTime('-4 days'));
+
+        $offre = $this->projectDir.'/public/docs/offre-walid-belbeche.pdf';
+
+        $envois = [
+            ['[ESSAI] '.self::SUJET_PREMIER, 'back/prospect/welcome_prospect.html.twig', true],
+            ['[ESSAI] '.self::SUJET_RELANCE, 'back/prospect/relance_prospect.html.twig', false],
+        ];
+
+        $sent = 0;
+        $errors = [];
+        foreach ($envois as [$sujet, $gabarit, $avecPieceJointe]) {
+            $email = (new Email())
+                ->from('contact@walidbelbeche.fr')
+                ->to($destinataire)
+                ->subject($sujet)
+                ->html($this->twig->render($gabarit, [
+                    'prospect' => $exemple,
+                    'customMessage' => null,
+                ]));
+
+            if ($avecPieceJointe && is_file($offre)) {
+                $email->attachFromPath($offre, 'Offre - Walid Belbeche.pdf');
+            }
+
+            try {
+                $this->mailer->send($email);
+                ++$sent;
+            } catch (\Exception $e) {
+                $errors[$sujet] = $e->getMessage();
+            }
+        }
+
+        return ['sent' => $sent, 'errors' => $errors];
+    }
+
+    /**
      * Envoie une vague complete avec le plafond, puis flush.
      *
      * @param Prospect[] $candidats

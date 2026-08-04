@@ -66,6 +66,26 @@
 			</form>
 		</div>
 
+		{# ------------------------------------------------- essai avant envoi reel #}
+		<div style="margin-top:1rem;padding:1rem;border:1px dashed var(--ad-line, #dde5f0);border-radius:10px;">
+			<div style="font-weight:600;font-size:.9rem;margin-bottom:.3rem;">
+				D'abord, un essai sur ta propre boîte
+			</div>
+			<p style="margin:0 0 .8rem;font-size:.8rem;color:var(--ad-text-3);">
+				Reçois les deux e-mails tels que les prospects les verront, avec l'offre PDF jointe.
+				Aucun prospect n'est touché, aucun statut ne bouge.
+			</p>
+			<form method="post" action="{{ path('back_prospect_preview_emails') }}"
+			      style="display:flex;flex-wrap:wrap;gap:.6rem;align-items:center;">
+				<input type="hidden" name="_token" value="{{ csrf_token('prospect_preview_emails') }}">
+				<input type="email" name="destinataire" class="form-control"
+				       style="flex:1 1 260px;min-width:0;max-width:340px;"
+				       value="{{ app.user ? app.user.userIdentifier : '' }}"
+				       placeholder="Adresse de réception de l'essai">
+				<button class="ad-btn ad-btn--primary">M'envoyer les deux e-mails d'essai</button>
+			</form>
+		</div>
+
 		<div id="wb-envoi-etat" hidden style="margin-top:1rem;padding:1rem;background:var(--ad-paper-2, #f6f8fb);border-radius:10px;">
 			<div id="wb-envoi-ligne" style="font-weight:600;font-size:.92rem;"></div>
 			<div id="wb-envoi-detail" style="font-size:.82rem;color:var(--ad-text-3);margin-top:.3rem;"></div>

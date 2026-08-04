@@ -161,6 +161,48 @@ class ProspectController extends AbstractController
     }
 
     /**
+     * M'envoie les deux e-mails de prospection, avec des donnees d'exemple
+     * et l'offre PDF jointe, pour verifier le rendu avant tout envoi reel.
+     * Aucun prospect n'est touche.
+     *
+     * @Route("/admin/prospects/essai-emails", name="back_prospect_preview_emails", methods={"POST"})
+     * @IsGranted("ROLE_ADMIN")
+     */
+    public function previewEmails(Request $request, ProspectOutreach $outreach): Response
+    {
+        if (!$this->isCsrfTokenValid('prospect_preview_emails', (string) $request->request->get('_token'))) {
+            $this->addFlash('error', 'Session expiree, reessaie.');
+
+            return $this->redirectToRoute('back_prospect_index');
+        }
+
+        $destinataire = trim((string) $request->request->get('destinataire'));
+        if ('' === $destinataire) {
+            $destinataire = (string) $this->getUser()->getUserIdentifier();
+        }
+
+        if (!filter_var($destinataire, FILTER_VALIDATE_EMAIL)) {
+            $this->addFlash('error', sprintf('Adresse invalide : %s', $destinataire));
+
+            return $this->redirectToRoute('back_prospect_index');
+        }
+
+        $resultat = $outreach->sendPreview($destinataire);
+
+        if ($resultat['sent'] > 0) {
+            $this->addFlash('success', sprintf(
+                '%d e-mail(s) d\'essai envoye(s) a %s : le premier contact avec l\'offre PDF jointe, et la relance. Aucun prospect n\'a ete touche.',
+                $resultat['sent'], $destinataire
+            ));
+        }
+        foreach ($resultat['errors'] as $sujet => $message) {
+            $this->addFlash('error', sprintf('%s : %s', $sujet, $message));
+        }
+
+        return $this->redirectToRoute('back_prospect_index');
+    }
+
+    /**
      * Diagnostic reseau du canal d'envoi.
      *
      * Teste le serveur configure sur plusieurs ports, PUIS un serveur tiers
