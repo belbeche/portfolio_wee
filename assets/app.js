@@ -1,33 +1,31 @@
 /*
  * Point d'entree des styles et scripts.
  *
- * Regle de tenue : une feuille n'est importee que si elle sert reellement.
- * Historique du menage (04/08/2026) :
- *   - pixel.scss (685 Ko) retire : c'est un kit qui embarque Bootstrap 4
- *     en entier alors que le site tourne sur Bootstrap 5. Aucune de ses
- *     classes propres n'etait utilisee dans les gabarits.
- *   - nucleo-icons et perfect-scrollbar retires : zero usage.
- *   - les doublons d'import (email, magnific-popup, normalize, services)
- *     ont ete supprimes.
+ * ATTENTION A L'ORDRE : pixel.scss passe volontairement APRES bootstrap et
+ * surcharge une partie du design. Ne pas le deplacer ni le retirer sans
+ * comparer le rendu avant/apres, sous peine de casser tout le site.
+ *
+ * Menage du 04/08/2026, limite au strictement sur :
+ *   - doublons stricts supprimes (email, magnific-popup, normalize, services
+ *     etaient importes deux fois)
+ *   - nucleo-icons et perfect-scrollbar retires : zero usage dans les
+ *     gabarits, et composants isoles donc sans surcharge possible.
  */
 
-// Socle
-import './styles/normalize.css';
-import './styles/bootstrap.min.css';   // Bootstrap 5.3.3, la grille du site
-
-// Theme historique et ses dependances encore utilisees
 import './styles/main.css';
-import './styles/animations.css';
-import './styles/font-awesome.css';
-import './styles/magnific-popup.css';  // utilise par public/js/main.js
-
-// Feuilles propres au site
-import './styles/about.css';
-import './styles/app.css';
+import './styles/normalize.css';
+import './styles/bootstrap.min.css';
+import './styles/magnific-popup.css';
 import './styles/email.css';
+import './styles/pixel.scss';
+import './styles/about.css';
 import './styles/form_call_back.css';
+// import './styles/new.css';
 import './styles/processus.css';
 import './styles/services.css';
+import './styles/animations.css';
+import './styles/font-awesome.css';
+import './styles/app.css';
 
 // start the Stimulus application
 import './bootstrap';
