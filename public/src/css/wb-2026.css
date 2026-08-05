@@ -1577,9 +1577,12 @@ section.bg-dark .small, section.bg-primary .small,
     100% { box-shadow: 0 0 0 0 rgba(53, 208, 127, 0); }
 }
 
+/* auto-fit et non un nombre fixe de colonnes : la grille tient trois tuiles
+   de front quand la place le permet, deux sinon, une sur mobile. Sans cela,
+   trois tuiles dans deux colonnes laissent un trou sur la seconde ligne. */
 .wb-live__grid {
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
     gap: .9rem;
 }
 .wb-live__tile {

@@ -145,13 +145,18 @@ class PterodactylService
             return $vide;
         }
 
+        // La moyenne ne porte que sur les serveurs qui tournent. Inclure les
+        // serveurs arretes, dont l'usage vaut zero, ferait mecaniquement
+        // chuter la charge affichee : le chiffre serait juste au sens du
+        // calcul et faux au sens de ce qu'il pretend decrire.
         $enLigne = 0;
         $cpu = 0.0;
         $memoire = 0;
         foreach ($serveurs as $serveur) {
-            if ('running' === ($serveur['status'] ?? null)) {
-                ++$enLigne;
+            if ('running' !== ($serveur['status'] ?? null)) {
+                continue;
             }
+            ++$enLigne;
             $cpu += (float) ($serveur['usage']['cpu_percent'] ?? 0);
             $memoire += (int) ($serveur['usage']['memory_mb'] ?? 0);
         }
@@ -160,7 +165,7 @@ class PterodactylService
             'configure' => true,
             'total' => count($serveurs),
             'enLigne' => $enLigne,
-            'cpu' => round($cpu / max(1, count($serveurs)), 1),
+            'cpu' => round($cpu / max(1, $enLigne), 1),
             'memoireMo' => $memoire,
             'verifieA' => (new \DateTime())->format('c'),
         ];

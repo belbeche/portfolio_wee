@@ -46,3 +46,4 @@ yarn-error.log
 /var/verrous/
 /var/surveillance-etat.json
 /var/derniere-tentative-sauvegarde
+/var/surveillance-serveurs.json

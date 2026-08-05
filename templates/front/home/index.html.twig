@@ -233,12 +233,8 @@
                         <div class="wb-live__n" data-live="enLigne">0</div>
                         <div class="wb-live__l">
                             <span class="wb-live__dot" aria-hidden="true"></span>
-                            {{ en ? 'servers online' : 'serveurs en ligne' }}
+                            {{ en ? 'production servers online' : 'serveurs en production, en ligne' }}
                         </div>
-                    </div>
-                    <div class="wb-live__tile">
-                        <div class="wb-live__n" data-live="total">0</div>
-                        <div class="wb-live__l">{{ en ? 'under supervision' : 'sous supervision' }}</div>
                     </div>
                     <div class="wb-live__tile">
                         <div class="wb-live__n"><span data-live="cpu">0</span><small>%</small></div>
@@ -291,10 +287,9 @@
 		fetch({{ path('api_supervision_public')|json_encode|raw }}, { headers: { 'Accept': 'application/json' } })
 			.then(function (r) { return r.json(); })
 			.then(function (d) {
-				if (!d || !d.configure || !d.total) { return; }
+				if (!d || !d.configure || !d.enLigne) { return; }
 				bloc.hidden = false;
 				poser(champs.enLigne, d.enLigne);
-				poser(champs.total, d.total);
 				poser(champs.cpu, d.cpu);
 				poser(champs.memoire, d.memoireMo);
 				if (champs.quand) {

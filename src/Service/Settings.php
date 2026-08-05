@@ -94,6 +94,48 @@ class Settings
             'env' => null,
             'secret' => false,
         ],
+        'entreprise_nom' => [
+            'label' => 'Devis : raison sociale',
+            'help' => "Le nom qui figure en haut du devis et dans les mentions legales du bas de page.",
+            'env' => null,
+            'secret' => false,
+        ],
+        'entreprise_adresse' => [
+            'label' => 'Devis : adresse du siege',
+            'help' => "Adresse complete sur une seule ligne. Exemple : 12 rue des Lilas, 44000 Nantes. C'est une mention obligatoire sur un devis.",
+            'env' => null,
+            'secret' => false,
+        ],
+        'entreprise_siren' => [
+            'label' => 'Devis : SIREN ou SIRET',
+            'help' => "Mention obligatoire. Le SIRET est preferable au SIREN, il identifie l'etablissement.",
+            'env' => null,
+            'secret' => false,
+        ],
+        'entreprise_tva' => [
+            'label' => 'Devis : numero de TVA intracommunautaire',
+            'help' => "Laisse vide si tu es en franchise en base de TVA : le devis affichera alors la mention « TVA non applicable, article 293 B du CGI » et ne calculera aucune taxe.",
+            'env' => null,
+            'secret' => false,
+        ],
+        'devis_tva_taux' => [
+            'label' => 'Devis : taux de TVA en pourcentage',
+            'help' => "20 par defaut. Mets 0 si tu es en franchise en base. Le devis calcule le total TTC a partir de ce taux.",
+            'env' => null,
+            'secret' => false,
+        ],
+        'devis_validite_jours' => [
+            'label' => 'Devis : duree de validite en jours',
+            'help' => "30 par defaut. La duree de validite de l'offre est une mention obligatoire sur un devis.",
+            'env' => null,
+            'secret' => false,
+        ],
+        'devis_penalites' => [
+            'label' => 'Devis : taux des penalites de retard',
+            'help' => "Exemple : 3 fois le taux d'interet legal. Exigible sans rappel prealable des le lendemain de l'echeance.",
+            'env' => null,
+            'secret' => false,
+        ],
         'portail_accueil' => [
             'label' => "Portail d'entrée du site",
             'help' => "Le grand écran d'accueil qui oriente le visiteur à son arrivée. Mets « non » pour l'éteindre, « visite » pour le montrer une fois par visite, « toujours » pour le montrer à chaque chargement de l'accueil. Par défaut : visite.",

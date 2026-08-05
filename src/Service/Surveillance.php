@@ -224,20 +224,84 @@ class Surveillance
             return $this->resultat('hebergement', 'Hebergement', true, 'Panneau non configure : controle ignore.');
         }
 
-        // 10 et pas 30 : le panneau demande une requete HTTP par serveur, et
-        // ce controle tourne apres chaque reponse envoyee a un visiteur.
-        $resume = $this->pterodactyl->publicSummary(10);
-        if (!$resume['configure'] || 0 === $resume['total']) {
+        $serveurs = $this->pterodactyl->getServersWithUsage(20);
+        if ([] === $serveurs) {
             return $this->resultat('hebergement', 'Hebergement', false, 'Le panneau ne repond pas ou ne renvoie aucun serveur.');
         }
 
-        $eteints = $resume['total'] - $resume['enLigne'];
+        $enLigneMaintenant = [];
+        foreach ($serveurs as $serveur) {
+            $id = (string) ($serveur['identifier'] ?? '');
+            if ('' !== $id && 'running' === ($serveur['status'] ?? null)) {
+                $enLigneMaintenant[] = $id;
+            }
+        }
+
+        // Le point important : un serveur eteint n'est PAS un incident. Sur un
+        // panneau, la moitie des serveurs sont des bacs a sable arretes
+        // volontairement. Exiger que tout tourne, c'est une alerte permanente,
+        // donc une alerte que l'on finit par ne plus lire.
+        //
+        // Ce qui merite un e-mail, c'est un serveur qui tournait hier et qui
+        // ne tourne plus aujourd'hui. On garde donc la liste de ceux qu'on a
+        // deja vus en ligne, et on ne signale que les disparitions.
+        $connus = $this->lireServeursConnus();
+        $tombes = array_values(array_diff($connus, $enLigneMaintenant));
+
+        // La reference s'enrichit des nouveaux, et oublie ceux qui restent
+        // eteints : une fois signale, un serveur arrete devient le nouveau
+        // normal et ne reveille plus personne.
+        $this->ecrireServeursConnus($enLigneMaintenant);
+
+        $eteints = count($serveurs) - count($enLigneMaintenant);
+
+        if ([] !== $tombes) {
+            return $this->resultat(
+                'hebergement',
+                'Hebergement',
+                false,
+                sprintf(
+                    '%d serveur(s) qui tournaient se sont arretes : %s. %d en ligne sur %d.',
+                    count($tombes),
+                    implode(', ', array_slice($tombes, 0, 5)),
+                    count($enLigneMaintenant),
+                    count($serveurs)
+                )
+            );
+        }
 
         return $this->resultat(
             'hebergement',
             'Hebergement',
-            0 === $eteints,
-            sprintf('%d serveur(s) en ligne sur %d.', $resume['enLigne'], $resume['total'])
+            true,
+            sprintf(
+                '%d serveur(s) en ligne, %d arrete(s) volontairement. Aucun arret imprevu.',
+                count($enLigneMaintenant),
+                $eteints
+            )
+        );
+    }
+
+    /** @return string[] */
+    private function lireServeursConnus(): array
+    {
+        $brut = @file_get_contents($this->projectDir.'/var/surveillance-serveurs.json');
+        if (false === $brut || '' === $brut) {
+            return [];
+        }
+
+        $liste = json_decode($brut, true);
+
+        return is_array($liste) ? array_values(array_filter($liste, 'is_string')) : [];
+    }
+
+    /** @param string[] $identifiants */
+    private function ecrireServeursConnus(array $identifiants): void
+    {
+        @file_put_contents(
+            $this->projectDir.'/var/surveillance-serveurs.json',
+            (string) json_encode(array_values($identifiants)),
+            LOCK_EX
         );
     }
 

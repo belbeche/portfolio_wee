@@ -98,16 +98,30 @@ class DevisController extends AbstractController
             $devis->setStatut('Envoyé');
             $entityManager->flush();
 
-            // Générer le PDF du devis
-            $html = $this->renderView('front/devis/show.html.twig', [
-                'devis' => $devis
+            // Le devis en PDF. On rend un gabarit dedie a mPDF et non la page
+            // web : une page concue pour un navigateur donne un PDF decale,
+            // avec les images en carre rouge et les tableaux qui debordent.
+            $html = $this->renderView('front/devis/devis_pdf.html.twig', [
+                'devis' => $devis,
             ]);
 
-            $filename = 'devis_' . $devis->getId() . '.pdf';
+            $reference = 'DEV-'.$devis->getCreatedAt()->format('Y').'-'
+                .strtoupper(substr((string) $devis->getId(), 0, 6));
+            $filename = 'Devis-'.$reference.'.pdf';
 
-            $mpdf = new Mpdf();
+        // mPDF ne devine pas le format : sans ces reglages il compose en
+        // Lettre americaine avec des marges par defaut, et le gabarit prevu
+        // pour du A4 se retrouve decale.
+        $mpdf = new Mpdf([
+            'format' => 'A4',
+            'margin_top' => 12,
+            'margin_bottom' => 20,
+            'margin_left' => 12,
+            'margin_right' => 12,
+            'default_font' => 'dejavusans',
+        ]);
             $mpdf->WriteHTML($html);
-            $pdfContent = $mpdf->Output('', 'S'); // Générer le PDF en tant que chaîne
+            $pdfContent = $mpdf->Output('', 'S');
 
             // Envoi de l'e-mail avec le récapitulatif du devis et le PDF en pièce jointe
             $email = (new TemplatedEmail())
@@ -122,7 +136,7 @@ class DevisController extends AbstractController
                 'prix' => $devis->getPrix(),
                 'devis' => $devis
             ])
-            ->attach($pdfContent, 'devis_' . $devis->getId() . '.pdf', 'application/pdf');
+            ->attach($pdfContent, $filename, 'application/pdf');
 
             // Envoyer l'email
             $mailer->send($email);

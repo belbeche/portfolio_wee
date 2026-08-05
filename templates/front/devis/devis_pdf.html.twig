@@ -1,0 +1,279 @@
+{# ---------------------------------------------------------------------------
+   Le devis, en PDF.
+
+   Ce gabarit est ecrit POUR mPDF, pas pour un navigateur. Trois consequences :
+     - aucune image externe : mPDF ne va pas les chercher sur le web, elles
+       finissent en carre rouge. Le logo est donc dessine en HTML et CSS.
+     - aucune largeur en pixels : sur une page A4 un max-width de 800px
+       deborde. Tout est en millimetres ou en pourcentage.
+     - pas de flexbox ni de grid : mPDF ne les gere pas. On utilise des
+       tableaux, ce qui est laid dans le code et juste a l'impression.
+
+   Les mentions obligatoires d'un devis sont reprises de service-public.fr :
+   identite du prestataire et du client, date de redaction, decompte detaille
+   en quantite et en prix, somme globale HT et TTC avec le taux de TVA, duree
+   de validite de l'offre, et la place pour la mention « bon pour accord »
+   au-dessus de la signature du client.
+--------------------------------------------------------------------------- #}
+{% set nomEntreprise   = settings.get('entreprise_nom', 'Walid BELBECHE') %}
+{% set adresse         = settings.get('entreprise_adresse', '') %}
+{% set siren           = settings.get('entreprise_siren', '') %}
+{% set tvaNumero       = settings.get('entreprise_tva', '') %}
+{% set telephone       = settings.get('contact_phone', '') %}
+{% set courriel        = 'contact@walidbelbeche.fr' %}
+{% set tauxTva         = settings.get('devis_tva_taux', '20')|trim %}
+{% set validiteJours   = settings.get('devis_validite_jours', '30')|trim %}
+{% set penalites       = settings.get('devis_penalites', "trois fois le taux d'interet legal") %}
+
+{% set franchise = tvaNumero|trim == '' or tauxTva == '0' %}
+{% set montantHt = devis.prix ?: 0 %}
+{% set montantTva = franchise ? 0 : montantHt * tauxTva / 100 %}
+{% set montantTtc = montantHt + montantTva %}
+
+{% set reference = 'DEV-' ~ devis.created_at|date('Y') ~ '-' ~ devis.id|slice(0, 6)|upper %}
+{% set validiteFin = devis.created_at|date_modify('+' ~ validiteJours ~ ' days') %}
+
+{% set client = devis.user %}
+{% set nomClient = client ? (client.prenom ~ ' ' ~ client.nom)|trim : '' %}
+{% if nomClient == '' %}{% set nomClient = devis.email %}{% endif %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Devis {{ reference }}</title>
+<style>
+    @page { size: A4; margin: 12mm 12mm 20mm; }
+    * { margin: 0; padding: 0; }
+    body { font-family: 'DejaVu Sans', sans-serif; font-size: 9.5pt; line-height: 1.5; color: #1d2b3f; }
+
+    /* ---------------------------------------------------------- en-tete -- */
+    .tete { background: #0a1628; color: #ffffff; padding: 6mm 7mm; }
+    .tete td { vertical-align: middle; }
+    .sceau {
+        background: #f5b301; color: #0a1628; font-weight: bold;
+        font-size: 12pt; padding: 2.4mm 3mm; border-radius: 3mm; text-align: center;
+    }
+    .marque { font-size: 13pt; font-weight: bold; padding-left: 4mm; }
+    .marque small { display: block; color: #9fb3cd; font-size: 8pt; font-weight: normal; }
+    .titre { text-align: right; }
+    .titre .mot { font-size: 20pt; font-weight: bold; letter-spacing: -.5pt; }
+    .titre .ref { color: #f5b301; font-size: 10pt; font-weight: bold; }
+
+    /* ------------------------------------------------------- identites -- */
+    .parties { width: 100%; border-collapse: collapse; margin-top: 6mm; }
+    .parties td { width: 50%; vertical-align: top; }
+    .parties td.gauche { padding-right: 3mm; }
+    .parties td.droite { padding-left: 3mm; }
+    .carte { border: .3mm solid #dbe3ee; border-radius: 2mm; padding: 3.5mm 4mm; }
+    .carte .etiq {
+        font-size: 7pt; letter-spacing: 1pt; text-transform: uppercase;
+        color: #7b8aa0; font-weight: bold; margin-bottom: 1.5mm;
+    }
+    .carte .nom { font-size: 10.5pt; font-weight: bold; color: #0a1628; }
+    .carte .l { color: #4a5a6e; font-size: 8.7pt; }
+
+    /* ------------------------------------------------------- reperes ---- */
+    .reperes { width: 100%; border-collapse: collapse; margin-top: 4mm; }
+    .reperes td {
+        border: .3mm solid #dbe3ee; padding: 2.5mm 3mm; width: 33.33%;
+        text-align: center;
+    }
+    .reperes .l { font-size: 7pt; letter-spacing: .8pt; text-transform: uppercase; color: #7b8aa0; font-weight: bold; }
+    .reperes .v { font-size: 10pt; font-weight: bold; color: #0a1628; }
+
+    /* ------------------------------------------------------ prestations - */
+    h2 {
+        font-size: 8pt; letter-spacing: 1pt; text-transform: uppercase;
+        color: #7b8aa0; margin: 6mm 0 2mm;
+    }
+    .lignes { width: 100%; border-collapse: collapse; }
+    .lignes th {
+        background: #0a1628; color: #ffffff; font-size: 8pt; text-transform: uppercase;
+        letter-spacing: .6pt; padding: 2.6mm 3mm; text-align: left;
+    }
+    .lignes th.n, .lignes td.n { text-align: right; }
+    .lignes td { border-bottom: .3mm solid #e6ecf5; padding: 3mm; vertical-align: top; }
+    .lignes .desc { color: #1d2b3f; }
+    .lignes .desc small { display: block; color: #5a6b82; font-size: 8.5pt; margin-top: 1mm; }
+
+    /* ---------------------------------------------------------- totaux -- */
+    .totaux { width: 100%; border-collapse: collapse; margin-top: 4mm; }
+    .totaux .vide { width: 55%; }
+    .totaux .t { width: 45%; }
+    .totaux .t table { width: 100%; border-collapse: collapse; }
+    .totaux .t td { padding: 1.8mm 3mm; font-size: 9.5pt; }
+    .totaux .t td.n { text-align: right; }
+    .totaux .t tr.sep td { border-top: .3mm solid #dbe3ee; }
+    .totaux .t tr.fort td {
+        background: #0a1628; color: #ffffff; font-size: 11.5pt; font-weight: bold;
+    }
+
+    /* --------------------------------------------------------- mentions - */
+    .mentions { margin-top: 6mm; border: .3mm solid #dbe3ee; border-radius: 2mm; padding: 4mm; }
+    .mentions p { color: #4a5a6e; font-size: 8.5pt; margin-bottom: 1.5mm; }
+    .mentions b { color: #1d2b3f; }
+
+    .accord { width: 100%; border-collapse: collapse; margin-top: 5mm; }
+    .accord td { width: 50%; vertical-align: top; padding-right: 4mm; }
+    .cadre { border: .3mm dashed #9aa9bf; border-radius: 2mm; padding: 4mm 4mm 24mm; }
+    .cadre .l { font-size: 8pt; color: #4a5a6e; }
+    .cadre .l b { color: #0a1628; }
+
+    .pied {
+        border-top: .3mm solid #dbe3ee; padding-top: 2mm;
+        font-size: 7.2pt; color: #7b8aa0; text-align: center;
+    }
+</style>
+</head>
+<body>
+
+<htmlpagefooter name="basdepage">
+    <div class="pied">
+        {{ nomEntreprise }}{% if adresse %} · {{ adresse }}{% endif %}{% if siren %} · SIREN {{ siren }}{% endif %}
+        {% if tvaNumero %} · TVA {{ tvaNumero }}{% endif %}<br>
+        {{ courriel }}{% if telephone %} · {{ telephone }}{% endif %} · walidbelbeche.fr · page {PAGENO}/{nbpg}
+    </div>
+</htmlpagefooter>
+<sethtmlpagefooter name="basdepage" value="on" />
+
+<table class="tete" width="100%">
+    <tr>
+        <td width="14mm"><div class="sceau">WB</div></td>
+        <td class="marque">
+            {{ nomEntreprise }}
+            <small>Consultant informatique · Applications web et mobiles</small>
+        </td>
+        <td class="titre">
+            <div class="mot">DEVIS</div>
+            <div class="ref">{{ reference }}</div>
+        </td>
+    </tr>
+</table>
+
+<table class="parties">
+    <tr>
+        <td class="gauche">
+            <div class="carte">
+                <div class="etiq">Prestataire</div>
+                <div class="nom">{{ nomEntreprise }}</div>
+                {% if adresse %}<div class="l">{{ adresse }}</div>{% endif %}
+                {% if siren %}<div class="l">SIREN {{ siren }}</div>{% endif %}
+                {% if tvaNumero %}<div class="l">TVA {{ tvaNumero }}</div>{% endif %}
+                <div class="l">{{ courriel }}</div>
+                {% if telephone %}<div class="l">{{ telephone }}</div>{% endif %}
+            </div>
+        </td>
+        <td class="droite">
+            <div class="carte">
+                <div class="etiq">Client</div>
+                <div class="nom">{{ nomClient }}</div>
+                <div class="l">{{ devis.email }}</div>
+                {% if devis.type_de_site_web %}
+                    <div class="l" style="margin-top:1.5mm;">Projet : {{ devis.type_de_site_web }}</div>
+                {% endif %}
+            </div>
+        </td>
+    </tr>
+</table>
+
+<table class="reperes">
+    <tr>
+        <td>
+            <div class="l">Date d'établissement</div>
+            <div class="v">{{ devis.created_at|date('d/m/Y') }}</div>
+        </td>
+        <td>
+            <div class="l">Valable jusqu'au</div>
+            <div class="v">{{ validiteFin|date('d/m/Y') }}</div>
+        </td>
+        <td>
+            <div class="l">Devis</div>
+            <div class="v">gratuit</div>
+        </td>
+    </tr>
+</table>
+
+<h2>Détail de la prestation</h2>
+<table class="lignes">
+    <thead>
+        <tr>
+            <th style="width:58%;">Désignation</th>
+            <th class="n" style="width:10%;">Qté</th>
+            <th class="n" style="width:16%;">Prix unitaire HT</th>
+            <th class="n" style="width:16%;">Total HT</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td class="desc">
+                <b>{{ devis.type_de_site_web ?: 'Prestation de développement' }}</b>
+                {% if devis.response %}<small>{{ devis.response|nl2br }}</small>
+                {% elseif devis.description_projet %}<small>{{ devis.description_projet|nl2br }}</small>{% endif %}
+            </td>
+            <td class="n">1</td>
+            <td class="n">{{ montantHt|number_format(2, ',', ' ') }} €</td>
+            <td class="n">{{ montantHt|number_format(2, ',', ' ') }} €</td>
+        </tr>
+    </tbody>
+</table>
+
+<table class="totaux">
+    <tr>
+        <td class="vide"></td>
+        <td class="t">
+            <table>
+                <tr>
+                    <td>Total HT</td>
+                    <td class="n">{{ montantHt|number_format(2, ',', ' ') }} €</td>
+                </tr>
+                <tr class="sep">
+                    <td>{% if franchise %}TVA{% else %}TVA {{ tauxTva }} %{% endif %}</td>
+                    <td class="n">{% if franchise %}non applicable{% else %}{{ montantTva|number_format(2, ',', ' ') }} €{% endif %}</td>
+                </tr>
+                <tr class="fort">
+                    <td>Total {% if franchise %}net{% else %}TTC{% endif %}</td>
+                    <td class="n">{{ montantTtc|number_format(2, ',', ' ') }} €</td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table>
+
+{% if franchise %}
+    <p style="margin-top:2mm;font-size:8.5pt;color:#4a5a6e;">
+        TVA non applicable, article 293 B du Code général des impôts.
+    </p>
+{% endif %}
+
+<div class="mentions">
+    <p><b>Validité.</b> Cette offre est valable {{ validiteJours }} jours à compter du {{ devis.created_at|date('d/m/Y') }}, soit jusqu'au {{ validiteFin|date('d/m/Y') }}. Passé ce délai, elle doit être reconfirmée.</p>
+    <p><b>Règlement.</b> 30 % à la commande, 40 % à la recette intermédiaire, 30 % à la mise en production. Paiement à 30 jours date de facture, par virement.</p>
+    <p><b>Retard de paiement.</b> Pénalités au taux de {{ penalites }}, exigibles sans rappel préalable dès le lendemain de l'échéance. Indemnité forfaitaire pour frais de recouvrement : 40 € par facture, due par tout client professionnel.</p>
+    <p><b>Propriété.</b> Le code source et les droits d'exploitation sont cédés au client au paiement du solde. Aucune dépendance à un prestataire n'est créée.</p>
+    <p style="margin-bottom:0;"><b>Ce devis est gratuit</b> et n'engage à rien tant qu'il n'est pas signé.</p>
+</div>
+
+<table class="accord">
+    <tr>
+        <td>
+            <div class="cadre">
+                <div class="l">
+                    <b>Bon pour accord</b><br>
+                    Date et signature du client, précédées de la mention manuscrite « bon pour accord ».
+                </div>
+            </div>
+        </td>
+        <td style="padding-right:0;">
+            <div class="cadre" style="border-style:solid;border-color:#dbe3ee;">
+                <div class="l">
+                    <b>{{ nomEntreprise }}</b><br>
+                    Fait le {{ devis.created_at|date('d/m/Y') }}<br>
+                    <span style="color:#7b8aa0;">Devis n° {{ reference }}</span>
+                </div>
+            </div>
+        </td>
+    </tr>
+</table>
+
+</body>
+</html>
