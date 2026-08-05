@@ -4,6 +4,7 @@ namespace App\Controller\Front;
 
 use App\Entity\User;
 use App\Entity\Contact;
+use App\Entity\Member;
 use App\Entity\Project;
 use App\Repository\SkillRepository;
 
@@ -101,6 +102,11 @@ class HomeController extends AbstractController
             'skills' => $skillRepository->findGroupedByFamily(),
             // Avis clients moderes, affiches sur l'accueil.
             'reviews' => $entityManager->getRepository(\App\Entity\Review::class)->findApproved(3),
+            // L'equipe, administrable depuis le back office. Le dirigeant
+            // d'abord, le reste ensuite : la promesse du site est qu'on parle
+            // a une seule personne, l'equipe vient en soutien.
+            'members' => $entityManager->getRepository(Member::class)
+                ->findBy([], ['id' => 'ASC']),
         ]);
     }
 

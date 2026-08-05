@@ -1631,3 +1631,293 @@ section.bg-dark .small, section.bg-primary .small,
 @media (prefers-reduced-motion: reduce) {
     .wb-live__pulse { animation: none; }
 }
+
+/* ================================================================ PORTAIL ==
+   L'ecran d'entree. Il couvre la page une poignee de secondes, le temps de
+   poser qui parle et ce qu'on peut y faire, puis il se leve.
+   ========================================================================= */
+html.wb-portail-ouvert { overflow: hidden; }
+
+.wb-portail {
+    position: fixed;
+    inset: 0;
+    z-index: 4000;
+    display: grid;
+    place-items: center;
+    padding: 6vh 1.25rem;
+    overflow-y: auto;
+    background: var(--wb-ink);
+    transition: opacity .8s cubic-bezier(.22, .61, .36, 1),
+                transform .8s cubic-bezier(.22, .61, .36, 1);
+}
+.wb-portail.is-sortie {
+    opacity: 0;
+    transform: translateY(-2.5%);
+    pointer-events: none;
+}
+
+/* Halo lent en fond : le seul mouvement pendant que le visiteur lit. */
+.wb-portail__fond {
+    position: absolute;
+    inset: -30%;
+    background: radial-gradient(38% 38% at 30% 28%, rgba(245, 179, 1, .16) 0%, transparent 70%),
+                radial-gradient(42% 42% at 74% 66%, rgba(53, 208, 127, .12) 0%, transparent 72%);
+    animation: wb-portail-derive 26s ease-in-out infinite alternate;
+    pointer-events: none;
+}
+@keyframes wb-portail-derive {
+    from { transform: translate3d(-2%, -1%, 0) scale(1); }
+    to   { transform: translate3d(3%, 2%, 0) scale(1.12); }
+}
+
+.wb-portail__inner {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 62rem;
+    text-align: center;
+    color: var(--wb-on-dark);
+}
+
+/* Chaque element entre a son tour, du sceau vers les portes. */
+.wb-portail__sceau,
+.wb-portail__sur,
+.wb-portail__titre,
+.wb-portail__sous,
+.wb-portail__portes,
+.wb-portail__entrer {
+    opacity: 0;
+    transform: translateY(14px);
+    transition: opacity .7s ease, transform .7s cubic-bezier(.22, .61, .36, 1);
+}
+.wb-portail.is-visible .wb-portail__sceau  { opacity: 1; transform: none; transition-delay: .05s; }
+.wb-portail.is-visible .wb-portail__sur    { opacity: 1; transform: none; transition-delay: .20s; }
+.wb-portail.is-visible .wb-portail__titre  { opacity: 1; transform: none; transition-delay: .32s; }
+.wb-portail.is-visible .wb-portail__sous   { opacity: 1; transform: none; transition-delay: .48s; }
+.wb-portail.is-visible .wb-portail__portes { opacity: 1; transform: none; transition-delay: .60s; }
+.wb-portail.is-visible .wb-portail__entrer { opacity: 1; transform: none; transition-delay: .95s; }
+
+.wb-portail__sceau {
+    width: 62px; height: 62px;
+    margin: 0 auto 1.2rem;
+    display: grid;
+    place-items: center;
+    border-radius: 16px;
+    background: linear-gradient(140deg, var(--wb-gold-soft), var(--wb-gold));
+    color: var(--wb-ink);
+    font-weight: 800;
+    font-size: 1.15rem;
+    letter-spacing: .04em;
+    box-shadow: 0 12px 40px rgba(245, 179, 1, .28);
+}
+.wb-portail__sur {
+    margin: 0 0 .5rem;
+    font-size: .74rem;
+    letter-spacing: .22em;
+    text-transform: uppercase;
+    color: var(--wb-gold-soft);
+}
+.wb-portail__titre {
+    margin: 0 auto .9rem;
+    max-width: 20ch;
+    font-size: clamp(1.75rem, 5.2vw, 3.4rem);
+    line-height: 1.08;
+    font-weight: 800;
+    letter-spacing: -.02em;
+    color: #fff;
+}
+.wb-portail__titre em {
+    font-style: normal;
+    background: linear-gradient(90deg, var(--wb-gold-soft), var(--wb-gold));
+    -webkit-background-clip: text;
+            background-clip: text;
+    color: transparent;
+}
+.wb-portail__sous {
+    margin: 0 0 1.8rem;
+    font-size: .95rem;
+    color: rgba(255, 255, 255, .62);
+}
+
+.wb-portail__portes {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: .85rem;
+    text-align: left;
+}
+.wb-portail__porte {
+    display: block;
+    padding: 1.35rem 1.25rem;
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, .12);
+    background: rgba(255, 255, 255, .045);
+    color: var(--wb-on-dark);
+    text-decoration: none;
+    transition: transform .3s cubic-bezier(.22, .61, .36, 1),
+                border-color .3s ease, background .3s ease;
+}
+.wb-portail__porte:hover,
+.wb-portail__porte:focus-visible {
+    transform: translateY(-5px);
+    border-color: rgba(245, 179, 1, .55);
+    background: rgba(245, 179, 1, .09);
+    color: #fff;
+}
+.wb-portail__porte-n {
+    display: block;
+    font-size: .7rem;
+    letter-spacing: .16em;
+    color: var(--wb-gold);
+    margin-bottom: .55rem;
+}
+.wb-portail__porte strong {
+    display: block;
+    font-size: 1.02rem;
+    font-weight: 700;
+    margin-bottom: .3rem;
+    color: #fff;
+}
+.wb-portail__porte-d {
+    display: block;
+    font-size: .82rem;
+    line-height: 1.45;
+    color: rgba(255, 255, 255, .6);
+}
+
+.wb-portail__entrer {
+    margin-top: 1.9rem;
+    background: none;
+    border: 0;
+    padding: 0;
+    color: rgba(255, 255, 255, .65);
+    font-size: .84rem;
+    letter-spacing: .04em;
+    cursor: pointer;
+}
+.wb-portail__entrer:hover { color: #fff; }
+/* Barre qui se remplit : le visiteur voit que l'ecran va se lever seul. */
+.wb-portail__barre {
+    display: block;
+    width: 116px;
+    height: 2px;
+    margin: .6rem auto 0;
+    border-radius: 2px;
+    background: rgba(255, 255, 255, .16);
+    overflow: hidden;
+}
+.wb-portail__barre i {
+    display: block;
+    height: 100%;
+    width: 0;
+    background: linear-gradient(90deg, var(--wb-gold-soft), var(--wb-gold));
+}
+.wb-portail.is-visible .wb-portail__barre i {
+    animation: wb-portail-jauge 7s linear forwards;
+    animation-delay: .95s;
+}
+@keyframes wb-portail-jauge { to { width: 100%; } }
+
+@media (max-width: 767.98px) {
+    .wb-portail__portes { grid-template-columns: 1fr; }
+    .wb-portail__porte { padding: 1rem 1.1rem; }
+}
+
+/* ================================================================= EQUIPE ==
+   Le dirigeant en premier, plus large, les renforts ensuite.
+   ========================================================================= */
+.wb-team {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1rem;
+    align-items: stretch;
+}
+.wb-team__card {
+    background: #fff;
+    border: 1px solid var(--wb-line, rgba(10, 22, 40, .10));
+    border-radius: 16px;
+    padding: 1.6rem 1.35rem;
+    text-align: center;
+    transition: transform .35s cubic-bezier(.22, .61, .36, 1), box-shadow .35s ease;
+}
+.wb-team__card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 18px 46px rgba(10, 22, 40, .10);
+}
+.wb-team__card--lead {
+    border-color: rgba(245, 179, 1, .55);
+    box-shadow: 0 10px 34px rgba(245, 179, 1, .13);
+}
+.wb-team__photo {
+    width: 96px; height: 96px;
+    margin: 0 auto .9rem;
+    border-radius: 50%;
+    overflow: hidden;
+    display: grid;
+    place-items: center;
+    background: linear-gradient(140deg, var(--wb-ink-3), var(--wb-ink));
+}
+.wb-team__photo img { width: 100%; height: 100%; object-fit: cover; }
+.wb-team__initiales {
+    font-weight: 800;
+    font-size: 1.6rem;
+    letter-spacing: .02em;
+    color: var(--wb-gold-soft);
+}
+.wb-team__card--lead .wb-team__photo {
+    width: 116px; height: 116px;
+    box-shadow: 0 0 0 4px rgba(245, 179, 1, .18);
+}
+.wb-team__nom {
+    margin: 0 0 .2rem;
+    font-size: 1.05rem;
+    font-weight: 700;
+    letter-spacing: -.01em;
+}
+.wb-team__role {
+    margin: 0 0 .7rem;
+    font-size: .8rem;
+    line-height: 1.4;
+    color: var(--wb-text-2, #5a6b82);
+}
+.wb-team__card--lead .wb-team__role { color: #8a6400; font-weight: 600; }
+.wb-team__mot {
+    margin: 0;
+    font-size: .82rem;
+    line-height: 1.55;
+    color: var(--wb-text-2, #5a6b82);
+}
+.wb-team__lien {
+    display: inline-block;
+    margin-top: .7rem;
+    font-size: .8rem;
+    font-weight: 600;
+    color: var(--wb-blue-soft, #2f6bd8);
+    text-decoration: none;
+}
+.wb-team__lien:hover { text-decoration: underline; }
+
+/* ========================================================== MISE EN SCENE ==
+   Les classes ci-dessous ne sont posees que par le script. Sans JavaScript,
+   ou avec « moins d'animations » actif, rien n'est masque.
+   ========================================================================= */
+.wb-reveal {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity .75s ease, transform .75s cubic-bezier(.22, .61, .36, 1);
+    transition-delay: var(--wb-delay, 0ms);
+    will-change: opacity, transform;
+}
+.wb-reveal.is-in { opacity: 1; transform: none; }
+
+.wb-entree {
+    opacity: 0;
+    transform: translateY(22px);
+    transition: opacity .85s ease, transform .85s cubic-bezier(.22, .61, .36, 1);
+    transition-delay: var(--wb-delay, 0ms);
+}
+.wb-hero.is-entre .wb-entree { opacity: 1; transform: none; }
+
+@media (prefers-reduced-motion: reduce) {
+    .wb-reveal, .wb-entree { opacity: 1 !important; transform: none !important; }
+    .wb-portail__fond { animation: none; }
+}

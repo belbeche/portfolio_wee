@@ -5,52 +5,111 @@
 {% block content %}
 {% set en = app.request.locale == 'en' %}
 
-{# Premiere visite : trois portes pour orienter sans jargon. Montree une
-   seule fois par navigateur (memorisee en localStorage). #}
-<div id="wb-intro" class="wb-intro" hidden>
-    <div class="wb-intro__card" data-tone="light" role="dialog" aria-modal="true" aria-label="{{ en ? 'Welcome' : 'Bienvenue' }}">
-        <button type="button" id="wb-intro-close" class="wb-intro__close" aria-label="{{ en ? 'Close' : 'Fermer' }}">&times;</button>
-        <span class="wb-eyebrow wb-eyebrow--ink">{{ en ? 'Welcome' : 'Bienvenue' }}</span>
-        <h2 class="wb-h3" style="margin:.4rem 0 .5rem;">{{ en ? 'What brings you here?' : "Qu'est-ce qui vous amène ?" }}</h2>
-        <p style="color: var(--wb-text-2); font-size:.92rem; margin-bottom:1.1rem;">
-            {{ en ? 'One person, from first sketch to production. Pick your door, the rest is guided.'
-                  : "Une seule personne, de l'idée à la mise en production. Choisissez votre porte, la suite est guidée." }}
+{# ------------------------------------------------------------- portail --
+   L'ecran d'entree. Il se leve tout seul apres l'animation, ou des que le
+   visiteur choisit une porte. Reglable dans l'administration :
+   « non » l'eteint, « visite » le montre une fois par visite (defaut),
+   « toujours » le remontre a chaque chargement de l'accueil.
+   Il n'est jamais montre a quelqu'un qui arrive avec une ancre (#equipe),
+   ni si le systeme demande moins d'animations. ------------------------- #}
+{% set portailMode = settings.get('portail_accueil', 'visite')|lower %}
+{% if portailMode != 'non' %}
+<div id="wb-portail" class="wb-portail" data-mode="{{ portailMode }}" hidden>
+    <div class="wb-portail__fond" aria-hidden="true"></div>
+
+    <div class="wb-portail__inner" role="dialog" aria-modal="true" aria-label="{{ en ? 'Welcome' : 'Bienvenue' }}">
+
+        <div class="wb-portail__sceau" aria-hidden="true">
+            <span>WB</span>
+        </div>
+
+        <p class="wb-portail__sur">{{ en ? 'Walid Belbeche' : 'Walid Belbeche' }}</p>
+        <p class="wb-portail__titre">
+            {{ en ? 'Web and mobile applications,' : 'Applications web et mobiles,' }}<br>
+            <em>{{ en ? 'one single contact.' : 'un seul interlocuteur.' }}</em>
         </p>
-        <div class="wb-intro__doors">
-            <a href="{{ url('front_project') }}" class="wb-intro__door">
-                <strong>{{ en ? 'See real projects' : 'Voir du concret' }}</strong>
-                <span>{{ en ? 'Delivered projects, sorted by your line of business.' : 'Des projets livrés, triés par secteur.' }}</span>
+        <p class="wb-portail__sous">
+            {{ en ? 'Where would you like to start?' : 'Par où souhaitez-vous commencer ?' }}
+        </p>
+
+        <div class="wb-portail__portes">
+            <a href="{{ url('front_project') }}" class="wb-portail__porte" style="--wb-delay: 0ms;">
+                <span class="wb-portail__porte-n">01</span>
+                <strong>{{ en ? 'See real work' : 'Voir du concret' }}</strong>
+                <span class="wb-portail__porte-d">{{ en ? 'Delivered projects, sorted by line of business.' : 'Des projets livrés, triés par secteur.' }}</span>
             </a>
-            <a href="{{ url('front_devis_new') }}" class="wb-intro__door">
+            <a href="{{ url('front_devis_new') }}" class="wb-portail__porte" style="--wb-delay: 90ms;">
+                <span class="wb-portail__porte-n">02</span>
                 <strong>{{ en ? 'Price my idea' : 'Chiffrer mon idée' }}</strong>
-                <span>{{ en ? 'Two minutes, an answer within 48 working hours.' : 'Deux minutes, une réponse sous 48 h ouvrées.' }}</span>
+                <span class="wb-portail__porte-d">{{ en ? 'Two minutes, an answer within 48 working hours.' : 'Deux minutes, une réponse sous 48 h ouvrées.' }}</span>
             </a>
-            <a href="{{ url('front_commencer') }}" class="wb-intro__door">
+            <a href="{{ url('front_commencer') }}" class="wb-portail__porte" style="--wb-delay: 180ms;">
+                <span class="wb-portail__porte-n">03</span>
                 <strong>{{ en ? 'Guide me' : 'Me laisser guider' }}</strong>
-                <span>{{ en ? 'Not sure where to start? One minute tour.' : 'Pas sûr de par où commencer ? Visite en une minute.' }}</span>
+                <span class="wb-portail__porte-d">{{ en ? 'Not sure where to start? One minute tour.' : 'Pas sûr de par où commencer ? Visite en une minute.' }}</span>
             </a>
         </div>
-        <button type="button" id="wb-intro-skip" class="wb-intro__skip">{{ en ? 'Just browse the site' : 'Je préfère juste visiter le site' }}</button>
+
+        <button type="button" id="wb-portail-entrer" class="wb-portail__entrer">
+            {{ en ? 'Enter the site' : 'Entrer sur le site' }}
+            <span class="wb-portail__barre" aria-hidden="true"><i></i></span>
+        </button>
     </div>
 </div>
+
 <script>
 (function () {
-    try {
-        if (localStorage.getItem('wb_intro_vue')) { return; }
-    } catch (e) { return; }
-    var box = document.getElementById('wb-intro');
-    if (!box) { return; }
-    var fermer = function () {
-        box.hidden = true;
-        try { localStorage.setItem('wb_intro_vue', '1'); } catch (e) {}
-    };
-    box.hidden = false;
-    document.getElementById('wb-intro-close').addEventListener('click', fermer);
-    document.getElementById('wb-intro-skip').addEventListener('click', fermer);
-    box.addEventListener('click', function (e) { if (e.target === box) { fermer(); } });
-    box.querySelectorAll('a').forEach(function (a) { a.addEventListener('click', fermer); });
+	var portail = document.getElementById('wb-portail');
+	if (!portail) { return; }
+
+	var mode = portail.dataset.mode || 'visite';
+	var CLE = 'wb_portail_vu';
+
+	// Trois raisons de ne jamais le montrer : le visiteur arrive sur une
+	// ancre precise, il demande moins d'animations, ou il l'a deja vu
+	// pendant cette visite. Dans ces cas la page s'affiche directement.
+	var arriveeCiblee = window.location.hash.length > 1;
+	var moinsDAnimations = window.matchMedia
+		&& window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+	var dejaVu = false;
+	try { dejaVu = 'visite' === mode && !!sessionStorage.getItem(CLE); } catch (e) {}
+
+	if (arriveeCiblee || moinsDAnimations || dejaVu) { return; }
+
+	var minuteur = null;
+
+	function lever() {
+		if (portail.classList.contains('is-sortie')) { return; }
+		portail.classList.add('is-sortie');
+		document.documentElement.classList.remove('wb-portail-ouvert');
+		clearTimeout(minuteur);
+		try { sessionStorage.setItem(CLE, '1'); } catch (e) {}
+		// On retire l'element du flux une fois la transition finie, sinon il
+		// continue d'intercepter les clics au-dessus de la page.
+		setTimeout(function () { portail.hidden = true; }, 900);
+	}
+
+	document.documentElement.classList.add('wb-portail-ouvert');
+	portail.hidden = false;
+	// Force un cycle de rendu avant d'animer, sinon le navigateur applique
+	// l'etat final directement et l'entree ne se voit pas.
+	requestAnimationFrame(function () {
+		requestAnimationFrame(function () { portail.classList.add('is-visible'); });
+	});
+
+	document.getElementById('wb-portail-entrer').addEventListener('click', lever);
+	portail.addEventListener('click', function (e) { if (e.target === portail || e.target.classList.contains('wb-portail__fond')) { lever(); } });
+	document.addEventListener('keydown', function (e) { if ('Escape' === e.key) { lever(); } });
+	portail.querySelectorAll('a').forEach(function (a) { a.addEventListener('click', lever); });
+	// Le premier defilement vaut acceptation : personne ne doit se sentir
+	// bloque par un ecran qu'il n'a pas demande.
+	window.addEventListener('wheel', lever, { passive: true, once: true });
+	window.addEventListener('touchmove', lever, { passive: true, once: true });
+	// Filet de securite : au bout de 7 secondes le portail se leve seul.
+	minuteur = setTimeout(lever, 7000);
 })();
 </script>
+{% endif %}
 
 {# =====================================================================
    Accueil.
@@ -461,6 +520,54 @@
     </div>
 </section>
 
+{# ------------------------------------------------------------- l'equipe -- #}
+{# Administrable depuis le back office, section Equipe. Le premier membre
+   enregistre est mis en avant : c'est l'interlocuteur unique promis partout
+   ailleurs sur le site, les autres sont presentes comme le renfort. Aucune
+   adresse e-mail n'est publiee, les robots les ramassent en quelques heures. #}
+{% if members|length > 0 %}
+<section class="wb-section wb-section--paper" data-tone="light" id="equipe">
+    <div class="container">
+        <div class="row justify-content-center text-center mb-5">
+            <div class="col-lg-8">
+                <span class="wb-eyebrow wb-eyebrow--ink">{{ en ? 'The team' : "L'équipe" }}</span>
+                <h2 class="wb-h2">{{ en ? 'One contact. A team behind him.' : 'Un interlocuteur. Une équipe derrière.' }}</h2>
+                <p class="wb-lead mx-auto">
+                    {{ en
+                        ? 'You always talk to the same person. Behind that person, engineering students in placement work on the parts that can be shared, under review. Nothing reaches production without passing through me.'
+                        : "Vous parlez toujours à la même personne. Derrière elle, des étudiants ingénieurs en immersion travaillent sur ce qui peut l'être, sous revue. Rien ne part en production sans passer par moi." }}
+                </p>
+            </div>
+        </div>
+
+        <div class="wb-team">
+            {% for member in members %}
+                <article class="wb-team__card {{ loop.first ? 'wb-team__card--lead' : '' }}" data-tone="light" style="--wb-delay: {{ loop.index0 * 70 }}ms;">
+                    <div class="wb-team__photo">
+                        {% if member.avatar %}
+                            <img src="{{ asset('uploads/avatar/' ~ member.avatar) }}"
+                                 alt="{{ member.firstname }} {{ member.lastname }}" loading="lazy" width="96" height="96">
+                        {% else %}
+                            <span class="wb-team__initiales" aria-hidden="true">{{ member.firstname|slice(0, 1)|upper }}{{ member.lastname|slice(0, 1)|upper }}</span>
+                        {% endif %}
+                    </div>
+                    <h3 class="wb-team__nom">{{ member.firstname }} {{ member.lastname }}</h3>
+                    <p class="wb-team__role">{{ member.function }}</p>
+                    {% if member.description %}
+                        <p class="wb-team__mot">{{ member.description|striptags|slice(0, 150) }}{{ member.description|striptags|length > 150 ? '...' : '' }}</p>
+                    {% endif %}
+                    {% if member.link %}
+                        <a href="{{ member.link }}" class="wb-team__lien" target="_blank" rel="noopener noreferrer">
+                            {{ en ? 'Profile' : 'Son profil' }}
+                        </a>
+                    {% endif %}
+                </article>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
 {# ---------------------------------------------------------- realisations -- #}
 <section class="wb-section wb-section--paper" data-tone="light">
     <div class="container">
@@ -582,5 +689,85 @@
         </p>
     </div>
 </section>
+
+{# ------------------------------------------------------- mise en scene -- #}
+{# Tout est pose par le script, jamais par le gabarit : si le JavaScript ne
+   s'execute pas, ou si le visiteur demande moins d'animations, la page reste
+   entierement lisible et rien n'est masque. C'est la seule facon d'animer
+   sans risquer une page blanche. #}
+<script>
+(function () {
+	var moinsDAnimations = window.matchMedia
+		&& window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+	if (moinsDAnimations || !('IntersectionObserver' in window)) { return; }
+
+	// 1. L'arrivee : le heros se compose en cascade, de haut en bas.
+	var heros = document.querySelector('.wb-hero');
+	if (heros) {
+		var pieces = heros.querySelectorAll('.wb-eyebrow, .wb-display, .wb-lead, .d-flex, .wb-credential, .wb-card');
+		Array.prototype.forEach.call(pieces, function (n, i) {
+			n.style.setProperty('--wb-delay', (i * 110) + 'ms');
+			n.classList.add('wb-entree');
+		});
+		requestAnimationFrame(function () {
+			requestAnimationFrame(function () { heros.classList.add('is-entre'); });
+		});
+	}
+
+	// 2. Le defilement : chaque bloc se leve une fois, quand il arrive.
+	var cibles = document.querySelectorAll(
+		'.wb-section .row, .wb-card, .wb-anecdote, .wb-stat, .wb-team__card, .wb-live__tile, .wb-skill'
+	);
+	if (!cibles.length) { return; }
+
+	var observateur = new IntersectionObserver(function (entrees) {
+		entrees.forEach(function (e) {
+			if (!e.isIntersecting) { return; }
+			e.target.classList.add('is-in');
+			observateur.unobserve(e.target);
+		});
+	}, { rootMargin: '0px 0px -8% 0px', threshold: 0.06 });
+
+	Array.prototype.forEach.call(cibles, function (n) {
+		// Deja visible au chargement : on ne l'anime pas, sinon le premier
+		// ecran clignote avant meme que la page soit lue.
+		if (n.getBoundingClientRect().top < window.innerHeight * 0.9) {
+			n.classList.add('is-in');
+
+			return;
+		}
+		n.classList.add('wb-reveal');
+		observateur.observe(n);
+	});
+
+	// 3. Les compteurs de la bande de chiffres montent quand on les atteint.
+	var chiffres = document.querySelectorAll('.wb-stat__n');
+	Array.prototype.forEach.call(chiffres, function (n) {
+		var brut = n.textContent.trim();
+		var cible = parseFloat(brut.replace(/[^0-9.,]/g, '').replace(',', '.'));
+		if (!isFinite(cible) || cible <= 0) { return; }
+		var suffixe = brut.replace(/[0-9.,\s]/g, '');
+		var vu = false;
+		var o = new IntersectionObserver(function (entrees) {
+			entrees.forEach(function (e) {
+				if (!e.isIntersecting || vu) { return; }
+				vu = true;
+				o.unobserve(e.target);
+				var debut = null;
+				function pas(t) {
+					if (null === debut) { debut = t; }
+					var k = Math.min(1, (t - debut) / 900);
+					k = 1 - Math.pow(1 - k, 3);
+					n.textContent = Math.round(cible * k) + (suffixe ? ' ' + suffixe : '');
+					if (k < 1) { requestAnimationFrame(pas); }
+				}
+				n.textContent = '0' + (suffixe ? ' ' + suffixe : '');
+				requestAnimationFrame(pas);
+			});
+		}, { threshold: 0.5 });
+		o.observe(n);
+	});
+})();
+</script>
 
 {% endblock %}

@@ -94,6 +94,12 @@ class Settings
             'env' => null,
             'secret' => false,
         ],
+        'portail_accueil' => [
+            'label' => "Portail d'entrée du site",
+            'help' => "Le grand écran d'accueil qui oriente le visiteur à son arrivée. Mets « non » pour l'éteindre, « visite » pour le montrer une fois par visite, « toujours » pour le montrer à chaque chargement de l'accueil. Par défaut : visite.",
+            'env' => null,
+            'secret' => false,
+        ],
         'contact_phone' => [
             'label' => 'Téléphone affiché sur le site',
             'help' => 'Utilisé par les pages de contact et l\'espace client.',
