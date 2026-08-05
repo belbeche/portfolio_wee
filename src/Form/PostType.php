@@ -35,6 +35,18 @@ class PostType extends AbstractType
                     'rows' => 10,
                 ],
             ])
+            ->add('titleEn', TextType::class, [
+                'required' => false,
+                'label' => 'Titre en anglais (facultatif)',
+                'help' => "Laisse vide : les visiteurs anglophones verront la version francaise.",
+                'attr' => ['placeholder' => 'English title'],
+            ])
+            ->add('contentEn', TextareaType::class, [
+                'required' => false,
+                'label' => 'Contenu en anglais (facultatif)',
+                'help' => "Meme mise en forme que la version francaise. Vide = repli sur le francais.",
+                'attr' => ['placeholder' => 'English content', 'rows' => 10],
+            ])
             ->add('status', ChoiceType::class, [
                 'choices' => [
                     'Brouillon' => 'draft',

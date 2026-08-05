@@ -39,7 +39,7 @@
         {% if posts|length > 0 %}
         <div class="row g-4">
             {% for post in posts %}
-                {% set texte = post.content|striptags %}
+                {% set texte = post.contentFor(app.request.locale)|striptags %}
                 {% set minutes = max(1, (texte|split(' ')|length / 200)|round(0, 'ceil')) %}
                 <div class="col-md-6 col-lg-4 d-flex">
                     <article class="wb-note w-100">
@@ -50,7 +50,7 @@
                             <span>{{ minutes }} min</span>
                         </div>
                         <h2 class="wb-note__title">
-                            <a href="{{ path('blog_show', { slug: post.slug }) }}">{{ post.title }}</a>
+                            <a href="{{ path('blog_show', { slug: post.slug }) }}">{{ post.titleFor(app.request.locale) }}</a>
                         </h2>
                         <p class="wb-note__desc">
                             {{ texte|slice(0, 150)|trim }}{{ texte|length > 150 ? '…' : '' }}

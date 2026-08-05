@@ -206,23 +206,30 @@
 			<tbody>
 			{% for prospect in prospects %}
 				{% set due = prospect.isFollowUpDue() %}
+				{% set dejaContacte = prospect.status != 'a_contacter' %}
 				<tr>
-					<td>
-						<strong>{{ prospect.company ?: prospect.email }}</strong>
-						{% if prospect.city %}<div style="font-size:.78rem;color:var(--ad-text-3);">{{ prospect.city }}</div>{% endif %}
+					<td data-libelle="Société">
+						<div>
+							<strong>{{ prospect.company ?: prospect.email }}</strong>
+							{% if prospect.city %}<div style="font-size:.78rem;color:var(--ad-text-3);">{{ prospect.city }}</div>{% endif %}
+						</div>
 					</td>
-					<td>
-						{{ prospect.contactName ?: '-' }}
-						<div style="font-size:.78rem;color:var(--ad-text-3);">{{ prospect.email }}</div>
+					<td data-libelle="Contact">
+						<div>
+							{{ prospect.contactName ?: '-' }}
+							<div style="font-size:.78rem;color:var(--ad-text-3);">{{ prospect.email }}</div>
+						</div>
 					</td>
-					<td>
+					<td data-libelle="Priorité">
 						{% if prospect.priority %}
 							<span class="ad-tag ad-tag--{{ prospect.priority == 'P1' ? 'green' : (prospect.priority == 'P2' ? 'gold' : 'muted') }}">{{ prospect.priority }}</span>
-						{% else %}-{% endif %}
+						{% else %}<span>-</span>{% endif %}
 					</td>
-					<td><span class="ad-tag ad-tag--blue">{{ prospect.statusLabel }}</span></td>
-					<td class="num">{{ prospect.prospectNotes|length }}</td>
-					<td>
+					<td data-libelle="Statut">
+						<span class="ad-tag ad-tag--{{ dejaContacte ? 'green' : 'blue' }}">{{ prospect.statusLabel }}</span>
+					</td>
+					<td class="num" data-libelle="Échanges"><span>{{ prospect.prospectNotes|length }}</span></td>
+					<td data-libelle="Prochaine relance">
 						{% if prospect.nextFollowUpAt %}
 							<span class="ad-tag ad-tag--{{ due ? 'red' : 'gold' }}">
 								{{ prospect.nextFollowUpAt|date('d/m/Y') }}
@@ -231,10 +238,15 @@
 							<span class="ad-tag ad-tag--muted">aucune</span>
 						{% endif %}
 					</td>
-					<td>
+					<td data-libelle="Actions">
 						<div class="ad-actions">
-							<a href="{{ url('back_prospect_notes', {id: prospect.id}) }}" class="ad-btn ad-btn--primary ad-btn--sm">Journal</a>
-							<a href="{{ url('back_prospect_edit', {id: prospect.id}) }}" class="ad-btn ad-btn--ghost ad-btn--sm">Modifier</a>
+							<a href="{{ path('back_prospect_notes', {id: prospect.id}) }}" class="ad-btn ad-btn--primary ad-btn--sm">Journal</a>
+							<a href="{{ path('back_prospect_edit', {id: prospect.id}) }}" class="ad-btn ad-btn--ghost ad-btn--sm">Modifier</a>
+							<form method="post" action="{{ path('back_prospect_delete', {id: prospect.id}) }}" style="display:inline;"
+							      onsubmit="return confirm('Supprimer définitivement {{ (prospect.company ?: prospect.email)|e('js') }} et tout son journal ?');">
+								<input type="hidden" name="_token" value="{{ csrf_token('delete' ~ prospect.id) }}">
+								<button class="ad-btn ad-btn--danger ad-btn--sm">Supprimer</button>
+							</form>
 						</div>
 					</td>
 				</tr>

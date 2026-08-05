@@ -1,11 +1,11 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}{{ post.title }} | Walid Belbeche{% endblock %}
-{% block meta_description %}{{ post.content|striptags|slice(0, 155)|trim }}{% endblock %}
+{% block title %}{{ post.titleFor(app.request.locale) }} | Walid Belbeche{% endblock %}
+{% block meta_description %}{{ post.contentFor(app.request.locale)|striptags|slice(0, 155)|trim }}{% endblock %}
 
 {% block content %}
 {% set en = app.request.locale == 'en' %}
-{% set texte = post.content|striptags %}
+{% set texte = post.contentFor(app.request.locale)|striptags %}
 {% set minutes = max(1, (texte|split(' ')|length / 200)|round(0, 'ceil')) %}
 
 <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/themes/prism-tomorrow.min.css" rel="stylesheet">
@@ -21,7 +21,7 @@
             {% endif %}
         </nav>
 
-        <h1 class="wb-display" style="font-size: clamp(1.9rem, 3.8vw, 2.7rem); line-height: 1.15;">{{ post.title }}</h1>
+        <h1 class="wb-display" style="font-size: clamp(1.9rem, 3.8vw, 2.7rem); line-height: 1.15;">{{ post.titleFor(app.request.locale) }}</h1>
 
         <div class="wb-case-meta">
             <span>{{ post.createdAt|date('d/m/Y') }}</span>
@@ -35,8 +35,14 @@
 <section class="wb-section wb-section--paper" data-tone="light">
     <div class="container" style="max-width: 820px;">
 
-        <article class="wb-article">
-            {{ post.content|raw }}
+        {% if en and not post.hasEnglishVersion() %}
+            <p class="wb-note-langue">
+                This article is only available in French for now. Here it is in the original language.
+            </p>
+        {% endif %}
+
+        <article class="wb-article" lang="{{ en and post.hasEnglishVersion() ? 'en' : 'fr' }}">
+            {{ post.contentFor(app.request.locale)|raw }}
 
             {% for section in post.sections %}
                 {% if section.type == 'content' %}
@@ -88,7 +94,7 @@
                                     <span>{{ autre.createdAt|date('d/m/Y') }}</span>
                                 </div>
                                 <h3 class="wb-note__title">
-                                    <a href="{{ path('blog_show', { slug: autre.slug }) }}">{{ autre.title }}</a>
+                                    <a href="{{ path('blog_show', { slug: autre.slug }) }}">{{ autre.titleFor(app.request.locale) }}</a>
                                 </h3>
                                 <a href="{{ path('blog_show', { slug: autre.slug }) }}" class="wb-note__go">{{ en ? 'Read' : 'Lire' }} &rarr;</a>
                             </article>
@@ -114,10 +120,10 @@
 {
     "@context": "https://schema.org",
     "@type": "BlogPosting",
-    "headline": {{ post.title|json_encode|raw }},
+    "headline": {{ post.titleFor(app.request.locale)|json_encode|raw }},
     "datePublished": "{{ post.createdAt|date('c') }}",
     "dateModified": "{{ post.createdAt|date('c') }}",
-    "description": {{ post.content|striptags|slice(0, 155)|trim|json_encode|raw }},
+    "description": {{ post.contentFor(app.request.locale)|striptags|slice(0, 155)|trim|json_encode|raw }},
     "image": "{{ app.request.schemeAndHttpHost ~ asset('medias/pwa/icon-512.png') }}",
     "author": { "@type": "Person", "name": "Walid Belbeche", "url": "https://walidbelbeche.fr" },
     "publisher": {

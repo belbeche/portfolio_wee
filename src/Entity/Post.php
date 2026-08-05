@@ -36,6 +36,21 @@ class Post
     private ?string $content = null;
 
     /**
+     * Titre en anglais. Laisse vide, la version francaise est affichee.
+     *
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private ?string $titleEn = null;
+
+    /**
+     * Contenu en anglais. Laisse vide, la version francaise est affichee :
+     * mieux vaut un article lisible en francais qu'une page vide.
+     *
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private ?string $contentEn = null;
+
+    /**
      * @ORM\OneToMany(targetEntity="App\Entity\Section", mappedBy="post", cascade={"persist", "remove"}, orphanRemoval=true)
      */
     private Collection $sections;
@@ -243,5 +258,58 @@ class Post
         $this->status = $status;
 
         return $this;
+    }
+
+    public function getTitleEn(): ?string
+    {
+        return $this->titleEn;
+    }
+
+    public function setTitleEn(?string $titleEn): self
+    {
+        $this->titleEn = $titleEn;
+
+        return $this;
+    }
+
+    public function getContentEn(): ?string
+    {
+        return $this->contentEn;
+    }
+
+    public function setContentEn(?string $contentEn): self
+    {
+        $this->contentEn = $contentEn;
+
+        return $this;
+    }
+
+    /**
+     * Le titre dans la langue demandee, avec repli sur le francais.
+     * Utilise directement dans les gabarits : post.titleFor(app.request.locale)
+     */
+    public function titleFor(string $locale): ?string
+    {
+        if ('en' === $locale && null !== $this->titleEn && '' !== trim($this->titleEn)) {
+            return $this->titleEn;
+        }
+
+        return $this->title;
+    }
+
+    /** Le contenu dans la langue demandee, avec repli sur le francais. */
+    public function contentFor(string $locale): ?string
+    {
+        if ('en' === $locale && null !== $this->contentEn && '' !== trim($this->contentEn)) {
+            return $this->contentEn;
+        }
+
+        return $this->content;
+    }
+
+    /** Vrai si une version anglaise complete existe. */
+    public function hasEnglishVersion(): bool
+    {
+        return null !== $this->contentEn && '' !== trim($this->contentEn);
     }
 }

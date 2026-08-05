@@ -716,3 +716,64 @@ body.admin #site_header.top-fixed { display: none !important; }
     text-overflow: ellipsis;
     white-space: nowrap;
 }
+
+
+/* =====================================================================
+   Mobile : les tableaux deviennent des fiches empilees.
+   Un tableau a 6 colonnes ne tient pas sur un telephone : plutot que de
+   le faire defiler lateralement, chaque ligne devient une carte ou
+   l'intitule de colonne s'affiche devant la valeur.
+   ===================================================================== */
+@media (max-width: 767px) {
+
+  .ad-table thead { display: none; }
+
+  .ad-table, .ad-table tbody, .ad-table tr, .ad-table td { display: block; width: 100%; }
+
+  .ad-table tr {
+    background: var(--ad-surface, #fff);
+    border: 1px solid var(--ad-line, #dde5f0);
+    border-radius: 12px;
+    padding: .9rem 1rem;
+    margin-bottom: .8rem;
+    box-shadow: 0 1px 3px rgba(10,22,40,.05);
+  }
+  .ad-table tr:hover td { background: transparent; }
+
+  .ad-table td {
+    border: 0 !important;
+    padding: .32rem 0 !important;
+    text-align: left !important;
+    display: flex; gap: .8rem; align-items: baseline; justify-content: space-between;
+  }
+  /* L'intitule de colonne, injecte depuis l'attribut data-libelle du gabarit */
+  .ad-table td[data-libelle]::before {
+    content: attr(data-libelle);
+    flex: 0 0 auto;
+    font-size: .72rem; font-weight: 700; letter-spacing: .04em;
+    text-transform: uppercase; color: var(--ad-text-3, #7b8aa0);
+  }
+  .ad-table td > * { text-align: right; }
+
+  /* La cellule d'actions passe en pleine largeur, boutons etales */
+  .ad-table td:last-child {
+    flex-direction: column; align-items: stretch; gap: .4rem;
+    margin-top: .6rem; padding-top: .7rem !important;
+    border-top: 1px dashed var(--ad-line, #dde5f0) !important;
+  }
+  .ad-table td:last-child::before { margin-bottom: .1rem; }
+  .ad-table td:last-child .ad-btn,
+  .ad-table td:last-child form { width: 100%; }
+  .ad-table td:last-child .ad-btn { justify-content: center; text-align: center; }
+  .ad-cell-clip { max-width: none !important; white-space: normal !important; }
+
+  /* Compteurs : deux par ligne au lieu de cinq colonnes ecrasees */
+  .ad-kpis { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
+
+  /* En-tete de page et actions : empiles, boutons pleine largeur */
+  .ad-top { flex-direction: column; align-items: stretch; gap: .7rem; }
+  .ad-top .ad-btn { width: 100%; justify-content: center; }
+  .ad-card__head { flex-direction: column; align-items: flex-start; gap: .4rem; }
+  .ad-grid { grid-template-columns: 1fr !important; }
+  .ad-form .ad-grid { grid-template-columns: 1fr !important; }
+}

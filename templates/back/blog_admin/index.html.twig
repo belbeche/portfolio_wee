@@ -44,6 +44,7 @@
 					<th>Titre</th>
 					<th style="width:150px;">Sujet</th>
 					<th style="width:120px;">Publié le</th>
+					<th style="width:110px;">Langues</th>
 					<th style="width:120px;">Statut</th>
 					<th style="width:260px;text-align:right;">Actions</th>
 				</tr>
@@ -51,7 +52,7 @@
 			<tbody>
 				{% for post in posts %}
 					<tr>
-						<td>
+						<td data-libelle="Titre">
 							<div class="ad-cell-clip"><strong>{{ post.title }}</strong></div>
 							{% if post.slug %}
 								<div style="font-size:.76rem;color:var(--ad-text-3);">/blog/{{ post.slug }}</div>
@@ -65,7 +66,13 @@
 							{% endif %}
 						</td>
 						<td>{{ post.createdAt ? post.createdAt|date('d/m/Y') : '-' }}</td>
-						<td>
+						<td data-libelle="Langues">
+							<span class="ad-tag ad-tag--muted">FR</span>
+							{% if post.hasEnglishVersion() %}
+								<span class="ad-tag ad-tag--green">EN</span>
+							{% endif %}
+						</td>
+						<td data-libelle="Statut">
 							{% if post.status == 'published' %}
 								<span class="ad-tag ad-tag--green">Publié</span>
 							{% elseif post.status == 'draft' %}

@@ -6,6 +6,7 @@ use App\Entity\PushSubscription;
 use App\Service\Settings;
 use App\Service\WebPush;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpKernel\KernelInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -143,6 +144,70 @@ class SettingController extends AbstractController
         }
         foreach (array_slice(array_unique($erreurs), 0, 3) as $e) {
             $this->addFlash('error', 'Push : '.$e);
+        }
+
+        return $this->redirectToRoute('back_settings');
+    }
+
+    /**
+     * Vide le cache du serveur sans passer par la console.
+     *
+     * Cible volontairement les deux caches qui posent probleme au quotidien :
+     * les gabarits Twig compiles et les traductions. Le cache du conteneur
+     * de services n'est PAS touche : le supprimer pendant qu'une requete
+     * l'utilise casserait le site jusqu'au prochain redemarrage.
+     *
+     * @Route("/vider-cache-serveur", name="back_settings_clear_cache", methods={"POST"})
+     */
+    public function clearServerCache(Request $request, KernelInterface $kernel, Settings $settings): Response
+    {
+        if (!$this->isCsrfTokenValid('settings_clear_cache', (string) $request->request->get('_token'))) {
+            $this->addFlash('error', 'Session expiree, reessaie.');
+
+            return $this->redirectToRoute('back_settings');
+        }
+
+        $racine = $kernel->getCacheDir();
+        $supprimes = 0;
+        $erreurs = [];
+
+        foreach (['twig', 'translations', 'pools'] as $dossier) {
+            $chemin = $racine.'/'.$dossier;
+            if (!is_dir($chemin)) {
+                continue;
+            }
+
+            $fichiers = new \RecursiveIteratorIterator(
+                new \RecursiveDirectoryIterator($chemin, \FilesystemIterator::SKIP_DOTS),
+                \RecursiveIteratorIterator::CHILD_FIRST
+            );
+
+            foreach ($fichiers as $fichier) {
+                try {
+                    if ($fichier->isDir()) {
+                        @rmdir($fichier->getPathname());
+                    } elseif (@unlink($fichier->getPathname())) {
+                        ++$supprimes;
+                    }
+                } catch (\Throwable $e) {
+                    $erreurs[] = $e->getMessage();
+                }
+            }
+        }
+
+        // La version des fichiers statiques change aussi : les visiteurs
+        // rechargent CSS et scripts dans la foulee.
+        $version = (int) $settings->get('asset_version', '12');
+        $settings->set('asset_version', (string) ($version + 1));
+
+        $this->addFlash('success', sprintf(
+            '%d fichier(s) de cache supprime(s) : gabarits, traductions et donnees mises en cache. Version des fichiers statiques passee a %d. Recharge la page pour voir le resultat.',
+            $supprimes,
+            $version + 1
+        ));
+
+        if ([] !== $erreurs) {
+            $this->addFlash('error', 'Certains fichiers n\'ont pas pu etre supprimes : '.implode(' | ', array_slice(array_unique($erreurs), 0, 2)));
         }
 
         return $this->redirectToRoute('back_settings');

@@ -67,6 +67,28 @@ class ProspectOutreach
     }
 
     /**
+     * Un premier contact a-t-il deja ete envoye a ce prospect ?
+     *
+     * On s'appuie sur le journal plutot que sur le seul statut : le statut
+     * peut etre remis a "a contacter" a la main, le journal, lui, garde la
+     * trace de ce qui est reellement parti.
+     */
+    public function alreadyContacted(Prospect $prospect): bool
+    {
+        if (Prospect::STATUS_TO_CONTACT !== $prospect->getStatus()) {
+            return true;
+        }
+
+        foreach ($prospect->getProspectNotes() as $note) {
+            if ('email' === $note->getType() && false !== mb_stripos((string) $note->getContent(), 'Premier contact')) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
      * Les prospects "A contacter" avec une adresse verifiee, prioritaires d'abord.
      *
      * @return Prospect[]
@@ -76,7 +98,10 @@ class ProspectOutreach
         $candidats = $this->em->getRepository(Prospect::class)
             ->findBy(['status' => Prospect::STATUS_TO_CONTACT], ['priority' => 'ASC']);
 
-        return array_values(array_filter($candidats, [$this, 'isSendable']));
+        return array_values(array_filter(
+            $candidats,
+            fn (Prospect $p) => $this->isSendable($p) && !$this->alreadyContacted($p)
+        ));
     }
 
     /**
@@ -104,6 +129,16 @@ class ProspectOutreach
     {
         if (!$this->isSendable($prospect)) {
             return sprintf('adresse non verifiee : %s', (string) $prospect->getEmail());
+        }
+
+        // Garde-fou absolu contre le double envoi. Le journal fait foi : si un
+        // premier contact y figure deja, il ne repart jamais, quelle que soit
+        // la porte d'entree (bouton de vague, envoi individuel, commande).
+        if (!$relance && $this->alreadyContacted($prospect)) {
+            return sprintf(
+                'deja contacte le %s : aucun second envoi',
+                $prospect->getLastContactedAt() ? $prospect->getLastContactedAt()->format('d/m/Y') : 'precedemment'
+            );
         }
 
         $gabarit = $relance ? 'back/prospect/relance_prospect.html.twig' : 'back/prospect/welcome_prospect.html.twig';

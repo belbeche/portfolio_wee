@@ -1426,3 +1426,59 @@ section.bg-dark .small, section.bg-primary .small,
 .wb-author p { font-size: .88rem; color: var(--wb-text-2); margin: 0 0 .8rem; }
 @media (max-width: 575px) { .wb-author { flex-direction: column; } }
 @media (prefers-reduced-motion: reduce) { .wb-note { transition: none; } }
+
+
+/* =====================================================================
+   Corrections finales : pastilles de filtre, lisibilite des articles.
+   ===================================================================== */
+
+/* --- pastilles de filtre (secteurs, sujets du blog) --------------------- */
+.cat-chip {
+  display: inline-flex; align-items: center; gap: .3rem;
+  padding: .42rem .95rem; border-radius: 999px;
+  border: 1px solid var(--wb-line); background: #fff;
+  color: var(--wb-text-2); font-size: .86rem; font-weight: 650;
+  text-decoration: none; line-height: 1.2;
+  transition: border-color .2s var(--wb-ease), color .2s var(--wb-ease), background .2s var(--wb-ease);
+}
+.cat-chip:hover { border-color: var(--wb-gold); color: var(--wb-text); }
+.cat-chip--active,
+.cat-chip.cat-chip--active {
+  background: var(--wb-ink); border-color: var(--wb-ink); color: #fff;
+}
+.cat-chip--active:hover { color: #fff; }
+.wb-filter { display: flex; flex-wrap: wrap; gap: .5rem; }
+
+/* --- corps d'article : contraste et respiration justes ------------------ */
+/* .wb-section p imposait un gris pale a tous les paragraphes : on reprend
+   la main a l'interieur d'un article, ou la lecture est longue. */
+.wb-article p,
+.wb-section .wb-article p,
+.wb-section--paper .wb-article p {
+  color: #33415a;
+  font-size: 1.06rem;
+  line-height: 1.72;
+  margin: 0 0 1.05rem;
+}
+.wb-article li,
+.wb-section .wb-article li,
+.wb-section--paper .wb-article li { color: #33415a; }
+/* Les editeurs laissent des paragraphes vides : ils creaient de grands trous. */
+.wb-article p:empty { display: none; }
+.wb-article br + br { display: none; }
+.wb-article > *:first-child { margin-top: 0; }
+
+/* --- accroche : le premier paragraphe porte l'article ------------------- */
+.wb-article > p:first-of-type {
+  font-size: 1.18rem;
+  line-height: 1.65;
+  color: var(--wb-text);
+  font-weight: 500;
+}
+
+/* Article disponible seulement en francais : mention discrete, pas une alerte */
+.wb-note-langue {
+  background: var(--wb-paper-3); border-radius: 8px;
+  padding: .7rem 1rem; margin: 0 0 1.6rem;
+  font-size: .85rem; color: var(--wb-text-3);
+}

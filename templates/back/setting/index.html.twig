@@ -60,6 +60,20 @@
             <input type="hidden" name="_token" value="{{ csrf_token('settings_purge') }}">
             <button class="ad-btn ad-btn--primary">Forcer l'actualisation des visiteurs</button>
         </form>
+
+        <hr style="margin:1.2rem 0;border:0;border-top:1px dashed var(--ad-line, #dde5f0);">
+
+        <p style="margin:0 0 .8rem;font-size:.85rem;color:var(--ad-text-3);">
+            <strong style="color:var(--ad-text);">Le cache du serveur.</strong>
+            Après un déploiement, les gabarits et les traductions restent parfois figés sur
+            leur ancienne version. Ce bouton les vide sans passer par la console, et
+            incrémente aussi la version des fichiers statiques dans la foulée.
+        </p>
+        <form method="post" action="{{ path('back_settings_clear_cache') }}"
+              onsubmit="return confirm('Vider le cache du serveur (gabarits, traductions, données mises en cache) ?');">
+            <input type="hidden" name="_token" value="{{ csrf_token('settings_clear_cache') }}">
+            <button class="ad-btn ad-btn--primary">Vider le cache du serveur</button>
+        </form>
     </div>
 </div>
 

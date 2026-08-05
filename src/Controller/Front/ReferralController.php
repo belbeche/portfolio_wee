@@ -54,12 +54,22 @@ class ReferralController extends AbstractController
             $path = (string) $settings->get('axishumain_expert_path', '');
         }
 
-        $separator = str_contains($path, '?') ? '&' : '?';
+        // Le reglage peut contenir soit un chemin (/premium), soit une adresse
+        // complete (https://axishumain.fr/premium). Dans le second cas il ne
+        // faut surtout pas la coller derriere l'adresse de base, sinon on
+        // obtient axishumain.frhttps://axishumain.fr/premium.
+        if ('' !== $path && preg_match('#^https?://#i', $path)) {
+            $cible = rtrim($path, '/');
+        } else {
+            $path = '' === $path ? '' : '/'.ltrim($path, '/');
+            $cible = $base.$path;
+        }
+
+        $separator = str_contains($cible, '?') ? '&' : '?';
 
         $url = sprintf(
-            '%s%s%sutm_source=walidbelbeche&utm_medium=referral&utm_campaign=%s',
-            $base,
-            $path,
+            '%s%sutm_source=walidbelbeche&utm_medium=referral&utm_campaign=%s',
+            $cible,
             $separator,
             urlencode($context)
         );
