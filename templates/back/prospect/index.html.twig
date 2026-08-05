@@ -114,6 +114,9 @@
 
 	function lancer(relances, bouton) {
 		var total = 0, envoyes = 0, rates = 0;
+		var echecsDeSuite = 0;    // trois echecs d'affilee = le serveur d'envoi
+		                          // est en cause, on arrete au lieu de bruler
+		                          // toute la liste contre un SMTP muet
 		var tentes = [];          // ce qui a deja ete tente : jamais deux fois
 		var PAUSE = 4000;         // 4 s entre deux envois : un SMTP mutualise
 		                          // refuse les rafales (erreur 450 too much mail)
@@ -157,7 +160,23 @@
 					return;
 				}
 
-				if (d.ok) { envoyes++; } else { rates++; echecs.textContent += d.societe + ' : ' + (d.message || 'échec') + '\n'; }
+				if (d.ok) {
+					envoyes++;
+					echecsDeSuite = 0;
+				} else {
+					rates++;
+					echecsDeSuite++;
+					echecs.textContent += d.societe + ' : ' + (d.message || 'échec') + '\n';
+
+					if (echecsDeSuite >= 3) {
+						ligne.textContent = 'Arrêt : aucun e-mail ne part.';
+						detail.textContent = 'Trois échecs d\'affilée, le problème vient du serveur d\'envoi et non des prospects. '
+							+ 'Aucun des ' + rates + ' prospects tentés n\'a été marqué comme contacté, ils repartiront tels quels. '
+							+ 'Clique « Tester le serveur d\'envoi » pour voir ce qui bloque.';
+						stop.hidden = true; bouton.disabled = false;
+						return;
+					}
+				}
 				total = envoyes + rates + d.restants;
 				ligne.textContent = 'Envoi ' + (envoyes + rates) + ' sur ' + total + ' · ' + d.societe;
 				detail.textContent = envoyes + ' parti(s), ' + rates + ' échec(s), ' + d.restants + ' restant(s). Prochain envoi dans 4 s.';

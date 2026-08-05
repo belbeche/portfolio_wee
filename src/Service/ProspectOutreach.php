@@ -121,7 +121,8 @@ class ProspectOutreach
 
     /**
      * Envoie l'e-mail a un prospect, trace le journal et pose la cadence.
-     * Ne flush pas : l'appelant flush une fois la vague terminee.
+     * Ecrit immediatement en base : sans ce flush, l'e-mail part mais le
+     * back office ne bouge pas, et le prospect repart a la vague suivante.
      *
      * @return string|null null si succes, sinon le message d'erreur
      */
@@ -175,6 +176,7 @@ class ProspectOutreach
                 $sujet,
                 !$relance ? '. Offre PDF jointe.' : ''));
         $this->em->persist($note);
+        $this->em->flush();
 
         return null;
     }
