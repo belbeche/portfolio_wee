@@ -1482,3 +1482,14 @@ section.bg-dark .small, section.bg-primary .small,
   padding: .7rem 1rem; margin: 0 0 1.6rem;
   font-size: .85rem; color: var(--wb-text-3);
 }
+
+/* Bascule de langue d'un article : discrete, sur le bandeau sombre */
+.wb-langues { display: inline-flex; gap: .25rem; margin-top: 1.1rem; padding: .25rem;
+  background: rgba(255,255,255,.08); border-radius: 999px; }
+.wb-langues__choix {
+  padding: .35rem .95rem; border-radius: 999px; font-size: .82rem; font-weight: 650;
+  color: var(--wb-on-dark-2); text-decoration: none; transition: background .2s var(--wb-ease), color .2s var(--wb-ease);
+}
+.wb-langues__choix:hover { color: #fff; }
+.wb-langues__choix.is-actif { background: var(--wb-gold); color: var(--wb-ink); }
+.wb-langues__choix.is-actif:hover { color: var(--wb-ink); }

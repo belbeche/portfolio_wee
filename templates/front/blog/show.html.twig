@@ -28,6 +28,19 @@
             <span>{{ minutes }} min {{ en ? 'read' : 'de lecture' }}</span>
             <span>{{ en ? 'By Walid Belbeche' : 'Par Walid Belbeche' }}</span>
         </div>
+
+        {# Bascule de langue propre a l'article : la version anglaise n'est
+           proposee que si elle existe reellement. #}
+        {% if post.hasEnglishVersion() %}
+            <div class="wb-langues" role="group" aria-label="{{ en ? 'Article language' : 'Langue de l\'article' }}">
+                <a href="{{ path('switch_locale', {_locale: 'fr'}) }}"
+                   class="wb-langues__choix {{ not en ? 'is-actif' : '' }}"
+                   {{ not en ? 'aria-current="true"' : '' }}>Français</a>
+                <a href="{{ path('switch_locale', {_locale: 'en'}) }}"
+                   class="wb-langues__choix {{ en ? 'is-actif' : '' }}"
+                   {{ en ? 'aria-current="true"' : '' }}>English</a>
+            </div>
+        {% endif %}
     </div>
 </section>
 
