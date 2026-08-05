@@ -1,0 +1,38 @@
+{% extends 'back/prospect/sequence/_base.html.twig' %}
+
+{% block etiquette %}Une observation{% endblock %}
+
+{% block corps %}
+    <p style="margin:0 0 14px;">Bonjour{% if prospect.contactName %} {{ prospect.contactName }}{% endif %},</p>
+
+    {% if constat %}
+        <p style="margin:0 0 14px;">
+            Je suis passé sur {{ prospect.company ?: 'votre site' }} et j'ai remarqué une chose :
+            <strong>{{ constat.phrase }}</strong>.
+        </p>
+        <p style="margin:0 0 14px;">
+            Ce n'est pas un reproche, c'est fréquent et ça se corrige. Je vous le signale
+            simplement parce que peu de gens le disent, et que ça vous coûte des visiteurs
+            tous les jours sans que rien ne l'indique.
+        </p>
+    {% else %}
+        <p style="margin:0 0 14px;">
+            Je développe des applications web et mobiles pour des entreprises comme la vôtre,
+            de l'analyse du besoin jusqu'à la mise en production.
+        </p>
+    {% endif %}
+
+    <p style="margin:0 0 14px;">
+        Je suis développeur indépendant{% if prospect.city %}, et je travaille régulièrement avec des entreprises de la région de {{ prospect.city }}{% endif %}.
+        Un seul interlocuteur du premier échange à la mise en ligne, un prix fixé avant de commencer,
+        et le code vous appartient à la fin.
+    </p>
+
+    <p style="margin:0 0 6px;">
+        Si le sujet vous intéresse, répondez à ce message et je vous dis en deux lignes
+        ce que je ferais et ce que ça coûte. Si ce n'est pas le moment, ignorez, je n'insisterai pas longtemps.
+    </p>
+{% endblock %}
+
+{% block ctaLien %}{{ liens.realisations }}{% endblock %}
+{% block ctaTexte %}Voir des projets livrés{% endblock %}

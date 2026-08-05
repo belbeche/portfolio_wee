@@ -1,0 +1,238 @@
+{% extends 'base_back.html.twig' %}
+
+{% block title %}Prospection{% endblock %}
+{% block breadcrumb %}Commercial{% endblock %}
+{% block heading %}Prospection{% endblock %}
+
+{% block topActions %}
+	<a href="{{ url('back_prospect_index') }}" class="ad-btn ad-btn--ghost">Liste des prospects</a>
+	<a href="{{ url('back_prospect_history') }}" class="ad-btn ad-btn--ghost">Historique</a>
+{% endblock %}
+
+{% block content %}
+
+{% set tauxOuverture = stats.envoyes > 0 ? (stats.ouverts / stats.envoyes * 100)|round : 0 %}
+{% set tauxClic = stats.envoyes > 0 ? (stats.cliques / stats.envoyes * 100)|round : 0 %}
+
+<div class="ad-kpis">
+	<div class="ad-kpi" data-tone="light">
+		<div class="ad-kpi__n">{{ aFaire|length }}</div>
+		<div class="ad-kpi__l">à envoyer aujourd'hui</div>
+	</div>
+	<div class="ad-kpi" data-tone="light">
+		<div class="ad-kpi__n">{{ stats.envoyes }}</div>
+		<div class="ad-kpi__l">messages partis</div>
+	</div>
+	<div class="ad-kpi" data-tone="light">
+		<div class="ad-kpi__n">{{ tauxOuverture }} %</div>
+		<div class="ad-kpi__l">ouverts ({{ stats.ouverts }})</div>
+	</div>
+	<div class="ad-kpi" data-tone="light">
+		<div class="ad-kpi__n">{{ tauxClic }} %</div>
+		<div class="ad-kpi__l">ont cliqué ({{ stats.cliques }})</div>
+	</div>
+</div>
+
+{# ------------------------------------------------------- qui rappeler -- #}
+<section class="ad-card" style="margin-top:1rem;border-color:#f5b301;" data-tone="light">
+	<div class="ad-card__head">
+		<h2>À rappeler en priorité</h2>
+		<span class="ad-tag ad-tag--gold">{{ interesses|length }}</span>
+	</div>
+	<div class="ad-card__body">
+		<p style="font-size:.84rem;color:var(--ad-text-3);margin:0 0 .9rem;max-width:76ch;">
+			Ces prospects ont ouvert votre message, certains plusieurs fois, et n'ont pas répondu.
+			C'est le signal le plus fort que vous aurez : quelqu'un qui relit un e-mail commercial
+			trois fois hésite. Un appel à ce moment-là vaut vingt e-mails de plus.
+		</p>
+
+		{% if interesses|length > 0 %}
+			<table class="ad-table">
+				<thead><tr><th>Prospect</th><th>Étape</th><th class="num">Ouvertures</th><th class="num">Clics</th><th>Téléphone</th><th></th></tr></thead>
+				<tbody>
+					{% for envoi in interesses %}
+						<tr>
+							<td data-libelle="Prospect">
+								<strong>{{ envoi.prospect.company ?: envoi.prospect.email }}</strong>
+								{% if envoi.prospect.city %}<br><span style="font-size:.8rem;color:var(--ad-text-3);">{{ envoi.prospect.city }}</span>{% endif %}
+							</td>
+							<td data-libelle="Étape">{{ etapes[envoi.etape].nom ?? envoi.etape }}</td>
+							<td data-libelle="Ouvertures" class="num">
+								<span class="ad-tag ad-tag--{{ envoi.temperature == 'chaud' ? 'red' : (envoi.temperature == 'tiede' ? 'gold' : 'blue') }}">{{ envoi.ouvertures }}</span>
+							</td>
+							<td data-libelle="Clics" class="num">{{ envoi.clics }}</td>
+							<td data-libelle="Téléphone">{{ envoi.prospect.phone ?: '-' }}</td>
+							<td><a href="{{ path('back_prospect_notes', {id: envoi.prospect.id}) }}" class="ad-btn ad-btn--ghost ad-btn--sm">Journal</a></td>
+						</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		{% else %}
+			<div class="ad-empty">
+				<h3>Personne n'a encore ouvert</h3>
+				<p style="margin:0;font-size:.86rem;">Lancez la séquence, les ouvertures remonteront ici automatiquement.</p>
+			</div>
+		{% endif %}
+	</div>
+</section>
+
+{# ---------------------------------------------------------- la sequence -- #}
+<section class="ad-card" style="margin-top:1rem;" data-tone="light">
+	<div class="ad-card__head"><h2>La séquence</h2></div>
+	<div class="ad-card__body">
+		<table class="ad-table">
+			<thead><tr><th>Étape</th><th>Quand</th><th>Ce qu'elle apporte</th><th class="num">Prospects</th><th class="num">Ouverts</th><th>Essai</th></tr></thead>
+			<tbody>
+				{% for n, etape in etapes %}
+					{% set st = stats.parEtape[n] ?? {envoyes: 0, ouverts: 0, cliques: 0} %}
+					<tr>
+						<td data-libelle="Étape"><strong>{{ n }}. {{ etape.nom }}</strong></td>
+						<td data-libelle="Quand">{{ cadence[n] == 0 ? 'immédiat' : 'J+' ~ cadence[n] }}</td>
+						<td data-libelle="Ce qu'elle apporte" style="font-size:.84rem;">
+							{% if n == 1 %}Un constat vrai sur son propre site, pas un discours
+							{% elseif n == 2 %}Une preuve : ce que je livre, et onze projets en production
+							{% elseif n == 3 %}Le diagnostic complet, offert, sans rien demander
+							{% else %}On clôt proprement et on laisse ses coordonnées{% endif %}
+						</td>
+						<td data-libelle="Prospects" class="num">{{ parEtape[n] ?? 0 }}</td>
+						<td data-libelle="Ouverts" class="num">{{ st.envoyes > 0 ? (st.ouverts / st.envoyes * 100)|round ~ ' %' : '-' }}</td>
+						<td data-libelle="Essai">
+							<form method="post" action="{{ path('back_sequence_preview', {etape: n}) }}">
+								<input type="hidden" name="_token" value="{{ csrf_token('sequence_essai') }}">
+								<button class="ad-btn ad-btn--ghost ad-btn--sm">M'envoyer</button>
+							</form>
+						</td>
+					</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+		<p style="font-size:.82rem;color:var(--ad-text-3);margin:1rem 0 0;max-width:76ch;">
+			Passé l'étape 4, plus rien n'est envoyé. Insister au-delà ne convertit pas : ça fait
+			classer l'adresse en indésirable et ça abîme la réputation d'envoi du domaine, ce qui
+			pénalise ensuite tous les autres messages, y compris vos devis.
+		</p>
+	</div>
+</section>
+
+{# ------------------------------------------------------------- la file -- #}
+<section class="ad-card" style="margin-top:1rem;" data-tone="light">
+	<div class="ad-card__head">
+		<h2>À envoyer maintenant</h2>
+		<span class="ad-tag">{{ aFaire|length }} prospect(s)</span>
+	</div>
+	<div class="ad-card__body">
+		{% if aFaire|length > 0 %}
+			<button id="wb-seq-go" class="ad-btn ad-btn--primary">Lancer l'envoi</button>
+			<button id="wb-seq-stop" class="ad-btn ad-btn--danger" hidden>Arrêter</button>
+			<div id="wb-seq-etat" hidden style="margin-top:.9rem;">
+				<div id="wb-seq-ligne" style="font-weight:700;"></div>
+				<div id="wb-seq-detail" style="font-size:.84rem;color:var(--ad-text-3);"></div>
+				<pre id="wb-seq-echecs" style="white-space:pre-wrap;font-size:.8rem;color:#b32a29;margin:.6rem 0 0;"></pre>
+			</div>
+
+			<table class="ad-table" style="margin-top:1rem;">
+				<thead><tr><th>Prospect</th><th>Prochaine étape</th><th>Site</th><th>Constat retenu</th></tr></thead>
+				<tbody>
+					{% for item in aFaire|slice(0, 40) %}
+						<tr data-prospect="{{ item.prospect.id }}">
+							<td data-libelle="Prospect"><strong>{{ item.prospect.company ?: item.prospect.email }}</strong></td>
+							<td data-libelle="Prochaine étape">{{ item.etape }}. {{ etapes[item.etape].nom }}</td>
+							<td data-libelle="Site" style="font-size:.8rem;">{{ item.prospect.website ?: '-' }}</td>
+							<td data-libelle="Constat retenu" style="font-size:.82rem;">
+								{% if item.prospect.constatPrincipal %}
+									<span class="ad-tag ad-tag--{{ item.prospect.constatPrincipal.gravite == 'haute' ? 'red' : 'gold' }}">{{ item.prospect.constatPrincipal.titre }}</span>
+								{% else %}
+									<span style="color:var(--ad-text-3);">pas encore analysé</span>
+								{% endif %}
+							</td>
+						</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		{% else %}
+			<div class="ad-empty">
+				<h3>Rien à envoyer aujourd'hui</h3>
+				<p style="margin:0;font-size:.86rem;">
+					Soit tout le monde est à jour dans la séquence, soit les délais entre deux étapes
+					ne sont pas écoulés. Revenez demain, ou importez de nouveaux prospects.
+				</p>
+			</div>
+		{% endif %}
+	</div>
+</section>
+
+<script>
+(function () {
+	var go = document.getElementById('wb-seq-go');
+	if (!go) { return; }
+
+	var stop = document.getElementById('wb-seq-stop');
+	var etat = document.getElementById('wb-seq-etat');
+	var ligne = document.getElementById('wb-seq-ligne');
+	var detail = document.getElementById('wb-seq-detail');
+	var echecs = document.getElementById('wb-seq-echecs');
+	var jeton = {{ csrf_token('sequence')|json_encode|raw }};
+	var PAUSE = 5000;
+	var arrete = false;
+
+	var file = Array.prototype.map.call(document.querySelectorAll('[data-prospect]'), function (l) {
+		return { id: l.dataset.prospect, ligne: l };
+	});
+
+	go.addEventListener('click', function () {
+		if (!confirm('Envoyer l\'étape suivante à ' + file.length + ' prospect(s) ? Un message toutes les 5 secondes.')) { return; }
+		arrete = false;
+		go.disabled = true;
+		stop.hidden = false;
+		etat.hidden = false;
+		echecs.textContent = '';
+		suivant(0, 0, 0, 0);
+	});
+
+	stop.addEventListener('click', function () { arrete = true; });
+
+	function suivant(i, envoyes, rates, dseSuite) {
+		if (arrete || i >= file.length) {
+			ligne.textContent = (arrete ? 'Arrêté. ' : 'Terminé. ') + envoyes + ' envoyé(s), ' + rates + ' échec(s).';
+			detail.textContent = 'Recharge la page pour voir les statuts à jour.';
+			stop.hidden = true; go.disabled = false;
+			return;
+		}
+
+		var courant = file[i];
+		var corps = new URLSearchParams();
+		corps.set('_token', jeton);
+
+		fetch({{ path('back_sequence_send', {id: '__ID__'})|json_encode|raw }}.replace('__ID__', courant.id), {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+			credentials: 'same-origin',
+			body: corps.toString()
+		}).then(function (r) { return r.json(); }).then(function (d) {
+			if (d.ok) {
+				envoyes++; dseSuite = 0;
+				courant.ligne.style.opacity = '.45';
+			} else {
+				rates++; dseSuite++;
+				echecs.textContent += (d.societe || courant.id) + ' : ' + (d.message || 'échec') + '\n';
+				// Trois échecs d'affilée : le serveur d'envoi est en cause, pas
+				// les prospects. On arrête au lieu de brûler toute la liste.
+				if (dseSuite >= 3) {
+					ligne.textContent = 'Arrêt : aucun message ne part.';
+					detail.textContent = 'Trois échecs d\'affilée. Aucun des prospects tentés n\'a été marqué, ils repartiront tels quels.';
+					stop.hidden = true; go.disabled = false;
+					return;
+				}
+			}
+			ligne.textContent = 'Envoi ' + (i + 1) + ' sur ' + file.length + ' · ' + (d.societe || '');
+			detail.textContent = envoyes + ' parti(s), ' + rates + ' échec(s). Prochain dans 5 s.';
+			setTimeout(function () { suivant(i + 1, envoyes, rates, dseSuite); }, PAUSE);
+		}).catch(function (e) {
+			ligne.textContent = 'Interrompu : ' + e.message;
+			stop.hidden = true; go.disabled = false;
+		});
+	}
+})();
+</script>
+
+{% endblock %}

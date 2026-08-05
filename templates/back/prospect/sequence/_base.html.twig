@@ -1,0 +1,40 @@
+{# Coquille commune aux quatre e-mails de la sequence.
+   Tableaux et styles en ligne : c'est la seule chose que Outlook et Gmail
+   rendent de la meme facon. Aucune classe CSS, aucun flex, aucune image
+   externe hors le pixel de suivi. #}
+<!DOCTYPE html>
+<html lang="fr"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1"></head>
+<body style="margin:0;padding:0;background:#f2f5f9;font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#f2f5f9;padding:24px 12px;">
+<tr><td align="center">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width:560px;background:#ffffff;border-radius:14px;overflow:hidden;">
+
+    <tr><td style="background:#0a1628;padding:20px 26px;">
+        <span style="color:#f5b301;font-size:11px;letter-spacing:2px;text-transform:uppercase;font-weight:700;">{% block etiquette %}{% endblock %}</span><br>
+        <span style="color:#ffffff;font-size:17px;font-weight:700;">Walid Belbeche</span>
+        <span style="color:#9fb3cd;font-size:13px;"> · développeur indépendant</span>
+    </td></tr>
+
+    <tr><td style="padding:26px;color:#1d2b3f;font-size:15px;line-height:1.6;">
+        {% block corps %}{% endblock %}
+    </td></tr>
+
+    <tr><td style="padding:0 26px 26px;">
+        <table role="presentation" cellpadding="0" cellspacing="0" border="0"><tr>
+            <td style="background:#f5b301;border-radius:8px;">
+                <a href="{% block ctaLien %}{{ liens.site }}{% endblock %}" style="display:inline-block;padding:12px 22px;color:#0a1628;font-weight:700;text-decoration:none;font-size:15px;">{% block ctaTexte %}Voir mon travail{% endblock %}</a>
+            </td>
+        </tr></table>
+    </td></tr>
+
+    <tr><td style="border-top:1px solid #e6ecf5;padding:16px 26px;color:#7b8aa0;font-size:11.5px;line-height:1.5;">
+        Walid Belbeche · développeur web et mobile · walidbelbeche.fr<br>
+        Vous recevez ce message parce que votre entreprise apparaît dans l'annuaire public des entreprises.
+        Répondez « stop » et je vous retire immédiatement, sans rien vous demander.
+    </td></tr>
+
+</table>
+</td></tr></table>
+<img src="{{ pixel }}" width="1" height="1" alt="" style="display:block;border:0;">
+</body></html>

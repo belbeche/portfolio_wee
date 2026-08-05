@@ -104,6 +104,80 @@ trait ProspectionTrait
      */
     private ?\DateTimeInterface $createdAt = null;
 
+    /**
+     * Ce que l'on a observe sur le site du prospect.
+     *
+     * C'est ce qui fait la difference entre « bonjour, je fais des sites » et
+     * « votre site affiche Non securise dans Chrome depuis le 12 mars ». Le
+     * premier finit dans la corbeille, le second obtient une reponse.
+     *
+     * @ORM\Column(type="json", nullable=true)
+     */
+    private ?array $diagnostic = null;
+
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private ?\DateTimeInterface $diagnostiqueLe = null;
+
+    /**
+     * Ou en est ce prospect dans la sequence : 0 pas encore contacte,
+     * 1 a 4 les etapes deja envoyees.
+     *
+     * @ORM\Column(type="integer", options={"default": 0})
+     */
+    private int $etape = 0;
+
+    /** @return array<string, mixed>|null */
+    public function getDiagnostic(): ?array
+    {
+        return $this->diagnostic;
+    }
+
+    /** @param array<string, mixed>|null $diagnostic */
+    public function setDiagnostic(?array $diagnostic): self
+    {
+        $this->diagnostic = $diagnostic;
+        $this->diagnostiqueLe = null === $diagnostic ? null : new \DateTime();
+
+        return $this;
+    }
+
+    public function getDiagnostiqueLe(): ?\DateTimeInterface
+    {
+        return $this->diagnostiqueLe;
+    }
+
+    public function getEtape(): int
+    {
+        return $this->etape;
+    }
+
+    public function setEtape(int $etape): self
+    {
+        $this->etape = $etape;
+
+        return $this;
+    }
+
+    /**
+     * Les constats exploitables, du plus parlant au moins parlant.
+     *
+     * @return array<int, array{cle: string, titre: string, phrase: string, gravite: string}>
+     */
+    public function getConstats(): array
+    {
+        return $this->diagnostic['constats'] ?? [];
+    }
+
+    /** Le constat que l'on mettra en avant dans le premier e-mail. */
+    public function getConstatPrincipal(): ?array
+    {
+        $constats = $this->getConstats();
+
+        return $constats[0] ?? null;
+    }
+
     public function getCompany(): ?string
     {
         return $this->company;

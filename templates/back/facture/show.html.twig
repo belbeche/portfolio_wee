@@ -1,0 +1,105 @@
+{% extends 'base_back.html.twig' %}
+
+{% block title %}Facture {{ facture.numero }}{% endblock %}
+{% block breadcrumb %}Commercial{% endblock %}
+{% block heading %}Facture {{ facture.numero }}{% endblock %}
+
+{% block topActions %}
+	<a href="{{ path('back_facture_index') }}" class="ad-btn ad-btn--ghost">Retour</a>
+	<a href="{{ path('back_facture_pdf', {id: facture.id}) }}" target="_blank" rel="noopener" class="ad-btn ad-btn--ghost">Voir le PDF</a>
+	<form method="post" action="{{ path('back_facture_send', {id: facture.id}) }}" style="display:inline;"
+	      onsubmit="return confirm('Envoyer la facture {{ facture.numero }} à {{ facture.clientEmail|e('js') }} ?');">
+		<input type="hidden" name="_token" value="{{ csrf_token('envoyer_' ~ facture.id) }}">
+		<button class="ad-btn ad-btn--primary">Envoyer au client</button>
+	</form>
+{% endblock %}
+
+{% block content %}
+
+<div class="ad-grid" style="grid-template-columns: minmax(0, 2fr) minmax(300px, 1fr);">
+
+	<div>
+		<section class="ad-card" data-tone="light">
+			<div class="ad-card__head">
+				<h2>Détail</h2>
+				<span class="ad-tag ad-tag--{{ facture.ton }}">{{ facture.statutLabel }}{% if facture.estEnRetard %} · {{ facture.joursDeRetard }} j de retard{% endif %}</span>
+			</div>
+			<div class="ad-card__body" style="padding-top:0;">
+				<table class="ad-table">
+					<thead>
+						<tr><th>Désignation</th><th class="num">Qté</th><th>Unité</th><th class="num">P.U. HT</th><th class="num">TVA</th><th class="num">Total HT</th></tr>
+					</thead>
+					<tbody>
+						{% for ligne in facture.lignes %}
+							<tr>
+								<td data-libelle="Désignation">
+									<strong>{{ ligne.designation }}</strong>
+									{% if ligne.detail %}<br><span style="font-size:.82rem;color:var(--ad-text-3);">{{ ligne.detail }}</span>{% endif %}
+								</td>
+								<td data-libelle="Qté" class="num">{{ ligne.quantite }}</td>
+								<td data-libelle="Unité">{{ ligne.unite }}</td>
+								<td data-libelle="P.U. HT" class="num">{{ ligne.prixUnitaire|number_format(2, ',', ' ') }} €</td>
+								<td data-libelle="TVA" class="num">{{ ligne.tauxTva }} %</td>
+								<td data-libelle="Total HT" class="num">{{ ligne.totalHt|number_format(2, ',', ' ') }} €</td>
+							</tr>
+						{% endfor %}
+					</tbody>
+				</table>
+			</div>
+		</section>
+	</div>
+
+	<div>
+		<section class="ad-card" style="margin-bottom:1rem;" data-tone="light">
+			<div class="ad-card__head"><h2>Règlement</h2></div>
+			<div class="ad-card__body">
+				<div style="display:flex;justify-content:space-between;padding:.25rem 0;"><span>Total TTC</span><strong>{{ facture.totalTtc|number_format(2, ',', ' ') }} €</strong></div>
+				<div style="display:flex;justify-content:space-between;padding:.25rem 0;"><span>Déjà réglé</span><strong>{{ facture.montantRegle|number_format(2, ',', ' ') }} €</strong></div>
+				<div style="display:flex;justify-content:space-between;padding:.5rem 0 0;border-top:1px solid var(--ad-line,#dde5f0);margin-top:.4rem;font-size:1.05rem;">
+					<span>Reste</span>
+					<strong style="color:{{ facture.resteADevoir > 0 ? '#b32a29' : '#0f7a54' }};">{{ facture.resteADevoir|number_format(2, ',', ' ') }} €</strong>
+				</div>
+
+				<form method="post" action="{{ path('back_facture_payment', {id: facture.id}) }}" style="margin-top:1rem;">
+					<input type="hidden" name="_token" value="{{ csrf_token('paiement_' ~ facture.id) }}">
+					<label style="font-size:.8rem;font-weight:700;">Encaissement</label>
+					<input type="text" name="montant" inputmode="decimal" placeholder="ex : 450,00"
+					       style="width:100%;padding:.5rem;margin:.3rem 0 .6rem;border:1px solid var(--ad-line,#dde5f0);border-radius:8px;">
+					<label style="font-size:.8rem;font-weight:700;">Moyen</label>
+					<select name="moyen" style="width:100%;padding:.5rem;margin:.3rem 0 .8rem;border:1px solid var(--ad-line,#dde5f0);border-radius:8px;">
+						<option value="">Non précisé</option>
+						<option value="virement" {{ facture.moyenPaiement == 'virement' ? 'selected' }}>Virement</option>
+						<option value="carte" {{ facture.moyenPaiement == 'carte' ? 'selected' }}>Carte bancaire</option>
+						<option value="cheque" {{ facture.moyenPaiement == 'cheque' ? 'selected' }}>Chèque</option>
+						<option value="especes" {{ facture.moyenPaiement == 'especes' ? 'selected' }}>Espèces</option>
+						<option value="autre" {{ facture.moyenPaiement == 'autre' ? 'selected' }}>Autre</option>
+					</select>
+					<div style="display:flex;gap:.4rem;flex-wrap:wrap;">
+						<button class="ad-btn ad-btn--primary ad-btn--sm">Enregistrer</button>
+						<button name="action" value="solder" class="ad-btn ad-btn--ghost ad-btn--sm"
+						        onclick="return confirm('Marquer cette facture comme entièrement payée ?');">Tout est payé</button>
+						<button name="action" value="annuler" class="ad-btn ad-btn--danger ad-btn--sm"
+						        onclick="return confirm('Annuler cette facture ? Le numéro reste réservé, comme l\'exige la numérotation continue.');">Annuler</button>
+					</div>
+				</form>
+			</div>
+		</section>
+
+		<section class="ad-card" data-tone="light">
+			<div class="ad-card__head"><h2>Client</h2></div>
+			<div class="ad-card__body">
+				<div style="font-weight:700;">{{ facture.clientNom }}</div>
+				<div style="font-size:.85rem;color:var(--ad-text-3);">{{ facture.clientEmail }}</div>
+				<div style="font-size:.85rem;color:var(--ad-text-3);margin-top:.6rem;">
+					Émise le {{ facture.emiseLe|date('d/m/Y') }}<br>
+					À régler avant le {{ facture.echeanceLe|date('d/m/Y') }}
+					{% if facture.regleeLe %}<br>Soldée le {{ facture.regleeLe|date('d/m/Y') }}{% endif %}
+					{% if facture.devis %}<br>Devis d'origine : {{ facture.devis.reference }}{% endif %}
+				</div>
+			</div>
+		</section>
+	</div>
+
+</div>
+
+{% endblock %}

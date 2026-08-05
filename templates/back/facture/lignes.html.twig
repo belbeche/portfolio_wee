@@ -1,0 +1,162 @@
+{% extends 'base_back.html.twig' %}
+
+{% block title %}Chiffrage {{ devis.reference }}{% endblock %}
+{% block breadcrumb %}Commercial{% endblock %}
+{% block heading %}Chiffrage · {{ devis.reference }}{% endblock %}
+
+{% block topActions %}
+	<a href="{{ path('back_devis_preview', {id: devis.id}) }}" target="_blank" rel="noopener" class="ad-btn ad-btn--ghost">Aperçu PDF</a>
+	<a href="{{ path('back_devis_show', {id: devis.id}) }}" class="ad-btn ad-btn--ghost">Retour au devis</a>
+{% endblock %}
+
+{% block content %}
+
+<section class="ad-card" data-tone="light">
+	<div class="ad-card__head">
+		<h2>Décompte détaillé</h2>
+		<span class="ad-tag">{{ devis.email }}</span>
+	</div>
+	<div class="ad-card__body">
+		<p style="font-size:.84rem;color:var(--ad-text-3);margin:0 0 1rem;max-width:76ch;">
+			Une ligne par prestation. Le client doit pouvoir lire ce qu'il achète poste par poste,
+			et c'est aussi une mention obligatoire sur un devis. Le champ « détail » est ce qui évite
+			les malentendus trois semaines plus tard.
+		</p>
+
+		{{ form_start(form, {attr: {id: 'wb-lignes-form'}}) }}
+			<div id="wb-lignes" data-prototype="{{ form_widget(form.lignes.vars.prototype)|e('html_attr') }}">
+				{% for ligne in form.lignes %}
+					<div class="wb-ligne" data-ligne>
+						<div class="wb-ligne__grille">
+							<div class="wb-ligne__desc">{{ form_row(ligne.designation) }}</div>
+							<div>{{ form_row(ligne.quantite) }}</div>
+							<div>{{ form_row(ligne.unite) }}</div>
+							<div>{{ form_row(ligne.prixUnitaire) }}</div>
+							<div>{{ form_row(ligne.remise) }}</div>
+							<div>{{ form_row(ligne.tauxTva) }}</div>
+						</div>
+						{{ form_row(ligne.detail) }}
+						{{ form_widget(ligne.position) }}
+						<div class="wb-ligne__pied">
+							<span class="wb-ligne__total" data-total>0,00 € HT</span>
+							<button type="button" class="ad-btn ad-btn--danger ad-btn--sm" data-supprimer>Retirer</button>
+						</div>
+					</div>
+				{% endfor %}
+			</div>
+
+			<button type="button" id="wb-ajouter" class="ad-btn ad-btn--ghost">+ Ajouter une ligne</button>
+
+			<div class="wb-recap" data-tone="light">
+				<div><span>Total HT</span><strong data-recap="ht">0,00 €</strong></div>
+				<div><span>TVA</span><strong data-recap="tva">0,00 €</strong></div>
+				<div class="wb-recap--fort"><span>Total TTC</span><strong data-recap="ttc">0,00 €</strong></div>
+			</div>
+
+			<div style="margin-top:1rem;display:flex;gap:.5rem;flex-wrap:wrap;">
+				<button class="ad-btn ad-btn--primary">Enregistrer le chiffrage</button>
+			</div>
+		{{ form_end(form) }}
+	</div>
+</section>
+
+<section class="ad-card" style="margin-top:1rem;" data-tone="light">
+	<div class="ad-card__head"><h2>Facturer</h2></div>
+	<div class="ad-card__body">
+		<p style="font-size:.84rem;color:var(--ad-text-3);margin:0 0 .9rem;max-width:76ch;">
+			La facture recopie les lignes telles qu'elles sont aujourd'hui. Une facture est
+			immuable : elle ne peut pas dépendre d'un devis que tu modifieras peut-être demain.
+			Enregistre ton chiffrage avant de cliquer.
+		</p>
+		<form method="post" action="{{ path('back_facture_from_devis', {id: devis.id}) }}"
+		      onsubmit="return confirm('Émettre une facture pour ce devis ? Le numéro sera attribué définitivement.');">
+			<input type="hidden" name="_token" value="{{ csrf_token('facturer_' ~ devis.id) }}">
+			<button class="ad-btn ad-btn--primary">Émettre la facture</button>
+		</form>
+	</div>
+</section>
+
+<style>
+	.wb-ligne { border:1px solid var(--ad-line,#dde5f0); border-radius:12px; padding:1rem; margin-bottom:.8rem; background:#fff; }
+	.wb-ligne__grille { display:grid; grid-template-columns: minmax(0,3fr) 80px 120px 130px 100px 100px; gap:.6rem; align-items:end; }
+	.wb-ligne__pied { display:flex; align-items:center; justify-content:space-between; gap:.6rem; margin-top:.4rem; }
+	.wb-ligne__total { font-weight:700; font-variant-numeric:tabular-nums; }
+	.wb-recap { margin-top:1rem; border:1px solid var(--ad-line,#dde5f0); border-radius:12px; padding:.9rem 1.1rem; max-width:340px; margin-left:auto; }
+	.wb-recap div { display:flex; justify-content:space-between; padding:.25rem 0; font-size:.9rem; }
+	.wb-recap--fort { border-top:1px solid var(--ad-line,#dde5f0); margin-top:.4rem; padding-top:.6rem !important; font-size:1.05rem !important; font-weight:700; }
+	@media (max-width: 900px) { .wb-ligne__grille { grid-template-columns: 1fr 1fr; } .wb-ligne__desc { grid-column: 1 / -1; } }
+</style>
+
+<script>
+(function () {
+	var zone = document.getElementById('wb-lignes');
+	var ajouter = document.getElementById('wb-ajouter');
+	if (!zone || !ajouter) { return; }
+
+	var compteur = zone.querySelectorAll('[data-ligne]').length;
+
+	function euros(n) {
+		return n.toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' €';
+	}
+
+	// Les totaux se recalculent a la frappe : on ne decouvre pas le montant
+	// final apres avoir enregistre et recharge la page.
+	function recalculer() {
+		var ht = 0, tva = 0;
+		zone.querySelectorAll('[data-ligne]').forEach(function (ligne) {
+			function val(fin) {
+				var champ = ligne.querySelector('[id$="' + fin + '"]');
+				return champ ? (parseFloat(String(champ.value).replace(',', '.')) || 0) : 0;
+			}
+			var brut = val('_quantite') * val('_prixUnitaire');
+			var net = brut * (1 - val('_remise') / 100);
+			var taxe = net * val('_tauxTva') / 100;
+			ht += net; tva += taxe;
+			var cible = ligne.querySelector('[data-total]');
+			if (cible) { cible.textContent = euros(net) + ' HT'; }
+		});
+		document.querySelector('[data-recap="ht"]').textContent = euros(ht);
+		document.querySelector('[data-recap="tva"]').textContent = euros(tva);
+		document.querySelector('[data-recap="ttc"]').textContent = euros(ht + tva);
+	}
+
+	function brancher(ligne) {
+		ligne.querySelectorAll('input, select').forEach(function (champ) {
+			champ.addEventListener('input', recalculer);
+			champ.addEventListener('change', recalculer);
+		});
+		var bouton = ligne.querySelector('[data-supprimer]');
+		if (bouton) {
+			bouton.addEventListener('click', function () {
+				if (zone.querySelectorAll('[data-ligne]').length <= 1) {
+					alert('Un devis a besoin d\'au moins une ligne.');
+					return;
+				}
+				ligne.remove();
+				recalculer();
+			});
+		}
+	}
+
+	zone.querySelectorAll('[data-ligne]').forEach(brancher);
+
+	ajouter.addEventListener('click', function () {
+		var gabarit = zone.dataset.prototype.replace(/__ligne__/g, compteur++);
+		var boite = document.createElement('div');
+		boite.className = 'wb-ligne';
+		boite.setAttribute('data-ligne', '');
+		boite.innerHTML = '<div class="wb-ligne__grille"></div>' + gabarit
+			+ '<div class="wb-ligne__pied"><span class="wb-ligne__total" data-total>0,00 € HT</span>'
+			+ '<button type="button" class="ad-btn ad-btn--danger ad-btn--sm" data-supprimer>Retirer</button></div>';
+		zone.appendChild(boite);
+		brancher(boite);
+		recalculer();
+		var premier = boite.querySelector('input');
+		if (premier) { premier.focus(); }
+	});
+
+	recalculer();
+})();
+</script>
+
+{% endblock %}

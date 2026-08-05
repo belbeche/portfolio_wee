@@ -1,0 +1,26 @@
+{% extends 'back/prospect/sequence/_base.html.twig' %}
+
+{% block etiquette %}Dernier message{% endblock %}
+
+{% block corps %}
+    <p style="margin:0 0 14px;">Bonjour{% if prospect.contactName %} {{ prospect.contactName }}{% endif %},</p>
+
+    <p style="margin:0 0 14px;">
+        Je vous ai écrit trois fois, vous n'avez pas donné suite, et c'est une réponse
+        parfaitement claire. Je clos donc ici : vous ne recevrez plus rien de ma part.
+    </p>
+
+    <p style="margin:0 0 14px;">
+        Une chose avant de partir. Ce n'est pas parce que ce n'est pas le moment aujourd'hui
+        que ce ne le sera pas dans six mois. Gardez cette adresse quelque part :
+        <strong>contact@walidbelbeche.fr</strong>. Le jour où votre site vous pose un vrai
+        problème, vous saurez à qui écrire, et vous n'aurez pas à chercher.
+    </p>
+
+    <p style="margin:0 0 6px;">
+        Bonne continuation, sincèrement.
+    </p>
+{% endblock %}
+
+{% block ctaLien %}{{ liens.site }}{% endblock %}
+{% block ctaTexte %}Garder mes coordonnées{% endblock %}

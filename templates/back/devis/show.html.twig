@@ -7,6 +7,12 @@
 	<div class="container">
 		<h1>Détails du devis</h1>
 
+		<p style="margin:0 0 1rem;display:flex;gap:.5rem;flex-wrap:wrap;">
+			<a href="{{ path('back_devis_lignes', {id: devis.id}) }}" class="ad-btn ad-btn--primary">Chiffrer ligne par ligne</a>
+			<a href="{{ path('back_devis_preview', {id: devis.id}) }}" target="_blank" rel="noopener" class="ad-btn ad-btn--ghost">Aperçu PDF</a>
+			<a href="{{ path('back_devis_reply', {id: devis.id}) }}" class="ad-btn ad-btn--ghost">Répondre au client</a>
+		</p>
+
 		<table>
 			<tr>
 				<th>Numéro</th>

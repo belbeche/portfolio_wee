@@ -1,0 +1,47 @@
+{% extends 'back/prospect/sequence/_base.html.twig' %}
+
+{% block etiquette %}Sans contrepartie{% endblock %}
+
+{% block corps %}
+    <p style="margin:0 0 14px;">Bonjour{% if prospect.contactName %} {{ prospect.contactName }}{% endif %},</p>
+
+    <p style="margin:0 0 14px;">
+        Dernier message utile, et celui-ci ne vous demande rien.
+        J'ai regardé {{ prospect.company ?: 'votre site' }} en détail. Voici ce que j'y ai vu,
+        que vous fassiez appel à moi ou à quelqu'un d'autre.
+    </p>
+
+    {% if constats|length > 0 %}
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:0 0 16px;">
+            {% for c in constats|slice(0, 5) %}
+                <tr><td style="padding:0 0 10px;">
+                    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:{{ c.gravite == 'haute' ? '#fdeeee' : '#f7f9fc' }};border-radius:10px;">
+                        <tr><td style="padding:13px 16px;font-size:14px;line-height:1.5;color:#33415a;">
+                            <strong style="color:{{ c.gravite == 'haute' ? '#b32a29' : '#0a1628' }};">{{ c.titre }}</strong><br>
+                            {{ c.phrase|capitalize }}.
+                        </td></tr>
+                    </table>
+                </td></tr>
+            {% endfor %}
+        </table>
+
+        <p style="margin:0 0 14px;">
+            Tout cela se corrige. Les deux premiers points sont ceux qui se voient le plus vite,
+            et ce sont souvent les moins chers à traiter.
+        </p>
+    {% else %}
+        <p style="margin:0 0 14px;">
+            Bonne nouvelle : je n'ai rien trouvé de bloquant. Votre site est correctement tenu,
+            ce qui est plus rare que vous ne le pensez. Gardez mon adresse pour le jour où
+            vous voudrez aller plus loin qu'un site vitrine.
+        </p>
+    {% endif %}
+
+    <p style="margin:0 0 6px;">
+        Si vous voulez que je vous dise par où commencer et à quel budget, répondez simplement
+        « par où ? » et je vous écris trois lignes. Sans rendez-vous, sans relance derrière.
+    </p>
+{% endblock %}
+
+{% block ctaLien %}{{ liens.devis }}{% endblock %}
+{% block ctaTexte %}Faire chiffrer mon projet{% endblock %}

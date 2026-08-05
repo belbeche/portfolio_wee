@@ -1,0 +1,33 @@
+{% extends 'back/prospect/sequence/_base.html.twig' %}
+
+{% block etiquette %}Du concret{% endblock %}
+
+{% block corps %}
+    <p style="margin:0 0 14px;">Bonjour{% if prospect.contactName %} {{ prospect.contactName }}{% endif %},</p>
+
+    <p style="margin:0 0 14px;">
+        Je vous ai écrit il y a quelques jours au sujet de {{ prospect.company ?: 'votre site' }}.
+        Plutôt que de vous relancer dans le vide, voici à quoi ressemble concrètement mon travail.
+    </p>
+
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#f7f9fc;border-radius:10px;margin:0 0 16px;">
+        <tr><td style="padding:16px 18px;font-size:14px;line-height:1.55;color:#33415a;">
+            <strong style="color:#0a1628;">Ce que je livre, à chaque fois</strong><br>
+            Un site ou une application qui s'ouvre en moins de deux secondes, lisible sur téléphone,
+            avec un certificat valide et une administration où vous modifiez vos contenus vous-même.
+            Hébergement et supervision inclus la première année, code et droits cédés à la livraison.
+        </td></tr>
+    </table>
+
+    <p style="margin:0 0 14px;">
+        Onze projets sont en production aujourd'hui, dans le commerce, l'associatif et le service aux entreprises.
+        Vous pouvez les regarder, ils sont tous en ligne.
+    </p>
+
+    <p style="margin:0 0 6px;">
+        Une question, même vague, se répond en une ligne. Il suffit de cliquer « répondre ».
+    </p>
+{% endblock %}
+
+{% block ctaLien %}{{ liens.realisations }}{% endblock %}
+{% block ctaTexte %}Regarder les réalisations{% endblock %}

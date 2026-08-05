@@ -67,6 +67,7 @@
                             {% endif %}
                         </td>
                         <td class="text-end">
+                            <a href="{{ path('back_devis_lignes', {'id': d.id}) }}" class="btn btn-primary btn-sm">Chiffrer</a>
                             <a href="{{ path('back_devis_reply', {'id': d.id}) }}" class="btn btn-primary btn-sm">Repondre</a>
                             <a href="{{ path('back_devis_show', {'id': d.id}) }}" class="btn btn-outline-secondary btn-sm">Voir</a>
                             <a href="{{ path('back_devis_edit', {'id': d.id}) }}" class="btn btn-outline-primary btn-sm">Modifier</a>

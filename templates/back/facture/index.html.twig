@@ -1,0 +1,82 @@
+{% extends 'base_back.html.twig' %}
+
+{% block title %}Factures{% endblock %}
+{% block breadcrumb %}Commercial{% endblock %}
+{% block heading %}Factures{% endblock %}
+
+{% block topActions %}
+	<a href="{{ path('back_devis_index') }}" class="ad-btn ad-btn--ghost">Aller aux devis</a>
+{% endblock %}
+
+{% block content %}
+
+<div class="ad-kpis">
+	<div class="ad-kpi" data-tone="light">
+		<div class="ad-kpi__n">{{ encaisse|number_format(0, ',', ' ') }} €</div>
+		<div class="ad-kpi__l">encaissé</div>
+	</div>
+	<div class="ad-kpi" data-tone="light">
+		<div class="ad-kpi__n">{{ attendu|number_format(0, ',', ' ') }} €</div>
+		<div class="ad-kpi__l">en attente de règlement</div>
+	</div>
+	<div class="ad-kpi" data-tone="light">
+		<div class="ad-kpi__n" style="color:{{ retard > 0 ? '#b32a29' : 'inherit' }};">{{ retard|number_format(0, ',', ' ') }} €</div>
+		<div class="ad-kpi__l">en retard</div>
+	</div>
+	<div class="ad-kpi" data-tone="light">
+		<div class="ad-kpi__n">{{ factures|length }}</div>
+		<div class="ad-kpi__l">facture(s)</div>
+	</div>
+</div>
+
+<section class="ad-card" style="margin-top:1rem;" data-tone="light">
+	<div class="ad-card__head"><h2>Toutes les factures</h2></div>
+
+	{% if factures|length > 0 %}
+		<div class="ad-card__body" style="padding-top:0;">
+			<table class="ad-table">
+				<thead>
+					<tr>
+						<th>Numéro</th><th>Client</th><th>Émise le</th><th>Échéance</th>
+						<th class="num">TTC</th><th class="num">Reste</th><th>Statut</th><th>Actions</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for facture in factures %}
+						<tr>
+							<td data-libelle="Numéro"><strong>{{ facture.numero }}</strong></td>
+							<td data-libelle="Client">{{ facture.clientNom }}</td>
+							<td data-libelle="Émise le" style="white-space:nowrap;">{{ facture.emiseLe|date('d/m/Y') }}</td>
+							<td data-libelle="Échéance" style="white-space:nowrap;">
+								{{ facture.echeanceLe|date('d/m/Y') }}
+								{% if facture.estEnRetard %}
+									<br><span class="ad-tag ad-tag--red">{{ facture.joursDeRetard }} j de retard</span>
+								{% endif %}
+							</td>
+							<td data-libelle="TTC" class="num">{{ facture.totalTtc|number_format(2, ',', ' ') }} €</td>
+							<td data-libelle="Reste" class="num">{{ facture.resteADevoir|number_format(2, ',', ' ') }} €</td>
+							<td data-libelle="Statut"><span class="ad-tag ad-tag--{{ facture.ton }}">{{ facture.statutLabel }}</span></td>
+							<td data-libelle="Actions">
+								<div style="display:flex;gap:.4rem;flex-wrap:wrap;">
+									<a href="{{ path('back_facture_show', {id: facture.id}) }}" class="ad-btn ad-btn--ghost ad-btn--sm">Ouvrir</a>
+									<a href="{{ path('back_facture_pdf', {id: facture.id}) }}" target="_blank" rel="noopener" class="ad-btn ad-btn--ghost ad-btn--sm">PDF</a>
+								</div>
+							</td>
+						</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
+	{% else %}
+		<div class="ad-card__body">
+			<div class="ad-empty">
+				<h3>Aucune facture</h3>
+				<p style="margin:0;font-size:.86rem;">
+					Ouvre un devis, chiffre-le ligne par ligne, puis clique « Émettre la facture ».
+				</p>
+			</div>
+		</div>
+	{% endif %}
+</section>
+
+{% endblock %}
