@@ -1,41 +1,90 @@
 {% extends 'base_back.html.twig' %}
 
-{% block title %}Membres{% endblock %}
+{% block title %}Équipe{% endblock %}
+{% block breadcrumb %}Configuration{% endblock %}
+{% block heading %}Équipe{% endblock %}
+
+{% block topActions %}
+	<a href="{{ url('front_home') }}#equipe" class="ad-btn ad-btn--ghost" target="_blank" rel="noopener">Voir sur le site</a>
+	<a href="{{ path('back_member_new') }}" class="ad-btn ad-btn--primary">Ajouter un membre</a>
+{% endblock %}
 
 {% block content %}
-    <div class="container-fluid">
-        <h1>Liste des membres</h1>
 
-        <a href="{{ path('back_member_new') }}">Ajouter un nouveau membre</a>
-        <div class="table-responsive">
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>Prénom</th>
-                        <th>Nom</th>
-                        <th>Fonction</th>
-                        <th>Email</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for member in members %}
-                        <tr>
-                            <td>{{ member.id }}</td>
-                            <td>{{ member.firstname }}</td>
-                            <td>{{ member.lastname }}</td>
-                            <td>{{ member.function }}</td>
-                            <td>{{ member.email }}</td>
-                            <td>
-                                {# <a href="{{ path('back_member_show', {id: member.id}) }}">Afficher</a> #}
-                                <a href="{{ path('back_member_edit', {id: member.id}) }}">Modifier</a>
-                                <a href="{{ path('back_member_delete', {id: member.id}) }}">Supprimer</a>
-                            </td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-    </div>
+<section class="ad-card" data-tone="light">
+	<div class="ad-card__head">
+		<h2>Liste des membres</h2>
+		<span class="ad-tag">{{ members|length }} membre(s)</span>
+	</div>
+
+	{% if members|length > 0 %}
+		<div class="ad-card__body" style="padding-top:0;">
+			<p style="font-size:.82rem;color:var(--ad-text-3);margin:.8rem 0 1rem;max-width:70ch;">
+				Ces membres alimentent la section « Équipe » de la page d'accueil. Le premier
+				de la liste y est mis en avant comme interlocuteur principal. Les adresses
+				e-mail restent ici, elles ne sont jamais publiées sur le site public.
+			</p>
+
+			<table class="ad-table">
+				<thead>
+					<tr>
+						<th>Photo</th>
+						<th>Nom</th>
+						<th>Fonction</th>
+						<th>Catégorie</th>
+						<th>E-mail</th>
+						<th>Actions</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for member in members %}
+						<tr>
+							<td data-libelle="Photo">
+								{% if member.avatar %}
+									<img src="{{ asset('uploads/avatar/' ~ member.avatar) }}"
+									     alt="" width="40" height="40" loading="lazy"
+									     style="width:40px;height:40px;border-radius:50%;object-fit:cover;">
+								{% else %}
+									<span class="ad-tag ad-tag--muted">sans photo</span>
+								{% endif %}
+							</td>
+							<td data-libelle="Nom">
+								<strong>{{ member.firstname }} {{ member.lastname }}</strong>
+								{% if loop.first %}
+									<span class="ad-tag ad-tag--gold" style="margin-left:.4rem;">mis en avant</span>
+								{% endif %}
+							</td>
+							<td data-libelle="Fonction" style="font-size:.84rem;">{{ member.function }}</td>
+							<td data-libelle="Catégorie" style="font-size:.84rem;">{{ member.category ?: '-' }}</td>
+							<td data-libelle="E-mail" style="font-size:.82rem;">{{ member.email }}</td>
+							<td data-libelle="Actions">
+								<div style="display:flex;gap:.4rem;flex-wrap:wrap;">
+									<a href="{{ path('back_member_edit', {id: member.id}) }}" class="ad-btn ad-btn--ghost ad-btn--sm">Modifier</a>
+									{# Suppression en POST avec jeton : un simple lien serait suivi par
+									   les robots d'indexation et les pre-chargeurs de navigateur. #}
+									<form method="post" action="{{ path('back_member_delete', {id: member.id}) }}"
+									      onsubmit="return confirm('Supprimer {{ (member.firstname ~ ' ' ~ member.lastname)|e('js') }} de l\'équipe ? Sa photo sera effacée aussi.');">
+										<input type="hidden" name="_token" value="{{ csrf_token('delete' ~ member.id) }}">
+										<button class="ad-btn ad-btn--danger ad-btn--sm">Supprimer</button>
+									</form>
+								</div>
+							</td>
+						</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
+	{% else %}
+		<div class="ad-card__body">
+			<div class="ad-empty">
+				<h3>Aucun membre enregistré</h3>
+				<p style="margin:0;font-size:.86rem;">
+					Ajoute au moins toi-même : la section « Équipe » de l'accueil reste masquée
+					tant que la liste est vide, elle apparaîtra dès le premier membre.
+				</p>
+			</div>
+		</div>
+	{% endif %}
+</section>
+
 {% endblock %}

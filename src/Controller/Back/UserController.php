@@ -96,15 +96,27 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("/back/users/{id}/delete", name="back_user_delete")
+     * Suppression en POST uniquement, avec jeton.
+     *
+     * En GET, il suffisait qu'un robot d'indexation ou le pre-chargeur du
+     * navigateur suive le lien pour effacer un compte. Une suppression ne
+     * doit jamais tenir dans une adresse que l'on peut visiter.
+     *
+     * @Route("/back/users/{id}/delete", name="back_user_delete", methods={"POST"})
      * @IsGranted("ROLE_ADMIN")
      */
-    public function delete(EntityManagerInterface $entityManager,$id): Response
+    public function delete(Request $request, EntityManagerInterface $entityManager, $id): Response
     {
         $user = $entityManager->getRepository(User::class)->find($id);
 
         if (null === $user) {
             $this->addFlash('error', 'Utilisateur introuvable.');
+
+            return $this->redirectToRoute('back_user_index');
+        }
+
+        if (!$this->isCsrfTokenValid('delete_user_'.$user->getId(), (string) $request->request->get('_token'))) {
+            $this->addFlash('error', 'Session expirée, recharge la page et réessaie.');
 
             return $this->redirectToRoute('back_user_index');
         }

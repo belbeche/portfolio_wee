@@ -1,41 +1,64 @@
 {% extends 'base_back.html.twig' %}
 
-{% block title %}Utilisateurs
+{% block title %}Utilisateurs{% endblock %}
+{% block breadcrumb %}Configuration{% endblock %}
+{% block heading %}Utilisateurs{% endblock %}
+
+{% block topActions %}
+	<a href="{{ path('back_user_new') }}" class="ad-btn ad-btn--primary">Créer un utilisateur</a>
 {% endblock %}
 
 {% block content %}
-	<div class="container-fluid">
-		<h1>Liste des utilisateurs</h1>
 
-		<a href="{{ path('back_user_new') }}">Créer un nouveau utilisateur</a>
-		<div class="table-responsive">
-			<table>
+<section class="ad-card" data-tone="light">
+	<div class="ad-card__head">
+		<h2>Liste des utilisateurs</h2>
+		<span class="ad-tag">{{ users|length }} compte(s)</span>
+	</div>
+
+	{% if users|length > 0 %}
+		<div class="ad-card__body" style="padding-top:0;">
+			<table class="ad-table">
 				<thead>
-				<tr>
-					<th>#</th>
-					<th>Email</th>
-					<th>Nom</th>
-					<th>Prenom</th>
-					<th>Actions</th>
-				</tr>
+					<tr>
+						<th>E-mail</th>
+						<th>Nom</th>
+						<th>Prénom</th>
+						<th>Actions</th>
+					</tr>
 				</thead>
 				<tbody>
-				{% for user in users %}
-					<tr>
-						<td>{{ user.id }}</td>
-						<td>{{ user.email }}</td>
-						<td>{{ user.nom }}</td>
-						<td>{{ user.prenom }}</td>
-						<td>
-							<a href="{{ url('back_user_show', {id: user.id}) }}">Afficher</a>
-							<a href="{{ url('back_user_edit', {id: user.id}) }}">Modifier</a>
-							<a href="{{ url('back_user_delete', {id: user.id}) }}">Supprimer</a>
-						</td>
-					</tr>
-				{% endfor %}
+					{% for user in users %}
+						<tr>
+							<td data-libelle="E-mail"><strong>{{ user.email }}</strong></td>
+							<td data-libelle="Nom">{{ user.nom ?: '-' }}</td>
+							<td data-libelle="Prénom">{{ user.prenom ?: '-' }}</td>
+							<td data-libelle="Actions">
+								<div style="display:flex;gap:.4rem;flex-wrap:wrap;">
+									<a href="{{ url('back_user_show', {id: user.id}) }}" class="ad-btn ad-btn--ghost ad-btn--sm">Afficher</a>
+									<a href="{{ url('back_user_edit', {id: user.id}) }}" class="ad-btn ad-btn--ghost ad-btn--sm">Modifier</a>
+									{# Suppression en POST avec jeton : un lien suffisait a effacer
+									   un compte des qu'un robot le suivait. #}
+									<form method="post" action="{{ url('back_user_delete', {id: user.id}) }}"
+									      onsubmit="return confirm('Supprimer définitivement le compte {{ user.email|e('js') }} ?');">
+										<input type="hidden" name="_token" value="{{ csrf_token('delete_user_' ~ user.id) }}">
+										<button class="ad-btn ad-btn--danger ad-btn--sm">Supprimer</button>
+									</form>
+								</div>
+							</td>
+						</tr>
+					{% endfor %}
 				</tbody>
 			</table>
 		</div>
-	</div>
+	{% else %}
+		<div class="ad-card__body">
+			<div class="ad-empty">
+				<h3>Aucun utilisateur</h3>
+				<p style="margin:0;font-size:.86rem;">Crée le premier compte avec le bouton en haut à droite.</p>
+			</div>
+		</div>
+	{% endif %}
+</section>
 
 {% endblock %}
