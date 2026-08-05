@@ -77,7 +77,7 @@ class EntretienSubscriber implements EventSubscriberInterface
         }
 
         try {
-            $this->surveillance->surveiller();
+            $this->surveillance->surveiller(false, true);
         } finally {
             $this->rendreLeVerrou($verrou);
         }

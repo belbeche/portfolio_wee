@@ -1,0 +1,232 @@
+{# ---------------------------------------------------------------------------
+   Devis et facture, gabarit unique pour mPDF.
+
+   REGLE ABSOLUE DE CE FICHIER, apprise a la dure apres un devis sorti en
+   1362 pages : mPDF calcule la largeur des tableaux a partir des pourcentages
+   PUIS ajoute les padding CSS par dessus. Un padding sur un td dont la
+   largeur est en pourcentage fait donc deborder le tableau, et mPDF, incapable
+   de faire tenir la ligne, cree une page, echoue encore, en cree une autre, a
+   l'infini.
+
+   Donc, dans ce fichier :
+     - jamais de padding CSS sur un td, on utilise l'attribut cellpadding
+       que mPDF prend en compte AVANT de repartir les largeurs
+     - jamais de padding sur un table, on l'entoure d'un div si besoin
+     - les pourcentages d'une meme rangee font exactement 100
+     - aucune largeur en pixels, aucune image externe, ni flex ni grid
+--------------------------------------------------------------------------- #}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>{{ titre }} {{ reference }}</title>
+<style>
+    body { font-family: 'DejaVu Sans', sans-serif; font-size: 9.5pt; line-height: 1.45; color: #1d2b3f; }
+    h2 { font-size: 8pt; letter-spacing: 1pt; color: #7b8aa0; margin: 5mm 0 1.5mm; text-transform: uppercase; }
+    .encre { background: #0a1628; color: #ffffff; }
+    .bloc { border: 0.3mm solid #dbe3ee; }
+    .etiq { font-size: 7pt; letter-spacing: 0.8pt; color: #7b8aa0; text-transform: uppercase; font-weight: bold; }
+    .nom { font-size: 10.5pt; font-weight: bold; color: #0a1628; }
+    .l { color: #4a5a6e; font-size: 8.5pt; }
+    .n { text-align: right; }
+    .c { text-align: center; }
+    .sceau { background: #f5b301; color: #0a1628; font-weight: bold; font-size: 12pt; text-align: center; }
+    .marque { font-size: 12.5pt; font-weight: bold; color: #ffffff; }
+    .marque-sous { color: #9fb3cd; font-size: 7.5pt; }
+    .titre-mot { font-size: 19pt; font-weight: bold; color: #ffffff; }
+    .titre-ref { font-size: 10pt; font-weight: bold; color: #f5b301; }
+    .th { background: #0a1628; color: #ffffff; font-size: 7.8pt; text-transform: uppercase; font-weight: bold; }
+    .ligne { border-bottom: 0.3mm solid #e6ecf5; }
+    .detail { color: #5a6b82; font-size: 8.3pt; }
+    .fort { background: #0a1628; color: #ffffff; font-size: 11pt; font-weight: bold; }
+    .mention { color: #4a5a6e; font-size: 8.4pt; }
+    .mention b { color: #1d2b3f; }
+    .pied { font-size: 7.2pt; color: #7b8aa0; text-align: center; }
+    .paye { background: #eaf7f1; border: 0.3mm solid #1baf7a; color: #0f7a54; }
+    .du { background: #fdeeee; border: 0.3mm solid #e34948; color: #b32a29; }
+</style>
+</head>
+<body>
+
+<htmlpagefooter name="bas">
+    <div class="pied">
+        {{ nomEntreprise }}{% if adresse %} · {{ adresse }}{% endif %}{% if siren %} · SIREN {{ siren }}{% endif %}{% if numeroTva %} · TVA {{ numeroTva }}{% endif %}
+        · {{ courriel }}{% if telephone %} · {{ telephone }}{% endif %} · page {PAGENO}/{nbpg}
+    </div>
+</htmlpagefooter>
+<sethtmlpagefooter name="bas" value="on" />
+
+{# ------------------------------------------------------------- en-tete -- #}
+<table width="100%" cellpadding="5" cellspacing="0" border="0" class="encre">
+    <tr>
+        <td width="10%" class="sceau">WB</td>
+        <td width="52%">
+            <span class="marque">{{ nomEntreprise }}</span><br>
+            <span class="marque-sous">Consultant informatique · Applications web et mobiles</span>
+        </td>
+        <td width="38%" class="n">
+            <span class="titre-mot">{{ titre }}</span><br>
+            <span class="titre-ref">{{ reference }}</span>
+        </td>
+    </tr>
+</table>
+
+{# ----------------------------------------------------------- identites -- #}
+<table width="100%" cellpadding="0" cellspacing="0" border="0">
+    <tr>
+        <td width="48%">
+            <table width="100%" cellpadding="4" cellspacing="0" border="0" class="bloc">
+                <tr><td>
+                    <span class="etiq">Prestataire</span><br>
+                    <span class="nom">{{ nomEntreprise }}</span><br>
+                    {% if adresse %}<span class="l">{{ adresse }}</span><br>{% endif %}
+                    {% if siren %}<span class="l">SIREN {{ siren }}</span><br>{% endif %}
+                    {% if numeroTva %}<span class="l">TVA {{ numeroTva }}</span><br>{% endif %}
+                    <span class="l">{{ courriel }}</span>
+                    {% if telephone %}<br><span class="l">{{ telephone }}</span>{% endif %}
+                </td></tr>
+            </table>
+        </td>
+        <td width="4%"></td>
+        <td width="48%">
+            <table width="100%" cellpadding="4" cellspacing="0" border="0" class="bloc">
+                <tr><td>
+                    <span class="etiq">Client</span><br>
+                    <span class="nom">{{ clientNom }}</span><br>
+                    {% if clientAdresse %}<span class="l">{{ clientAdresse|nl2br }}</span><br>{% endif %}
+                    <span class="l">{{ clientEmail }}</span>
+                    {% if projet %}<br><span class="l">Projet : {{ projet }}</span>{% endif %}
+                </td></tr>
+            </table>
+        </td>
+    </tr>
+</table>
+
+{# ------------------------------------------------------------- reperes -- #}
+<br>
+<table width="100%" cellpadding="4" cellspacing="0" border="0" class="bloc">
+    <tr>
+        <td width="33%" class="c">
+            <span class="etiq">Date d'émission</span><br>
+            <span class="nom">{{ emisLe|date('d/m/Y') }}</span>
+        </td>
+        <td width="34%" class="c">
+            <span class="etiq">{{ echeanceLabel }}</span><br>
+            <span class="nom">{{ echeanceLe|date('d/m/Y') }}</span>
+        </td>
+        <td width="33%" class="c">
+            {% if type == 'devis' %}
+                <span class="etiq">Devis</span><br><span class="nom">gratuit</span>
+            {% else %}
+                <span class="etiq">Statut</span><br><span class="nom">{{ statut }}</span>
+            {% endif %}
+        </td>
+    </tr>
+</table>
+
+{# ---------------------------------------------------------- prestations - #}
+<h2>Détail{% if type == 'facture' and devisOrigine %} · suite au devis {{ devisOrigine }}{% endif %}</h2>
+<table width="100%" cellpadding="4" cellspacing="0" border="0">
+    <tr class="th">
+        <td width="46%">Désignation</td>
+        <td width="10%" class="n">Qté</td>
+        <td width="12%" class="c">Unité</td>
+        <td width="14%" class="n">P.U. HT</td>
+        <td width="8%" class="n">TVA</td>
+        <td width="10%" class="n">Total HT</td>
+    </tr>
+    {% for ligne in lignes %}
+        <tr class="ligne">
+            <td>
+                {{ ligne.designation }}
+                {% if ligne.detail %}<br><span class="detail">{{ ligne.detail|nl2br }}</span>{% endif %}
+                {% if ligne.remise > 0 %}<br><span class="detail">Remise {{ ligne.remise|number_format(0, ',', ' ') }} %</span>{% endif %}
+            </td>
+            <td class="n">{{ ligne.quantite|number_format(ligne.quantite == ligne.quantite|round ? 0 : 2, ',', ' ') }}</td>
+            <td class="c">{{ ligne.unite }}</td>
+            <td class="n">{{ ligne.prixUnitaire|number_format(2, ',', ' ') }} €</td>
+            <td class="n">{{ ligne.tauxTva|number_format(0, ',', ' ') }} %</td>
+            <td class="n">{{ ligne.totalHt|number_format(2, ',', ' ') }} €</td>
+        </tr>
+    {% endfor %}
+</table>
+
+{# -------------------------------------------------------------- totaux -- #}
+<br>
+<table width="100%" cellpadding="0" cellspacing="0" border="0">
+    <tr>
+        <td width="55%">
+            {% if franchise %}
+                <span class="mention">TVA non applicable, article 293 B du Code général des impôts.</span>
+            {% endif %}
+        </td>
+        <td width="45%">
+            <table width="100%" cellpadding="3" cellspacing="0" border="0">
+                <tr>
+                    <td>Total HT</td>
+                    <td class="n">{{ totalHt|number_format(2, ',', ' ') }} €</td>
+                </tr>
+                {% for taux, palier in tvaParTaux %}
+                    <tr>
+                        <td>TVA {{ taux|number_format(0, ',', ' ') }} % sur {{ palier.base|number_format(2, ',', ' ') }} €</td>
+                        <td class="n">{{ palier.montant|number_format(2, ',', ' ') }} €</td>
+                    </tr>
+                {% endfor %}
+                <tr class="fort">
+                    <td>Total {% if franchise %}net{% else %}TTC{% endif %}</td>
+                    <td class="n">{{ totalTtc|number_format(2, ',', ' ') }} €</td>
+                </tr>
+                {% if type == 'facture' %}
+                    <tr>
+                        <td>Déjà réglé</td>
+                        <td class="n">{{ regle|number_format(2, ',', ' ') }} €</td>
+                    </tr>
+                    <tr class="{{ reste > 0 ? 'du' : 'paye' }}">
+                        <td><b>{{ reste > 0 ? 'Reste à régler' : 'Soldée' }}</b></td>
+                        <td class="n"><b>{{ reste|number_format(2, ',', ' ') }} €</b></td>
+                    </tr>
+                {% endif %}
+            </table>
+        </td>
+    </tr>
+</table>
+
+{# ------------------------------------------------------------ mentions -- #}
+<br>
+<table width="100%" cellpadding="4" cellspacing="0" border="0" class="bloc">
+    <tr><td>
+        {% if type == 'devis' %}
+            <p class="mention"><b>Validité.</b> Cette offre est valable {{ validite }} jours, soit jusqu'au {{ echeanceLe|date('d/m/Y') }}. Passé ce délai elle doit être reconfirmée.</p>
+            <p class="mention"><b>Règlement.</b> 30 % à la commande, 40 % à la recette intermédiaire, 30 % à la mise en production. Paiement à 30 jours date de facture, par virement.</p>
+        {% else %}
+            <p class="mention"><b>Règlement.</b> À payer avant le {{ echeanceLe|date('d/m/Y') }}{% if moyen %}, par {{ moyen|lower }}{% endif %}.{% if iban %} IBAN : {{ iban }}.{% endif %}</p>
+        {% endif %}
+        <p class="mention"><b>Retard de paiement.</b> Pénalités au taux de {{ penalites }}, exigibles sans rappel préalable dès le lendemain de l'échéance. Indemnité forfaitaire pour frais de recouvrement : 40 €, due par tout client professionnel.</p>
+        <p class="mention"><b>Propriété.</b> Le code source et les droits d'exploitation sont cédés au client au paiement du solde.</p>
+        {% if type == 'devis' %}
+            <p class="mention"><b>Ce devis est gratuit</b> et n'engage à rien tant qu'il n'est pas signé.</p>
+        {% endif %}
+    </td></tr>
+</table>
+
+{% if type == 'devis' %}
+    <br>
+    <table width="100%" cellpadding="4" cellspacing="0" border="0">
+        <tr>
+            <td width="48%" class="bloc">
+                <span class="etiq">Bon pour accord</span><br>
+                <span class="mention">Date et signature du client, précédées de la mention manuscrite « bon pour accord ».</span>
+                <br><br><br><br>
+            </td>
+            <td width="4%"></td>
+            <td width="48%" class="bloc">
+                <span class="etiq">{{ nomEntreprise }}</span><br>
+                <span class="mention">Fait le {{ emisLe|date('d/m/Y') }}<br>Devis n° {{ reference }}</span>
+                <br><br><br><br>
+            </td>
+        </tr>
+    </table>
+{% endif %}
+
+</body>
+</html>

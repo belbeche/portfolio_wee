@@ -86,7 +86,7 @@ class DevisController extends AbstractController
      * @Route("/admin/devis/{id}/reply", name="back_devis_reply")
      * @IsGranted("ROLE_ADMIN")
      */
-    public function reply(Request $request, MailerInterface $mailer, Devis $devis, EntityManagerInterface $entityManager): Response
+    public function reply(Request $request, MailerInterface $mailer, Devis $devis, EntityManagerInterface $entityManager, \App\Service\DocumentPdf $documentPdf): Response
     {
         $form = $this->createForm(ReplyDevisFormType::class, $devis);
         $form->handleRequest($request);
@@ -98,30 +98,19 @@ class DevisController extends AbstractController
             $devis->setStatut('Envoyé');
             $entityManager->flush();
 
-            // Le devis en PDF. On rend un gabarit dedie a mPDF et non la page
-            // web : une page concue pour un navigateur donne un PDF decale,
-            // avec les images en carre rouge et les tableaux qui debordent.
-            $html = $this->renderView('front/devis/devis_pdf.html.twig', [
-                'devis' => $devis,
-            ]);
+            // Un seul chemin pour tous les PDF du site : DocumentPdf. Il porte
+            // le garde-fou sur le nombre de pages, ne serait-ce que pour ne
+            // jamais renvoyer d'un devis de 1362 pages a un client.
+            try {
+                $pdf = $documentPdf->pourDevis($devis);
+            } catch (\Throwable $e) {
+                $this->addFlash('error', 'Le PDF n\'a pas pu etre genere, rien n\'a ete envoye. '.$e->getMessage());
 
-            $reference = 'DEV-'.$devis->getCreatedAt()->format('Y').'-'
-                .strtoupper(substr((string) $devis->getId(), 0, 6));
-            $filename = 'Devis-'.$reference.'.pdf';
+                return $this->redirectToRoute('back_devis_index');
+            }
 
-        // mPDF ne devine pas le format : sans ces reglages il compose en
-        // Lettre americaine avec des marges par defaut, et le gabarit prevu
-        // pour du A4 se retrouve decale.
-        $mpdf = new Mpdf([
-            'format' => 'A4',
-            'margin_top' => 12,
-            'margin_bottom' => 20,
-            'margin_left' => 12,
-            'margin_right' => 12,
-            'default_font' => 'dejavusans',
-        ]);
-            $mpdf->WriteHTML($html);
-            $pdfContent = $mpdf->Output('', 'S');
+            $pdfContent = $pdf['contenu'];
+            $filename = $pdf['nom'];
 
             // Envoi de l'e-mail avec le récapitulatif du devis et le PDF en pièce jointe
             $email = (new TemplatedEmail())

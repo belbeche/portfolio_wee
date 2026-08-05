@@ -69,6 +69,25 @@ final class SecurityHeadersSubscriber implements EventSubscriberInterface
 
         $headers = $response->headers;
 
+        // --- L'administration ne doit JAMAIS etre mise en cache -----------
+        // Sans cela, le navigateur ressert la liste des prospects telle
+        // qu'elle etait avant l'envoi, et Cloudflare peut meme servir une
+        // page d'administration a la place d'une autre. C'est ce qui obligeait
+        // a passer par une fenetre de navigation privee pour voir l'etat reel.
+        $chemin = $request->getPathInfo();
+        $prive = str_starts_with($chemin, '/admin')
+            || str_starts_with($chemin, '/back')
+            || str_starts_with($chemin, '/espace')
+            || str_starts_with($chemin, '/utilisateur');
+
+        if ($prive) {
+            $headers->set('Cache-Control', 'no-store, no-cache, must-revalidate, max-age=0, private');
+            $headers->set('Pragma', 'no-cache');
+            $headers->set('Expires', '0');
+            // Cloudflare respecte cet en-tete et cesse de mettre en cache.
+            $headers->set('CDN-Cache-Control', 'no-store');
+        }
+
         // --- En-têtes valables pour toutes les réponses -------------------
         $headers->set('X-Content-Type-Options', 'nosniff');
         $headers->set('Referrer-Policy', 'strict-origin-when-cross-origin');

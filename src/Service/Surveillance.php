@@ -56,15 +56,21 @@ class Surveillance
      *
      * @return array<int, array{cle: string, libelle: string, ok: bool, detail: string}>
      */
-    public function controler(): array
+    public function controler(bool $leger = false): array
     {
-        return [
+        $controles = [
             $this->controlerBase(),
             $this->controlerDisque(),
             $this->controlerSauvegarde(),
-            $this->controlerHebergement(),
-            $this->controlerEnvois(),
         ];
+
+        if (!$leger) {
+            $controles[] = $this->controlerHebergement();
+        }
+
+        $controles[] = $this->controlerEnvois();
+
+        return $controles;
     }
 
     /**
@@ -73,9 +79,13 @@ class Surveillance
      *
      * @return array{controles: array<int, array<string, mixed>>, alerte: bool, message: string}
      */
-    public function surveiller(bool $forcerAlerte = false): array
+    public function surveiller(bool $forcerAlerte = false, bool $leger = false): array
     {
-        $controles = $this->controler();
+        // En mode leger, on saute le controle de l'hebergement : il demande
+        // une requete HTTP par serveur au panneau, soit plusieurs secondes
+        // pendant lesquelles un processus PHP est immobilise. Acceptable en
+        // ligne de commande, pas derriere chaque page servie a un visiteur.
+        $controles = $this->controler($leger);
 
         $etatActuel = [];
         foreach ($controles as $controle) {

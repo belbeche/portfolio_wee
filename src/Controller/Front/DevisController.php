@@ -159,7 +159,7 @@ class DevisController extends AbstractController
      * @Route("/rgertelecharger-devis/{id}", name="front_download_devis")
      * @IsGranted("ROLE_USER")
      */
-    public function downloadDevis(EntityManagerInterface $entityManager, $id): Response
+    public function downloadDevis(EntityManagerInterface $entityManager, \App\Service\DocumentPdf $documentPdf, $id): Response
     {
         $devis = $entityManager->getRepository(Devis::class)->find($id);
 
@@ -175,28 +175,12 @@ class DevisController extends AbstractController
             throw $this->createAccessDeniedException("Ce devis n'est pas le votre.");
         }
 
-        $html = $this->renderView('front/devis/devis_pdf.html.twig', [
-            'devis' => $devis,
+        $pdf = $documentPdf->pourDevis($devis);
+
+        return new Response($pdf['contenu'], 200, [
+            'Content-Type' => 'application/pdf',
+            'Content-Disposition' => 'attachment; filename="'.$pdf['nom'].'"',
         ]);
-
-        $reference = 'DEV-'.$devis->getCreatedAt()->format('Y').'-'
-            .strtoupper(substr((string) $devis->getId(), 0, 6));
-
-        // mPDF ne devine pas le format : sans ces reglages il compose en
-        // Lettre americaine avec des marges par defaut, et le gabarit prevu
-        // pour du A4 se retrouve decale.
-        $mpdf = new Mpdf([
-            'format' => 'A4',
-            'margin_top' => 12,
-            'margin_bottom' => 20,
-            'margin_left' => 12,
-            'margin_right' => 12,
-            'default_font' => 'dejavusans',
-        ]);
-        $mpdf->WriteHTML($html);
-        $mpdf->Output('Devis-'.$reference.'.pdf', 'D');
-
-        return new Response();
     }
 
     /**

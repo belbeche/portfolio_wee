@@ -85,12 +85,113 @@ class Devis
      */
     private Collection $attentesDesignWeb;
 
+    /**
+     * Le decompte detaille, ligne par ligne.
+     *
+     * @ORM\OneToMany(targetEntity=DevisLigne::class, mappedBy="devis", cascade={"persist", "remove"}, orphanRemoval=true)
+     * @ORM\OrderBy({"position" = "ASC", "id" = "ASC"})
+     */
+    private Collection $lignes;
+
     public function __construct()
     {
         $this->created_at = new DateTimeImmutable('now', new \DateTimeZone('Europe/Paris'));
         $this->messages = new ArrayCollection();
         $this->tickets = new ArrayCollection();
         $this->attentesDesignWeb = new ArrayCollection();
+        $this->lignes = new ArrayCollection();
+    }
+
+    /** @return Collection<int, DevisLigne> */
+    public function getLignes(): Collection
+    {
+        return $this->lignes;
+    }
+
+    public function addLigne(DevisLigne $ligne): self
+    {
+        if (!$this->lignes->contains($ligne)) {
+            $this->lignes->add($ligne);
+            $ligne->setDevis($this);
+        }
+
+        return $this;
+    }
+
+    public function removeLigne(DevisLigne $ligne): self
+    {
+        if ($this->lignes->removeElement($ligne) && $ligne->getDevis() === $this) {
+            $ligne->setDevis(null);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Total hors taxes.
+     *
+     * Tant qu'aucune ligne n'existe, on retombe sur l'ancien champ prix :
+     * les devis deja envoyes continuent de s'afficher correctement.
+     */
+    public function getTotalHt(): float
+    {
+        if ($this->lignes->isEmpty()) {
+            return (float) ($this->prix ?: 0);
+        }
+
+        $total = 0.0;
+        foreach ($this->lignes as $ligne) {
+            $total += $ligne->getTotalHt();
+        }
+
+        return round($total, 2);
+    }
+
+    public function getMontantTva(): float
+    {
+        if ($this->lignes->isEmpty()) {
+            return 0.0; // le taux est alors applique par le gabarit
+        }
+
+        $total = 0.0;
+        foreach ($this->lignes as $ligne) {
+            $total += $ligne->getMontantTva();
+        }
+
+        return round($total, 2);
+    }
+
+    public function getTotalTtc(): float
+    {
+        return round($this->getTotalHt() + $this->getMontantTva(), 2);
+    }
+
+    /**
+     * La TVA regroupee par taux : un devis peut melanger 20 % et 0 %, et la
+     * facture doit alors detailler chaque base d'imposition separement.
+     *
+     * @return array<string, array{base: float, montant: float}>
+     */
+    public function getTvaParTaux(): array
+    {
+        $paliers = [];
+        foreach ($this->lignes as $ligne) {
+            $taux = number_format((float) $ligne->getTauxTva(), 2, '.', '');
+            if (!isset($paliers[$taux])) {
+                $paliers[$taux] = ['base' => 0.0, 'montant' => 0.0];
+            }
+            $paliers[$taux]['base'] += $ligne->getTotalHt();
+            $paliers[$taux]['montant'] += $ligne->getMontantTva();
+        }
+        ksort($paliers);
+
+        return $paliers;
+    }
+
+    /** La reference lisible, celle que l'on cite au telephone. */
+    public function getReference(): string
+    {
+        return 'DEV-'.$this->created_at->format('Y').'-'.strtoupper(substr((string) $this->id, 0, 6));
     }
 
     public function getId(): ?Uuid
