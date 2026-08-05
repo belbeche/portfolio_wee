@@ -29,7 +29,9 @@ class SauvegardeCommand extends Command
 
     protected function configure(): void
     {
-        $this->addOption('lister', null, InputOption::VALUE_NONE, 'Affiche les archives existantes sans en creer une nouvelle');
+        $this
+            ->addOption('lister', null, InputOption::VALUE_NONE, 'Affiche les archives existantes sans en creer une nouvelle')
+            ->addOption('si-necessaire', null, InputOption::VALUE_NONE, 'Ne sauvegarde que si la derniere date de plus de 20 h');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -54,6 +56,17 @@ class SauvegardeCommand extends Command
             );
 
             return Command::SUCCESS;
+        }
+
+        // Utilise au demarrage du conteneur : sans ce garde-fou, trois
+        // redemarrages dans la journee font trois archives pour rien.
+        if ($input->getOption('si-necessaire')) {
+            $age = $this->sauvegarde->ageDerniereEnHeures();
+            if (null !== $age && $age < 20) {
+                $io->text(sprintf('Derniere sauvegarde il y a %s h : rien a faire.', $age));
+
+                return Command::SUCCESS;
+            }
         }
 
         try {
