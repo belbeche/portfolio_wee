@@ -129,7 +129,7 @@ class HomeController extends AbstractController
         $resume = $cache->get('supervision_publique', function (ItemInterface $item) use ($pterodactyl) {
             $item->expiresAfter(120);
 
-            return $pterodactyl->publicSummary(30);
+            return $pterodactyl->publicSummary(12);
         });
 
         $reponse = new JsonResponse($resume);

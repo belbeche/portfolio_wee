@@ -1921,3 +1921,115 @@ html.wb-portail-ouvert { overflow: hidden; }
     .wb-reveal, .wb-entree { opacity: 1 !important; transform: none !important; }
     .wb-portail__fond { animation: none; }
 }
+
+/* ====================================================== CORRECTIFS 08/2026 ==
+   1. Le surlignage doré affichait un texte gris
+   -------------------------------------------------------------------------
+   La regle « .wb-hero span » colorait TOUS les spans du bandeau en gris
+   secondaire. Le mot surligne est un span : il passait donc en gris alors
+   que la ligne autour restait blanche. La couleur du titre doit gagner.
+   ========================================================================= */
+.wb-mark,
+.wb-hero .wb-mark,
+.wb-page-top .wb-mark,
+.wb-section--ink .wb-mark { color: inherit !important; }
+
+/* Le trait se dessine de gauche a droite a l'arrivee. Sans JavaScript la
+   classe is-entre n'existe pas : le trait est alors simplement deja tire,
+   jamais absent. */
+.wb-hero.is-entre .wb-mark:after {
+    animation: wb-trait 1s cubic-bezier(.22, .61, .36, 1) .75s both;
+    transform-origin: left center;
+}
+@keyframes wb-trait {
+    from { transform: scaleX(0); }
+    to   { transform: scaleX(1); }
+}
+
+/* 2. Corps d'article : l'editeur ecrit des couleurs en dur dans le HTML
+   -------------------------------------------------------------------------
+   Un style pose directement sur la balise bat n'importe quel selecteur.
+   Seul !important reprend la main, et uniquement a l'interieur d'un article.
+   ========================================================================= */
+.wb-article p,
+.wb-article li,
+.wb-article span,
+.wb-article div,
+.wb-article td {
+    color: #33415a !important;
+    background: none !important;
+}
+.wb-article h1, .wb-article h2, .wb-article h3,
+.wb-article h4, .wb-article h5, .wb-article h6,
+.wb-article strong, .wb-article b { color: var(--wb-text) !important; }
+.wb-article a, .wb-article a span { color: var(--wb-blue) !important; }
+.wb-article blockquote p { color: #45536e !important; }
+/* Les tailles collees par l'editeur cassaient le rythme de lecture. */
+.wb-article p, .wb-article li { font-size: 1.06rem !important; line-height: 1.75 !important; }
+
+/* 3. Bandeau d'accueil : plein ecran sans jamais deborder
+   -------------------------------------------------------------------------
+   svh au lieu de vh : sur mobile, vh compte la barre d'adresse qui se
+   retracte, ce qui fait depasser le contenu d'une centaine de pixels.
+   Sous 992 px la hauteur redevient libre : le titre et le formulaire
+   empiles sont plus hauts qu'un ecran, les forcer creerait un debordement.
+   ========================================================================= */
+.wb-hero--accueil {
+    display: flex;
+    align-items: center;
+    min-height: 92vh;
+    min-height: min(92svh, 920px);
+    padding-bottom: clamp(5rem, 9vh, 8rem);
+}
+.wb-hero--accueil > .container { width: 100%; }
+
+@media (max-width: 991.98px) {
+    .wb-hero--accueil {
+        display: block;
+        min-height: 0;
+        padding-top: clamp(6.5rem, 14vh, 9rem);
+        padding-bottom: clamp(4.5rem, 10vh, 7rem);
+    }
+}
+/* Ecran bas et large (portable pose sur un bureau) : on rend la main, sinon
+   le titre et le formulaire se chevauchent. */
+@media (min-width: 992px) and (max-height: 700px) {
+    .wb-hero--accueil { min-height: 0; padding-bottom: 5rem; }
+}
+
+/* 4. Bande de chiffres : elle repond au survol comme le reste du site. */
+.wb-stats--paper .wb-stat {
+    transition: transform .3s cubic-bezier(.22, .61, .36, 1), box-shadow .3s ease;
+}
+.wb-stats--paper .wb-stat:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 14px 34px rgba(10, 22, 40, .08);
+}
+
+/* 5. Fleche « continuer » : elle dit qu'il y a quelque chose plus bas. */
+.wb-scrollcue {
+    position: absolute;
+    left: 50%;
+    bottom: clamp(4.5rem, 8vh, 6.5rem);
+    transform: translateX(-50%);
+    z-index: 2;
+    display: grid;
+    place-items: center;
+    width: 34px; height: 34px;
+    border-radius: 50%;
+    border: 1px solid rgba(255, 255, 255, .22);
+    color: rgba(255, 255, 255, .7);
+    background: rgba(255, 255, 255, .05);
+    text-decoration: none;
+    animation: wb-cue 2.6s ease-in-out infinite;
+}
+.wb-scrollcue:hover { color: #fff; border-color: var(--wb-gold); }
+@keyframes wb-cue {
+    0%, 100% { transform: translate(-50%, 0); }
+    50%      { transform: translate(-50%, 7px); }
+}
+@media (max-width: 991.98px) { .wb-scrollcue { display: none; } }
+@media (prefers-reduced-motion: reduce) {
+    .wb-scrollcue { animation: none; }
+    .wb-hero.is-entre .wb-mark:after { animation: none; transform: none; }
+}

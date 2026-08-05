@@ -40,3 +40,7 @@ yarn-error.log
 ###> lexik/jwt-authentication-bundle ###
 /config/jwt/*.pem
 ###< lexik/jwt-authentication-bundle ###
+
+# Sauvegardes automatiques et verrous d'entretien : jamais dans le depot.
+/var/sauvegardes/
+/var/verrous/

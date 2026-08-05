@@ -1,0 +1,117 @@
+{% extends 'base_back.html.twig' %}
+
+{% block title %}Maintenance{% endblock %}
+{% block breadcrumb %}Configuration{% endblock %}
+{% block heading %}Maintenance{% endblock %}
+
+{% block topActions %}
+	<form method="post" action="{{ path('back_maintenance_check') }}" style="display:inline;">
+		<input type="hidden" name="_token" value="{{ csrf_token('maintenance_check') }}">
+		<button class="ad-btn ad-btn--ghost">Contrôler et m'envoyer le rapport</button>
+	</form>
+	<form method="post" action="{{ path('back_maintenance_backup') }}" style="display:inline;"
+	      onsubmit="this.querySelector('button').disabled = true; this.querySelector('button').textContent = 'Sauvegarde en cours…'; return true;">
+		<input type="hidden" name="_token" value="{{ csrf_token('maintenance_backup') }}">
+		<button class="ad-btn ad-btn--primary">Sauvegarder maintenant</button>
+	</form>
+{% endblock %}
+
+{% block content %}
+
+{% set enPanne = controles|filter(c => not c.ok)|length %}
+
+<section class="ad-card" style="margin-bottom:1rem;border-color:{{ enPanne > 0 ? '#e34948' : '#35d07f' }};" data-tone="light">
+	<div class="ad-card__head">
+		<h2>État du site</h2>
+		<span class="ad-tag ad-tag--{{ enPanne > 0 ? 'red' : 'green' }}">
+			{{ enPanne > 0 ? enPanne ~ ' point(s) à voir' : 'tout est vert' }}
+		</span>
+	</div>
+	<div class="ad-card__body">
+		<table class="ad-table">
+			<thead>
+				<tr><th>Contrôle</th><th>État</th><th>Détail</th></tr>
+			</thead>
+			<tbody>
+				{% for controle in controles %}
+					<tr>
+						<td data-libelle="Contrôle"><strong>{{ controle.libelle }}</strong></td>
+						<td data-libelle="État">
+							<span class="ad-tag ad-tag--{{ controle.ok ? 'green' : 'red' }}">{{ controle.ok ? 'OK' : 'Alerte' }}</span>
+						</td>
+						<td data-libelle="Détail" style="font-size:.84rem;">{{ controle.detail }}</td>
+					</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+
+		<p style="margin:1rem 0 0;font-size:.82rem;color:var(--ad-text-3);max-width:78ch;">
+			Ces contrôles tournent tout seuls, environ toutes les quinze minutes, juste après
+			qu'une page a été servie à un visiteur. Personne n'attend derrière.
+			{% if dernierControle %}
+				Dernier passage automatique le {{ dernierControle|date('d/m/Y à H:i') }}.
+			{% else %}
+				Aucun passage automatique enregistré pour l'instant.
+			{% endif %}
+			Tu ne reçois un e-mail que lorsqu'un point <em>change</em> d'état : une panne qui
+			dure ne te réécrit pas toutes les quinze minutes, et son retour à la normale
+			t'envoie un dernier message.
+		</p>
+	</div>
+</section>
+
+<section class="ad-card" data-tone="light">
+	<div class="ad-card__head">
+		<h2>Sauvegardes</h2>
+		<span class="ad-tag">{{ archives|length }} / {{ aConserver }}</span>
+	</div>
+	<div class="ad-card__body">
+		<p style="margin:0 0 1rem;font-size:.84rem;color:var(--ad-text-3);max-width:78ch;">
+			Une archive par jour, créée automatiquement. Chacune contient l'export SQL complet
+			de la base et le contenu du dossier des fichiers envoyés. Les {{ aConserver }} plus
+			récentes sont gardées, les plus anciennes s'effacent seules pour ne pas remplir le disque.
+			<strong style="color:var(--ad-text);">Télécharge-en une de temps en temps</strong> :
+			une sauvegarde qui ne vit que sur le serveur qu'elle protège ne protège pas de grand-chose.
+		</p>
+
+		{% if archives|length > 0 %}
+			<table class="ad-table">
+				<thead>
+					<tr><th>Archive</th><th>Taille</th><th>Date</th><th>Actions</th></tr>
+				</thead>
+				<tbody>
+					{% for archive in archives %}
+						<tr>
+							<td data-libelle="Archive" style="font-size:.84rem;">
+								{{ archive.nom }}
+								{% if loop.first %}<span class="ad-tag ad-tag--green" style="margin-left:.4rem;">la plus récente</span>{% endif %}
+							</td>
+							<td data-libelle="Taille" class="num">{{ (archive.octets / 1048576)|number_format(1, ',', ' ') }} Mo</td>
+							<td data-libelle="Date" style="white-space:nowrap;">{{ archive.date|date('d/m/Y à H:i') }}</td>
+							<td data-libelle="Actions">
+								<div style="display:flex;gap:.4rem;flex-wrap:wrap;">
+									<a href="{{ path('back_maintenance_download', {nom: archive.nom}) }}" class="ad-btn ad-btn--ghost ad-btn--sm">Télécharger</a>
+									<form method="post" action="{{ path('back_maintenance_delete', {nom: archive.nom}) }}"
+									      onsubmit="return confirm('Supprimer {{ archive.nom|e('js') }} ?');">
+										<input type="hidden" name="_token" value="{{ csrf_token('maintenance_delete_' ~ archive.nom) }}">
+										<button class="ad-btn ad-btn--danger ad-btn--sm">Supprimer</button>
+									</form>
+								</div>
+							</td>
+						</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		{% else %}
+			<div class="ad-empty">
+				<h3>Aucune sauvegarde pour l'instant</h3>
+				<p style="margin:0;font-size:.86rem;">
+					La première partira toute seule dans les prochaines heures. Tu peux aussi
+					cliquer « Sauvegarder maintenant » pour en avoir une tout de suite.
+				</p>
+			</div>
+		{% endif %}
+	</div>
+</section>
+
+{% endblock %}

@@ -101,7 +101,9 @@ class SettingController extends AbstractController
             $version + 1
         ));
 
-        return $this->redirectToRoute('back_settings');
+        // rechargement=1 declenche, au retour, la purge du cache du navigateur
+        // et du service worker, puis un rechargement force de la page.
+        return $this->redirectToRoute('back_settings', ['rechargement' => 1]);
     }
 
     /**
@@ -210,6 +212,9 @@ class SettingController extends AbstractController
             $this->addFlash('error', 'Certains fichiers n\'ont pas pu etre supprimes : '.implode(' | ', array_slice(array_unique($erreurs), 0, 2)));
         }
 
-        return $this->redirectToRoute('back_settings');
+        // Vider le cache du serveur ne sert a rien si le navigateur, lui,
+        // ressert sa copie. rechargement=1 fait purger le cache du navigateur
+        // et le service worker au retour, puis recharge la page.
+        return $this->redirectToRoute('back_settings', ['rechargement' => 1]);
     }
 }

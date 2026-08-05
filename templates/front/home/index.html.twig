@@ -126,7 +126,7 @@
     {% endfor %}
 {% endfor %}
 
-<section class="wb-hero wb-slant" data-tone="dark">
+<section class="wb-hero wb-hero--accueil wb-slant" data-tone="dark">
     <div class="container">
         <div class="row align-items-center g-5">
 
@@ -183,10 +183,14 @@
 
         </div>
     </div>
+    <a href="#chiffres" class="wb-scrollcue" aria-label="{{ en ? 'Continue' : 'Continuer' }}">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"
+             stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+    </a>
 </section>
 
 {# ------------------------------------------------------------ chiffres -- #}
-<section class="wb-section--tight" style="background: var(--wb-paper);">
+<section class="wb-section--tight" id="chiffres" style="background: var(--wb-paper);">
     <div class="container">
         <div class="wb-stats wb-stats--paper">
             <div class="wb-stat"><div class="wb-stat__n">12</div><div class="wb-stat__l">{{ 'home.stat_years'|trans }}<br>{{ 'home.stat_years_2'|trans }}</div></div>

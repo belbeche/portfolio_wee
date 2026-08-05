@@ -3,6 +3,64 @@
 {% block title %}Paramètres{% endblock %}
 
 {% block content %}
+
+{# --------------------------------------------------- purge du navigateur --
+   Vider le cache du serveur ne sert a rien si le navigateur ressert sa
+   copie, et le service worker de la PWA garde lui aussi les fichiers.
+   Cette sequence supprime les deux, puis recharge la page proprement. #}
+{% if app.request.query.get('rechargement') %}
+<div class="ad-card" style="margin-bottom:1rem;border-color:#f5b301;" data-tone="light">
+    <div class="ad-card__body" style="display:flex;align-items:center;gap:.7rem;">
+        <span class="ad-tag ad-tag--gold">en cours</span>
+        <span id="wb-purge-etat" style="font-size:.9rem;">Purge du cache de ce navigateur, puis rechargement…</span>
+    </div>
+</div>
+<script>
+(function () {
+	var etat = document.getElementById('wb-purge-etat');
+	var propre = {{ path('back_settings')|json_encode|raw }} + '?vide=1';
+
+	function dire(t) { if (etat) { etat.textContent = t; } }
+
+	function terminer() {
+		dire('Rechargement…');
+		// replace et non href : le bouton Retour ne rejoue pas la purge.
+		setTimeout(function () { window.location.replace(propre); }, 350);
+	}
+
+	var travaux = [];
+
+	// 1. Le Cache Storage de la PWA, qui sert les fichiers hors ligne.
+	if (window.caches && caches.keys) {
+		travaux.push(caches.keys().then(function (noms) {
+			return Promise.all(noms.map(function (n) { return caches.delete(n); }));
+		}).catch(function () {}));
+	}
+
+	// 2. Le service worker lui-meme : on lui demande sa version a jour.
+	if (navigator.serviceWorker && navigator.serviceWorker.getRegistrations) {
+		travaux.push(navigator.serviceWorker.getRegistrations().then(function (regs) {
+			return Promise.all(regs.map(function (r) { return r.update().catch(function () {}); }));
+		}).catch(function () {}));
+	}
+
+	// Filet de securite : si une promesse ne revient jamais, on recharge quand meme.
+	var secours = setTimeout(terminer, 3500);
+	Promise.all(travaux).then(function () { clearTimeout(secours); terminer(); });
+})();
+</script>
+{% elseif app.request.query.get('vide') %}
+<div class="ad-card" style="margin-bottom:1rem;border-color:#35d07f;" data-tone="light">
+    <div class="ad-card__body" style="display:flex;align-items:center;gap:.7rem;flex-wrap:wrap;">
+        <span class="ad-tag ad-tag--green">terminé</span>
+        <span style="font-size:.9rem;">
+            Cache du serveur vidé, cache de ce navigateur et service worker purgés,
+            page rechargée. Tu regardes bien la dernière version.
+        </span>
+    </div>
+</div>
+{% endif %}
+
 <div class="ad-head">
     <div>
         <h1 class="ad-title">Paramètres de l'application</h1>
