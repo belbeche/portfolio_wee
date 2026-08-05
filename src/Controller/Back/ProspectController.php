@@ -5,6 +5,8 @@ namespace App\Controller\Back;
 use App\Entity\Prospect;
 use App\Form\ProspectType;
 use Symfony\Component\Mime\Email;
+use App\Entity\ProspectNote;
+use App\Repository\ProspectNoteRepository;
 use App\Repository\ProspectRepository;
 use App\Service\ProspectOutreach;
 use Doctrine\ORM\EntityManagerInterface;
@@ -30,6 +32,37 @@ class ProspectController extends AbstractController
             'waveCandidates' => $outreach->firstContactCandidates(),
             'dueFollowUps' => $outreach->dueFollowUps(),
             'waveMax' => 5,
+        ]);
+    }
+
+    /**
+     * L'historique complet des e-mails de prospection.
+     *
+     * On y trouve aussi bien les envois partis que les envois refuses, avec
+     * l'erreur exacte renvoyee par le serveur d'envoi. C'est la page a ouvrir
+     * quand on se demande "est-ce que ce prospect a vraiment recu quelque
+     * chose", sans avoir a ouvrir le journal de chacun un par un.
+     *
+     * @Route("/admin/prospects/historique", name="back_prospect_history", methods={"GET"})
+     */
+    public function history(ProspectNoteRepository $notes): Response
+    {
+        $lignes = $notes->findEmailHistory(300);
+
+        $partis = 0;
+        $refuses = 0;
+        foreach ($lignes as $ligne) {
+            if (ProspectNote::TYPE_EMAIL_ECHEC === $ligne->getType()) {
+                ++$refuses;
+            } else {
+                ++$partis;
+            }
+        }
+
+        return $this->render('back/prospect/historique.html.twig', [
+            'lignes' => $lignes,
+            'partis' => $partis,
+            'refuses' => $refuses,
         ]);
     }
 

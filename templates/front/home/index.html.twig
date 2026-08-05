@@ -138,6 +138,117 @@
     </div>
 </section>
 
+{# --------------------------------------------------- supervision en direct -- #}
+{# Le bandeau reste cache tant que l'API n'a pas repondu : mieux vaut aucune
+   section qu'une section a zero serveur. Les chiffres sont anonymes, aucun
+   nom de client ne sort de l'API publique. #}
+<section class="wb-section wb-live" data-tone="dark" id="wb-live" hidden>
+    <div class="container">
+        <div class="row g-4 align-items-center">
+            <div class="col-lg-5">
+                <span class="wb-eyebrow">
+                    <span class="wb-live__pulse" aria-hidden="true"></span>
+                    {{ en ? 'Live monitoring' : 'Supervision en direct' }}
+                </span>
+                <h2 class="wb-h2">
+                    {{ en ? 'Your servers are watched' : 'Vos serveurs sont surveillés' }}<br>
+                    {{ en ? 'while you sleep.' : 'pendant que vous dormez.' }}
+                </h2>
+                <p class="wb-lead wb-lead--on-dark">
+                    {{ en
+                        ? 'Every project I host is monitored around the clock. These figures come straight from the panel, refreshed every thirty seconds. Nothing here is a mockup.'
+                        : "Chaque projet que j'héberge est surveillé en continu. Ces chiffres viennent directement du panneau, rafraîchis toutes les trente secondes. Rien ici n'est une maquette." }}
+                </p>
+                <a href="{{ url('front_commencer') }}" class="wb-btn wb-btn--ghost mt-2">
+                    {{ en ? 'Have your project hosted' : 'Faire héberger votre projet' }}
+                </a>
+            </div>
+
+            <div class="col-lg-7">
+                <div class="wb-live__grid">
+                    <div class="wb-live__tile">
+                        <div class="wb-live__n" data-live="enLigne">0</div>
+                        <div class="wb-live__l">
+                            <span class="wb-live__dot" aria-hidden="true"></span>
+                            {{ en ? 'servers online' : 'serveurs en ligne' }}
+                        </div>
+                    </div>
+                    <div class="wb-live__tile">
+                        <div class="wb-live__n" data-live="total">0</div>
+                        <div class="wb-live__l">{{ en ? 'under supervision' : 'sous supervision' }}</div>
+                    </div>
+                    <div class="wb-live__tile">
+                        <div class="wb-live__n"><span data-live="cpu">0</span><small>%</small></div>
+                        <div class="wb-live__l">{{ en ? 'average CPU load' : 'charge processeur moyenne' }}</div>
+                    </div>
+                    <div class="wb-live__tile">
+                        <div class="wb-live__n"><span data-live="memoire">0</span><small>Mo</small></div>
+                        <div class="wb-live__l">{{ en ? 'memory in use' : 'mémoire utilisée' }}</div>
+                    </div>
+                </div>
+                <p class="wb-live__foot">
+                    {{ en ? 'Last check' : 'Dernière vérification' }}
+                    <strong data-live="quand">--:--:--</strong>
+                    <span class="wb-live__sep">·</span>
+                    {{ en ? 'refreshed every 30 seconds' : 'rafraîchi toutes les 30 secondes' }}
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+(function () {
+	var bloc = document.getElementById('wb-live');
+	if (!bloc) { return; }
+
+	var champs = {};
+	bloc.querySelectorAll('[data-live]').forEach(function (n) { champs[n.dataset.live] = n; });
+
+	// Compteur anime : le chiffre monte au lieu d'apparaitre sec. C'est ce qui
+	// donne la sensation de direct, sans clignotement a chaque rafraichissement.
+	function poser(noeud, valeur) {
+		if (!noeud) { return; }
+		var depart = parseFloat(noeud.textContent.replace(',', '.')) || 0;
+		var arrivee = Number(valeur) || 0;
+		if (depart === arrivee) { return; }
+		var debut = null;
+		var decimales = arrivee % 1 !== 0 ? 1 : 0;
+		function pas(t) {
+			if (debut === null) { debut = t; }
+			var k = Math.min(1, (t - debut) / 700);
+			k = 1 - Math.pow(1 - k, 3);
+			noeud.textContent = (depart + (arrivee - depart) * k).toFixed(decimales);
+			if (k < 1) { requestAnimationFrame(pas); }
+		}
+		requestAnimationFrame(pas);
+	}
+
+	function relever() {
+		fetch({{ path('api_supervision_public')|json_encode|raw }}, { headers: { 'Accept': 'application/json' } })
+			.then(function (r) { return r.json(); })
+			.then(function (d) {
+				if (!d || !d.configure || !d.total) { return; }
+				bloc.hidden = false;
+				poser(champs.enLigne, d.enLigne);
+				poser(champs.total, d.total);
+				poser(champs.cpu, d.cpu);
+				poser(champs.memoire, d.memoireMo);
+				if (champs.quand) {
+					champs.quand.textContent = new Date(d.verifieA).toLocaleTimeString();
+				}
+			})
+			.catch(function () { /* panneau injoignable : le bandeau reste tel quel */ });
+	}
+
+	relever();
+	// L'onglet en arriere-plan n'interroge rien : inutile de solliciter le
+	// panneau pour une page que personne ne regarde.
+	setInterval(function () { if (!document.hidden) { relever(); } }, 30000);
+	document.addEventListener('visibilitychange', function () { if (!document.hidden) { relever(); } });
+})();
+</script>
+
 {# ------------------------------------------------------- le vrai probleme -- #}
 <section class="wb-section wb-section--paper" data-tone="light">
     <div class="container">

@@ -1,0 +1,93 @@
+{% extends 'base_back.html.twig' %}
+
+{% block title %}Historique des e-mails{% endblock %}
+{% block breadcrumb %}Prospects{% endblock %}
+{% block heading %}Historique des e-mails{% endblock %}
+
+{% block topActions %}
+	<a href="{{ url('back_prospect_index') }}" class="ad-btn ad-btn--ghost">Retour à la liste</a>
+{% endblock %}
+
+{% block content %}
+
+<section class="ad-card" style="margin-bottom:1rem;" data-tone="light">
+	<div class="ad-card__body">
+		<div style="display:flex;gap:1.4rem;flex-wrap:wrap;align-items:baseline;">
+			<div>
+				<div style="font-size:1.6rem;font-weight:800;line-height:1;">{{ partis }}</div>
+				<div style="font-size:.78rem;color:var(--ad-text-3);">parti(s) et acceptés par le serveur</div>
+			</div>
+			<div>
+				<div style="font-size:1.6rem;font-weight:800;line-height:1;color:{{ refuses > 0 ? '#c0392b' : 'inherit' }};">{{ refuses }}</div>
+				<div style="font-size:.78rem;color:var(--ad-text-3);">refusé(s) par le serveur d'envoi</div>
+			</div>
+		</div>
+		<p style="margin:.9rem 0 0;font-size:.84rem;color:var(--ad-text-3);max-width:70ch;">
+			Un e-mail apparaît ici à la seconde où il part. S'il n'y figure pas, il n'est
+			jamais sorti du serveur, quel que soit ce qu'affichait la barre de progression.
+			Un refus ne marque pas le prospect comme contacté : il repartira au prochain essai.
+		</p>
+	</div>
+</section>
+
+<section class="ad-card" data-tone="light">
+	<div class="ad-card__head">
+		<h2>300 derniers envois</h2>
+		<span class="ad-tag">{{ lignes|length }} ligne(s)</span>
+	</div>
+
+	{% if lignes|length > 0 %}
+		<div class="ad-card__body" style="padding-top:0;">
+			<table class="ad-table">
+				<thead>
+					<tr>
+						<th>Date</th>
+						<th>Prospect</th>
+						<th>Adresse</th>
+						<th>Résultat</th>
+						<th>Détail</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for ligne in lignes %}
+						<tr>
+							<td data-libelle="Date" style="white-space:nowrap;">
+								{{ ligne.createdAt ? ligne.createdAt|date('d/m/Y à H:i') : '-' }}
+							</td>
+							<td data-libelle="Prospect">
+								{% if ligne.prospect %}
+									<a href="{{ url('back_prospect_notes', {id: ligne.prospect.id}) }}">
+										{{ ligne.prospect.company ?: ligne.prospect.email }}
+									</a>
+								{% else %}
+									<span style="color:var(--ad-text-3);">fiche supprimée</span>
+								{% endif %}
+							</td>
+							<td data-libelle="Adresse" style="font-size:.82rem;">
+								{{ ligne.prospect ? ligne.prospect.email : '-' }}
+							</td>
+							<td data-libelle="Résultat">
+								<span class="ad-tag ad-tag--{{ ligne.tone }}">{{ ligne.typeLabel }}</span>
+							</td>
+							<td data-libelle="Détail" style="font-size:.8rem;white-space:pre-line;max-width:52ch;">
+								{{ ligne.content }}
+							</td>
+						</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
+	{% else %}
+		<div class="ad-card__body">
+			<div class="ad-empty">
+				<h3>Aucun e-mail enregistré</h3>
+				<p style="margin:0;font-size:.86rem;">
+					Aucun e-mail de prospection n'est encore parti depuis ce site. Dès le
+					premier envoi, réussi ou refusé, il apparaîtra ici avec son horodatage.
+				</p>
+			</div>
+		</div>
+	{% endif %}
+</section>
+
+{% endblock %}

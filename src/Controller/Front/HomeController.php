@@ -20,6 +20,8 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Contracts\Cache\CacheInterface;
+use Symfony\Contracts\Cache\ItemInterface;
 
 class HomeController extends AbstractController
 {
@@ -102,6 +104,37 @@ class HomeController extends AbstractController
         ]);
     }
 
+
+    /**
+     * Resume public de la supervision, pour le bandeau temps reel de l'accueil.
+     *
+     * Volontairement anonyme : des compteurs, rien d'autre. Aucun nom de
+     * serveur ni identifiant ne sort d'ici, un visiteur ne peut donc rien
+     * deduire des clients heberges.
+     *
+     * Le resultat est mis en cache deux minutes. Sans cela, chaque visite de
+     * l'accueil declencherait une rafale d'appels au panneau, et un robot
+     * suffirait a le faire tomber.
+     *
+     * @Route("/api/supervision", name="api_supervision_public", methods={"GET"})
+     */
+    public function supervisionPublique(\App\Service\PterodactylService $pterodactyl, CacheInterface $cache): JsonResponse
+    {
+        $resume = $cache->get('supervision_publique', function (ItemInterface $item) use ($pterodactyl) {
+            $item->expiresAfter(120);
+
+            return $pterodactyl->publicSummary(30);
+        });
+
+        $reponse = new JsonResponse($resume);
+        // Deux minutes de cache navigateur et CDN : meme logique que le cache
+        // serveur, pour que Cloudflare absorbe l'essentiel du trafic.
+        $reponse->setPublic();
+        $reponse->setMaxAge(120);
+        $reponse->headers->addCacheControlDirective('s-maxage', 120);
+
+        return $reponse;
+    }
 
     /**
      * @Route("/a-propos", name="front_about")

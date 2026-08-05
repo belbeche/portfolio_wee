@@ -30,6 +30,13 @@ class ProspectNote
     ];
 
     /**
+     * Type pose par le systeme, jamais proposé dans le formulaire : un envoi
+     * qui a echoue. Il garde la trace de l'erreur exacte du serveur d'envoi
+     * sans jamais compter comme un contact, donc le prospect reste candidat.
+     */
+    public const TYPE_EMAIL_ECHEC = 'email-echec';
+
+    /**
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
@@ -76,7 +83,14 @@ class ProspectNote
 
     public function getType(): string { return $this->type; }
     public function setType(string $type): self { $this->type = $type; return $this; }
-    public function getTypeLabel(): string { return self::TYPES[$this->type] ?? $this->type; }
+    public function getTypeLabel(): string
+    {
+        if (self::TYPE_EMAIL_ECHEC === $this->type) {
+            return 'E-mail refuse';
+        }
+
+        return self::TYPES[$this->type] ?? $this->type;
+    }
 
     public function getContent(): ?string { return $this->content; }
     public function setContent(string $content): self { $this->content = $content; return $this; }
@@ -96,6 +110,7 @@ class ProspectNote
             'proposition' => 'violet',
             'refus' => 'red',
             'email' => 'gold',
+            self::TYPE_EMAIL_ECHEC => 'red',
         ][$this->type] ?? 'muted';
     }
 }

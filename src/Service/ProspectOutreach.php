@@ -163,6 +163,12 @@ class ProspectOutreach
         try {
             $this->mailer->send($email);
         } catch (\Exception $e) {
+            // Un echec laisse une trace, sinon il est invisible : la page
+            // affiche le detail quelques secondes puis il est perdu. Le type
+            // email-echec n'est PAS compte comme un contact, donc le prospect
+            // reste candidat au prochain essai.
+            $this->traceEchec($prospect, $sujet, $e->getMessage());
+
             return $e->getMessage();
         }
 
@@ -179,6 +185,31 @@ class ProspectOutreach
         $this->em->flush();
 
         return null;
+    }
+
+    /**
+     * Ecrit l'echec dans le journal du prospect, avec l'erreur brute du
+     * serveur d'envoi. C'est ce qui permet de repondre a la question
+     * "pourquoi rien ne part" une heure apres, sans relire les logs nginx.
+     */
+    private function traceEchec(Prospect $prospect, string $sujet, string $erreur): void
+    {
+        try {
+            $note = (new ProspectNote())
+                ->setProspect($prospect)
+                ->setType(ProspectNote::TYPE_EMAIL_ECHEC)
+                ->setContent(sprintf(
+                    "Envoi refuse. Sujet : %s\nErreur du serveur : %s",
+                    $sujet,
+                    mb_substr($erreur, 0, 900)
+                ));
+            $this->em->persist($note);
+            $this->em->flush();
+        } catch (\Throwable $e) {
+            // Le traçage ne doit jamais casser la vague : si la base refuse
+            // cette note, l'erreur d'envoi reste renvoyee a l'appelant.
+            error_log('[prospect] trace d\'echec impossible : '.$e->getMessage());
+        }
     }
 
     /**

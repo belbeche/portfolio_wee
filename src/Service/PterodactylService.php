@@ -117,6 +117,56 @@ class PterodactylService
     }
 
     /**
+     * Resume anonyme, destine a la page d'accueil publique.
+     *
+     * Aucun nom de serveur, aucune description, aucun identifiant : un
+     * visiteur ne doit rien pouvoir deduire des clients heberges. Seulement
+     * des compteurs, qui suffisent a montrer que la supervision est reelle.
+     *
+     * @return array{configure: bool, total: int, enLigne: int, cpu: float|null, memoireMo: int|null, verifieA: string}
+     */
+    public function publicSummary(int $maxServers = 30): array
+    {
+        $vide = [
+            'configure' => false,
+            'total' => 0,
+            'enLigne' => 0,
+            'cpu' => null,
+            'memoireMo' => null,
+            'verifieA' => (new \DateTime())->format('c'),
+        ];
+
+        if (!$this->isConfigured()) {
+            return $vide;
+        }
+
+        $serveurs = $this->getServersWithUsage($maxServers);
+        if ([] === $serveurs) {
+            return $vide;
+        }
+
+        $enLigne = 0;
+        $cpu = 0.0;
+        $memoire = 0;
+        foreach ($serveurs as $serveur) {
+            if ('running' === ($serveur['status'] ?? null)) {
+                ++$enLigne;
+            }
+            $cpu += (float) ($serveur['usage']['cpu_percent'] ?? 0);
+            $memoire += (int) ($serveur['usage']['memory_mb'] ?? 0);
+        }
+
+        return [
+            'configure' => true,
+            'total' => count($serveurs),
+            'enLigne' => $enLigne,
+            'cpu' => round($cpu / max(1, count($serveurs)), 1),
+            'memoireMo' => $memoire,
+            'verifieA' => (new \DateTime())->format('c'),
+        ];
+    }
+
+    /**
      * Sous-ensemble visible par un client du site : les serveurs dont la
      * description contient son adresse e-mail. C'est la convention de
      * rattachement : sur le panneau, mets l'e-mail du client dans la

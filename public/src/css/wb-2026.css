@@ -1535,3 +1535,99 @@ section.bg-dark .small, section.bg-primary .small,
 .wb-article { max-width: 68ch; margin-left: auto; margin-right: auto; }
 .wb-article h2 { margin-top: 2.6rem !important; }
 .wb-article > p:empty, .wb-article > div:empty { display: none !important; }
+
+/* ============================================================ SUPERVISION ==
+   Bandeau temps reel de l'accueil. Fond encre plus profond que les autres
+   sections sombres : c'est le seul bloc du site qui affiche des donnees
+   vivantes, il doit se distinguer sans crier.
+   ========================================================================= */
+.wb-live {
+    background: radial-gradient(120% 140% at 12% 0%, var(--wb-ink-3) 0%, var(--wb-ink) 58%);
+    color: var(--wb-on-dark);
+    position: relative;
+    overflow: hidden;
+}
+.wb-live:before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: linear-gradient(rgba(255, 255, 255, .04) 1px, transparent 1px),
+                      linear-gradient(90deg, rgba(255, 255, 255, .04) 1px, transparent 1px);
+    background-size: 46px 46px;
+    -webkit-mask-image: radial-gradient(75% 75% at 70% 40%, #000 0%, transparent 100%);
+            mask-image: radial-gradient(75% 75% at 70% 40%, #000 0%, transparent 100%);
+    pointer-events: none;
+}
+.wb-live > .container { position: relative; z-index: 1; }
+
+/* Point qui bat : le seul mouvement permanent de la page. */
+.wb-live__pulse {
+    display: inline-block;
+    width: .5rem; height: .5rem;
+    margin-right: .45rem;
+    border-radius: 50%;
+    background: #35d07f;
+    box-shadow: 0 0 0 0 rgba(53, 208, 127, .7);
+    animation: wb-live-pulse 2.4s infinite;
+    vertical-align: middle;
+}
+@keyframes wb-live-pulse {
+    0%   { box-shadow: 0 0 0 0 rgba(53, 208, 127, .55); }
+    70%  { box-shadow: 0 0 0 .55rem rgba(53, 208, 127, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(53, 208, 127, 0); }
+}
+
+.wb-live__grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: .9rem;
+}
+.wb-live__tile {
+    background: rgba(255, 255, 255, .05);
+    border: 1px solid rgba(255, 255, 255, .10);
+    border-radius: 14px;
+    padding: 1.15rem 1.25rem;
+    backdrop-filter: blur(6px);
+}
+.wb-live__n {
+    font-size: clamp(1.9rem, 4vw, 2.7rem);
+    font-weight: 800;
+    line-height: 1;
+    letter-spacing: -.02em;
+    font-variant-numeric: tabular-nums;
+    color: #fff;
+}
+.wb-live__n small {
+    font-size: .42em;
+    font-weight: 600;
+    margin-left: .22rem;
+    color: var(--wb-gold-soft);
+}
+.wb-live__l {
+    margin-top: .45rem;
+    font-size: .82rem;
+    line-height: 1.35;
+    color: rgba(255, 255, 255, .68);
+}
+.wb-live__dot {
+    display: inline-block;
+    width: .45rem; height: .45rem;
+    margin-right: .35rem;
+    border-radius: 50%;
+    background: #35d07f;
+    vertical-align: middle;
+}
+.wb-live__foot {
+    margin: 1rem 0 0;
+    font-size: .78rem;
+    color: rgba(255, 255, 255, .55);
+}
+.wb-live__foot strong { color: rgba(255, 255, 255, .85); font-weight: 600; }
+.wb-live__sep { margin: 0 .35rem; opacity: .5; }
+
+@media (max-width: 575.98px) {
+    .wb-live__grid { grid-template-columns: 1fr; }
+}
+@media (prefers-reduced-motion: reduce) {
+    .wb-live__pulse { animation: none; }
+}
