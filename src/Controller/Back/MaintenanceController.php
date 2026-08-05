@@ -3,7 +3,6 @@
 namespace App\Controller\Back;
 
 use App\Service\Sauvegarde;
-use App\Service\Settings;
 use App\Service\Surveillance;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -24,24 +23,22 @@ class MaintenanceController extends AbstractController
     /**
      * @Route("", name="back_maintenance", methods={"GET"})
      */
-    public function index(Surveillance $surveillance, Sauvegarde $sauvegarde, Settings $settings): Response
+    public function index(Surveillance $surveillance, Sauvegarde $sauvegarde): Response
     {
-        $dernierControle = (int) $settings->get('surveillance_dernier_passage', '0');
-
         return $this->render('back/maintenance/index.html.twig', [
             // On controle a l'affichage : la page dit l'etat maintenant, pas
             // celui du dernier passage automatique.
             'controles' => $surveillance->controler(),
             'archives' => $sauvegarde->archives(),
             'aConserver' => Sauvegarde::A_CONSERVER,
-            'dernierControle' => $dernierControle > 0 ? (new \DateTime())->setTimestamp($dernierControle) : null,
+            'dernierControle' => $surveillance->dernierPassage(),
         ]);
     }
 
     /**
      * @Route("/sauvegarder", name="back_maintenance_backup", methods={"POST"})
      */
-    public function sauvegarder(Request $request, Sauvegarde $sauvegarde, Settings $settings): Response
+    public function sauvegarder(Request $request, Sauvegarde $sauvegarde): Response
     {
         if (!$this->isCsrfTokenValid('maintenance_backup', (string) $request->request->get('_token'))) {
             $this->addFlash('error', 'Session expiree, reessaie.');
@@ -52,7 +49,6 @@ class MaintenanceController extends AbstractController
         try {
             @set_time_limit(300);
             $chemin = $sauvegarde->creer();
-            $settings->set('sauvegarde_dernier_passage', (string) time());
 
             $this->addFlash('success', sprintf(
                 'Sauvegarde %s creee (%.1f Mo). Les %d plus recentes sont conservees, les autres sont effacees automatiquement.',

@@ -44,3 +44,5 @@ yarn-error.log
 # Sauvegardes automatiques et verrous d'entretien : jamais dans le depot.
 /var/sauvegardes/
 /var/verrous/
+/var/surveillance-etat.json
+/var/derniere-tentative-sauvegarde

@@ -24,6 +24,15 @@ class Sauvegarde
     /** Au-dela de cette taille, une table est exportee par tranches. */
     private const LIGNES_PAR_LOT = 500;
 
+    /**
+     * En dessous de cet espace libre, on ne sauvegarde pas.
+     *
+     * Une sauvegarde qui remplit le disque fait tomber le site et parfois le
+     * serveur de base avec lui. Ce serait le comble : le mecanisme cense
+     * proteger les donnees devenu la cause de la panne.
+     */
+    private const DISQUE_MINI_MO = 400;
+
     private Connection $connexion;
     private string $projectDir;
 
@@ -83,6 +92,26 @@ class Sauvegarde
     {
         if (!class_exists(\ZipArchive::class)) {
             throw new \RuntimeException("L'extension PHP zip est absente : impossible de creer l'archive.");
+        }
+
+        $libre = @disk_free_space($this->projectDir);
+        if (false !== $libre && null !== $libre) {
+            $libreMo = (int) round($libre / 1048576);
+            if ($libreMo < self::DISQUE_MINI_MO) {
+                // On fait d'abord le menage, des fois que ce soient les vieilles
+                // archives qui occupent la place.
+                $this->faireLePlace();
+                $libreMo = (int) round(((float) @disk_free_space($this->projectDir)) / 1048576);
+            }
+
+            if ($libreMo < self::DISQUE_MINI_MO) {
+                throw new \RuntimeException(sprintf(
+                    'Sauvegarde annulee : il ne reste que %d Mo libres (seuil : %d Mo). '
+                    .'Remplir le disque ferait tomber le site, ce qui serait pire que de manquer une sauvegarde.',
+                    $libreMo,
+                    self::DISQUE_MINI_MO
+                ));
+            }
         }
 
         $horodatage = (new \DateTime())->format('Y-m-d_H-i-s');

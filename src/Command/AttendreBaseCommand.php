@@ -38,12 +38,29 @@ class AttendreBaseCommand extends Command
     {
         $this
             ->addOption('timeout', 't', InputOption::VALUE_REQUIRED, 'Duree maximale d\'attente, en secondes', '60')
-            ->addOption('intervalle', 'i', InputOption::VALUE_REQUIRED, 'Secondes entre deux essais', '2');
+            ->addOption('intervalle', 'i', InputOption::VALUE_REQUIRED, 'Secondes entre deux essais', '2')
+            ->addOption('info', null, InputOption::VALUE_NONE, 'Affiche seulement la cible de connexion, sans attendre');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
+
+        // Affiche vers QUOI on essaie de se connecter, mot de passe exclu.
+        // C'est la premiere question a se poser devant un « Connection
+        // refused » : le site vise-t-il seulement le bon serveur ?
+        $p = $this->connexion->getParams();
+        $io->definitionList(
+            ['Hote' => (string) ($p['host'] ?? '(non defini)')],
+            ['Port' => (string) ($p['port'] ?? '(defaut)')],
+            ['Base' => (string) ($p['dbname'] ?? '(non definie)')],
+            ['Utilisateur' => (string) ($p['user'] ?? '(non defini)')],
+            ['Mot de passe' => '' !== (string) ($p['password'] ?? '') ? 'renseigne' : 'VIDE']
+        );
+
+        if ($input->getOption('info')) {
+            return Command::SUCCESS;
+        }
 
         $limite = max(1, (int) $input->getOption('timeout'));
         $intervalle = max(1, (int) $input->getOption('intervalle'));

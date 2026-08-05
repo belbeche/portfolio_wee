@@ -27,7 +27,6 @@ class Surveillance
 
     private Connection $connexion;
     private EntityManagerInterface $em;
-    private Settings $settings;
     private Sauvegarde $sauvegarde;
     private PterodactylService $pterodactyl;
     private MailerInterface $mailer;
@@ -37,7 +36,6 @@ class Surveillance
     public function __construct(
         Connection $connexion,
         EntityManagerInterface $em,
-        Settings $settings,
         Sauvegarde $sauvegarde,
         PterodactylService $pterodactyl,
         MailerInterface $mailer,
@@ -46,7 +44,6 @@ class Surveillance
     ) {
         $this->connexion = $connexion;
         $this->em = $em;
-        $this->settings = $settings;
         $this->sauvegarde = $sauvegarde;
         $this->pterodactyl = $pterodactyl;
         $this->mailer = $mailer;
@@ -85,10 +82,7 @@ class Surveillance
             $etatActuel[$controle['cle']] = $controle['ok'] ? 'ok' : 'ko';
         }
 
-        $etatPrecedent = json_decode((string) $this->settings->get('surveillance_etat', '{}'), true);
-        if (!is_array($etatPrecedent)) {
-            $etatPrecedent = [];
-        }
+        $etatPrecedent = $this->lireEtat();
 
         $tombes = [];
         $revenus = [];
@@ -101,8 +95,7 @@ class Surveillance
             }
         }
 
-        $this->settings->set('surveillance_etat', (string) json_encode($etatActuel));
-        $this->settings->set('surveillance_dernier_passage', (string) time());
+        $this->ecrireEtat($etatActuel);
 
         if ([] === $tombes && [] === $revenus && !$forcerAlerte) {
             return ['controles' => $controles, 'alerte' => false, 'message' => 'Rien de neuf.'];
@@ -111,6 +104,67 @@ class Surveillance
         $message = $this->prevenir($controles, $tombes, $revenus);
 
         return ['controles' => $controles, 'alerte' => true, 'message' => $message];
+    }
+
+    // ------------------------------------------------- memoire sur disque
+
+    /**
+     * L'etat precedent est garde dans un fichier, PAS en base.
+     *
+     * C'est le point le plus important de tout ce service : une surveillance
+     * qui a besoin de la base pour fonctionner se tait exactement le jour ou
+     * la base tombe, c'est-a-dire le seul jour ou elle sert. Un fichier reste
+     * lisible et inscriptible quoi qu'il arrive au serveur MySQL.
+     */
+    private function fichierEtat(): string
+    {
+        $dossier = $this->projectDir.'/var';
+        if (!is_dir($dossier)) {
+            @mkdir($dossier, 0775, true);
+        }
+
+        return $dossier.'/surveillance-etat.json';
+    }
+
+    /** @return array<string, string> */
+    private function lireEtat(): array
+    {
+        $brut = @file_get_contents($this->fichierEtat());
+        if (false === $brut || '' === $brut) {
+            return [];
+        }
+
+        $etat = json_decode($brut, true);
+
+        return is_array($etat) ? $etat : [];
+    }
+
+    /** @param array<string, string> $etat */
+    private function ecrireEtat(array $etat): void
+    {
+        @file_put_contents($this->fichierEtat(), (string) json_encode($etat), LOCK_EX);
+    }
+
+    /** Date du dernier tour de controle, lue sur le fichier d'etat. */
+    public function dernierPassage(): ?\DateTimeInterface
+    {
+        $date = @filemtime($this->fichierEtat());
+        if (false === $date || 0 === $date) {
+            return null;
+        }
+
+        return (new \DateTime())->setTimestamp($date);
+    }
+
+    /** Vrai si le prochain tour de controle est du. */
+    public function estDu(int $intervalleSecondes): bool
+    {
+        $date = @filemtime($this->fichierEtat());
+        if (false === $date) {
+            return true;
+        }
+
+        return (time() - $date) >= $intervalleSecondes;
     }
 
     // ------------------------------------------------------------ controles
