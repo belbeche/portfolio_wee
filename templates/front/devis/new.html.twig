@@ -207,17 +207,58 @@
 								{{ 'quote.step2'|trans }}
 							</legend>
 
-							{{ form_row(formDevis.type_de_site_web, {
-								'label': 'quote.type_label'|trans,
-								'attr': {'class': 'form-select'}
-							}) }}
-							{{ form_errors(formDevis.type_de_site_web) }}
+							{# ------------------------------------------------------------------
+							   Le catalogue technique retourne en situations.
 
-							<button type="button" class="wb-btn wb-btn--outline"
-							        style="padding: .4rem .85rem; font-size: .82rem; margin-top: .5rem;"
-							        data-bs-toggle="modal" data-bs-target="#combinedModal">
-								{{ 'quote.type_help'|trans }}
-							</button>
+							   Demander a quelqu'un de choisir entre « Systeme de Gestion de
+							   Contenu » et « Intranet d'entreprise », c'est lui demander de
+							   connaitre un metier qui n'est pas le sien. Face a une liste
+							   qu'il ne comprend pas, il choisit au hasard ou il ferme la page.
+							   Il decrit donc sa situation, et c'est nous qui traduisons.
+
+							   La liste technique reste accessible juste en dessous : sans
+							   JavaScript, ou pour quelqu'un qui sait exactement ce qu'il veut,
+							   le formulaire reste utilisable tel quel.
+							------------------------------------------------------------------ #}
+							<p style="font-size: .95rem; color: var(--wb-text-2); margin: 0 0 1rem;">
+								{{ app.request.locale == 'en'
+									? 'Pick the sentence closest to your situation. No technical vocabulary needed.'
+									: 'Choisissez la phrase la plus proche de votre situation. Aucun vocabulaire technique nécessaire.' }}
+							</p>
+
+							<div class="wb-situations">
+								{% for situation in situations() %}
+									<button type="button" class="wb-situation" data-valeur="{{ situation.type }}" data-cle="{{ situation.cle }}">
+										<span class="wb-situation__pour">{{ situation.pour }}</span>
+										<span class="wb-situation__phrase">« {{ situation.phrase }} »</span>
+										<span class="wb-situation__suite">
+											<span class="wb-situation__cout">{{ situation.consequence }}</span>
+											<span class="wb-situation__rep">{{ situation.reponse }}</span>
+										</span>
+									</button>
+								{% endfor %}
+							</div>
+
+							<details class="wb-repli">
+								<summary>
+									{{ app.request.locale == 'en'
+										? 'I already know what I want, show me the technical list'
+										: 'Je sais déjà ce que je veux, montrez-moi la liste technique' }}
+								</summary>
+								<div style="margin-top:.8rem;">
+									{{ form_row(formDevis.type_de_site_web, {
+										'label': 'quote.type_label'|trans,
+										'attr': {'class': 'form-select'}
+									}) }}
+									{{ form_errors(formDevis.type_de_site_web) }}
+
+									<button type="button" class="wb-btn wb-btn--outline"
+									        style="padding: .4rem .85rem; font-size: .82rem; margin-top: .5rem;"
+									        data-bs-toggle="modal" data-bs-target="#combinedModal">
+										{{ 'quote.type_help'|trans }}
+									</button>
+								</div>
+							</details>
 						</fieldset>
 
 						{# ------------------------------------------------- 3. design -- #}
@@ -232,10 +273,16 @@
 
 							<div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 g-3">
 								{% for option in formDevis.attentes_design_web %}
+									{% set aide = aide_design(option.vars.label) %}
 									<div class="col">
 										<label class="wb-choice h-100 d-flex align-items-start gap-2">
 											{{ form_widget(option, {'label': false, 'attr': {'class': 'form-check-input mt-1 flex-shrink-0'}}) }}
-											<span style="font-size: .9rem; line-height: 1.4;">{{ option.vars.label }}</span>
+											<span>
+												<span style="font-size: .9rem; line-height: 1.4; font-weight: 600;">{{ option.vars.label }}</span>
+												{% if aide %}
+													<span class="wb-choice__aide">{{ aide }}</span>
+												{% endif %}
+											</span>
 										</label>
 									</div>
 								{% endfor %}
@@ -381,6 +428,48 @@
 
     go.addEventListener('click', search);
     q.addEventListener('keydown', function (e) { if (e.key === 'Enter') { e.preventDefault(); search(); } });
+})();
+</script>
+
+
+{# ---------------------------------------------------- choix par situation --
+   Le script ne fait que relier les cartes au select existant. Sans lui, le
+   bloc « je sais deja ce que je veux » reste ouvert et le formulaire
+   fonctionne exactement comme avant : rien n'est jamais bloque. #}
+<script>
+(function () {
+	var cartes = document.querySelectorAll('.wb-situation');
+	if (!cartes.length) { return; }
+
+	var select = document.querySelector('#devis_type_de_site_web, [name$="[type_de_site_web]"]');
+	if (!select) { return; }
+
+	var repli = document.querySelector('.wb-repli');
+
+	function choisir(carte) {
+		cartes.forEach(function (c) { c.classList.remove('is-choisi'); c.setAttribute('aria-pressed', 'false'); });
+		carte.classList.add('is-choisi');
+		carte.setAttribute('aria-pressed', 'true');
+		select.value = carte.dataset.valeur;
+		// change et non input : les selects stylises ecoutent change.
+		select.dispatchEvent(new Event('change', { bubbles: true }));
+	}
+
+	cartes.forEach(function (carte) {
+		carte.setAttribute('aria-pressed', 'false');
+		carte.addEventListener('click', function () { choisir(carte); });
+	});
+
+	// Si la personne arrive avec un type deja choisi, on allume la carte
+	// correspondante plutot que de la laisser choisir deux fois.
+	if (select.value) {
+		var deja = document.querySelector('.wb-situation[data-valeur="' + select.value + '"]');
+		if (deja) { deja.classList.add('is-choisi'); deja.setAttribute('aria-pressed', 'true'); }
+	}
+
+	// Le repli technique se referme une fois le script en place : il ne sert
+	// qu'a ceux qui savent, ou a ceux qui n'ont pas de JavaScript.
+	if (repli) { repli.open = false; }
 })();
 </script>
 

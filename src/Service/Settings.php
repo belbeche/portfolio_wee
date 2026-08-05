@@ -118,6 +118,12 @@ class Settings
             'env' => null,
             'secret' => false,
         ],
+        'entreprise_iban' => [
+            'label' => 'Facture : IBAN de reglement',
+            'help' => "Affiche sur les factures pour que le client puisse virer sans te le demander. Laisse vide pour ne rien afficher.",
+            'env' => null,
+            'secret' => false,
+        ],
         'devis_tva_taux' => [
             'label' => 'Devis : taux de TVA en pourcentage',
             'help' => "20 par defaut. Mets 0 si tu es en franchise en base. Le devis calcule le total TTC a partir de ce taux.",

@@ -74,7 +74,11 @@ class DocumentPdf
         [$totalHt, $tvaParTaux, $totalTva] = $this->totaliser($lignes);
 
         $validite = (int) ($this->settings->get('devis_validite_jours', '30') ?: 30);
-        $emisLe = \DateTime::createFromFormat('U', (string) $devis->getCreatedAt()->getTimestamp());
+        // createFromFormat('U') construit une date en UTC. Sans remettre le
+        // fuseau de Paris, un devis cree a 23h30 s'imprimerait avec la date
+        // de la veille, ce qui decale aussi la fin de validite.
+        $emisLe = \DateTime::createFromFormat('U', (string) $devis->getCreatedAt()->getTimestamp())
+            ->setTimezone(new \DateTimeZone('Europe/Paris'));
 
         $html = $this->twig->render('pdf/document.html.twig', array_merge($contexte, [
             'type' => 'devis',

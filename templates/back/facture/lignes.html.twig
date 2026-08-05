@@ -25,18 +25,15 @@
 
 		{{ form_start(form, {attr: {id: 'wb-lignes-form'}}) }}
 			<div id="wb-lignes" data-prototype="{{ form_widget(form.lignes.vars.prototype)|e('html_attr') }}">
+				{# Les lignes existantes sont rendues EXACTEMENT comme le prototype,
+				   c'est-a-dire par form_widget sans mise en page manuelle. Sinon
+				   une ligne ajoutee au clic n'aurait pas la meme allure qu'une
+				   ligne chargee avec la page, et le formulaire aurait l'air casse
+				   des le premier ajout. La grille est posee par le CSS, sur la
+				   position des champs, donc elle s'applique aux deux. #}
 				{% for ligne in form.lignes %}
 					<div class="wb-ligne" data-ligne>
-						<div class="wb-ligne__grille">
-							<div class="wb-ligne__desc">{{ form_row(ligne.designation) }}</div>
-							<div>{{ form_row(ligne.quantite) }}</div>
-							<div>{{ form_row(ligne.unite) }}</div>
-							<div>{{ form_row(ligne.prixUnitaire) }}</div>
-							<div>{{ form_row(ligne.remise) }}</div>
-							<div>{{ form_row(ligne.tauxTva) }}</div>
-						</div>
-						{{ form_row(ligne.detail) }}
-						{{ form_widget(ligne.position) }}
+						<div class="wb-ligne__champs">{{ form_widget(ligne) }}</div>
 						<div class="wb-ligne__pied">
 							<span class="wb-ligne__total" data-total>0,00 € HT</span>
 							<button type="button" class="ad-btn ad-btn--danger ad-btn--sm" data-supprimer>Retirer</button>
@@ -78,13 +75,23 @@
 
 <style>
 	.wb-ligne { border:1px solid var(--ad-line,#dde5f0); border-radius:12px; padding:1rem; margin-bottom:.8rem; background:#fff; }
-	.wb-ligne__grille { display:grid; grid-template-columns: minmax(0,3fr) 80px 120px 130px 100px 100px; gap:.6rem; align-items:end; }
+	/* La grille porte sur la POSITION des champs, pas sur des div ajoutees a
+	   la main : c'est ce qui garantit qu'une ligne ajoutee au clic est
+	   identique a une ligne chargee avec la page.
+	   Ordre des champs : 1 designation, 2 detail, 3 quantite, 4 unite,
+	   5 prix unitaire, 6 remise, 7 TVA, 8 position (cachee). */
+	.wb-ligne__champs { display:grid; grid-template-columns: 90px 110px 130px 100px 100px; gap:.6rem; align-items:end; }
+	.wb-ligne__champs > *:nth-child(1),
+	.wb-ligne__champs > *:nth-child(2) { grid-column: 1 / -1; }
+	.wb-ligne__champs > *:nth-child(8) { display:none; }
+	.wb-ligne__champs label { font-size:.75rem; font-weight:700; margin-bottom:.15rem; }
+	.wb-ligne__champs input, .wb-ligne__champs select, .wb-ligne__champs textarea { width:100%; }
 	.wb-ligne__pied { display:flex; align-items:center; justify-content:space-between; gap:.6rem; margin-top:.4rem; }
 	.wb-ligne__total { font-weight:700; font-variant-numeric:tabular-nums; }
 	.wb-recap { margin-top:1rem; border:1px solid var(--ad-line,#dde5f0); border-radius:12px; padding:.9rem 1.1rem; max-width:340px; margin-left:auto; }
 	.wb-recap div { display:flex; justify-content:space-between; padding:.25rem 0; font-size:.9rem; }
 	.wb-recap--fort { border-top:1px solid var(--ad-line,#dde5f0); margin-top:.4rem; padding-top:.6rem !important; font-size:1.05rem !important; font-weight:700; }
-	@media (max-width: 900px) { .wb-ligne__grille { grid-template-columns: 1fr 1fr; } .wb-ligne__desc { grid-column: 1 / -1; } }
+	@media (max-width: 900px) { .wb-ligne__champs { grid-template-columns: 1fr 1fr; } }
 </style>
 
 <script>
@@ -145,7 +152,7 @@
 		var boite = document.createElement('div');
 		boite.className = 'wb-ligne';
 		boite.setAttribute('data-ligne', '');
-		boite.innerHTML = '<div class="wb-ligne__grille"></div>' + gabarit
+		boite.innerHTML = '<div class="wb-ligne__champs">' + gabarit + '</div>'
 			+ '<div class="wb-ligne__pied"><span class="wb-ligne__total" data-total>0,00 € HT</span>'
 			+ '<button type="button" class="ad-btn ad-btn--danger ad-btn--sm" data-supprimer>Retirer</button></div>';
 		zone.appendChild(boite);
