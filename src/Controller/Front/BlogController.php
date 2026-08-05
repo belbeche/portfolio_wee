@@ -50,10 +50,17 @@ class BlogController extends AbstractController
 
 
     #[Route('/{slug}', name: 'show', methods: ['GET'])]
-    public function show(Post $post): Response
+    public function show(Post $post, PostRepository $postRepository): Response
     {
+        // Trois lectures suivantes : un article ne doit jamais etre un cul-de-sac.
+        $suivants = array_values(array_filter(
+            $postRepository->findValidatedPosts(),
+            static fn (Post $p) => $p->getId() !== $post->getId()
+        ));
+
         return $this->render('front/blog/show.html.twig', [
             'post' => $post,
+            'suivants' => array_slice($suivants, 0, 3),
         ]);
     }
 }

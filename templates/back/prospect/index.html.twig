@@ -114,6 +114,9 @@
 
 	function lancer(relances, bouton) {
 		var total = 0, envoyes = 0, rates = 0;
+		var tentes = [];          // ce qui a deja ete tente : jamais deux fois
+		var PAUSE = 4000;         // 4 s entre deux envois : un SMTP mutualise
+		                          // refuse les rafales (erreur 450 too much mail)
 		arrete = false;
 		etat.hidden = false;
 		stop.hidden = false;
@@ -130,6 +133,7 @@
 			var corps = new URLSearchParams();
 			corps.set('_token', {{ csrf_token('prospect_send_wave')|json_encode|raw }});
 			corps.set('relances', relances);
+			tentes.forEach(function (id) { corps.append('tentes[]', id); });
 
 			fetch({{ path('back_prospect_send_next')|json_encode|raw }}, {
 				method: 'POST',
@@ -137,17 +141,27 @@
 				credentials: 'same-origin',
 				body: corps.toString()
 			}).then(function (r) { return r.json(); }).then(function (d) {
+				if (d.id) { tentes.push(d.id); }
+
+				if (d.stop) {
+					ligne.textContent = 'Vague interrompue par le serveur d\'envoi.';
+					detail.textContent = envoyes + ' parti(s) et tracé(s). Reprends plus tard, rien ne repartira deux fois.';
+					echecs.textContent += (d.message || '') + '\n';
+					stop.hidden = true; bouton.disabled = false;
+					return;
+				}
 				if (d.fini) {
 					ligne.textContent = 'Terminé : ' + envoyes + ' envoyé(s)' + (rates ? ', ' + rates + ' échec(s)' : '') + '.';
 					detail.textContent = 'Recharge la page pour voir les statuts à jour.';
 					stop.hidden = true; bouton.disabled = false;
 					return;
 				}
+
 				if (d.ok) { envoyes++; } else { rates++; echecs.textContent += d.societe + ' : ' + (d.message || 'échec') + '\n'; }
 				total = envoyes + rates + d.restants;
 				ligne.textContent = 'Envoi ' + (envoyes + rates) + ' sur ' + total + ' · ' + d.societe;
-				detail.textContent = envoyes + ' parti(s), ' + rates + ' échec(s), ' + d.restants + ' restant(s).';
-				setTimeout(suivant, 400);
+				detail.textContent = envoyes + ' parti(s), ' + rates + ' échec(s), ' + d.restants + ' restant(s). Prochain envoi dans 4 s.';
+				setTimeout(suivant, PAUSE);
 			}).catch(function (e) {
 				ligne.textContent = 'Interrompu : ' + e.message;
 				detail.textContent = envoyes + ' e-mail(s) déjà partis et tracés. Recharge puis reclique pour continuer.';

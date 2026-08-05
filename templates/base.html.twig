@@ -7,23 +7,45 @@
 		<meta name="created" content="21-01-2025">
 		<meta name="image" content="https://walidbelbeche.fr/img/moi2.jpg">
 		<meta name="viewport" content="width=device-width, initial-scale=1"/>
-		<meta name="description" content="{{ 'site_description'|trans }}"/>
+		<meta name="description" content="{% block meta_description %}{{ 'site_description'|trans }}{% endblock %}"/>
 		<meta name="keywords" content="{{ 'keywords_site'|trans }}"/>
 		<meta content="Walid BELBECHE" name="author"/>
 		<title>
 			{% block title %}{{ 'site_title'|trans }} - {{ 'site_description'|trans }}
 			{% endblock %}
 		</title>
-		<!-- Favicon -->
-		<link rel="apple-touch-icon" sizes="180x180" href="{{ asset('medias/favicon/favicon-16x16.png') }}">
+		{# ---------------------------------------------------- identite visuelle #}
+		<link rel="icon" href="{{ asset('medias/favicon/favicon.ico') }}" sizes="any">
 		<link rel="icon" type="image/png" sizes="32x32" href="{{ asset('medias/favicon/favicon-32x32.png') }}">
 		<link rel="icon" type="image/png" sizes="16x16" href="{{ asset('medias/favicon/favicon-16x16.png') }}">
-		<link rel="manifest" href="{{ asset('medias/favicon/site.webmanifest') }}">
-		<link rel="icon" href="{{ asset('medias/favicon/favicon.ico') }}">
+		<link rel="icon" type="image/svg+xml" href="{{ asset('medias/pwa/logo.svg') }}">
+		<link rel="apple-touch-icon" sizes="180x180" href="{{ asset('medias/pwa/apple-touch-icon.png') }}">
 
-		{# Application installable (PWA) et notifications #}
+		{# Application installable #}
 		<link rel="manifest" href="{{ asset('manifest.webmanifest') }}">
 		<meta name="theme-color" content="#0a1628">
+		<meta name="apple-mobile-web-app-title" content="W. Belbeche">
+
+		{# ------------------------------------- referencement et partage social #}
+		{% set og_titre = block('title')|striptags|trim %}
+		{% set og_desc = block('meta_description') is defined and block('meta_description')|trim
+			? block('meta_description')|striptags|trim
+			: 'site_description'|trans %}
+		<link rel="canonical" href="{{ app.request.schemeAndHttpHost ~ app.request.pathInfo }}">
+		<meta property="og:type" content="website">
+		<meta property="og:site_name" content="Walid Belbeche">
+		<meta property="og:locale" content="{{ app.request.locale == 'en' ? 'en_GB' : 'fr_FR' }}">
+		<meta property="og:title" content="{{ og_titre }}">
+		<meta property="og:description" content="{{ og_desc }}">
+		<meta property="og:url" content="{{ app.request.schemeAndHttpHost ~ app.request.pathInfo }}">
+		<meta property="og:image" content="{{ app.request.schemeAndHttpHost ~ asset('medias/pwa/icon-512.png') }}">
+		<meta property="og:image:width" content="512">
+		<meta property="og:image:height" content="512">
+		<meta name="twitter:card" content="summary">
+		<meta name="twitter:title" content="{{ og_titre }}">
+		<meta name="twitter:description" content="{{ og_desc }}">
+		<meta name="twitter:image" content="{{ app.request.schemeAndHttpHost ~ asset('medias/pwa/icon-512.png') }}">
+		<meta name="robots" content="index, follow, max-image-preview:large">
 
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css">
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css">
@@ -246,12 +268,68 @@
 				};
 			</script>
 			<script defer src="https://stats.youss.dev/script.js" data-website-id="2f81360d-92bc-460b-bcd6-81ba64683e42" data-domains="walidbelbeche.fr,www.walidbelbeche.fr"></script>
+			{# Donnees structurees : ce que les moteurs affichent dans leurs
+			   resultats (nom, logo, zone desservie, moyens de contact). #}
 			<script type="application/ld+json">
 			{
 				"@context": "https://schema.org",
-				"@type": "WebPage",
-				"name": "Agence Web Walid BELBECHE",
-				"description": "Spécialiste de la création et gestion d'applications web et mobiles."
+				"@type": "ProfessionalService",
+				"@id": "https://walidbelbeche.fr/#identite",
+				"name": "Walid Belbeche",
+				"alternateName": "Walid Belbeche, consultant informatique",
+				"description": "Conception et developpement d'applications web et mobiles. Un seul interlocuteur, du cadrage a la mise en production.",
+				"url": "https://walidbelbeche.fr",
+				"logo": "https://walidbelbeche.fr/medias/pwa/icon-512.png",
+				"image": "https://walidbelbeche.fr/medias/pwa/icon-512.png",
+				"email": "contact@walidbelbeche.fr",
+				"telephone": "+33661287786",
+				"priceRange": "290 € - 4900 €",
+				"address": {
+					"@type": "PostalAddress",
+					"streetAddress": "173 rue de Courcelles",
+					"postalCode": "75017",
+					"addressLocality": "Paris",
+					"addressCountry": "FR"
+				},
+				"areaServed": { "@type": "Country", "name": "France" },
+				"knowsLanguage": ["fr", "en"],
+				"founder": {
+					"@type": "Person",
+					"name": "Walid Belbeche",
+					"jobTitle": "Consultant informatique, developpeur web et mobile",
+					"sameAs": [
+						"https://www.linkedin.com/in/walid-belbeche/",
+						"https://github.com/belbeche"
+					]
+				},
+				"sameAs": [
+					"https://www.linkedin.com/in/walid-belbeche/",
+					"https://github.com/belbeche"
+				],
+				"hasOfferCatalog": {
+					"@type": "OfferCatalog",
+					"name": "Mes formules",
+					"itemListElement": [
+						{
+							"@type": "Offer",
+							"price": "290",
+							"priceCurrency": "EUR",
+							"itemOffered": { "@type": "Service", "name": "Le Diagnostic", "description": "Audit de votre site, de vos outils et de vos fichiers, avec un plan d'action chiffre ligne par ligne." }
+						},
+						{
+							"@type": "Offer",
+							"price": "4900",
+							"priceCurrency": "EUR",
+							"itemOffered": { "@type": "Service", "name": "Le Projet", "description": "Site web, application metier ou application mobile au forfait, code et droits cedes a la fin." }
+						},
+						{
+							"@type": "Offer",
+							"price": "390",
+							"priceCurrency": "EUR",
+							"itemOffered": { "@type": "Service", "name": "L'Interlocuteur Unique", "description": "Supervision, sauvegardes verifiees, correctifs et evolutions incluses chaque mois." }
+						}
+					]
+				}
 			}
 			</script>
 		{% endblock %}

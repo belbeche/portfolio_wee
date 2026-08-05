@@ -85,6 +85,24 @@ class ImportProspectsCommand extends Command
         $repo = $this->em->getRepository(Prospect::class);
         $crees = 0;
         $ignores = 0;
+        $ignoresContactes = 0;
+
+        // Empreinte de tout ce qui est deja dans la base, calculee une seule
+        // fois. On compare sur le nom normalise (sans accents, sans forme
+        // juridique, sans ponctuation) : une entreprise dont l'adresse a ete
+        // completee a la main n'a plus son e-mail d'import, mais garde son nom.
+        $connus = [];
+        $contactes = [];
+        foreach ($repo->findAll() as $existant) {
+            $cle = self::empreinte((string) $existant->getCompany());
+            if ('' !== $cle) {
+                $connus[$cle] = true;
+                if (Prospect::STATUS_TO_CONTACT !== $existant->getStatus()) {
+                    $contactes[$cle] = true;
+                }
+            }
+            $connus['@'.mb_strtolower((string) $existant->getEmail())] = true;
+        }
 
         foreach ($results as $e) {
             $siren = (string) ($e['siren'] ?? '');
@@ -92,11 +110,28 @@ class ImportProspectsCommand extends Command
                 continue;
             }
 
+            $nom = (string) ($e['nom_complet'] ?? '');
             $email = sprintf('siren-%s@a-completer.walidbelbeche.fr', $siren);
-            if ($repo->findOneBy(['email' => $email])) {
+            $cle = self::empreinte($nom);
+
+            // Deja contacte : on ne le repropose pas, meme sous un autre nom
+            // de fichier ou apres un changement d'adresse.
+            if ('' !== $cle && isset($contactes[$cle])) {
+                ++$ignoresContactes;
+                continue;
+            }
+
+            if (isset($connus['@'.$email]) || ('' !== $cle && isset($connus[$cle]))) {
                 ++$ignores;
                 continue;
             }
+
+            // Marque tout de suite, pour que deux fiches identiques dans la
+            // meme reponse de l'annuaire ne creent pas de doublon.
+            if ('' !== $cle) {
+                $connus[$cle] = true;
+            }
+            $connus['@'.$email] = true;
 
             $siege = $e['siege'] ?? [];
             $dirigeant = $e['dirigeants'][0] ?? null;
@@ -150,11 +185,18 @@ class ImportProspectsCommand extends Command
         }
 
         $io->success(sprintf(
-            '%d fiche(s) %s, %d deja presente(s).',
+            '%d fiche(s) %s.',
             $crees,
-            $input->getOption('dry-run') ? 'trouvees (rien enregistre, --dry-run)' : 'importees',
-            $ignores
+            $input->getOption('dry-run') ? 'trouvees (rien enregistre, --dry-run)' : 'importees'
         ));
+
+        if ($ignores > 0 || $ignoresContactes > 0) {
+            $io->text(sprintf(
+                'Ecartees : %d deja dans la base, %d deja contactee(s) (jamais reproposees).',
+                $ignores,
+                $ignoresContactes
+            ));
+        }
 
         return Command::SUCCESS;
     }
@@ -180,5 +222,29 @@ class ImportProspectsCommand extends Command
         $data = json_decode((string) $body, true);
 
         return is_array($data) ? $data : null;
+    }
+
+    /**
+     * Empreinte comparable d'un nom d'entreprise : minuscules, sans accents,
+     * sans forme juridique ni ponctuation. « SARL Crealys-Web » et
+     * « Crealys Web » donnent la meme cle, donc un seul prospect.
+     */
+    private static function empreinte(string $nom): string
+    {
+        $nom = mb_strtolower(trim($nom));
+        // Retire les accents sans dependre d'une extension : translitteration
+        // manuelle des caracteres frequents en francais.
+        $nom = strtr($nom, [
+            "\u{e0}" => 'a', "\u{e2}" => 'a', "\u{e4}" => 'a',
+            "\u{e9}" => 'e', "\u{e8}" => 'e', "\u{ea}" => 'e', "\u{eb}" => 'e',
+            "\u{ee}" => 'i', "\u{ef}" => 'i',
+            "\u{f4}" => 'o', "\u{f6}" => 'o',
+            "\u{f9}" => 'u', "\u{fb}" => 'u', "\u{fc}" => 'u',
+            "\u{e7}" => 'c',
+        ]);
+        $nom = (string) preg_replace('/\b(sarl|sas|sasu|eurl|sa|sci|scop|eirl|ei|snc|association|asso)\b/u', ' ', $nom);
+        $nom = (string) preg_replace('/[^a-z0-9]+/u', '', $nom);
+
+        return $nom;
     }
 }

@@ -1,74 +1,132 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}{{ post.title }}{% endblock %}
+{% block title %}{{ post.title }} | Walid Belbeche{% endblock %}
+{% block meta_description %}{{ post.content|striptags|slice(0, 155)|trim }}{% endblock %}
 
 {% block content %}
-<!-- Prism.js for syntax highlighting -->
+{% set en = app.request.locale == 'en' %}
+{% set texte = post.content|striptags %}
+{% set minutes = max(1, (texte|split(' ')|length / 200)|round(0, 'ceil')) %}
+
 <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/themes/prism-tomorrow.min.css" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/prism.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/components/prism-core.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/components/prism-clike.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/components/prism-php.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/components/prism-javascript.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/components/prism-css.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/components/prism-markup.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/components/prism-bash.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/components/prism-json.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/components/prism-sql.min.js"></script>
 
-<div class="container mt-6">
-    <h1 class="mb-4">{{ post.title }}</h1>
-    <p class="text-muted">Publié le {{ post.createdAt|date('d/m/Y') }}</p>
+{# ---------------------------------------------------------------- en-tete #}
+<section class="wb-hero" data-tone="dark">
+    <div class="container" style="padding-top: 1rem; padding-bottom: 3rem; max-width: 820px;">
+        <nav class="wb-crumb" aria-label="{{ en ? 'You are here' : 'Vous êtes ici' }}">
+            <a href="{{ path('blog_index') }}">{{ en ? 'Field notes' : 'Notes de terrain' }}</a>
+            {% if post.category %}
+                <span aria-hidden="true">/</span>
+                <a href="{{ path('blog_category', { category: post.category.name }) }}">{{ post.category.name }}</a>
+            {% endif %}
+        </nav>
 
-    <!-- Contenu principal -->
-    <div class="content mb-5">
-        {{ post.content|raw }}
+        <h1 class="wb-display" style="font-size: clamp(1.9rem, 3.8vw, 2.7rem); line-height: 1.15;">{{ post.title }}</h1>
+
+        <div class="wb-case-meta">
+            <span>{{ post.createdAt|date('d/m/Y') }}</span>
+            <span>{{ minutes }} min {{ en ? 'read' : 'de lecture' }}</span>
+            <span>{{ en ? 'By Walid Belbeche' : 'Par Walid Belbeche' }}</span>
+        </div>
     </div>
+</section>
 
-    <!-- Sections dynamiques -->
-    {% if post.sections|length > 0 %}
-        <div class="article-sections">
+{# ----------------------------------------------------------------- article #}
+<section class="wb-section wb-section--paper" data-tone="light">
+    <div class="container" style="max-width: 820px;">
+
+        <article class="wb-article">
+            {{ post.content|raw }}
+
             {% for section in post.sections %}
                 {% if section.type == 'content' %}
-                    <!-- Section de contenu -->
-                    <div class="section-content mb-4">
-                        <p>{{ section.content|raw }}</p>
-                    </div>
+                    {{ section.content|raw }}
+
                 {% elseif section.type == 'code' %}
-                    <!-- Section de code -->
-                    <div class="section-code mb-4">
-                        <div class="card">
-                            <div class="card-header">
-                                Langage : <strong>{{ section.language }}</strong>
-                            </div>
-                            <div class="card-body bg-light" data-tone="light">
-                                <pre><code class="language-{{ section.language|default('plaintext') }}">{{ section.content|e }}</code></pre>
-                            </div>
-                        </div>
-                    </div>
+                    <figure class="wb-code">
+                        <figcaption>{{ section.language|default('code') }}</figcaption>
+                        <pre><code class="language-{{ section.language|default('plaintext') }}">{{ section.content|e }}</code></pre>
+                    </figure>
+
                 {% elseif section.type == 'media' %}
-                    <!-- Section de média -->
                     {% if section.mediaType == 'image' %}
-                        <div class="section-media mb-4">
-                            <img src="{{ asset('uploads/' ~ section.mediaUrl) }}" alt="Image" class="img-fluid">
-                        </div>
+                        <figure class="wb-article__media">
+                            <img src="{{ asset('uploads/' ~ section.mediaUrl) }}" alt="" loading="lazy">
+                        </figure>
                     {% elseif section.mediaType == 'video' %}
-                        <div class="section-media mb-4">
-                            <video controls>
+                        <figure class="wb-article__media">
+                            <video controls preload="metadata">
                                 <source src="{{ asset('uploads/' ~ section.mediaUrl) }}" type="video/mp4">
-                                Votre navigateur ne supporte pas les vidéos.
                             </video>
-                        </div>
-                    {% else %}
-                        <div class="section-media mb-4 text-danger">
-                            <p>Média non supporté ou invalide.</p>
-                        </div>
+                        </figure>
                     {% endif %}
                 {% endif %}
             {% endfor %}
-        </div>
-    {% endif %}
+        </article>
 
-    <a href="{{ path('blog_index') }}" class="btn btn-secondary mt-3">Retour à la liste</a>
-</div>
+        {# ------------------------------------------------------- signature #}
+        <div class="wb-author">
+            <div class="wb-author__img">WB</div>
+            <div>
+                <strong>Walid Belbeche</strong>
+                <p>{{ en ? 'Independent consultant. I design and build web and mobile applications, from the first question to going live.'
+                         : "Consultant indépendant. Je conçois et développe des applications web et mobiles, de la première question à la mise en ligne." }}</p>
+                <a href="{{ url('front_devis_new') }}" class="wb-btn wb-btn--ink wb-btn--sm">{{ en ? 'Talk about your project' : 'Parler de votre projet' }}</a>
+            </div>
+        </div>
+
+        {# --------------------------------------------------- lire ensuite #}
+        {% if suivants is defined and suivants|length %}
+            <div class="mt-5">
+                <h2 class="wb-h3 mb-4">{{ en ? 'Read next' : 'À lire ensuite' }}</h2>
+                <div class="row g-4">
+                    {% for autre in suivants %}
+                        <div class="col-md-4 d-flex">
+                            <article class="wb-note w-100">
+                                <div class="wb-note__meta">
+                                    {% if autre.category %}<span class="wb-note__cat">{{ autre.category.name }}</span>{% endif %}
+                                    <span>{{ autre.createdAt|date('d/m/Y') }}</span>
+                                </div>
+                                <h3 class="wb-note__title">
+                                    <a href="{{ path('blog_show', { slug: autre.slug }) }}">{{ autre.title }}</a>
+                                </h3>
+                                <a href="{{ path('blog_show', { slug: autre.slug }) }}" class="wb-note__go">{{ en ? 'Read' : 'Lire' }} &rarr;</a>
+                            </article>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        {% endif %}
+
+    </div>
+</section>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/prism.min.js" defer></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/components/prism-php.min.js" defer></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/components/prism-javascript.min.js" defer></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/components/prism-css.min.js" defer></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/components/prism-bash.min.js" defer></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/components/prism-json.min.js" defer></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/components/prism-sql.min.js" defer></script>
+
+{# Donnees structurees de l'article, pour l'affichage dans les resultats #}
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": {{ post.title|json_encode|raw }},
+    "datePublished": "{{ post.createdAt|date('c') }}",
+    "dateModified": "{{ post.createdAt|date('c') }}",
+    "description": {{ post.content|striptags|slice(0, 155)|trim|json_encode|raw }},
+    "image": "{{ app.request.schemeAndHttpHost ~ asset('medias/pwa/icon-512.png') }}",
+    "author": { "@type": "Person", "name": "Walid Belbeche", "url": "https://walidbelbeche.fr" },
+    "publisher": {
+        "@type": "Organization",
+        "name": "Walid Belbeche",
+        "logo": { "@type": "ImageObject", "url": "{{ app.request.schemeAndHttpHost ~ asset('medias/pwa/icon-512.png') }}" }
+    },
+    "mainEntityOfPage": "{{ app.request.schemeAndHttpHost ~ app.request.pathInfo }}"
+}
+</script>
+
 {% endblock %}

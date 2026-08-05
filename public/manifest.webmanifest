@@ -1,15 +1,39 @@
 {
   "name": "Walid Belbeche, consultant informatique",
   "short_name": "W. Belbeche",
-  "description": "Un seul interlocuteur, du cadrage a la mise en production.",
+  "description": "Applications web et mobiles : un seul interlocuteur, du cadrage a la mise en production.",
   "lang": "fr",
-  "start_url": "/",
+  "dir": "ltr",
+  "start_url": "/?source=pwa",
   "scope": "/",
   "display": "standalone",
+  "orientation": "portrait-primary",
   "background_color": "#0a1628",
   "theme_color": "#0a1628",
+  "categories": ["business", "productivity", "developer"],
   "icons": [
     { "src": "/medias/pwa/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
-    { "src": "/medias/pwa/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+    { "src": "/medias/pwa/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "/medias/pwa/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ],
+  "shortcuts": [
+    {
+      "name": "Estimer mon projet",
+      "short_name": "Devis",
+      "url": "/devis-en-ligne",
+      "icons": [{ "src": "/medias/pwa/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Mes realisations",
+      "short_name": "Realisations",
+      "url": "/realisations",
+      "icons": [{ "src": "/medias/pwa/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Espace client",
+      "short_name": "Espace",
+      "url": "/espace",
+      "icons": [{ "src": "/medias/pwa/icon-192.png", "sizes": "192x192" }]
+    }
   ]
 }

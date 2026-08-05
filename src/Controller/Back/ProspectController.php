@@ -144,19 +144,53 @@ class ProspectController extends AbstractController
         $relance = '1' === (string) $request->request->get('relances');
         $candidats = $relance ? $outreach->dueFollowUps() : $outreach->firstContactCandidates();
 
+        // Les prospects deja tentes pendant cette vague, succes ou echec.
+        // Sans cette liste, un envoi en echec restait en tete de file et
+        // la page le retentait indefiniment : c'est ce qui a matraque le
+        // serveur d'envoi et declenche sa limite de debit.
+        $dejaTentes = array_filter((array) $request->request->all('tentes'));
+        if ([] !== $dejaTentes) {
+            $candidats = array_values(array_filter(
+                $candidats,
+                static fn ($p) => !in_array((string) $p->getId(), $dejaTentes, true)
+            ));
+        }
+
         if ([] === $candidats) {
             return new JsonResponse(['ok' => true, 'fini' => true, 'restants' => 0, 'message' => 'Termine.']);
+        }
+
+        // Plafond horaire : meme en rechargeant la page, on ne peut pas
+        // depasser ce que le serveur d'envoi tolere.
+        if ($outreach->sentLastHour() >= ProspectOutreach::MAX_PAR_HEURE) {
+            return new JsonResponse([
+                'ok' => false,
+                'fini' => true,
+                'stop' => true,
+                'message' => sprintf(
+                    'Plafond de %d envois par heure atteint : c\'est volontaire, un envoi trop rapide fait rejeter tes e-mails. Reprends dans une heure.',
+                    ProspectOutreach::MAX_PAR_HEURE
+                ),
+            ]);
         }
 
         $prospect = $candidats[0];
         $erreur = $outreach->send($prospect, $relance);
 
+        // Un refus temporaire du serveur (4xx : debit depasse, quota, greylist)
+        // ne se resout pas en insistant, au contraire. On arrete la vague.
+        $limite = null !== $erreur && preg_match('/\b4\d\d\b.*(too much mail|too many|rate|quota|try again|deferred|greylist)/i', $erreur);
+
         return new JsonResponse([
             'ok' => null === $erreur,
-            'fini' => false,
+            'fini' => (bool) $limite,
+            'stop' => (bool) $limite,
+            'id' => (string) $prospect->getId(),
             'societe' => (string) ($prospect->getCompany() ?: $prospect->getEmail()),
             'restants' => count($candidats) - 1,
-            'message' => $erreur,
+            'message' => $limite
+                ? "Le serveur d'envoi limite le debit : vague interrompue. Reprends dans une heure, les prospects deja contactes ne repartiront pas. Detail : ".$erreur
+                : $erreur,
         ]);
     }
 

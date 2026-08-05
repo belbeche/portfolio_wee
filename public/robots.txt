@@ -1,0 +1,17 @@
+# walidbelbeche.fr
+User-agent: *
+Allow: /
+
+# Espaces prives : rien a indexer
+Disallow: /admin/
+Disallow: /back/
+Disallow: /espace
+Disallow: /profil/
+Disallow: /utilisateur/
+Disallow: /connexion
+Disallow: /deconnexion
+Disallow: /api/
+Disallow: /push/
+Disallow: /vers-axishumain/
+
+Sitemap: https://walidbelbeche.fr/sitemap.xml

@@ -1,47 +1,94 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}{{ 'title_news'|trans }}{% endblock %}
+{% block title %}{{ app.request.locale == 'en' ? 'Notes and field reports' : 'Le carnet de bord' }} | Walid Belbeche{% endblock %}
+{% block meta_description %}{{ app.request.locale == 'en'
+    ? 'Field notes on web and mobile projects: what works, what fails, and why. Written by the person who does the work.'
+    : "Des notes de terrain sur les projets web et mobiles : ce qui marche, ce qui rate, et pourquoi. Écrit par celui qui fait le travail." }}{% endblock %}
 
 {% block content %}
-<div class="container mt-6">
-    <h1 class="text-center mb-5">{{ 'course_tutorials'|trans }}</h1>
+{% set en = app.request.locale == 'en' %}
 
-    <!-- Navigation des catégories -->
-    <div class="d-flex justify-content-center mb-4 flex-wrap">
-        <a href="{{ path('blog_index') }}" 
-           class="btn btn-outline-primary mx-2 mb-2 {% if currentCategory is not defined %}active{% endif %}">
-            {{ 'all'|trans }}
-        </a>
-        {% for category in categories %}
-            <a href="{{ path('blog_category', { category: category.name }) }}" 
-               class="btn btn-outline-primary mx-2 mb-2 {% if currentCategory == category.name %}active{% endif %}">
-                {{ category.name }}
-            </a>
-        {% endfor %}
+<section class="wb-hero" data-tone="dark">
+    <div class="container" style="padding-top: 1rem; padding-bottom: 4rem;">
+        <span class="wb-eyebrow">{{ en ? 'Field notes' : 'Notes de terrain' }}</span>
+        <h1 class="wb-display" style="font-size: clamp(2.1rem, 4.5vw, 3.2rem);">
+            {{ en ? 'What I learn' : "Ce que j'apprends" }}<br>
+            <span class="wb-mark">{{ en ? 'on real projects' : 'sur de vrais projets' }}</span>
+        </h1>
+        <p class="wb-lead wb-lead--on-dark mb-0" style="max-width: 660px;">
+            {{ en ? 'No theory and no recycled advice. What actually happened on the work I do, told plainly, whether it went well or not.'
+                  : "Pas de théorie ni de conseils recyclés. Ce qui s'est réellement passé sur mon travail, raconté simplement, que ça se soit bien terminé ou non." }}
+        </p>
     </div>
+</section>
 
-    <!-- Liste des articles -->
-    <div class="row g-4">
-        {% for post in posts %}
-            <div class="col-md-6 col-lg-4">
-                <div class="card h-100 shadow-sm border-0">
-                    <div class="card-body d-flex flex-column">
-                        <h5 class="card-title">{{ post.title }}</h5>
-                        <p class="card-text text-muted small">
-                            {{ 'published_on'|trans }} {{ post.createdAt|date('d/m/Y') }}
+<section class="wb-section wb-section--paper" data-tone="light">
+    <div class="container">
+
+        {% if categories|length > 0 %}
+        <nav class="wb-filter mb-5" aria-label="{{ en ? 'Filter by topic' : 'Filtrer par sujet' }}">
+            <a href="{{ path('blog_index') }}"
+               class="cat-chip {{ currentCategory is not defined or not currentCategory ? 'cat-chip--active' : '' }}">{{ en ? 'All' : 'Tout' }}</a>
+            {% for category in categories %}
+                <a href="{{ path('blog_category', { category: category.name }) }}"
+                   class="cat-chip {{ currentCategory == category.name ? 'cat-chip--active' : '' }}">{{ category.name }}</a>
+            {% endfor %}
+        </nav>
+        {% endif %}
+
+        {% if posts|length > 0 %}
+        <div class="row g-4">
+            {% for post in posts %}
+                {% set texte = post.content|striptags %}
+                {% set minutes = max(1, (texte|split(' ')|length / 200)|round(0, 'ceil')) %}
+                <div class="col-md-6 col-lg-4 d-flex">
+                    <article class="wb-note w-100">
+                        <div class="wb-note__meta">
+                            {% if post.category %}<span class="wb-note__cat">{{ post.category.name }}</span>{% endif %}
+                            <span>{{ post.createdAt|date('d/m/Y') }}</span>
+                            <span>·</span>
+                            <span>{{ minutes }} min</span>
+                        </div>
+                        <h2 class="wb-note__title">
+                            <a href="{{ path('blog_show', { slug: post.slug }) }}">{{ post.title }}</a>
+                        </h2>
+                        <p class="wb-note__desc">
+                            {{ texte|slice(0, 150)|trim }}{{ texte|length > 150 ? '…' : '' }}
                         </p>
-                        <p class="card-text flex-grow-1">
-                            {{ post.content|striptags|slice(0, 120) ~ '...' }}
-                        </p>
-                        <a href="{{ path('blog_show', { slug: post.slug }) }}" class="btn btn-primary mt-auto">{{ 'read_more'|trans }}</a>
-                    </div>
+                        <a href="{{ path('blog_show', { slug: post.slug }) }}" class="wb-note__go">
+                            {{ en ? 'Read' : 'Lire' }} &rarr;
+                        </a>
+                    </article>
+                </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="wb-card" data-tone="light" style="max-width: 620px;">
+            <h2 class="wb-h3">{{ en ? 'Nothing here yet' : 'Rien ici pour le moment' }}</h2>
+            <p style="color: var(--wb-text-2);">
+                {{ en ? 'No article in this topic yet. Have a look at the delivered projects instead.'
+                      : "Aucun article dans ce sujet pour l'instant. Regardez plutôt les projets livrés." }}
+            </p>
+            <a href="{{ url('front_project') }}" class="wb-btn wb-btn--ink">{{ en ? 'See my work' : 'Voir mes réalisations' }}</a>
+        </div>
+        {% endif %}
+
+        <div class="wb-card wb-card--ink wb-case-cta mt-5 p-4 p-lg-5" data-tone="dark">
+            <div class="row align-items-center g-4">
+                <div class="col-lg-8">
+                    <h2 class="wb-h3">{{ en ? 'A project rather than a question?' : 'Plutôt un projet qu\'une question ?' }}</h2>
+                    <p class="mb-0" style="color: var(--wb-on-dark-2);">
+                        {{ en ? 'Describe it in two minutes, you get a priced answer within 48 working hours.'
+                              : 'Décrivez-le en deux minutes, vous recevez une réponse chiffrée sous 48 heures ouvrées.' }}
+                    </p>
+                </div>
+                <div class="col-lg-4 text-lg-end">
+                    <a href="{{ url('front_devis_new') }}" class="wb-btn wb-btn--gold">{{ en ? 'Get my estimate' : 'Estimer mon projet' }}</a>
                 </div>
             </div>
-        {% else %}
-            <div class="col-12">
-                <p class="text-center text-muted">{{ 'no_articles_found'|trans }}</p>
-            </div>
-        {% endfor %}
+        </div>
+
     </div>
-</div>
+</section>
+
 {% endblock %}

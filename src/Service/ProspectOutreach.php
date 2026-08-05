@@ -23,6 +23,9 @@ class ProspectOutreach
 {
     public const MAX_PAR_VAGUE = 15;
 
+    /** Plafond horaire, garde-fou contre les rafales que le SMTP refuse. */
+    public const MAX_PAR_HEURE = 20;
+
     private const SUJET_PREMIER = 'Developpement web et mobile en marque blanche - Walid Belbeche';
     private const SUJET_RELANCE = 'Je reviens vers vous - Walid Belbeche, developpement web et mobile';
 
@@ -37,6 +40,22 @@ class ProspectOutreach
         $this->mailer = $mailer;
         $this->twig = $twig;
         $this->projectDir = $projectDir;
+    }
+
+    /**
+     * Combien d'e-mails sont reellement partis dans la derniere heure.
+     * S'appuie sur le journal, donc resiste a un rechargement de page.
+     */
+    public function sentLastHour(): int
+    {
+        $depuis = new \DateTime('-1 hour');
+
+        return (int) $this->em->createQuery(
+            'SELECT COUNT(n.id) FROM App\Entity\ProspectNote n
+             WHERE n.type = :type AND n.createdAt >= :depuis'
+        )->setParameter('type', 'email')
+         ->setParameter('depuis', $depuis)
+         ->getSingleScalarResult();
     }
 
     /** Un e-mail est envoyable s'il ne contient pas de domaine a completer. */

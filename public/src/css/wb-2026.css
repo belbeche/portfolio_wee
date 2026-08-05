@@ -1356,3 +1356,73 @@ section.bg-dark .small, section.bg-primary .small,
 }
 .wb-intro__skip:hover { color: var(--wb-text); }
 @media (prefers-reduced-motion: reduce) { .wb-intro__door { transition: none; } }
+
+
+/* ===== blog : cartes de notes ========================================== */
+.wb-note {
+  display: flex; flex-direction: column;
+  background: #fff; border: 1px solid var(--wb-line); border-radius: var(--wb-radius);
+  padding: 1.4rem 1.5rem; box-shadow: var(--wb-shadow-1);
+  transition: transform .25s var(--wb-ease), box-shadow .25s var(--wb-ease), border-color .25s var(--wb-ease);
+}
+.wb-note:hover { transform: translateY(-4px); box-shadow: var(--wb-shadow-2); border-color: var(--wb-gold); }
+.wb-note__meta {
+  display: flex; flex-wrap: wrap; gap: .45rem; align-items: center;
+  font-size: .76rem; color: var(--wb-text-3); margin-bottom: .7rem;
+}
+.wb-note__cat {
+  background: var(--wb-paper-3); color: var(--wb-text-2); font-weight: 700;
+  border-radius: 999px; padding: .18rem .6rem; font-size: .7rem;
+}
+.wb-note__title { font-size: 1.08rem; font-weight: 800; line-height: 1.35; margin: 0 0 .6rem; }
+.wb-note__title a { color: var(--wb-text); text-decoration: none; }
+.wb-note__title a:hover { color: var(--wb-blue); }
+.wb-note__desc { font-size: .88rem; line-height: 1.6; color: var(--wb-text-2); margin: 0 0 1rem; flex: 1; }
+.wb-note__go { margin-top: auto; font-size: .84rem; font-weight: 700; color: var(--wb-blue); text-decoration: none; }
+.wb-note__go:hover { text-decoration: underline; }
+
+/* ===== blog : corps de l'article ======================================= */
+.wb-article { font-size: 1.06rem; line-height: 1.75; color: var(--wb-text-2); }
+.wb-article > p { margin: 0 0 1.15rem; }
+.wb-article h2 {
+  font-size: 1.5rem; font-weight: 800; color: var(--wb-text);
+  margin: 2.4rem 0 .9rem; line-height: 1.25;
+}
+.wb-article h3 { font-size: 1.2rem; font-weight: 800; color: var(--wb-text); margin: 1.9rem 0 .7rem; }
+.wb-article a { color: var(--wb-blue); }
+.wb-article strong, .wb-article b { color: var(--wb-text); font-weight: 700; }
+.wb-article ul, .wb-article ol { margin: 0 0 1.15rem; padding-left: 1.3rem; }
+.wb-article li { margin-bottom: .45rem; }
+.wb-article blockquote {
+  margin: 1.6rem 0; padding: 1rem 1.3rem;
+  background: var(--wb-paper-2); border-left: 3px solid var(--wb-gold);
+  border-radius: 0 8px 8px 0; font-size: 1.02rem; color: var(--wb-text);
+}
+.wb-article blockquote p:last-child { margin-bottom: 0; }
+.wb-article__media { margin: 1.8rem 0; }
+.wb-article__media img, .wb-article__media video {
+  width: 100%; border-radius: var(--wb-radius-sm); box-shadow: var(--wb-shadow-1);
+}
+.wb-code { margin: 1.8rem 0; border-radius: var(--wb-radius-sm); overflow: hidden; box-shadow: var(--wb-shadow-1); }
+.wb-code figcaption {
+  background: var(--wb-ink-2); color: var(--wb-on-dark-2);
+  font-size: .74rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase;
+  padding: .5rem .9rem;
+}
+.wb-code pre { margin: 0; border-radius: 0; }
+
+/* ===== blog : signature de l'auteur ==================================== */
+.wb-author {
+  display: flex; gap: 1.2rem; align-items: flex-start;
+  margin-top: 3rem; padding: 1.6rem 1.7rem;
+  background: var(--wb-paper-2); border: 1px solid var(--wb-line); border-radius: var(--wb-radius);
+}
+.wb-author__img {
+  flex: 0 0 56px; width: 56px; height: 56px; border-radius: 50%;
+  background: var(--wb-ink); color: #fff; font-weight: 800; font-size: 1.05rem;
+  display: flex; align-items: center; justify-content: center;
+}
+.wb-author strong { display: block; color: var(--wb-text); margin-bottom: .25rem; }
+.wb-author p { font-size: .88rem; color: var(--wb-text-2); margin: 0 0 .8rem; }
+@media (max-width: 575px) { .wb-author { flex-direction: column; } }
+@media (prefers-reduced-motion: reduce) { .wb-note { transition: none; } }
