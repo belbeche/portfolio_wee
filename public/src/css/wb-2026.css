@@ -1493,3 +1493,45 @@ section.bg-dark .small, section.bg-primary .small,
 .wb-langues__choix:hover { color: #fff; }
 .wb-langues__choix.is-actif { background: var(--wb-gold); color: var(--wb-ink); }
 .wb-langues__choix.is-actif:hover { color: var(--wb-ink); }
+
+
+/* =====================================================================
+   Lecture d'article : confort et neutralisation des styles colles.
+   Les editeurs de texte enregistrent des couleurs et des tailles dans le
+   HTML lui-meme (style="color:#999"). Dans un article, la mise en forme
+   du site doit primer, sinon chaque texte a sa propre apparence.
+   ===================================================================== */
+.wb-article,
+.wb-article p,
+.wb-article span,
+.wb-article div,
+.wb-article li,
+.wb-article font {
+  color: #2c3a52 !important;
+  background: none !important;
+  font-family: inherit !important;
+}
+.wb-article p,
+.wb-article li { font-size: 1.07rem !important; line-height: 1.78 !important; }
+.wb-article p { margin: 0 0 1.15rem !important; }
+
+/* Les titres gardent leur couleur forte */
+.wb-article h2, .wb-article h2 span,
+.wb-article h3, .wb-article h3 span,
+.wb-article strong, .wb-article b,
+.wb-article strong span, .wb-article b span { color: var(--wb-text) !important; }
+.wb-article a, .wb-article a span { color: var(--wb-blue) !important; }
+
+/* L'accroche : le premier paragraphe porte l'article */
+.wb-article > p:first-of-type,
+.wb-article > p:first-of-type span {
+  font-size: 1.2rem !important;
+  line-height: 1.62 !important;
+  color: var(--wb-text) !important;
+  font-weight: 500 !important;
+}
+
+/* Colonne de lecture : jamais plus large que l'oeil ne suit confortablement */
+.wb-article { max-width: 68ch; margin-left: auto; margin-right: auto; }
+.wb-article h2 { margin-top: 2.6rem !important; }
+.wb-article > p:empty, .wb-article > div:empty { display: none !important; }
