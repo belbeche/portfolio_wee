@@ -38,7 +38,7 @@ class HomeController extends AbstractController
     * @Route("/", name="front_home")
     * @Route("/realisations/{category}", name="front_project_by_category")
     */
-    public function index(EntityManagerInterface $entityManager, Request $request, MailerInterface $mailer, SkillRepository $skillRepository, ?string $category = null): Response
+    public function index(EntityManagerInterface $entityManager, Request $request, MailerInterface $mailer, SkillRepository $skillRepository, ?string $category): Response
     {
         $callbackRequest = new CallbackRequest();
         $form = $this->createForm(CallbackRequestType::class, $callbackRequest);
