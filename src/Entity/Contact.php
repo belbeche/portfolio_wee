@@ -33,9 +33,14 @@ class Contact
      */
     private ?string $email;
     /**
+     * Le telephone est facultatif dans le formulaire de contact, mais la
+     * colonne n'accepte pas null. On stocke donc une chaine vide, et la
+     * propriete part avec cette valeur : sans defaut, la simple lecture
+     * d'un contact sans telephone levait une erreur.
+     *
      * @ORM\Column(type="string", length=255)
      */
-    private string $phone;
+    private string $phone = '';
 
     /**
      * @ORM\Column(type="string", length=255)
@@ -161,9 +166,12 @@ class Contact
      *
      * @return self
      */
-    public function setPhone(string $phone): self
+    public function setPhone(?string $phone): self
     {
-        $this->phone = $phone;
+        // Un champ facultatif laisse passer null. Le refuser faisait tomber
+        // le formulaire de contact en erreur 500 des qu'un visiteur ne
+        // laissait pas son numero, c'est-a-dire tres souvent.
+        $this->phone = $phone ?? '';
 
         return $this;
     }

@@ -1,0 +1,119 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Outils gratuits : audit, budget, économies | Walid BELBECHE{% endblock %}
+{% block meta_description %}Trois outils gratuits et sans inscription : auditez votre site, estimez le budget de votre projet, calculez ce que vous coûte votre organisation actuelle.{% endblock %}
+
+{% block seo %}
+<script type="application/ld+json">
+{
+	"@context": "https://schema.org",
+	"@type": "ItemList",
+	"name": "Outils gratuits pour votre projet web",
+	"itemListElement": [
+		{ "@type": "ListItem", "position": 1, "name": "Audit gratuit de votre site", "url": "{{ app.request.schemeAndHttpHost }}{{ path('front_audit') }}" },
+		{ "@type": "ListItem", "position": 2, "name": "Estimation du budget de votre projet", "url": "{{ app.request.schemeAndHttpHost }}{{ path('front_estimation') }}" },
+		{ "@type": "ListItem", "position": 3, "name": "Calcul du coût de votre organisation actuelle", "url": "{{ app.request.schemeAndHttpHost }}{{ path('front_economies') }}" }
+	]
+}
+</script>
+<script type="application/ld+json">
+{
+	"@context": "https://schema.org",
+	"@type": "BreadcrumbList",
+	"itemListElement": [
+		{ "@type": "ListItem", "position": 1, "name": "Accueil", "item": "{{ app.request.schemeAndHttpHost }}{{ path('front_home') }}" },
+		{ "@type": "ListItem", "position": 2, "name": "Outils gratuits", "item": "{{ app.request.schemeAndHttpHost }}{{ path('front_outils') }}" }
+	]
+}
+</script>
+{% endblock %}
+
+{% block content %}
+{% set en = app.request.locale == 'en' %}
+
+<section class="wb-hero wb-slant" data-tone="dark" style="padding-bottom:7rem;">
+	<div class="container">
+		<div class="row justify-content-center text-center">
+			<div class="col-lg-8">
+				<span class="wb-eyebrow">Gratuit · sans inscription · sans engagement</span>
+				<h1 class="wb-display">Servez-vous.<br><span class="wb-mark">On parlera après.</span></h1>
+				<p class="wb-lead wb-lead--on-dark mx-auto mb-0">
+					Trois outils qui répondent aux questions qu'on se pose avant de contacter
+					qui que ce soit. Aucun ne demande votre adresse pour fonctionner.
+				</p>
+			</div>
+		</div>
+	</div>
+</section>
+
+<section class="wb-section" data-tone="light">
+	<div class="container" style="max-width:1000px;">
+		<div class="wb-outils">
+
+			<a href="{{ url('front_audit') }}" class="wb-outil">
+				<span class="wb-outil__q">« Mon site est-il encore correct ? »</span>
+				<h2 class="wb-outil__t">Audit de votre site</h2>
+				<p class="wb-outil__d">
+					Entrez votre adresse. J'analyse la sécurité, la vitesse, l'affichage sur
+					téléphone et le référencement, et je vous donne un score sur 100 avec
+					le détail de ce qui cloche.
+				</p>
+				<span class="wb-outil__m">Résultat en quelques secondes</span>
+				<span class="wb-outil__go">Auditer mon site →</span>
+			</a>
+
+			<a href="{{ url('front_estimation') }}" class="wb-outil">
+				<span class="wb-outil__q">« Combien ça va me coûter ? »</span>
+				<h2 class="wb-outil__t">Estimation du budget</h2>
+				<p class="wb-outil__d">
+					Choisissez votre point de départ, cochez ce dont vous avez besoin.
+					Le budget et le délai se mettent à jour en direct. Une fourchette
+					honnête, pas un prix d'appel.
+				</p>
+				<span class="wb-outil__m">Prix affichés, rien de caché</span>
+				<span class="wb-outil__go">Estimer mon projet →</span>
+			</a>
+
+			<a href="{{ url('front_economies') }}" class="wb-outil">
+				<span class="wb-outil__q">« Est-ce que ça vaut le coup ? »</span>
+				<h2 class="wb-outil__t">Ce que vous coûte l'organisation actuelle</h2>
+				<p class="wb-outil__d">
+					Combien d'heures votre équipe passe-t-elle sur des tâches qu'une
+					application ferait seule ? Le calcul donne le coût annuel, et le temps
+					qu'il faut pour rentabiliser un développement.
+				</p>
+				<span class="wb-outil__m">Rien ne quitte votre navigateur</span>
+				<span class="wb-outil__go">Faire le calcul →</span>
+			</a>
+
+		</div>
+
+		<div class="wb-labo__note">
+			<p class="mb-0">
+				<strong>Pourquoi c'est gratuit.</strong>
+				Parce qu'un prestataire qui vous donne une information utile avant de vous vendre
+				quoi que ce soit vous en dit plus long sur sa façon de travailler que n'importe
+				quelle page « à propos ». Si vous repartez avec la réponse et rien d'autre,
+				c'est très bien.
+			</p>
+		</div>
+	</div>
+</section>
+
+<style>
+	.wb-outils { display:grid; grid-template-columns:repeat(auto-fit,minmax(290px,1fr)); gap:1rem; }
+	.wb-outil { display:flex; flex-direction:column; text-decoration:none; color:inherit;
+		background:#fff; border:1px solid var(--wb-line,rgba(10,22,40,.12)); border-radius:16px; padding:1.6rem 1.5rem;
+		transition:transform .3s cubic-bezier(.22,.61,.36,1), box-shadow .3s ease, border-color .3s ease; }
+	.wb-outil:hover { transform:translateY(-5px); border-color:rgba(245,179,1,.6); box-shadow:0 18px 44px rgba(10,22,40,.1); color:inherit; }
+	.wb-outil__q { font-size:.85rem; font-style:italic; color:var(--wb-text-3,#8494a8); margin-bottom:.6rem; }
+	.wb-outil__t { font-size:1.15rem; font-weight:800; line-height:1.3; margin:0 0 .6rem; color:var(--wb-text,#0a1628); }
+	.wb-outil__d { font-size:.9rem; line-height:1.6; color:var(--wb-text-2,#5a6b82); margin:0 0 1rem; flex:1; }
+	.wb-outil__m { font-size:.75rem; font-weight:700; text-transform:uppercase; letter-spacing:.05em; color:#0f7a54; margin-bottom:.8rem; }
+	.wb-outil__go { font-weight:700; color:var(--wb-gold,#f5b301); }
+	.wb-labo__note { margin-top:2rem; background:var(--wb-paper-2,#f2f5f9); border-radius:14px; padding:1.3rem 1.5rem;
+		font-size:.92rem; line-height:1.65; color:var(--wb-text-2,#5a6b82); }
+	.wb-labo__note strong { color:var(--wb-text,#0a1628); }
+</style>
+
+{% endblock %}

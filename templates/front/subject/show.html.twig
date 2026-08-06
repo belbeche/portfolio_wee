@@ -119,7 +119,7 @@
 
 {% block javascripts %}
     {{ parent() }}
-    <script>
+    <script nonce="{{ csp_nonce() }}">
         document.addEventListener('DOMContentLoaded', function() {
             document.querySelectorAll('.reply-button').forEach(function(button) {
                 button.addEventListener('click', function() {

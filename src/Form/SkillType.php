@@ -45,6 +45,8 @@ class SkillType extends AbstractType
             ->add('position', IntegerType::class, [
                 'label' => "Ordre d'affichage",
                 'required' => false,
+                // Laisse vide veut dire zero, pas null.
+                'empty_data' => '0',
             ])
             ->add('visible', CheckboxType::class, [
                 'label' => 'Visible sur le site',

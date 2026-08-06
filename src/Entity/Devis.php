@@ -46,11 +46,14 @@ class Devis
     private $prix;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * Une seule declaration de colonne, et elle dit la verite : l'adresse
+     * est facultative. Il y en avait deux empilees ici, dont la seconde
+     * contredisait la premiere.
+     *
+     * @ORM\Column(type="string", length=255, nullable=true)
      * @Assert\Email(message="L'adresse email '{{ value }}' n'est pas valide.")
-     * @ORM\Column(nullable=true)
      */
-    private $email;
+    private ?string $email = null;
 
     /**
      * @ORM\Column(type="string", length=255)
@@ -257,8 +260,11 @@ class Devis
         return $this->email;
     }
 
-    public function setEmail(string $email): self
+    public function setEmail(?string $email): self
     {
+        // Le champ est facultatif dans le formulaire de devis : refuser null
+        // ici renvoyait une erreur 500 au visiteur au lieu d'enregistrer sa
+        // demande. Perdre un prospect sur un champ vide coute cher.
         $this->email = $email;
 
         return $this;

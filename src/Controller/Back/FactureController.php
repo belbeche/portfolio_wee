@@ -38,7 +38,7 @@ class FactureController extends AbstractController
         // personne n'a envie de cliquer « ajouter » avant de commencer.
         if ($devis->getLignes()->isEmpty()) {
             $ligne = (new DevisLigne())
-                ->setDesignation((string) ($devis->getTypeDeSiteWeb() ?: ''))
+                ->setDesignation($this->libelleProjet($devis->getTypeDeSiteWeb()))
                 ->setPrixUnitaire($devis->getPrix() ?: 0)
                 ->setTauxTva($settings->get('devis_tva_taux', '20') ?: '20');
             $devis->addLigne($ligne);
@@ -73,6 +73,32 @@ class FactureController extends AbstractController
             'devis' => $devis,
             'form' => $form->createView(),
         ]);
+    }
+
+    /**
+     * La cle technique du formulaire, en francais lisible.
+     *
+     * Sans cette traduction, la premiere ligne du devis s'appelait
+     * « application_cross_plateforme » : un identifiant interne, sous les yeux
+     * du client, sur un document contractuel.
+     */
+    private function libelleProjet(?string $cle): string
+    {
+        $libelles = [
+            'site_vitrine' => 'Site vitrine',
+            'site_real_estate' => "Site d'annonces immobilieres",
+            'site_e-commerce' => 'Boutique en ligne',
+            'site_blog' => 'Blog professionnel',
+            'site_portfolio' => 'Portfolio',
+            'site_forum' => 'Forum communautaire',
+            'site_info_magazine' => "Site d'information",
+            'application_cross_plateforme' => 'Application web et mobile',
+            'systeme_gestion_contenu' => 'Systeme de gestion de contenu',
+            'intranet' => "Intranet d'entreprise",
+            'autre' => 'Prestation sur mesure',
+        ];
+
+        return $libelles[(string) $cle] ?? 'Prestation de developpement';
     }
 
     /**

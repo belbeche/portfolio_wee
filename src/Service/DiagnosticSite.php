@@ -33,12 +33,28 @@ class DiagnosticSite
      */
     public function analyser(Prospect $prospect): array
     {
-        $url = $this->normaliser((string) $prospect->getWebsite());
+        return $this->analyserUrl((string) $prospect->getWebsite());
+    }
+
+    /**
+     * La meme analyse, a partir d'une simple adresse.
+     *
+     * L'audit public et la prospection partagent ce moteur : un constat qui
+     * s'affiche a un visiteur est exactement celui qui partira dans un e-mail,
+     * il n'y a pas deux verites.
+     *
+     * @return array<string, mixed>
+     */
+    public function analyserUrl(string $adresse): array
+    {
+        $url = $this->normaliser($adresse);
 
         if ('' === $url) {
             return [
                 'url' => null,
                 'joignable' => false,
+                'score' => null,
+                'notes' => [],
                 'constats' => [],
                 'resume' => 'Aucune adresse de site connue.',
             ];
@@ -50,10 +66,12 @@ class DiagnosticSite
             return [
                 'url' => $url,
                 'joignable' => false,
+                'score' => 0,
+                'notes' => ['securite' => 0, 'performance' => 0, 'mobile' => 0, 'seo' => 0, 'global' => 0],
                 'constats' => [[
                     'cle' => 'injoignable',
-                    'titre' => 'Le site ne repond pas',
-                    'phrase' => sprintf("votre site %s ne repond pas depuis l'exterieur", $this->hote($url)),
+                    'titre' => 'Le site ne répond pas',
+                    'phrase' => sprintf("votre site %s ne répond pas depuis l'extérieur", $this->hote($url)),
                     'gravite' => 'haute',
                 ]],
                 'resume' => 'Site injoignable au moment du test.',
@@ -68,7 +86,7 @@ class DiagnosticSite
             $constats[] = [
                 'cle' => 'https',
                 'titre' => 'Pas de certificat',
-                'phrase' => "votre site s'ouvre en http : les navigateurs affichent « Non securise » a vos visiteurs, et Google declasse ces pages depuis 2018",
+                'phrase' => "votre site s'ouvre en http : les navigateurs affichent « Non sécurisé » à vos visiteurs, et Google déclasse ces pages depuis 2018",
                 'gravite' => 'haute',
             ];
         }
@@ -77,8 +95,8 @@ class DiagnosticSite
         if (!preg_match('/<meta[^>]+name=["\']viewport["\']/i', $html)) {
             $constats[] = [
                 'cle' => 'mobile',
-                'titre' => 'Pas prevu pour le mobile',
-                'phrase' => "votre page n'a pas de balise viewport : sur un telephone elle s'affiche en miniature, alors que la majorite de vos visiteurs arrivent de la",
+                'titre' => 'Pas prévu pour le mobile',
+                'phrase' => "votre page n'a pas de balise viewport : sur un téléphone elle s'affiche en miniature, alors que la majorité de vos visiteurs arrivent de là",
                 'gravite' => 'haute',
             ];
         }
@@ -89,7 +107,7 @@ class DiagnosticSite
                 'cle' => 'vitesse',
                 'titre' => 'Page lente',
                 'phrase' => sprintf(
-                    'votre page met %.1f seconde(s) a repondre depuis un acces standard : au-dela de deux secondes, une part importante des visiteurs repart avant de voir quoi que ce soit',
+                    'votre page met %.1f seconde(s) à répondre depuis un accès standard : au-delà de deux secondes, une part importante des visiteurs repart avant de voir quoi que ce soit',
                     $mesure['ms'] / 1000
                 ),
                 'gravite' => 'haute',
@@ -101,7 +119,7 @@ class DiagnosticSite
             $constats[] = [
                 'cle' => 'description',
                 'titre' => 'Pas de description',
-                'phrase' => "votre page n'a pas de meta description : dans les resultats Google, le texte affiche sous votre titre est choisi au hasard dans la page",
+                'phrase' => "votre page n'a pas de meta description : dans les résultats Google, le texte affiché sous votre titre est choisi au hasard dans la page",
                 'gravite' => 'moyenne',
             ];
         }
@@ -113,7 +131,7 @@ class DiagnosticSite
                 $constats[] = [
                     'cle' => 'titre',
                     'titre' => 'Titre de page trop court',
-                    'phrase' => sprintf("le titre de votre page est « %s » : c'est ce que Google affiche en bleu, et c'est ce qui decide du clic", $titre),
+                    'phrase' => sprintf("le titre de votre page est « %s » : c'est ce que Google affiche en bleu, et c'est ce qui décide du clic", $titre),
                     'gravite' => 'moyenne',
                 ];
             }
@@ -121,7 +139,7 @@ class DiagnosticSite
             $constats[] = [
                 'cle' => 'titre',
                 'titre' => 'Aucun titre de page',
-                'phrase' => "votre page n'a pas de balise title : Google affiche alors l'adresse brute dans ses resultats",
+                'phrase' => "votre page n'a pas de balise title : Google affiche alors l'adresse brute dans ses résultats",
                 'gravite' => 'haute',
             ];
         }
@@ -133,9 +151,9 @@ class DiagnosticSite
             if ($derniere > 0 && $derniere <= $anneeCourante - 2) {
                 $constats[] = [
                     'cle' => 'abandon',
-                    'titre' => 'Site fige',
+                    'titre' => 'Site figé',
                     'phrase' => sprintf(
-                        'le bas de votre page affiche encore %d : un visiteur en deduit que le site, et parfois l\'entreprise, ne sont plus suivis',
+                        'le bas de votre page affiche encore %d : un visiteur en déduit que le site, et parfois l\'entreprise, ne sont plus suivis',
                         $derniere
                     ),
                     'gravite' => 'moyenne',
@@ -148,8 +166,8 @@ class DiagnosticSite
         if ($poidsKo > 900) {
             $constats[] = [
                 'cle' => 'poids',
-                'titre' => 'Page tres lourde',
-                'phrase' => sprintf('le seul code de votre page pese %d Ko avant meme les images : sur un forfait mobile, cela se paie en secondes d\'attente', $poidsKo),
+                'titre' => 'Page très lourde',
+                'phrase' => sprintf('le seul code de votre page pèse %d Ko avant même les images : sur un forfait mobile, cela se paie en secondes d\'attente', $poidsKo),
                 'gravite' => 'moyenne',
             ];
         }
@@ -158,18 +176,99 @@ class DiagnosticSite
         // qu'un, autant que ce soit celui qui parle le plus.
         usort($constats, static fn ($a, $b) => ('haute' === $b['gravite'] ? 1 : 0) <=> ('haute' === $a['gravite'] ? 1 : 0));
 
+        $notes = $this->noter($mesure, $constats, $poidsKo);
+
         return [
             'url' => $url,
             'joignable' => true,
             'https' => $mesure['https'],
             'ms' => $mesure['ms'],
             'poidsKo' => $poidsKo,
+            'notes' => $notes,
+            'score' => $notes['global'],
             'constats' => $constats,
             'resume' => [] === $constats
-                ? 'Rien de bloquant reperé : ce site est correctement tenu.'
-                : sprintf('%d point(s) reperé(s), dont %d important(s).',
+                ? 'Rien de bloquant repéré : ce site est correctement tenu.'
+                : sprintf('%d point(s) repéré(s), dont %d important(s).',
                     count($constats),
                     count(array_filter($constats, static fn ($c) => 'haute' === $c['gravite']))),
+        ];
+    }
+
+    /**
+     * Les quatre notes et la note globale, sur 100.
+     *
+     * Le bareme est volontairement simple et explicable : un visiteur qui voit
+     * « Securite 30 » doit pouvoir comprendre pourquoi en lisant les constats
+     * juste en dessous. Une note qu'on ne sait pas justifier ne convainc
+     * personne, et se retourne contre celui qui l'affiche.
+     *
+     * @param array{joignable: bool, https: bool, ms: int, corps: string} $mesure
+     * @param array<int, array<string, string>>                           $constats
+     *
+     * @return array{securite: int, performance: int, mobile: int, seo: int, global: int}
+     */
+    private function noter(array $mesure, array $constats, int $poidsKo): array
+    {
+        $cles = array_column($constats, 'cle');
+        $a = static fn (string $cle): bool => in_array($cle, $cles, true);
+
+        // Securite : le certificat vaut l'essentiel de la note. Un site en
+        // http n'est pas « un peu moins sur », il est signale comme non sur
+        // a chacun de ses visiteurs.
+        $securite = $mesure['https'] ? 100 : 30;
+
+        // Performance : deux secondes est le seuil ou l'abandon decolle.
+        $ms = max(1, $mesure['ms']);
+        if ($ms <= 800) {
+            $performance = 100;
+        } elseif ($ms <= 1500) {
+            $performance = 85;
+        } elseif ($ms <= 2500) {
+            $performance = 65;
+        } elseif ($ms <= 4000) {
+            $performance = 40;
+        } else {
+            $performance = 20;
+        }
+        if ($poidsKo > 900) {
+            $performance = max(10, $performance - 15);
+        }
+
+        // Mobile : la balise viewport est binaire, on l'a ou on ne l'a pas.
+        $mobile = $a('mobile') ? 25 : 100;
+
+        // Referencement : trois points qui se voient directement dans les
+        // resultats de recherche.
+        $seo = 100;
+        if ($a('description')) {
+            $seo -= 30;
+        }
+        if ($a('titre')) {
+            $seo -= 30;
+        }
+        if ($a('abandon')) {
+            $seo -= 15;
+        }
+        if (!$mesure['https']) {
+            $seo -= 10; // Google declasse les pages en http depuis 2018
+        }
+        $seo = max(0, $seo);
+
+        // La note globale pese ce qui coute le plus cher a negliger.
+        $global = (int) round(
+            $securite * 0.30
+            + $performance * 0.30
+            + $mobile * 0.20
+            + $seo * 0.20
+        );
+
+        return [
+            'securite' => $securite,
+            'performance' => $performance,
+            'mobile' => $mobile,
+            'seo' => $seo,
+            'global' => $global,
         ];
     }
 

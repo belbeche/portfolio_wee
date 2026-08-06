@@ -9,7 +9,7 @@
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
 
-	<script>
+	<script nonce="{{ csp_nonce() }}">
 		var image = document.getElementsByClassName('thumbnail');
 		new simpleParallax(image, {
 			maxTransition: 60
@@ -176,7 +176,9 @@
 				</p>
 
 				<div class="wb-form">
-					{{ form_start(formDevis, {'attr': {'novalidate': 'novalidate'}}) }}
+					{{ form_start(formDevis, {'attr': {'novalidate': 'novalidate', 'id': 'wb-devis-form'}}) }}
+
+					<div class="wb-etape" data-etape="1">
 
 						{# ------------------------------------------------ 1. contact -- #}
 						<fieldset style="border: 0; padding: 0; margin: 0 0 2rem;">
@@ -261,6 +263,14 @@
 							</details>
 						</fieldset>
 
+						<div class="wb-nav">
+							<button type="button" class="wb-btn wb-btn--gold" data-suivant>Continuer</button>
+							<span class="wb-nav__note">Deux questions de plus, et c'est fini.</span>
+						</div>
+					</div>
+
+					<div class="wb-etape" data-etape="2">
+
 						{# ------------------------------------------------- 3. design -- #}
 						<fieldset style="border: 0; padding: 0; margin: 0 0 2rem;">
 							<legend class="wb-eyebrow wb-eyebrow--ink" style="float: none; width: auto; font-size: .72rem;">
@@ -337,9 +347,29 @@
 							</div>
 						</fieldset>
 
+						{# --------------------------------------------- rassurance -- #}
+						{# Juste avant le bouton, la ou l'hesitation est la plus forte :
+						   ce qui se passe apres, et ce qui n'arrivera pas. #}
+						<div class="wb-rassure">
+							<span class="wb-rassure__i" aria-hidden="true">✓</span>
+							<span><strong>Réponse sous 48 h ouvrées</strong>, par un être humain, avec un chiffrage ligne par ligne.</span>
+						</div>
+						<div class="wb-rassure">
+							<span class="wb-rassure__i" aria-hidden="true">✓</span>
+							<span><strong>Aucune relance automatique.</strong> Vos coordonnées ne sont ni revendues ni versées à une liste de diffusion.</span>
+						</div>
+						<div class="wb-rassure">
+							<span class="wb-rassure__i" aria-hidden="true">✓</span>
+							<span><strong>Le devis est gratuit et n'engage à rien</strong> tant qu'il n'est pas signé.</span>
+						</div>
+
 						{# ------------------------------------------------- validation -- #}
 						<div class="d-flex flex-column flex-sm-row align-items-sm-center gap-3 pt-3"
 						     style="border-top: 1px solid var(--wb-line);">
+							{# Variante « ink » et non « ghost » : la ghost est blanche, faite pour
+							   les fonds sombres. Posee sur ce fond clair, elle etait blanche
+							   sur blanc et le bouton disparaissait. #}
+							<button type="button" class="wb-btn wb-btn--ghost-ink" data-precedent>Retour</button>
 							<button type="submit" class="wb-btn wb-btn--gold">
 								{{ 'quote.submit'|trans }}
 							</button>
@@ -347,6 +377,7 @@
 								{{ 'quote.submit_note'|trans }}
 							</span>
 						</div>
+					</div>
 
 					{{ form_end(formDevis) }}
 				</div>
@@ -436,7 +467,7 @@
    Le script ne fait que relier les cartes au select existant. Sans lui, le
    bloc « je sais deja ce que je veux » reste ouvert et le formulaire
    fonctionne exactement comme avant : rien n'est jamais bloque. #}
-<script>
+<script nonce="{{ csp_nonce() }}">
 (function () {
 	var cartes = document.querySelectorAll('.wb-situation');
 	if (!cartes.length) { return; }
@@ -470,6 +501,82 @@
 	// Le repli technique se referme une fois le script en place : il ne sert
 	// qu'a ceux qui savent, ou a ceux qui n'ont pas de JavaScript.
 	if (repli) { repli.open = false; }
+})();
+</script>
+
+
+{# ------------------------------------------------- formulaire en deux temps --
+   Le formulaire faisait cinq sections d'affilee. Vu d'en haut, ca ressemble a
+   un questionnaire administratif, et on le referme. En deux ecrans, le premier
+   ne demande que deux choses : qui vous etes, et dans quelle situation vous
+   etes. C'est court, ca s'engage, et le second se remplit par elan.
+
+   Sans JavaScript, la classe js-etapes n'est jamais posee : les deux ecrans
+   restent affiches l'un sous l'autre et le formulaire fonctionne comme avant.
+-------------------------------------------------------------------------- #}
+<style>
+	.wb-nav { display:flex; align-items:center; gap:1rem; flex-wrap:wrap; padding-top:.5rem; }
+	.wb-nav__note { font-size:.85rem; color:var(--wb-text-3,#8494a8); }
+	.wb-rassure { display:flex; gap:.6rem; align-items:flex-start; font-size:.88rem; line-height:1.5; color:var(--wb-text-2,#5a6b82); margin-bottom:.55rem; }
+	.wb-rassure__i { color:#1baf7a; font-weight:800; flex-shrink:0; }
+	.wb-rassure strong { color:var(--wb-text,#0a1628); }
+
+	form.js-etapes .wb-etape { display:none; }
+	form.js-etapes .wb-etape.is-actif { display:block; }
+</style>
+
+<script nonce="{{ csp_nonce() }}">
+(function () {
+	var form = document.getElementById('wb-devis-form');
+	if (!form) { return; }
+
+	var ecrans = form.querySelectorAll('.wb-etape');
+	if (ecrans.length < 2) { return; }
+
+	var reperes = document.querySelectorAll('.wb-steps__item');
+
+	function montrer(n) {
+		ecrans.forEach(function (e, i) { e.classList.toggle('is-actif', i === n); });
+		reperes.forEach(function (r, i) { r.classList.toggle('is-current', i <= n); });
+
+		// On remonte en haut du formulaire, sinon on se retrouve au milieu
+		// de l'ecran suivant sans comprendre ce qui vient de se passer.
+		var haut = form.getBoundingClientRect().top + window.scrollY - 90;
+		window.scrollTo({ top: haut, behavior: 'smooth' });
+	}
+
+	form.classList.add('js-etapes');
+	montrer(0);
+
+	form.querySelectorAll('[data-suivant]').forEach(function (b) {
+		b.addEventListener('click', function () {
+			// Verification minimale : une adresse valide et une situation
+			// choisie. On ne bloque pas sur le reste, il est facultatif.
+			var email = form.querySelector('[type="email"], [id$="_email"]');
+			if (email && email.offsetParent !== null && !email.checkValidity()) {
+				email.focus();
+				email.reportValidity();
+
+				return;
+			}
+			montrer(1);
+		});
+	});
+
+	form.querySelectorAll('[data-precedent]').forEach(function (b) {
+		b.addEventListener('click', function () { montrer(0); });
+	});
+
+	// Choisir une situation fait avancer tout seul : le clic est deja une
+	// reponse, demander un second clic pour rien fait perdre du monde.
+	form.querySelectorAll('.wb-situation').forEach(function (carte) {
+		carte.addEventListener('click', function () {
+			setTimeout(function () {
+				var email = form.querySelector('[type="email"], [id$="_email"]');
+				if (!email || email.offsetParent === null || email.checkValidity()) { montrer(1); }
+			}, 320);
+		});
+	});
 })();
 </script>
 

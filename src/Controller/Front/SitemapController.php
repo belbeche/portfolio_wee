@@ -32,6 +32,14 @@ class SitemapController extends AbstractController
             ['front_services', 0.9, 'monthly'],
             ['front_project', 0.9, 'weekly'],
             ['front_devis_new', 0.9, 'monthly'],
+            // L'audit est une porte d'entree a part entiere : il repond a une
+            // recherche que les gens font vraiment, « tester mon site ».
+            ['front_audit', 0.9, 'monthly'],
+            // « combien coute un site » est une des recherches les plus
+            // frequentes du secteur : autant y repondre soi-meme.
+            ['front_estimation', 0.9, 'monthly'],
+            ['front_outils', 0.8, 'monthly'],
+            ['front_economies', 0.8, 'monthly'],
             ['front_commencer', 0.8, 'monthly'],
             ['front_methode', 0.7, 'monthly'],
             ['front_agences', 0.7, 'monthly'],

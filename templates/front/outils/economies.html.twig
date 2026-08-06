@@ -1,0 +1,334 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Combien vous coûte votre organisation actuelle ? | Walid BELBECHE{% endblock %}
+{% block meta_description %}Calculez en direct ce que coûtent les tâches manuelles de votre équipe, et en combien de temps une application se rembourse.{% endblock %}
+
+{% block seo %}
+<script type="application/ld+json">
+{
+	"@context": "https://schema.org",
+	"@type": "BreadcrumbList",
+	"itemListElement": [
+		{ "@type": "ListItem", "position": 1, "name": "Accueil", "item": "{{ app.request.schemeAndHttpHost }}{{ path('front_home') }}" },
+		{ "@type": "ListItem", "position": 2, "name": "Outils gratuits", "item": "{{ app.request.schemeAndHttpHost }}{{ path('front_outils') }}" },
+		{ "@type": "ListItem", "position": 3, "name": "Ce que coûte le travail à la main", "item": "{{ app.request.schemeAndHttpHost }}{{ path('front_economies') }}" }
+	]
+}
+</script>
+<script type="application/ld+json">
+{
+	"@context": "https://schema.org",
+	"@type": "FAQPage",
+	"mainEntity": [
+		{
+			"@type": "Question",
+			"name": "Comment chiffrer le coût des tâches manuelles dans une entreprise ?",
+			"acceptedAnswer": { "@type": "Answer", "text": "On multiplie le nombre de personnes concernées par les heures qu'elles y passent chaque semaine, puis par leur coût horaire chargé, puis par quarante-cinq semaines travaillées, congés et jours fériés déduits. Quatre personnes qui perdent cinq heures par semaine à trente-cinq euros de l'heure représentent 31 500 euros de temps payé chaque année, dont environ 22 000 euros qu'un outil peut supprimer." }
+		},
+		{
+			"@type": "Question",
+			"name": "En combien de temps une application sur mesure se rembourse-t-elle ?",
+			"acceptedAnswer": { "@type": "Answer", "text": "On divise le budget de développement par les économies mensuelles qu'il génère. Un développement de quinze mille euros qui supprime deux mille euros de temps perdu chaque mois est remboursé en huit mois. Au-delà de vingt-quatre mois, le projet mérite d'être redécoupé plutôt que lancé tel quel." }
+		},
+		{
+			"@type": "Question",
+			"name": "Quel est le coût horaire chargé d'un salarié ?",
+			"acceptedAnswer": { "@type": "Answer", "text": "C'est le salaire brut augmenté des charges patronales, divisé par les heures réellement travaillées. Il se situe autour de trente à quarante euros pour un salarié payé au voisinage du SMIC, et de cinquante à quatre-vingts euros pour un cadre. C'est ce chiffre qu'il faut utiliser, pas le salaire net." }
+		}
+	]
+}
+</script>
+{% endblock %}
+
+{% block content %}
+
+<section class="wb-hero wb-slant" data-tone="dark" style="padding-bottom:7rem;">
+	<div class="container">
+		<div class="row justify-content-center text-center">
+			<div class="col-lg-8">
+				<span class="wb-eyebrow">Rien ne quitte votre navigateur</span>
+				<h1 class="wb-display">Ce que vous coûte<br><span class="wb-mark">le travail à la main</span></h1>
+				<p class="wb-lead wb-lead--on-dark mx-auto mb-0">
+					Ressaisir une commande, refaire un devis, chercher un fichier, recopier
+					un tableau. Trois chiffres suffisent à mettre un montant dessus.
+				</p>
+			</div>
+		</div>
+	</div>
+</section>
+
+<section class="wb-section" data-tone="light">
+	<div class="container" style="max-width:900px;">
+		<div class="wb-eco">
+
+			<div class="wb-eco__form">
+				<label class="wb-eco__champ">
+					<span>Personnes concernées</span>
+					<input type="number" id="eco-personnes" value="4" min="1" max="500" step="1">
+					<small>Celles qui font ces tâches, même à temps partiel.</small>
+				</label>
+
+				<label class="wb-eco__champ">
+					<span>Heures perdues par personne et par semaine</span>
+					<input type="number" id="eco-heures" value="5" min="0.5" max="35" step="0.5">
+					<small>Ressaisie, copier-coller, recherche de documents, relances.</small>
+				</label>
+
+				<label class="wb-eco__champ">
+					<span>Coût horaire chargé (€)</span>
+					<input type="number" id="eco-cout" value="35" min="10" max="200" step="1">
+					<small>Salaire brut plus charges, divisé par les heures travaillées. Autour de 30 à 40 € pour un salarié au SMIC majoré.</small>
+				</label>
+
+				<label class="wb-eco__champ">
+					<span>Part automatisable</span>
+					<input type="range" id="eco-part" value="70" min="20" max="95" step="5">
+					<small><strong><span id="eco-part-v">70</span> %</strong> de ces heures peuvent être supprimées par un outil. Au-delà de 80 %, c'est rare : il reste toujours du contrôle humain.</small>
+				</label>
+			</div>
+
+			<div class="wb-eco__res" data-tone="dark">
+				<span class="wb-eco__l">Ce que ça vous coûte</span>
+				<span class="wb-eco__n" id="eco-an">0 €</span>
+				<span class="wb-eco__d">par an, en heures payées</span>
+
+				<hr class="wb-eco__sep">
+
+				<div class="wb-eco__ligne"><span>Par mois</span><strong id="eco-mois">0 €</strong></div>
+				<div class="wb-eco__ligne"><span>Heures récupérées par an</span><strong id="eco-h">0 h</strong></div>
+				<div class="wb-eco__ligne"><span>Soit, en jours de travail</span><strong id="eco-j">0 j</strong></div>
+
+				<hr class="wb-eco__sep">
+
+				<div class="wb-eco__retour">
+					<span class="wb-eco__l">Une application à <strong id="eco-invest">15 000 €</strong></span>
+					<span class="wb-eco__retour-n" id="eco-retour">se rembourse en 12 mois</span>
+					<input type="range" id="eco-budget" value="15000" min="3000" max="60000" step="1000">
+				</div>
+
+				<a href="{{ url('front_estimation') }}" class="wb-btn wb-btn--gold w-100" style="margin-top:1rem;">Estimer mon projet</a>
+			</div>
+
+		</div>
+
+		<div class="wb-labo__note" style="margin-top:2rem;">
+			<p class="mb-0">
+				<strong>Ce calcul est volontairement prudent.</strong>
+				Il ne compte que des heures déjà payées, pas les ventes perdues, pas les erreurs
+				de ressaisie, pas le temps de correction quand quelqu'un se trompe de version du
+				fichier. Ces coûts existent, mais ils ne se chiffrent pas honnêtement depuis une
+				page web. Ce que vous voyez est un plancher, pas une promesse.
+			</p>
+		</div>
+	</div>
+</section>
+
+{# La page se resumait a quatre champs et un total. Un visiteur qui
+   n'a jamais chiffre son temps perdu ne sait pas quoi y mettre, et
+   quatre champs vides ne parlent a personne. Un cas concret lui donne
+   ses propres chiffres par comparaison. #}
+<section class="wb-section wb-section--paper" data-tone="light">
+	<div class="container" style="max-width:900px;">
+		<h2 class="wb-h2 text-center">À quoi ça ressemble, en vrai</h2>
+		<p class="wb-lead text-center mx-auto" style="max-width:62ch;">
+			Trois situations que je rencontre tout le temps. Si l'une vous parle,
+			reprenez ses chiffres plus haut et ajustez.
+		</p>
+
+		<div class="wb-cas">
+			<article class="wb-cas__c">
+				<span class="wb-cas__n">Cabinet de 4 personnes</span>
+				<p class="wb-cas__q">
+					« On ressaisit chaque rendez-vous trois fois : dans l'agenda, dans le
+					tableur de suivi, puis dans la facture. »
+				</p>
+				<p class="wb-cas__d">
+					4 personnes, 5 h par semaine, 35 € de l'heure, curseur à 70 %.
+				</p>
+				<span class="wb-cas__r">≈ 22 050 € par an</span>
+			</article>
+
+			<article class="wb-cas__c">
+				<span class="wb-cas__n">Artisan et son assistante</span>
+				<p class="wb-cas__q">
+					« Les devis, je les refais un par un sous Word. Une heure chacun,
+					et je me trompe une fois sur dix. »
+				</p>
+				<p class="wb-cas__d">
+					2 personnes, 8 h par semaine, 40 € de l'heure, curseur à 70 %.
+				</p>
+				<span class="wb-cas__r">≈ 20 160 € par an</span>
+			</article>
+
+			<article class="wb-cas__c">
+				<span class="wb-cas__n">PME de 12 personnes</span>
+				<p class="wb-cas__q">
+					« Personne ne sait quelle version du fichier est la bonne. On passe
+					la moitié des réunions à se mettre d'accord là-dessus. »
+				</p>
+				<p class="wb-cas__d">
+					12 personnes, 3 h par semaine, 45 € de l'heure, curseur à 70 %.
+				</p>
+				<span class="wb-cas__r">≈ 51 030 € par an</span>
+			</article>
+		</div>
+
+		<p class="text-center" style="margin-top:1.4rem; font-size:.88rem; color:var(--wb-text-3,#8494a8);">
+			Mêmes règles que le calculateur ci-dessus : 45 semaines travaillées, congés et jours fériés déduits, et seule la part automatisable est comptée.
+		</p>
+	</div>
+</section>
+
+<section class="wb-section" data-tone="light">
+	<div class="container" style="max-width:760px;">
+		<h2 class="wb-h2">Ce qu'on me demande à ce sujet</h2>
+
+		<details class="wb-faq" open>
+			<summary>Comment chiffrer le temps perdu, concrètement ?</summary>
+			<p>
+				Vous comptez les personnes concernées, les heures qu'elles y passent chaque
+				semaine, et leur coût horaire chargé, sur 45 semaines travaillées. Quatre
+				personnes qui perdent cinq heures par semaine à trente-cinq euros de l'heure,
+				ça fait 31 500 € de temps payé chaque année. Le calculateur n'en retient que
+				la part qu'un outil peut réellement supprimer, soit 22 050 € au curseur
+				par défaut. Cet argent est déjà sorti de la caisse, tous les ans, sans rien
+				produire.
+			</p>
+		</details>
+
+		<details class="wb-faq">
+			<summary>Qu'est-ce que le coût horaire chargé ?</summary>
+			<p>
+				Le salaire brut plus les charges patronales, divisé par les heures réellement
+				travaillées. Comptez 30 à 40 € pour un salarié proche du SMIC, 50 à 80 € pour
+				un cadre. C'est ce chiffre-là qu'il faut prendre, pas le salaire net : le net
+				fait paraître le problème deux fois plus petit qu'il n'est.
+			</p>
+		</details>
+
+		<details class="wb-faq">
+			<summary>En combien de temps un développement se rembourse-t-il ?</summary>
+			<p>
+				On divise le budget par les économies mensuelles. Quinze mille euros de
+				développement qui suppriment deux mille euros de temps perdu chaque mois,
+				c'est remboursé en huit mois. Au-delà de vingt-quatre mois, je vous dirai
+				de redécouper le projet plutôt que de le lancer tel quel.
+			</p>
+		</details>
+
+		<details class="wb-faq">
+			<summary>Pourquoi ne pas compter aussi les erreurs et les ventes perdues ?</summary>
+			<p>
+				Parce qu'elles ne se chiffrent pas honnêtement depuis une page web. Elles
+				existent, elles coûtent souvent plus cher que les heures elles-mêmes, mais
+				les mettre dans le calcul reviendrait à gonfler un résultat que vous ne
+				pourriez pas vérifier. Ce que vous voyez est un plancher.
+			</p>
+		</details>
+
+		<details class="wb-faq">
+			<summary>Faut-il tout automatiser ?</summary>
+			<p>
+				Non, et c'est pour ça que le curseur s'arrête à 95 %. Il reste toujours du
+				contrôle humain, des cas particuliers, des exceptions qu'aucun outil ne doit
+				décider seul. Au-delà de 80 % d'automatisation, méfiez-vous de qui vous
+				le promet.
+			</p>
+		</details>
+	</div>
+</section>
+
+<style>
+	.wb-cas { display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:1rem; margin-top:1.6rem; }
+	.wb-cas__c { background:#fff; border:1px solid var(--wb-line,rgba(10,22,40,.1)); border-radius:14px;
+		padding:1.3rem 1.4rem; display:flex; flex-direction:column; }
+	.wb-cas__n { display:block; font-size:.72rem; text-transform:uppercase; letter-spacing:.07em; font-weight:800; color:var(--wb-gold,#f5b301); }
+	.wb-cas__q { font-size:.93rem; line-height:1.6; font-style:italic; color:var(--wb-text,#0a1628); margin:.5rem 0 .8rem; flex:1; }
+	.wb-cas__d { font-size:.82rem; color:var(--wb-text-3,#8494a8); margin:0 0 .6rem; }
+	.wb-cas__r { font-size:1.15rem; font-weight:800; color:#b32a29; font-variant-numeric:tabular-nums; }
+</style>
+
+
+<style>
+	.wb-eco { display:grid; grid-template-columns:minmax(0,1.1fr) minmax(280px,.9fr); gap:1.4rem; align-items:start; }
+	.wb-eco__form { display:grid; gap:1.1rem; }
+	.wb-eco__champ { display:block; }
+	.wb-eco__champ > span { display:block; font-weight:700; font-size:.92rem; margin-bottom:.35rem; }
+	.wb-eco__champ input[type="number"] { width:100%; padding:.65rem .8rem; font-size:1.05rem;
+		border:1px solid var(--wb-line,rgba(10,22,40,.15)); border-radius:10px; }
+	.wb-eco__champ input[type="range"] { width:100%; accent-color:var(--wb-gold,#f5b301); }
+	.wb-eco__champ small { display:block; font-size:.8rem; line-height:1.5; color:var(--wb-text-2,#5a6b82); margin-top:.35rem; }
+
+	.wb-eco__res { position:sticky; top:100px; background:#0a1628; color:#fff; border-radius:16px; padding:1.5rem; }
+	.wb-eco__l { display:block; font-size:.72rem; letter-spacing:.1em; text-transform:uppercase; font-weight:700; color:var(--wb-gold,#f5b301); }
+	.wb-eco__n { display:block; font-size:2.4rem; font-weight:800; line-height:1.1; margin:.2rem 0 .1rem; font-variant-numeric:tabular-nums; }
+	.wb-eco__d { display:block; font-size:.82rem; color:var(--wb-on-dark-2,#9fb3cd); }
+	.wb-eco__sep { border:0; border-top:1px solid rgba(255,255,255,.14); margin:1rem 0; }
+	.wb-eco__ligne { display:flex; justify-content:space-between; gap:1rem; font-size:.9rem; padding:.2rem 0; color:var(--wb-on-dark-2,#9fb3cd); }
+	.wb-eco__ligne strong { color:#fff; font-variant-numeric:tabular-nums; }
+	.wb-eco__retour-n { display:block; font-size:1.05rem; font-weight:700; margin:.25rem 0 .5rem; }
+	.wb-eco__retour input { width:100%; accent-color:var(--wb-gold,#f5b301); }
+
+	@media (max-width:820px) { .wb-eco { grid-template-columns:1fr; } .wb-eco__res { position:static; } }
+</style>
+
+<script nonce="{{ csp_nonce() }}">
+(function () {
+	var champs = ['personnes', 'heures', 'cout', 'part', 'budget'].reduce(function (a, c) {
+		a[c] = document.getElementById('eco-' + c);
+
+		return a;
+	}, {});
+	if (!champs.personnes) { return; }
+
+	function euros(n) {
+		return Math.round(n).toLocaleString('fr-FR') + ' €';
+	}
+
+	function calculer() {
+		var personnes = Math.max(1, parseFloat(champs.personnes.value) || 1);
+		var heures = Math.max(0, parseFloat(champs.heures.value) || 0);
+		var cout = Math.max(0, parseFloat(champs.cout.value) || 0);
+		var part = (parseFloat(champs.part.value) || 0) / 100;
+		var budget = parseFloat(champs.budget.value) || 0;
+
+		// 45 semaines travaillees et non 52 : conges, jours feries et arrets
+		// existent, et gonfler ce chiffre rendrait tout le calcul suspect.
+		var heuresAn = personnes * heures * 45 * part;
+		var coutAn = heuresAn * cout;
+
+		document.getElementById('eco-an').textContent = euros(coutAn);
+		document.getElementById('eco-mois').textContent = euros(coutAn / 12);
+		document.getElementById('eco-h').textContent = Math.round(heuresAn).toLocaleString('fr-FR') + ' h';
+		document.getElementById('eco-j').textContent = Math.round(heuresAn / 7) + ' j';
+		document.getElementById('eco-part-v').textContent = Math.round(part * 100);
+		document.getElementById('eco-invest').textContent = euros(budget);
+
+		var retour = document.getElementById('eco-retour');
+		if (coutAn <= 0) {
+			retour.textContent = 'renseignez vos chiffres';
+
+			return;
+		}
+
+		var mois = budget / (coutAn / 12);
+		if (mois <= 1) {
+			retour.textContent = 'est remboursée en moins d\'un mois';
+		} else if (mois <= 60) {
+			retour.textContent = 'se rembourse en ' + Math.round(mois) + ' mois';
+		} else {
+			// Au-dela de cinq ans, annoncer un retour serait malhonnete :
+			// personne ne sait de quoi une entreprise aura besoin en 2032.
+			retour.textContent = 'ne se rembourse pas sur ces bases';
+		}
+	}
+
+	Object.keys(champs).forEach(function (c) {
+		champs[c].addEventListener('input', calculer);
+	});
+
+	calculer();
+})();
+</script>
+
+{% endblock %}

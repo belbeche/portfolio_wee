@@ -118,6 +118,12 @@ class Settings
             'env' => null,
             'secret' => false,
         ],
+        'tjm' => [
+            'label' => 'Taux journalier (€ HT)',
+            'help' => "Le nombre à partir duquel tout le site calcule. L'estimateur public, les fourchettes affichées et les délais en découlent : change ce chiffre, tout suit. 450 par défaut. En dessous de 100 la valeur est ignorée, c'est un garde-fou contre la faute de frappe.",
+            'env' => null,
+            'secret' => false,
+        ],
         'entreprise_iban' => [
             'label' => 'Facture : IBAN de reglement',
             'help' => "Affiche sur les factures pour que le client puisse virer sans te le demander. Laisse vide pour ne rien afficher.",

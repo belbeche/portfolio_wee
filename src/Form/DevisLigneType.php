@@ -58,7 +58,10 @@ class DevisLigneType extends AbstractType
                 'html5' => true,
                 'attr' => ['step' => '0.1', 'min' => '0', 'class' => 'js-ligne'],
             ])
-            ->add('position', HiddenType::class);
+            // Une ligne ajoutee par le navigateur arrive sans position tant
+            // que le script ne l'a pas numerotee. Sans cette valeur par
+            // defaut, l'enregistrement echouait.
+            ->add('position', HiddenType::class, ['empty_data' => '0']);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

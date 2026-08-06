@@ -57,7 +57,7 @@
     </div>
 </div>
 
-<script>
+<script nonce="{{ csp_nonce() }}">
 (function () {
 	var portail = document.getElementById('wb-portail');
 	if (!portail) { return; }
@@ -256,7 +256,7 @@
     </div>
 </section>
 
-<script>
+<script nonce="{{ csp_nonce() }}">
 (function () {
 	var bloc = document.getElementById('wb-live');
 	if (!bloc) { return; }
@@ -694,11 +694,28 @@
    s'execute pas, ou si le visiteur demande moins d'animations, la page reste
    entierement lisible et rien n'est masque. C'est la seule facon d'animer
    sans risquer une page blanche. #}
-<script>
+<script nonce="{{ csp_nonce() }}">
 (function () {
 	var moinsDAnimations = window.matchMedia
 		&& window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 	if (moinsDAnimations || !('IntersectionObserver' in window)) { return; }
+
+	// Rien n'est masque tant que cette classe n'est pas posee : le CSS ne
+	// cache que sous wb-anime. On l'ajoute donc au dernier moment, quand on
+	// est sur de pouvoir animer.
+	document.documentElement.classList.add('wb-anime');
+
+	// Filet de securite absolu : trois secondes apres le chargement, tout ce
+	// qui est encore masque devient visible, quoi qu'il se soit passe entre
+	// temps. Une animation ratee ne coute rien, du contenu disparu coute un
+	// client.
+	setTimeout(function () {
+		document.querySelectorAll('.wb-reveal:not(.is-in)').forEach(function (n) {
+			n.classList.add('is-in');
+		});
+		var h = document.querySelector('.wb-hero');
+		if (h) { h.classList.add('is-entre'); }
+	}, 3000);
 
 	// 1. L'arrivee : le heros se compose en cascade, de haut en bas.
 	var heros = document.querySelector('.wb-hero');

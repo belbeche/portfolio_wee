@@ -13,28 +13,32 @@
 
 <section class="ad-card" data-tone="light">
 	<div class="ad-card__head">
-		<h2>Décompte détaillé</h2>
+		<h2>Chiffrage</h2>
 		<span class="ad-tag">{{ devis.email }}</span>
 	</div>
 	<div class="ad-card__body">
-		<p style="font-size:.84rem;color:var(--ad-text-3);margin:0 0 1rem;max-width:76ch;">
-			Une ligne par prestation. Le client doit pouvoir lire ce qu'il achète poste par poste,
-			et c'est aussi une mention obligatoire sur un devis. Le champ « détail » est ce qui évite
-			les malentendus trois semaines plus tard.
-		</p>
+
+		{# Raccourcis : la plupart des devis se composent des memes postes.
+		   Cliquer vaut mieux que retaper la meme phrase pour la dixieme fois. #}
+		<div class="wb-modeles">
+			<span class="wb-modeles__l">Ajouter vite :</span>
+			<button type="button" class="ad-btn ad-btn--ghost ad-btn--sm" data-modele="Conception et maquettes|1200">Maquettes</button>
+			<button type="button" class="ad-btn ad-btn--ghost ad-btn--sm" data-modele="Développement et intégration|2400">Développement</button>
+			<button type="button" class="ad-btn ad-btn--ghost ad-btn--sm" data-modele="Hébergement et supervision, 1 an|360">Hébergement</button>
+			<button type="button" class="ad-btn ad-btn--ghost ad-btn--sm" data-modele="Reprise des contenus existants|450">Contenus</button>
+			<button type="button" class="ad-btn ad-btn--ghost ad-btn--sm" data-modele="Formation à l'administration|300">Formation</button>
+			<button type="button" class="ad-btn ad-btn--ghost ad-btn--sm" data-modele="Maintenance mensuelle|90">Maintenance</button>
+		</div>
 
 		{{ form_start(form, {attr: {id: 'wb-lignes-form'}}) }}
 			<div id="wb-lignes" data-prototype="{{ form_widget(form.lignes.vars.prototype)|e('html_attr') }}">
-				{# Les lignes existantes sont rendues EXACTEMENT comme le prototype,
-				   c'est-a-dire par form_widget sans mise en page manuelle. Sinon
-				   une ligne ajoutee au clic n'aurait pas la meme allure qu'une
-				   ligne chargee avec la page, et le formulaire aurait l'air casse
-				   des le premier ajout. La grille est posee par le CSS, sur la
-				   position des champs, donc elle s'applique aux deux. #}
 				{% for ligne in form.lignes %}
 					<div class="wb-ligne" data-ligne>
 						<div class="wb-ligne__champs">{{ form_widget(ligne) }}</div>
 						<div class="wb-ligne__pied">
+							<label class="wb-ligne__plus">
+								<input type="checkbox" data-detail> détails
+							</label>
 							<span class="wb-ligne__total" data-total>0,00 € HT</span>
 							<button type="button" class="ad-btn ad-btn--danger ad-btn--sm" data-supprimer>Retirer</button>
 						</div>
@@ -42,7 +46,7 @@
 				{% endfor %}
 			</div>
 
-			<button type="button" id="wb-ajouter" class="ad-btn ad-btn--ghost">+ Ajouter une ligne</button>
+			<button type="button" id="wb-ajouter" class="ad-btn ad-btn--ghost">+ Ligne vide</button>
 
 			<div class="wb-recap" data-tone="light">
 				<div><span>Total HT</span><strong data-recap="ht">0,00 €</strong></div>
@@ -50,8 +54,9 @@
 				<div class="wb-recap--fort"><span>Total TTC</span><strong data-recap="ttc">0,00 €</strong></div>
 			</div>
 
-			<div style="margin-top:1rem;display:flex;gap:.5rem;flex-wrap:wrap;">
-				<button class="ad-btn ad-btn--primary">Enregistrer le chiffrage</button>
+			<div style="margin-top:1rem;display:flex;gap:.5rem;flex-wrap:wrap;align-items:center;">
+				<button class="ad-btn ad-btn--primary">Enregistrer</button>
+				<span style="font-size:.8rem;color:var(--ad-text-3);">Puis « Aperçu PDF » en haut à droite pour voir le rendu.</span>
 			</div>
 		{{ form_end(form) }}
 	</div>
@@ -61,9 +66,8 @@
 	<div class="ad-card__head"><h2>Facturer</h2></div>
 	<div class="ad-card__body">
 		<p style="font-size:.84rem;color:var(--ad-text-3);margin:0 0 .9rem;max-width:76ch;">
-			La facture recopie les lignes telles qu'elles sont aujourd'hui. Une facture est
+			La facture recopie les lignes telles qu'elles sont enregistrées. Une facture est
 			immuable : elle ne peut pas dépendre d'un devis que tu modifieras peut-être demain.
-			Enregistre ton chiffrage avant de cliquer.
 		</p>
 		<form method="post" action="{{ path('back_facture_from_devis', {id: devis.id}) }}"
 		      onsubmit="return confirm('Émettre une facture pour ce devis ? Le numéro sera attribué définitivement.');">
@@ -74,27 +78,48 @@
 </section>
 
 <style>
-	.wb-ligne { border:1px solid var(--ad-line,#dde5f0); border-radius:12px; padding:1rem; margin-bottom:.8rem; background:#fff; }
-	/* La grille porte sur la POSITION des champs, pas sur des div ajoutees a
-	   la main : c'est ce qui garantit qu'une ligne ajoutee au clic est
-	   identique a une ligne chargee avec la page.
-	   Ordre des champs : 1 designation, 2 detail, 3 quantite, 4 unite,
-	   5 prix unitaire, 6 remise, 7 TVA, 8 position (cachee). */
-	.wb-ligne__champs { display:grid; grid-template-columns: 90px 110px 130px 100px 100px; gap:.6rem; align-items:end; }
-	.wb-ligne__champs > *:nth-child(1),
-	.wb-ligne__champs > *:nth-child(2) { grid-column: 1 / -1; }
-	.wb-ligne__champs > *:nth-child(8) { display:none; }
-	.wb-ligne__champs label { font-size:.75rem; font-weight:700; margin-bottom:.15rem; }
-	.wb-ligne__champs input, .wb-ligne__champs select, .wb-ligne__champs textarea { width:100%; }
-	.wb-ligne__pied { display:flex; align-items:center; justify-content:space-between; gap:.6rem; margin-top:.4rem; }
-	.wb-ligne__total { font-weight:700; font-variant-numeric:tabular-nums; }
+	.wb-modeles { display:flex; align-items:center; gap:.4rem; flex-wrap:wrap; margin-bottom:1rem; }
+	.wb-modeles__l { font-size:.8rem; color:var(--ad-text-3); margin-right:.2rem; }
+
+	.wb-ligne { border:1px solid var(--ad-line,#dde5f0); border-radius:12px; padding:.85rem 1rem; margin-bottom:.6rem; background:#fff; }
+
+	/* La mise en page est posee par des classes ajoutees en JavaScript sur
+	   chaque champ, jamais par sa position dans le HTML. Le gabarit d'une
+	   ligne ajoutee au clic n'a pas forcement la meme profondeur de balises
+	   que celui d'une ligne chargee avec la page : se fier a nth-child, c'est
+	   ce qui a produit la colonne unique et illisible de la version d'avant. */
+	.wb-ligne__champs { display:grid; grid-template-columns: minmax(0,1fr) 150px; gap:.6rem 1rem; align-items:start; }
+	.wb-ligne__champs .mb-3 { margin-bottom:0 !important; }
+	.wb-ligne__champs label { font-size:.72rem; font-weight:700; text-transform:uppercase; letter-spacing:.04em; color:var(--ad-text-3); margin-bottom:.15rem; display:block; }
+	.wb-ligne__champs input, .wb-ligne__champs select, .wb-ligne__champs textarea {
+		width:100%; padding:.5rem .6rem; border:1px solid var(--ad-line,#dde5f0); border-radius:8px; font-size:.92rem;
+	}
+
+	/* Par defaut, deux champs seulement : ce qu'on vend, et combien.
+	   Tout le reste est du cas particulier et se demande a la demande. */
+	.wb-champ--avance { display:none; }
+	.wb-ligne.is-detaille .wb-champ--avance { display:block; }
+	.wb-ligne.is-detaille .wb-ligne__champs { grid-template-columns: minmax(0,1fr) 100px 130px 150px 110px 110px; }
+	.wb-ligne.is-detaille .wb-champ--designation,
+	.wb-ligne.is-detaille .wb-champ--detail { grid-column: 1 / -1; }
+	.wb-champ--cache { display:none !important; }
+
+	.wb-ligne__pied { display:flex; align-items:center; gap:.8rem; margin-top:.6rem; }
+	.wb-ligne__plus { font-size:.78rem; color:var(--ad-text-3); display:flex; align-items:center; gap:.3rem; cursor:pointer; }
+	.wb-ligne__plus input { width:auto; }
+	.wb-ligne__total { font-weight:700; font-variant-numeric:tabular-nums; margin-left:auto; }
+
 	.wb-recap { margin-top:1rem; border:1px solid var(--ad-line,#dde5f0); border-radius:12px; padding:.9rem 1.1rem; max-width:340px; margin-left:auto; }
 	.wb-recap div { display:flex; justify-content:space-between; padding:.25rem 0; font-size:.9rem; }
 	.wb-recap--fort { border-top:1px solid var(--ad-line,#dde5f0); margin-top:.4rem; padding-top:.6rem !important; font-size:1.05rem !important; font-weight:700; }
-	@media (max-width: 900px) { .wb-ligne__champs { grid-template-columns: 1fr 1fr; } }
+
+	@media (max-width: 820px) {
+		.wb-ligne__champs, .wb-ligne.is-detaille .wb-ligne__champs { grid-template-columns: 1fr 1fr; }
+		.wb-champ--designation, .wb-champ--detail { grid-column: 1 / -1; }
+	}
 </style>
 
-<script>
+<script nonce="{{ csp_nonce() }}">
 (function () {
 	var zone = document.getElementById('wb-lignes');
 	var ajouter = document.getElementById('wb-ajouter');
@@ -102,23 +127,38 @@
 
 	var compteur = zone.querySelectorAll('[data-ligne]').length;
 
+	// Nom du champ -> classe posee sur son bloc. avance: true = masque tant
+	// que la personne n'a pas demande les details.
+	var CHAMPS = [
+		{ fin: '_designation',  classe: 'wb-champ--designation', avance: false },
+		{ fin: '_prixUnitaire', classe: 'wb-champ--prix',        avance: false },
+		{ fin: '_detail',       classe: 'wb-champ--detail',      avance: true },
+		{ fin: '_quantite',     classe: 'wb-champ--qte',         avance: true },
+		{ fin: '_unite',        classe: 'wb-champ--unite',       avance: true },
+		{ fin: '_remise',       classe: 'wb-champ--remise',      avance: true },
+		{ fin: '_tauxTva',      classe: 'wb-champ--tva',         avance: true }
+	];
+
 	function euros(n) {
 		return n.toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' €';
 	}
 
-	// Les totaux se recalculent a la frappe : on ne decouvre pas le montant
-	// final apres avoir enregistre et recharge la page.
+	function champ(ligne, fin) {
+		return ligne.querySelector('[id$="' + fin + '"]');
+	}
+
+	function valeur(ligne, fin) {
+		var c = champ(ligne, fin);
+		return c ? (parseFloat(String(c.value).replace(',', '.')) || 0) : 0;
+	}
+
 	function recalculer() {
 		var ht = 0, tva = 0;
 		zone.querySelectorAll('[data-ligne]').forEach(function (ligne) {
-			function val(fin) {
-				var champ = ligne.querySelector('[id$="' + fin + '"]');
-				return champ ? (parseFloat(String(champ.value).replace(',', '.')) || 0) : 0;
-			}
-			var brut = val('_quantite') * val('_prixUnitaire');
-			var net = brut * (1 - val('_remise') / 100);
-			var taxe = net * val('_tauxTva') / 100;
-			ht += net; tva += taxe;
+			var qte = valeur(ligne, '_quantite') || 1;
+			var net = qte * valeur(ligne, '_prixUnitaire') * (1 - valeur(ligne, '_remise') / 100);
+			ht += net;
+			tva += net * valeur(ligne, '_tauxTva') / 100;
 			var cible = ligne.querySelector('[data-total]');
 			if (cible) { cible.textContent = euros(net) + ' HT'; }
 		});
@@ -128,13 +168,49 @@
 	}
 
 	function brancher(ligne) {
-		ligne.querySelectorAll('input, select').forEach(function (champ) {
-			champ.addEventListener('input', recalculer);
-			champ.addEventListener('change', recalculer);
+		var champs = ligne.querySelector('.wb-ligne__champs');
+
+		// On remonte du champ vers son bloc enveloppant, quel qu'il soit.
+		CHAMPS.forEach(function (def) {
+			var c = champ(ligne, def.fin);
+			if (!c) { return; }
+			var bloc = c;
+			while (bloc.parentElement && bloc.parentElement !== champs) { bloc = bloc.parentElement; }
+			if (bloc.parentElement !== champs) { return; }
+			bloc.classList.add(def.classe);
+			if (def.avance) { bloc.classList.add('wb-champ--avance'); }
 		});
-		var bouton = ligne.querySelector('[data-supprimer]');
-		if (bouton) {
-			bouton.addEventListener('click', function () {
+
+		// Tout ce qui n'a pas ete reconnu (le champ position, cache) disparait.
+		Array.prototype.forEach.call(champs.children, function (bloc) {
+			if (!bloc.className || bloc.className.indexOf('wb-champ--') === -1) {
+				bloc.classList.add('wb-champ--cache');
+			}
+		});
+
+		ligne.querySelectorAll('input, select, textarea').forEach(function (c) {
+			c.addEventListener('input', recalculer);
+			c.addEventListener('change', recalculer);
+		});
+
+		var bascule = ligne.querySelector('[data-detail]');
+		if (bascule) {
+			// Une ligne qui porte deja une remise, une quantite differente de 1
+			// ou un detail s'ouvre d'office : on ne cache jamais une valeur
+			// que quelqu'un a saisie.
+			var aDesReglages = valeur(ligne, '_quantite') !== 1
+				|| valeur(ligne, '_remise') > 0
+				|| (champ(ligne, '_detail') && champ(ligne, '_detail').value.trim() !== '');
+			if (aDesReglages) { bascule.checked = true; ligne.classList.add('is-detaille'); }
+
+			bascule.addEventListener('change', function () {
+				ligne.classList.toggle('is-detaille', bascule.checked);
+			});
+		}
+
+		var retirer = ligne.querySelector('[data-supprimer]');
+		if (retirer) {
+			retirer.addEventListener('click', function () {
 				if (zone.querySelectorAll('[data-ligne]').length <= 1) {
 					alert('Un devis a besoin d\'au moins une ligne.');
 					return;
@@ -145,21 +221,41 @@
 		}
 	}
 
-	zone.querySelectorAll('[data-ligne]').forEach(brancher);
-
-	ajouter.addEventListener('click', function () {
+	function nouvelleLigne(designation, prix) {
 		var gabarit = zone.dataset.prototype.replace(/__ligne__/g, compteur++);
 		var boite = document.createElement('div');
 		boite.className = 'wb-ligne';
 		boite.setAttribute('data-ligne', '');
 		boite.innerHTML = '<div class="wb-ligne__champs">' + gabarit + '</div>'
-			+ '<div class="wb-ligne__pied"><span class="wb-ligne__total" data-total>0,00 € HT</span>'
-			+ '<button type="button" class="ad-btn ad-btn--danger ad-btn--sm" data-supprimer>Retirer</button></div>';
+			+ '<div class="wb-ligne__pied">'
+			+ '<label class="wb-ligne__plus"><input type="checkbox" data-detail> détails</label>'
+			+ '<span class="wb-ligne__total" data-total>0,00 € HT</span>'
+			+ '<button type="button" class="ad-btn ad-btn--danger ad-btn--sm" data-supprimer>Retirer</button>'
+			+ '</div>';
 		zone.appendChild(boite);
+
+		if (designation) {
+			var d = champ(boite, '_designation');
+			if (d) { d.value = designation; }
+			var p = champ(boite, '_prixUnitaire');
+			if (p && prix) { p.value = prix; }
+		}
+
 		brancher(boite);
 		recalculer();
-		var premier = boite.querySelector('input');
+
+		var premier = boite.querySelector('[id$="_designation"]');
 		if (premier) { premier.focus(); }
+	}
+
+	zone.querySelectorAll('[data-ligne]').forEach(brancher);
+	ajouter.addEventListener('click', function () { nouvelleLigne(); });
+
+	document.querySelectorAll('[data-modele]').forEach(function (b) {
+		b.addEventListener('click', function () {
+			var parts = b.dataset.modele.split('|');
+			nouvelleLigne(parts[0], parts[1]);
+		});
 	});
 
 	recalculer();

@@ -1,6 +1,11 @@
 <style>
+    /* La barre est une seule ligne sur grand ecran. Chaque pastille avait
+       son propre calage vertical : bordure d'un cote, marge haute de
+       l'autre. Resultat, les deux boutons flottaient au-dessus du reste.
+       On centre tout sur le meme axe et on donne aux deux pastilles
+       exactement la meme hauteur, bordure comprise. */
     .libutton {
-        display: flex;
+        display: inline-flex;
         flex-direction: column;
         justify-content: center;
         padding: 7px;
@@ -13,20 +18,36 @@
         border-radius: 16px;
         background-color: #0A66C2;
         font-family: "SF Pro Text", Helvetica, sans-serif;
+        font-size: .8rem;
         margin-top: 13px;
     }
     .nav-cta {
         background-color: #ffc107;
         color: #1a1a1a !important;
         font-weight: 600;
+        border: 1px solid transparent;
         border-radius: 16px;
-        padding: 6px 18px !important;
-        margin-top: 10px;
     }
     .nav-cta:hover { background-color: #ffcd39; }
-    @media (max-width: 576px) {
-        .libutton { margin-left: 12px; }
+
+    @media (min-width: 992px) {
+        #navbarMenu .navbar-nav { align-items: center; }
+        #navbarMenu .navbar-nav > li { display: flex; align-items: center; }
+        .nav-link.nav-cta,
+        .nav-link.nav-audit {
+            display: inline-flex;
+            align-items: center;
+            line-height: 1.2;
+            padding: .42rem .9rem !important;
+            margin-top: 0;
+        }
+        .libutton { margin-top: 0; margin-left: 14px; }
+    }
+
+    @media (max-width: 991.98px) {
         .nav-cta { display: inline-block; margin: 10px 12px; }
+        .nav-link.nav-audit { display: inline-block; margin: 6px 12px; }
+        .libutton { margin-left: 12px; }
     }
 </style>
 <header id="header">
@@ -126,6 +147,17 @@
                         </ul>
                     </li>
                 {% endif %}
+
+                {# Une seule entree pour tous les outils gratuits. Deux
+                   entrees separees faisaient deborder la barre sur deux
+                   lignes : chaque libelle se coupait au milieu, y compris le
+                   logo. Un menu qui se casse coute plus cher en credibilite
+                   que les deux clics economises. #}
+                <li class="nav-item">
+                    <a class="nav-link nav-audit" href="{{ url('front_outils') }}">
+                        {{ app.request.locale == 'en' ? 'Free tools' : 'Outils gratuits' }}
+                    </a>
+                </li>
 
                 {# Appel à l'action principal : l'estimation en ligne existe
                    déjà et convertit bien mieux qu'une demande d'appel. #}

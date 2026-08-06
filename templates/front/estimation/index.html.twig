@@ -1,0 +1,344 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Combien coûte mon projet ? Estimation immédiate | Walid BELBECHE{% endblock %}
+{% block meta_description %}Estimez le budget de votre site ou application en quelques clics. Prix affichés, fourchette honnête, sans inscription.{% endblock %}
+
+{# Donnees structurees. Une page qui repond a « combien coute un site »
+   peut voir ses reponses reprises directement dans Google, au-dessus des
+   liens. C'est la difference entre exister dans les resultats et y etre lu. #}
+{% block seo %}
+<script type="application/ld+json">
+{
+	"@context": "https://schema.org",
+	"@type": "FAQPage",
+	"mainEntity": [
+		{
+			"@type": "Question",
+			"name": "Combien coûte un site vitrine en 2026 ?",
+			"acceptedAnswer": { "@type": "Answer", "text": "Un site vitrine de cinq à huit pages, écrit sur mesure et non posé sur un thème, se situe entre 2 000 et 3 500 euros hors taxes. En dessous, il s'agit presque toujours d'un gabarit acheté et rempli. Au-dessus, il y a des fonctionnalités en plus : réservation, espace client, plusieurs langues." }
+		},
+		{
+			"@type": "Question",
+			"name": "Combien coûte une boutique en ligne ?",
+			"acceptedAnswer": { "@type": "Answer", "text": "Comptez entre 5 000 et 9 000 euros hors taxes pour une boutique complète : catalogue, paiement, transporteurs, gestion des commandes et factures. Le prix dépend surtout du nombre de références et de la reprise éventuelle d'un catalogue existant." }
+		},
+		{
+			"@type": "Question",
+			"name": "Combien coûte une application métier sur mesure ?",
+			"acceptedAnswer": { "@type": "Answer", "text": "Une application qui remplace des fichiers Excel et des échanges par e-mail démarre autour de 9 000 euros hors taxes et dépasse souvent 15 000 euros dès qu'il y a plusieurs profils d'utilisateurs, des droits différents et des documents à générer." }
+		},
+		{
+			"@type": "Question",
+			"name": "Pourquoi une fourchette de prix et pas un montant ferme ?",
+			"acceptedAnswer": { "@type": "Answer", "text": "Un montant ferme annoncé avant d'avoir parlé du projet est une promesse intenable. Deux sites vitrines n'ont pas le même prix selon le nombre de pages, l'état des contenus existants et ce qu'il faut reprendre. L'estimation en ligne donne le bon ordre de grandeur, à vingt pour cent près. Le chiffrage définitif, ligne par ligne, arrive sous 48 heures ouvrées." }
+		},
+		{
+			"@type": "Question",
+			"name": "Le prix peut-il augmenter en cours de projet ?",
+			"acceptedAnswer": { "@type": "Answer", "text": "Non, pas sans votre accord écrit. Le prix est fixé au devis avant le démarrage. Une demande nouvelle en cours de route fait l'objet d'un avenant chiffré que vous validez, ou que vous refusez." }
+		},
+		{
+			"@type": "Question",
+			"name": "Comment se passe le paiement ?",
+			"acceptedAnswer": { "@type": "Answer", "text": "En trois fois : à la commande, à la recette, à la mise en ligne. Le code source et les droits vous sont cédés au paiement du solde." }
+		}
+	]
+}
+</script>
+<script type="application/ld+json">
+{
+	"@context": "https://schema.org",
+	"@type": "BreadcrumbList",
+	"itemListElement": [
+		{ "@type": "ListItem", "position": 1, "name": "Accueil", "item": "{{ app.request.schemeAndHttpHost }}{{ path('front_home') }}" },
+		{ "@type": "ListItem", "position": 2, "name": "Outils gratuits", "item": "{{ app.request.schemeAndHttpHost }}{{ path('front_outils') }}" },
+		{ "@type": "ListItem", "position": 3, "name": "Estimation du budget", "item": "{{ app.request.schemeAndHttpHost }}{{ path('front_estimation') }}" }
+	]
+}
+</script>
+{% endblock %}
+
+{% block content %}
+
+<section class="wb-hero wb-slant" data-tone="dark" style="padding-bottom:7rem;">
+	<div class="container">
+		<div class="row justify-content-center text-center">
+			<div class="col-lg-8">
+				<span class="wb-eyebrow">Sans inscription · résultat immédiat</span>
+				<h1 class="wb-display">Combien coûte<br><span class="wb-mark">votre projet ?</span></h1>
+				<p class="wb-lead wb-lead--on-dark mx-auto mb-0">
+					Choisissez votre point de départ, cochez ce dont vous avez besoin.
+					Le budget et le délai se mettent à jour en direct.
+				</p>
+			</div>
+		</div>
+	</div>
+</section>
+
+<section class="wb-section" data-tone="light">
+	<div class="container" style="max-width:1000px;">
+
+		<h2 class="wb-h2">1. Votre point de départ</h2>
+		<div class="wb-bases">
+			{% for base in bases %}
+				<button type="button" class="wb-base {{ loop.first ? 'is-choisi' }}"
+				        data-base="{{ base.cle }}" data-prix="{{ base.prix }}" data-jours="{{ base.jours }}"
+				        aria-pressed="{{ loop.first ? 'true' : 'false' }}">
+					<span class="wb-base__nom">{{ base.nom }}</span>
+					<span class="wb-base__pour">{{ base.pour }}</span>
+					<span class="wb-base__prix">à partir de {{ base.prix|number_format(0, ',', ' ') }} €</span>
+				</button>
+			{% endfor %}
+		</div>
+
+		<h2 class="wb-h2" style="margin-top:2.5rem;">2. Ce dont vous avez besoin</h2>
+		<p class="wb-lead" style="font-size:.95rem;">
+			Tout est facultatif. Ce que vous ne cochez pas ne sera ni développé ni facturé.
+		</p>
+		<div class="wb-options">
+			{% for option in options %}
+				<label class="wb-option" data-option="{{ option.cle }}" data-bases="{{ option.bases|join(',') }}">
+					<input type="checkbox" data-prix="{{ option.prix }}" data-jours="{{ option.jours }}">
+					<span class="wb-option__c">
+						<span class="wb-option__nom">{{ option.nom }}</span>
+						<span class="wb-option__detail">{{ option.detail }}</span>
+					</span>
+					<span class="wb-option__prix">+ {{ option.prix|number_format(0, ',', ' ') }} €</span>
+				</label>
+			{% endfor %}
+		</div>
+
+	</div>
+</section>
+
+{# Le total suit la page : on ne doit jamais avoir a remonter pour savoir
+   ou on en est. Sur mobile il se colle en bas de l'ecran. #}
+<div class="wb-total" id="wb-total" data-tone="dark">
+	<div class="container wb-total__in">
+		<div>
+			<span class="wb-total__l">Budget estimé</span>
+			<span class="wb-total__n"><span data-total-bas>1 000</span> à <span data-total-haut>1 500</span> €</span>
+			<span class="wb-total__d">hors taxes · <span data-total-jours>15</span> jours ouvrés environ</span>
+		</div>
+		<a href="#" class="wb-btn wb-btn--gold" data-devis>Faire chiffrer précisément</a>
+	</div>
+</div>
+
+<section class="wb-section wb-section--paper" data-tone="light">
+	<div class="container" style="max-width:760px;">
+		<h2 class="wb-h2">Pourquoi une fourchette et pas un prix</h2>
+		<p class="wb-lead">
+			Un chiffre unique affiché avant qu'on ait parlé de votre projet est une promesse
+			qu'on ne peut pas tenir. Deux sites vitrines n'ont pas le même prix selon le nombre
+			de pages, la qualité des contenus existants et ce qu'il faut reprendre.
+		</p>
+		<p class="wb-lead">
+			Cette estimation vous donne le bon ordre de grandeur, à vingt pour cent près.
+			Le chiffrage définitif arrive sous 48 heures ouvrées, ligne par ligne, et
+			<strong>c'est celui-là qui m'engage</strong>.
+		</p>
+		<div class="wb-rassure"><span class="wb-rassure__i" aria-hidden="true">✓</span>
+			<span><strong>Prix fixé avant de commencer.</strong> Pas de dépassement sans que vous l'ayez validé.</span></div>
+		<div class="wb-rassure"><span class="wb-rassure__i" aria-hidden="true">✓</span>
+			<span><strong>Paiement en trois fois</strong>, à la commande, à la recette, à la mise en ligne.</span></div>
+		<div class="wb-rassure"><span class="wb-rassure__i" aria-hidden="true">✓</span>
+			<span><strong>Le code et les droits vous appartiennent</strong> au paiement du solde.</span></div>
+	</div>
+</section>
+
+{# Les questions que les gens posent au telephone, ecrites une bonne fois.
+   Elles sont visibles ici et reprises en donnees structurees plus haut :
+   Google n'accepte de les afficher dans ses resultats que si le visiteur
+   peut les lire sur la page. #}
+<section class="wb-section" data-tone="light">
+	<div class="container" style="max-width:760px;">
+		<h2 class="wb-h2">Les questions que tout le monde pose</h2>
+
+		<details class="wb-faq" open>
+			<summary>Combien coûte un site vitrine ?</summary>
+			<p>
+				Entre 2 000 et 3 500 € hors taxes pour cinq à huit pages écrites sur mesure.
+				En dessous, c'est presque toujours un gabarit acheté et rempli : ça se voit,
+				et surtout ça se retrouve à l'identique chez trois concurrents. Au-dessus,
+				il y a des fonctions en plus, réservation, espace client, deuxième langue.
+			</p>
+		</details>
+
+		<details class="wb-faq">
+			<summary>Combien coûte une boutique en ligne ?</summary>
+			<p>
+				Entre 5 000 et 9 000 € hors taxes pour une boutique complète : catalogue,
+				paiement, transporteurs, suivi des commandes et factures. Ce qui fait
+				vraiment varier le prix, c'est le nombre de références et l'état du
+				catalogue existant, pas le nombre de pages.
+			</p>
+		</details>
+
+		<details class="wb-faq">
+			<summary>Combien coûte une application sur mesure ?</summary>
+			<p>
+				À partir de 9 000 € hors taxes, et souvent au-delà de 15 000 € dès qu'il y a
+				plusieurs profils d'utilisateurs, des droits différents selon les personnes
+				et des documents à générer automatiquement. C'est le poste où l'estimation
+				en ligne est la moins précise : là, il faut se parler.
+			</p>
+		</details>
+
+		<details class="wb-faq">
+			<summary>Pourquoi une fourchette et pas un montant ferme ?</summary>
+			<p>
+				Parce qu'un montant ferme annoncé avant qu'on ait parlé de votre projet est
+				une promesse intenable, et que la rattraper plus tard abîme la confiance bien
+				plus que l'imprécision de départ. Cette page vous donne le bon ordre de
+				grandeur, à vingt pour cent près. Le devis définitif, ligne par ligne,
+				arrive sous 48 heures ouvrées, et c'est celui-là qui m'engage.
+			</p>
+		</details>
+
+		<details class="wb-faq">
+			<summary>Le prix peut-il augmenter en cours de route ?</summary>
+			<p>
+				Pas sans votre accord écrit. Le prix est fixé au devis, avant le démarrage.
+				Si vous demandez quelque chose de nouveau en cours de projet, je vous
+				envoie un avenant chiffré. Vous le validez, ou vous ne le validez pas.
+			</p>
+		</details>
+
+		<details class="wb-faq">
+			<summary>Comment se passe le paiement ?</summary>
+			<p>
+				En trois fois : à la commande, à la recette, à la mise en ligne. Le code
+				source et les droits vous appartiennent au paiement du solde. Vous n'êtes
+				jamais prisonnier de votre prestataire.
+			</p>
+		</details>
+
+		<details class="wb-faq">
+			<summary>Et si je ne sais pas encore ce que je veux ?</summary>
+			<p>
+				C'est le cas le plus fréquent, et ce n'est pas un problème. Décrivez la
+				situation plutôt que la solution : ce qui vous prend du temps aujourd'hui,
+				ce que vos clients n'arrivent pas à faire. Le reste, c'est mon travail.
+			</p>
+		</details>
+	</div>
+</section>
+
+<style>
+	.wb-bases { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:.8rem; }
+	.wb-base { display:block; text-align:left; width:100%; font:inherit; color:inherit; cursor:pointer;
+		background:#fff; border:1px solid var(--wb-line,rgba(10,22,40,.12)); border-radius:14px; padding:1.1rem 1.2rem;
+		transition:transform .25s cubic-bezier(.22,.61,.36,1), border-color .25s ease, box-shadow .25s ease; }
+	.wb-base:hover { transform:translateY(-3px); box-shadow:0 12px 30px rgba(10,22,40,.08); }
+	.wb-base.is-choisi { border-color:var(--wb-gold); background:#fffdf5; box-shadow:0 0 0 2px rgba(245,179,1,.3); }
+	.wb-base__nom { display:block; font-weight:700; font-size:1.05rem; color:var(--tone-strong,#0a1628); }
+	.wb-base__pour { display:block; font-size:.85rem; line-height:1.45; color:var(--wb-text-2,#5a6b82); margin:.3rem 0 .5rem; }
+	.wb-base__prix { display:block; font-size:.8rem; font-weight:700; color:#8a6400; }
+
+	.wb-options { display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:.6rem; }
+	.wb-option { display:flex; gap:.7rem; align-items:flex-start; cursor:pointer;
+		background:#fff; border:1px solid var(--wb-line,rgba(10,22,40,.12)); border-radius:12px; padding:.85rem 1rem;
+		transition:border-color .2s ease, background .2s ease; }
+	.wb-option:hover { border-color:rgba(245,179,1,.6); }
+	.wb-option.is-coche { border-color:var(--wb-gold); background:#fffdf5; }
+	.wb-option.is-hors { display:none; }
+	.wb-option input { margin-top:.25rem; flex-shrink:0; }
+	.wb-option__c { flex:1; }
+	.wb-option__nom { display:block; font-weight:600; font-size:.95rem; }
+	.wb-option__detail { display:block; font-size:.82rem; line-height:1.45; color:var(--wb-text-2,#5a6b82); margin-top:.15rem; }
+	.wb-option__prix { font-size:.85rem; font-weight:700; color:#8a6400; white-space:nowrap; }
+
+	.wb-total { position:sticky; bottom:0; z-index:30; background:#0a1628; color:#fff;
+		border-top:2px solid var(--wb-gold); box-shadow:0 -8px 30px rgba(10,22,40,.25); }
+	.wb-total__in { display:flex; align-items:center; justify-content:space-between; gap:1rem; padding:.9rem 1rem; flex-wrap:wrap; }
+	.wb-total__l { display:block; font-size:.7rem; letter-spacing:.12em; text-transform:uppercase; font-weight:700; color:var(--wb-gold); }
+	.wb-total__n { display:block; font-size:1.55rem; font-weight:800; line-height:1.15; font-variant-numeric:tabular-nums; }
+	.wb-total__d { display:block; font-size:.78rem; color:var(--wb-on-dark-2,#9fb3cd); }
+</style>
+
+<script nonce="{{ csp_nonce() }}">
+(function () {
+	var bases = document.querySelectorAll('.wb-base');
+	var options = document.querySelectorAll('.wb-option');
+	if (!bases.length) { return; }
+
+	var marge = {{ marge }};
+	var lien = document.querySelector('[data-devis]');
+
+	function baseChoisie() {
+		return document.querySelector('.wb-base.is-choisi') || bases[0];
+	}
+
+	function euros(n) {
+		return Math.round(n / 50) * 50 === 0 ? '0' : (Math.round(n / 50) * 50).toLocaleString('fr-FR');
+	}
+
+	function recalculer() {
+		var base = baseChoisie();
+		var total = parseInt(base.dataset.prix, 10);
+		var jours = parseInt(base.dataset.jours, 10);
+		var cles = [];
+
+		options.forEach(function (o) {
+			var c = o.querySelector('input');
+			var actif = !o.classList.contains('is-hors') && c.checked;
+			o.classList.toggle('is-coche', actif);
+			if (!actif) { return; }
+			total += parseInt(c.dataset.prix, 10);
+			jours += parseInt(c.dataset.jours, 10);
+			cles.push(o.dataset.option);
+		});
+
+		// Arrondi a la cinquantaine : afficher « 4 137 € » donnerait une
+		// precision que cette estimation n'a pas.
+		// On cherche a l'interieur de la barre de total, et sous des noms qui
+		// n'existent nulle part ailleurs. Avant, la recherche portait sur
+		// toute la page : « [data-jours] » tombait sur la premiere carte de
+		// choix, qui porte ce meme attribut, et le nombre de jours ecrasait
+		// son contenu. La premiere carte n'affichait plus que « 18 », et la
+		// barre du bas restait bloquee sur 15 jours.
+		var barre = document.getElementById('wb-total');
+		barre.querySelector('[data-total-bas]').textContent = euros(total * (1 - marge));
+		barre.querySelector('[data-total-haut]').textContent = euros(total * (1 + marge));
+		barre.querySelector('[data-total-jours]').textContent = jours;
+
+		if (lien) {
+			lien.href = {{ path('front_devis_new')|json_encode|raw }}
+				+ '?base=' + encodeURIComponent(base.dataset.base)
+				+ '&options=' + encodeURIComponent(cles.join(','))
+				+ '&budget=' + total;
+		}
+	}
+
+	function filtrer() {
+		var cle = baseChoisie().dataset.base;
+		options.forEach(function (o) {
+			// Une option qui n'a pas de sens pour ce point de depart disparait
+			// au lieu d'etre grisee : une liste ou tout est possible n'aide
+			// personne a choisir.
+			var permise = o.dataset.bases.split(',').indexOf(cle) !== -1;
+			o.classList.toggle('is-hors', !permise);
+			if (!permise) { o.querySelector('input').checked = false; }
+		});
+	}
+
+	bases.forEach(function (b) {
+		b.addEventListener('click', function () {
+			bases.forEach(function (x) { x.classList.remove('is-choisi'); x.setAttribute('aria-pressed', 'false'); });
+			b.classList.add('is-choisi');
+			b.setAttribute('aria-pressed', 'true');
+			filtrer();
+			recalculer();
+		});
+	});
+
+	options.forEach(function (o) {
+		o.querySelector('input').addEventListener('change', recalculer);
+	});
+
+	filtrer();
+	recalculer();
+})();
+</script>
+
+{% endblock %}

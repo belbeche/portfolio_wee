@@ -57,7 +57,7 @@
     {{ form_end(form) }}
 </div>
 
-<script>
+<script nonce="{{ csp_nonce() }}">
     document.addEventListener('DOMContentLoaded', () => {
         const collectionHolder = document.querySelector('.sections-collection');
         if (!collectionHolder) return;

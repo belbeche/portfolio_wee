@@ -48,7 +48,7 @@
 <!-- TinyMCE Plugin -->
 <script src="{{ asset('src/js/tinymce.min.js') }}"></script>
 
-<script>
+<script nonce="{{ csp_nonce() }}">
     jQuery(document).ready( function(){
         jQuery('input[type="file"]').change(function(e){
             var fileName = e.target.files[0].name;

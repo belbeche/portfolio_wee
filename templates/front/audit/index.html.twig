@@ -1,0 +1,380 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Audit gratuit de votre site | Walid BELBECHE{% endblock %}
+{% block meta_description %}Analysez gratuitement votre site : sécurité, vitesse, mobile et référencement. Résultat immédiat, sans inscription.{% endblock %}
+
+{% block seo %}
+<script type="application/ld+json">
+{
+	"@context": "https://schema.org",
+	"@type": "FAQPage",
+	"mainEntity": [
+		{
+			"@type": "Question",
+			"name": "Comment savoir si mon site est encore correct ?",
+			"acceptedAnswer": { "@type": "Answer", "text": "Quatre points suffisent à trancher : le cadenas dans la barre d'adresse, le temps d'affichage de la page d'accueil, la lisibilité sur téléphone sans zoomer, et la présence d'un titre et d'une description propres à chaque page. Un site qui échoue sur l'un des quatre perd des visiteurs sans que personne ne s'en aperçoive, puisque ceux qui partent ne préviennent pas." }
+		},
+		{
+			"@type": "Question",
+			"name": "Pourquoi le cadenas HTTPS est-il important ?",
+			"acceptedAnswer": { "@type": "Answer", "text": "Sans certificat, les navigateurs affichent Non sécurisé à côté de votre adresse, et Google déclasse la page. La grande majorité des visiteurs ferment l'onglet à ce moment-là. Le certificat est gratuit et s'installe en une heure : c'est la correction la plus rentable qui existe." }
+		},
+		{
+			"@type": "Question",
+			"name": "À partir de quand un site est-il trop lent ?",
+			"acceptedAnswer": { "@type": "Answer", "text": "Au-delà de deux secondes et demie pour afficher la page d'accueil, on perd des visiteurs mesurablement. Les causes les plus fréquentes sont des images publiées au format de l'appareil photo, un hébergement mutualisé saturé, et une accumulation de modules qui chargent chacun leurs propres fichiers." }
+		},
+		{
+			"@type": "Question",
+			"name": "Que veut dire un site pas adapté au mobile ?",
+			"acceptedAnswer": { "@type": "Answer", "text": "Que la page ne déclare pas comment se redimensionner sur un petit écran. Le téléphone affiche alors la version bureau en réduction : il faut zoomer pour lire et viser pour cliquer. Plus de la moitié des visites venant du téléphone, ce seul défaut divise le nombre de contacts reçus." }
+		},
+		{
+			"@type": "Question",
+			"name": "L'audit est-il vraiment gratuit ?",
+			"acceptedAnswer": { "@type": "Answer", "text": "Oui, sans inscription et sans contrepartie. L'analyse tourne immédiatement et rien n'est conservé tant que vous ne demandez pas le rapport détaillé par e-mail. Aucune inscription à une liste de diffusion, aucune relance automatique." }
+		}
+	]
+}
+</script>
+<script type="application/ld+json">
+{
+	"@context": "https://schema.org",
+	"@type": "BreadcrumbList",
+	"itemListElement": [
+		{ "@type": "ListItem", "position": 1, "name": "Accueil", "item": "{{ app.request.schemeAndHttpHost }}{{ path('front_home') }}" },
+		{ "@type": "ListItem", "position": 2, "name": "Outils gratuits", "item": "{{ app.request.schemeAndHttpHost }}{{ path('front_outils') }}" },
+		{ "@type": "ListItem", "position": 3, "name": "Audit gratuit de votre site", "item": "{{ app.request.schemeAndHttpHost }}{{ path('front_audit') }}" }
+	]
+}
+</script>
+{% endblock %}
+
+{% block content %}
+{% set en = app.request.locale == 'en' %}
+
+<section class="wb-hero wb-slant" data-tone="dark" style="padding-bottom: 7rem;">
+	<div class="container">
+		<div class="row justify-content-center text-center">
+			<div class="col-lg-8">
+				<span class="wb-eyebrow">Gratuit · sans inscription · résultat immédiat</span>
+				<h1 class="wb-display">Votre site tient-il<br><span class="wb-mark">encore la route ?</span></h1>
+				<p class="wb-lead wb-lead--on-dark mx-auto mb-4">
+					Entrez votre adresse. J'analyse la sécurité, la vitesse, l'affichage sur téléphone
+					et le référencement, et je vous dis ce que vos visiteurs voient vraiment.
+				</p>
+
+				<form method="post" class="wb-audit__form" novalidate>
+					<input type="hidden" name="_token" value="{{ csrf_token('audit') }}">
+					<input type="url" name="site" value="{{ adresse }}" required
+					       placeholder="monsite.fr" autocomplete="url" inputmode="url"
+					       aria-label="Adresse de votre site">
+					<button type="submit" class="wb-btn wb-btn--gold">Analyser</button>
+				</form>
+
+				<p class="wb-audit__note">
+					Aucune donnée n'est conservée tant que vous ne le demandez pas.
+					L'analyse prend quelques secondes.
+				</p>
+			</div>
+		</div>
+	</div>
+</section>
+
+{# Le gabarit de base n'affiche aucun message flash. La demande de rapport
+   redirige avec un flash de succes ou d'erreur, que personne ne voyait
+   jamais : de l'exterieur, le bouton ne faisait rien. Un envoi qui reussit
+   sans le dire equivaut a un envoi rate. #}
+{% for type, messages in app.flashes %}
+	{% for message in messages %}
+		<section class="wb-section--tight">
+			<div class="container" style="max-width: 760px;">
+				<div class="wb-flash wb-flash--{{ type }}">{{ message }}</div>
+			</div>
+		</section>
+	{% endfor %}
+{% endfor %}
+
+{% if erreur %}
+	<section class="wb-section--tight">
+		<div class="container" style="max-width: 760px;">
+			<div class="wb-flash wb-flash--error">{{ erreur }}</div>
+		</div>
+	</section>
+{% endif %}
+
+{% if resultat %}
+	<section class="wb-section" data-tone="light" id="resultat">
+		<div class="container" style="max-width: 900px;">
+
+			{% if not resultat.joignable %}
+				<div class="wb-card" data-tone="light">
+					<h2 class="wb-h2">Le site n'a pas répondu</h2>
+					<p class="wb-lead mb-0">
+						{{ resultat.url ?: 'Cette adresse' }} ne répond pas depuis l'extérieur.
+						Soit le serveur est arrêté, soit l'adresse comporte une faute.
+						Si votre site s'ouvre bien chez vous mais pas ici, c'est déjà une information :
+						vos visiteurs peuvent rencontrer le même problème.
+					</p>
+				</div>
+			{% else %}
+				{% set s = resultat.score %}
+				{% set ton = s >= 80 ? 'vert' : (s >= 55 ? 'orange' : 'rouge') %}
+
+				<div class="wb-score wb-score--{{ ton }}">
+					<div class="wb-score__jauge" style="--wb-part: {{ s }};">
+						<span class="wb-score__n">{{ s }}</span>
+						<span class="wb-score__sur">/ 100</span>
+					</div>
+					<div class="wb-score__txt">
+						<span class="wb-eyebrow wb-eyebrow--ink">{{ resultat.url }}</span>
+						<h2 class="wb-h2" style="margin:.2rem 0 .5rem;">
+							{% if s >= 80 %}Votre site est bien tenu.
+							{% elseif s >= 55 %}Votre site tient, mais il perd des visiteurs.
+							{% else %}Votre site vous coûte des clients tous les jours.{% endif %}
+						</h2>
+						<p class="mb-0" style="color: var(--wb-text-2); font-size:.95rem;">{{ resultat.resume }}</p>
+					</div>
+				</div>
+
+				<div class="wb-notes">
+					{% for cle, libelle in {'securite': 'Sécurité', 'performance': 'Vitesse', 'mobile': 'Mobile', 'seo': 'Référencement'} %}
+						{% set n = resultat.notes[cle] %}
+						<div class="wb-note wb-note--{{ n >= 80 ? 'vert' : (n >= 55 ? 'orange' : 'rouge') }}">
+							<span class="wb-note__l">{{ libelle }}</span>
+							<span class="wb-note__n">{{ n }}</span>
+							<span class="wb-note__barre"><i style="width: {{ n }}%;"></i></span>
+						</div>
+					{% endfor %}
+				</div>
+
+				<h2 class="wb-h2" style="margin-top:2.5rem;">Ce que j'ai trouvé</h2>
+
+				{% if resultat.constats|length > 0 %}
+					<div class="wb-constats">
+						{% for c in resultat.constats %}
+							<div class="wb-constat wb-constat--{{ c.gravite == 'haute' ? 'haute' : 'moyenne' }}">
+								<span class="wb-constat__t">{{ c.titre }}</span>
+								<span class="wb-constat__p">{{ c.phrase|capitalize }}.</span>
+							</div>
+						{% endfor %}
+					</div>
+				{% else %}
+					<div class="wb-card" data-tone="light">
+						<p class="mb-0">
+							Rien de bloquant. C'est plus rare que vous ne le pensez, et ça mérite d'être dit.
+							Gardez mon adresse pour le jour où vous voudrez aller plus loin qu'un site vitrine.
+						</p>
+					</div>
+				{% endif %}
+
+				{# ------------------------------------------------ capture -- #}
+				<div class="wb-capture" data-tone="dark">
+					<div>
+						<span class="wb-eyebrow">Le rapport complet</span>
+						<h3 class="wb-h3 text-white" style="margin:.3rem 0 .5rem;">Recevez le détail par e-mail</h3>
+						<p style="color: var(--wb-on-dark-2); font-size:.92rem; margin:0;">
+							Chaque point expliqué, ce que ça coûte, et par où commencer si vous voulez le corriger
+							vous-même. Aucune inscription, aucune liste de diffusion, pas de relance automatique.
+						</p>
+					</div>
+					<form method="post" action="{{ path('front_audit_rapport') }}" class="wb-capture__form" novalidate>
+						<input type="hidden" name="_token" value="{{ csrf_token('audit_rapport') }}">
+						<input type="text" name="societe" placeholder="Votre entreprise (facultatif)" autocomplete="organization">
+						<input type="email" name="email" required placeholder="vous@votre-entreprise.fr" autocomplete="email">
+						<button type="submit" class="wb-btn wb-btn--gold">Recevoir mon rapport</button>
+					</form>
+				</div>
+
+				<div class="text-center" style="margin-top:2.5rem;">
+					<p class="wb-lead mx-auto" style="max-width:60ch;">
+						Vous préférez que je m'en occupe ? Dites-moi ce que vous voulez corriger,
+						je vous réponds sous 48 heures ouvrées avec un chiffrage ligne par ligne.
+					</p>
+					<a href="{{ url('front_devis_new') }}" class="wb-btn wb-btn--gold">Faire chiffrer la correction</a>
+				</div>
+			{% endif %}
+
+		</div>
+	</section>
+{% endif %}
+
+{# Sans cette section, la page repondait par quatre notes sur cent et
+   quatre mots de metier : securite, vitesse, mobile, referencement. Un
+   chiffre qu'on ne sait pas interpreter n'apprend rien. On explique donc
+   ce que chaque point veut dire pour le visiteur, et ce qu'il coute
+   quand il est rate. #}
+<section class="wb-section wb-section--paper" data-tone="light">
+	<div class="container" style="max-width:1000px;">
+		<h2 class="wb-h2 text-center">Ce que je regarde, et pourquoi ça compte</h2>
+		<p class="wb-lead text-center mx-auto" style="max-width:62ch;">
+			Quatre points, quatre notes. Aucun n'est une question de goût :
+			chacun se mesure, et chacun fait partir des visiteurs quand il est raté.
+		</p>
+
+		<div class="wb-crit">
+			<article class="wb-crit__c">
+				<span class="wb-crit__n">Sécurité</span>
+				<h3 class="wb-crit__t">Le cadenas dans la barre d'adresse</h3>
+				<p>
+					S'il manque, le navigateur écrit « Non sécurisé » juste à côté de votre nom.
+					La plupart des gens ferment l'onglet à ce moment-là, et Google recule la page
+					dans ses résultats. Le certificat est gratuit et s'installe en une heure :
+					c'est la correction la plus rentable de toute cette liste.
+				</p>
+			</article>
+
+			<article class="wb-crit__c">
+				<span class="wb-crit__n">Vitesse</span>
+				<h3 class="wb-crit__t">Le temps avant que la page s'affiche</h3>
+				<p>
+					Au-delà de deux secondes et demie, on perd des visiteurs, et ça se mesure.
+					Le coupable est presque toujours le même : des photos publiées telles que
+					sorties de l'appareil, quatre fois trop lourdes pour un écran.
+					C'est aussi le défaut le plus rapide à corriger.
+				</p>
+			</article>
+
+			<article class="wb-crit__c">
+				<span class="wb-crit__n">Mobile</span>
+				<h3 class="wb-crit__t">Ce que voit quelqu'un sur son téléphone</h3>
+				<p>
+					Si la page ne dit pas au téléphone comment se réorganiser, celui-ci affiche
+					la version bureau en réduction : il faut zoomer pour lire, viser pour cliquer.
+					Plus d'un visiteur sur deux arrive du téléphone. Ce seul défaut divise
+					le nombre de messages que vous recevez.
+				</p>
+			</article>
+
+			<article class="wb-crit__c">
+				<span class="wb-crit__n">Référencement</span>
+				<h3 class="wb-crit__t">Ce que Google affiche de vous</h3>
+				<p>
+					Le titre et les deux lignes en dessous, dans les résultats de recherche,
+					sont écrits dans votre page. Quand ils manquent, Google prend ce qu'il
+					trouve, et ça donne souvent « Accueil » suivi d'un bout de menu.
+					C'est votre vitrine sur la rue la plus passante du monde.
+				</p>
+			</article>
+		</div>
+	</div>
+</section>
+
+<section class="wb-section" data-tone="light">
+	<div class="container" style="max-width:760px;">
+		<h2 class="wb-h2">Les questions qu'on me pose</h2>
+
+		<details class="wb-faq" open>
+			<summary>Comment savoir si mon site est encore correct ?</summary>
+			<p>
+				Quatre points suffisent à trancher : le cadenas dans la barre d'adresse,
+				le temps d'affichage de la page d'accueil, la lisibilité sur téléphone
+				sans zoomer, et la présence d'un titre propre à chaque page. Un site qui
+				échoue sur l'un des quatre perd des visiteurs sans que personne ne s'en
+				aperçoive : ceux qui partent ne préviennent pas.
+			</p>
+		</details>
+
+		<details class="wb-faq">
+			<summary>Pourquoi le cadenas est-il si important ?</summary>
+			<p>
+				Sans certificat, les navigateurs affichent « Non sécurisé » à côté de votre
+				adresse et Google déclasse la page. C'est gratuit, ça s'installe en une heure,
+				et c'est la correction qui rapporte le plus pour le moins d'efforts.
+			</p>
+		</details>
+
+		<details class="wb-faq">
+			<summary>À partir de quand un site est-il trop lent ?</summary>
+			<p>
+				Au-delà de deux secondes et demie pour afficher la page d'accueil. Les causes
+				les plus fréquentes : des images au format de l'appareil photo, un hébergement
+				mutualisé saturé, et une accumulation d'extensions qui chargent chacune ses
+				propres fichiers.
+			</p>
+		</details>
+
+		<details class="wb-faq">
+			<summary>L'audit est-il vraiment gratuit ?</summary>
+			<p>
+				Oui, sans inscription et sans contrepartie. L'analyse tourne tout de suite,
+				et rien n'est conservé tant que vous ne demandez pas le rapport détaillé par
+				e-mail. Pas de liste de diffusion, pas de relance automatique.
+			</p>
+		</details>
+
+		<details class="wb-faq">
+			<summary>Et si le résultat est mauvais ?</summary>
+			<p>
+				Alors vous savez quoi corriger, et dans quel ordre. Le rapport donne le détail
+				point par point, y compris pour le faire vous-même ou le confier à qui vous
+				voulez. Si vous préférez me le confier, le chiffrage arrive sous 48 heures
+				ouvrées, ligne par ligne.
+			</p>
+		</details>
+	</div>
+</section>
+
+<style>
+	.wb-crit { display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:1rem; margin-top:1.6rem; }
+	.wb-crit__c { background:#fff; border:1px solid var(--wb-line,rgba(10,22,40,.1)); border-radius:14px; padding:1.4rem 1.5rem; }
+	.wb-crit__n { display:block; font-size:.72rem; text-transform:uppercase; letter-spacing:.08em; font-weight:800; color:var(--wb-gold,#f5b301); }
+	.wb-crit__t { font-size:1.05rem; font-weight:800; line-height:1.35; margin:.35rem 0 .5rem; color:var(--wb-text,#0a1628); }
+	.wb-crit__c p { margin:0; font-size:.92rem; line-height:1.65; color:var(--wb-text-2,#5a6b82); }
+</style>
+
+
+<style>
+	.wb-audit__form { display:flex; gap:.6rem; max-width:520px; margin:0 auto; flex-wrap:wrap; }
+	.wb-audit__form input {
+		flex:1 1 240px; padding:.85rem 1rem; border-radius:10px; font-size:1rem;
+		border:1px solid rgba(255,255,255,.2); background:rgba(255,255,255,.08); color:#fff;
+	}
+	.wb-audit__form input::placeholder { color:rgba(255,255,255,.45); }
+	.wb-audit__form input:focus { outline:2px solid var(--wb-gold); background:rgba(255,255,255,.14); }
+	.wb-audit__note { margin:.9rem 0 0; font-size:.82rem; color:var(--wb-on-dark-2,#9fb3cd); }
+
+	.wb-score { display:flex; gap:1.6rem; align-items:center; flex-wrap:wrap;
+		background:#fff; border:1px solid var(--wb-line,rgba(10,22,40,.1)); border-left:6px solid #1baf7a;
+		border-radius:16px; padding:1.6rem 1.8rem; }
+	.wb-score--orange { border-left-color:#f5b301; }
+	.wb-score--rouge  { border-left-color:#e34948; }
+	.wb-score__jauge { width:118px; height:118px; border-radius:50%; flex-shrink:0;
+		display:grid; place-items:center; position:relative;
+		background:conic-gradient(currentColor calc(var(--wb-part)*1%), rgba(10,22,40,.08) 0); }
+	.wb-score--vert   .wb-score__jauge { color:#1baf7a; }
+	.wb-score--orange .wb-score__jauge { color:#f5b301; }
+	.wb-score--rouge  .wb-score__jauge { color:#e34948; }
+	.wb-score__jauge:after { content:""; position:absolute; inset:9px; border-radius:50%; background:#fff; }
+	.wb-score__n { position:relative; z-index:1; font-size:2.1rem; font-weight:800; color:var(--wb-text,#0a1628); line-height:1; }
+	.wb-score__sur { position:relative; z-index:1; font-size:.72rem; color:var(--wb-text-3,#8494a8); }
+	.wb-score__txt { flex:1 1 300px; }
+
+	.wb-notes { display:grid; grid-template-columns:repeat(auto-fit,minmax(170px,1fr)); gap:.8rem; margin-top:1rem; }
+	.wb-note { background:#fff; border:1px solid var(--wb-line,rgba(10,22,40,.1)); border-radius:12px; padding:.9rem 1rem; }
+	.wb-note__l { display:block; font-size:.72rem; text-transform:uppercase; letter-spacing:.06em; font-weight:700; color:var(--wb-text-3,#8494a8); }
+	.wb-note__n { display:block; font-size:1.7rem; font-weight:800; line-height:1.15; margin:.15rem 0 .4rem; }
+	.wb-note__barre { display:block; height:5px; border-radius:3px; background:rgba(10,22,40,.08); overflow:hidden; }
+	.wb-note__barre i { display:block; height:100%; border-radius:3px; }
+	.wb-note--vert   .wb-note__n, .wb-note--vert   .wb-note__barre i { color:#0f7a54; background:#1baf7a; }
+	.wb-note--orange .wb-note__n, .wb-note--orange .wb-note__barre i { color:#8a6400; background:#f5b301; }
+	.wb-note--rouge  .wb-note__n, .wb-note--rouge  .wb-note__barre i { color:#b32a29; background:#e34948; }
+	.wb-note--vert .wb-note__n, .wb-note--orange .wb-note__n, .wb-note--rouge .wb-note__n { background:none; }
+
+	.wb-constats { display:grid; gap:.7rem; }
+	.wb-constat { background:#fff; border:1px solid var(--wb-line,rgba(10,22,40,.1)); border-left:4px solid #f5b301;
+		border-radius:12px; padding:1rem 1.2rem; }
+	.wb-constat--haute { border-left-color:#e34948; background:#fdf7f7; }
+	.wb-constat__t { display:block; font-weight:700; margin-bottom:.25rem; }
+	.wb-constat__p { display:block; font-size:.92rem; line-height:1.55; color:var(--wb-text-2,#5a6b82); }
+
+	.wb-capture { margin-top:2.5rem; background:linear-gradient(120deg,#0a1628,#16304f); border-radius:16px;
+		padding:1.8rem; display:grid; grid-template-columns:1fr 1fr; gap:1.6rem; align-items:center; }
+	.wb-capture__form { display:grid; gap:.55rem; }
+	.wb-capture__form input { padding:.75rem .9rem; border-radius:10px; font-size:.95rem;
+		border:1px solid rgba(255,255,255,.2); background:rgba(255,255,255,.08); color:#fff; }
+	.wb-capture__form input::placeholder { color:rgba(255,255,255,.45); }
+	@media (max-width:820px) { .wb-capture { grid-template-columns:1fr; } }
+</style>
+
+{% endblock %}

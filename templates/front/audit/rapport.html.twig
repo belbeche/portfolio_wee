@@ -1,0 +1,96 @@
+{# Le rapport envoye par e-mail. Tableaux et styles en ligne, comme les autres
+   gabarits de courriel : c'est la seule chose qu'Outlook et Gmail rendent de
+   la meme facon. #}
+<!DOCTYPE html>
+<html lang="fr"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1"></head>
+<body style="margin:0;padding:0;background:#f2f5f9;font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#f2f5f9;padding:24px 12px;">
+<tr><td align="center">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width:580px;background:#ffffff;border-radius:14px;overflow:hidden;">
+
+	<tr><td style="background:#0a1628;padding:22px 26px;">
+		<span style="color:#f5b301;font-size:11px;letter-spacing:2px;text-transform:uppercase;font-weight:700;">Votre rapport</span><br>
+		<span style="color:#ffffff;font-size:18px;font-weight:700;">{{ resultat.url }}</span>
+	</td></tr>
+
+	{% if resultat.joignable %}
+		{% set s = resultat.score %}
+		{% set couleur = s >= 80 ? '#1baf7a' : (s >= 55 ? '#f5b301' : '#e34948') %}
+
+		<tr><td style="padding:24px 26px 8px;">
+			<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+				<tr>
+					<td width="90" style="text-align:center;">
+						<span style="display:inline-block;font-size:34px;font-weight:800;color:{{ couleur }};line-height:1;">{{ s }}</span><br>
+						<span style="font-size:11px;color:#8494a8;">sur 100</span>
+					</td>
+					<td style="padding-left:16px;color:#1d2b3f;font-size:15px;line-height:1.55;">
+						{% if s >= 80 %}Votre site est bien tenu. Les points ci-dessous sont du réglage fin.
+						{% elseif s >= 55 %}Votre site tient, mais il perd des visiteurs sur des points corrigeables.
+						{% else %}Plusieurs points coûtent des visiteurs tous les jours. Aucun n'est difficile à corriger.{% endif %}
+					</td>
+				</tr>
+			</table>
+		</td></tr>
+
+		<tr><td style="padding:8px 26px;">
+			<table role="presentation" width="100%" cellpadding="6" cellspacing="0" border="0" style="font-size:14px;color:#1d2b3f;">
+				{% for cle, libelle in {'securite': 'Sécurité', 'performance': 'Vitesse', 'mobile': 'Affichage mobile', 'seo': 'Référencement'} %}
+					{% set n = resultat.notes[cle] %}
+					<tr>
+						<td style="border-bottom:1px solid #e6ecf5;">{{ libelle }}</td>
+						<td width="70" style="border-bottom:1px solid #e6ecf5;text-align:right;font-weight:700;color:{{ n >= 80 ? '#0f7a54' : (n >= 55 ? '#8a6400' : '#b32a29') }};">{{ n }} / 100</td>
+					</tr>
+				{% endfor %}
+			</table>
+		</td></tr>
+
+		{% if resultat.constats|length > 0 %}
+			<tr><td style="padding:18px 26px 6px;">
+				<span style="font-size:11px;letter-spacing:1.5px;text-transform:uppercase;font-weight:700;color:#8494a8;">Le détail</span>
+			</td></tr>
+			{% for c in resultat.constats %}
+				<tr><td style="padding:0 26px 10px;">
+					<table role="presentation" width="100%" cellpadding="12" cellspacing="0" border="0"
+					       style="background:{{ c.gravite == 'haute' ? '#fdf7f7' : '#f7f9fc' }};border-radius:10px;">
+						<tr><td style="font-size:14px;line-height:1.55;color:#33415a;">
+							<strong style="color:{{ c.gravite == 'haute' ? '#b32a29' : '#0a1628' }};">{{ c.titre }}</strong><br>
+							{{ c.phrase|capitalize }}.
+						</td></tr>
+					</table>
+				</td></tr>
+			{% endfor %}
+		{% endif %}
+
+		<tr><td style="padding:14px 26px 4px;color:#4a5a6e;font-size:14px;line-height:1.6;">
+			<strong style="color:#0a1628;">Par où commencer.</strong>
+			Traitez les points en rouge d'abord : ce sont ceux que vos visiteurs remarquent, ou que Google
+			pénalise. Un certificat s'installe en une heure et ne coûte rien. La vitesse et l'affichage sur
+			téléphone demandent plus de travail, mais ce sont eux qui font repartir les gens avant d'avoir lu.
+		</td></tr>
+	{% else %}
+		<tr><td style="padding:24px 26px;color:#1d2b3f;font-size:15px;line-height:1.6;">
+			Votre site n'a pas répondu au moment du test. C'est déjà une information : vos visiteurs
+			peuvent rencontrer la même chose. Si le site s'ouvre chez vous, vérifiez qu'il répond aussi
+			depuis un autre réseau que le vôtre.
+		</td></tr>
+	{% endif %}
+
+	<tr><td style="padding:18px 26px 26px;">
+		<table role="presentation" cellpadding="0" cellspacing="0" border="0"><tr>
+			<td style="background:#f5b301;border-radius:8px;">
+				<a href="https://walidbelbeche.fr/devis" style="display:inline-block;padding:12px 22px;color:#0a1628;font-weight:700;text-decoration:none;font-size:15px;">Faire chiffrer la correction</a>
+			</td>
+		</tr></table>
+	</td></tr>
+
+	<tr><td style="border-top:1px solid #e6ecf5;padding:16px 26px;color:#7b8aa0;font-size:11.5px;line-height:1.5;">
+		Vous recevez ce message parce que vous avez demandé l'analyse de {{ resultat.url }} sur walidbelbeche.fr.
+		Votre adresse n'est ni revendue ni versée à une liste de diffusion. Répondez « stop » et je l'efface.<br>
+		Walid Belbeche · développeur web et mobile · walidbelbeche.fr
+	</td></tr>
+
+</table>
+</td></tr></table>
+</body></html>

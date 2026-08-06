@@ -63,12 +63,12 @@ class PterodactylService
                 return $servers; // ce qu'on a deja, plutot que rien
             }
 
-            error_log(sprintf(
-                '[pterodactyl] page %d : %d serveur(s), total annonce %s',
-                $page,
-                count($data['data'] ?? []),
-                (string) ($data['meta']['pagination']['total'] ?? '?')
-            ));
+            // Pas de journalisation ici. Cette ligne servait a debuguer la
+            // pagination du panneau, elle a fait son travail. La garder, c'est
+            // ecrire une entree de niveau [error] dans nginx a chaque appel,
+            // soit toutes les deux minutes a cause du bandeau de l'accueil.
+            // Un journal ou tout est marque « error » ne sert plus a reperer
+            // les vraies erreurs : on finit par ne plus le lire.
 
             foreach (($data['data'] ?? []) as $item) {
                 $servers[] = $item['attributes'] ?? [];

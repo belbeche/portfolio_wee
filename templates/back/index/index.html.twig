@@ -29,6 +29,53 @@
 	</div>
 {% endif %}
 
+{# ------------------------------------------------------ suivi commercial -- #}
+{# Les euros avant les compteurs de contenu. Un tableau de bord qui compte des
+   articles de blog mais pas ce qu'on encaisse ne dit rien de l'activite. #}
+<div class="wb-argent">
+	<a href="{{ url('back_devis_index') }}" class="wb-argent__bloc">
+		<span class="wb-argent__l">Chiffré, en attente de réponse</span>
+		<span class="wb-argent__n">{{ argent.devisChiffres|number_format(0, ',', ' ') }} €</span>
+		<span class="wb-argent__d">{{ argent.devisEnAttente }} devis chiffré(s)</span>
+	</a>
+	<a href="{{ url('back_facture_index') }}" class="wb-argent__bloc">
+		<span class="wb-argent__l">Facturé, pas encore réglé</span>
+		<span class="wb-argent__n">{{ argent.attendu|number_format(0, ',', ' ') }} €</span>
+		<span class="wb-argent__d">sur {{ argent.facture|number_format(0, ',', ' ') }} € émis</span>
+	</a>
+	<a href="{{ url('back_facture_index') }}" class="wb-argent__bloc wb-argent__bloc--vert">
+		<span class="wb-argent__l">Encaissé</span>
+		<span class="wb-argent__n">{{ argent.encaisse|number_format(0, ',', ' ') }} €</span>
+		<span class="wb-argent__d">dont {{ argent.moisEncaisse|number_format(0, ',', ' ') }} € ce mois-ci</span>
+	</a>
+	<a href="{{ url('back_facture_index') }}" class="wb-argent__bloc {{ argent.retard > 0 ? 'wb-argent__bloc--rouge' }}">
+		<span class="wb-argent__l">En retard de paiement</span>
+		<span class="wb-argent__n">{{ argent.retard|number_format(0, ',', ' ') }} €</span>
+		<span class="wb-argent__d">{{ argent.nbRetard }} facture(s) à relancer</span>
+	</a>
+	<a href="{{ url('back_sequence') }}" class="wb-argent__bloc">
+		<span class="wb-argent__l">Prospection, taux d'ouverture</span>
+		<span class="wb-argent__n">{{ argent.tauxReponse }} %</span>
+		<span class="wb-argent__d">voir le tunnel d'acquisition</span>
+	</a>
+</div>
+
+<style>
+	.wb-argent { display:grid; grid-template-columns:repeat(auto-fit,minmax(190px,1fr)); gap:.7rem; margin-bottom:1.2rem; }
+	.wb-argent__bloc {
+		display:block; text-decoration:none; color:inherit; background:#fff;
+		border:1px solid var(--ad-line,#dde5f0); border-left:4px solid #2f6bd8;
+		border-radius:12px; padding:.9rem 1rem;
+		transition:transform .25s cubic-bezier(.22,.61,.36,1), box-shadow .25s ease;
+	}
+	.wb-argent__bloc:hover { transform:translateY(-3px); box-shadow:0 12px 28px rgba(10,22,40,.09); }
+	.wb-argent__bloc--vert  { border-left-color:#1baf7a; }
+	.wb-argent__bloc--rouge { border-left-color:#e34948; background:#fdf6f6; }
+	.wb-argent__l { display:block; font-size:.72rem; text-transform:uppercase; letter-spacing:.05em; font-weight:700; color:var(--ad-text-3,#8494a8); }
+	.wb-argent__n { display:block; font-size:1.6rem; font-weight:800; line-height:1.1; margin:.3rem 0 .15rem; font-variant-numeric:tabular-nums; }
+	.wb-argent__d { display:block; font-size:.78rem; color:var(--ad-text-3,#8494a8); }
+</style>
+
 {# ---------------------------------------------------------------- chiffres -- #}
 <div class="ad-kpis">
 	<a href="{{ url('back_devis_index') }}" class="ad-kpi" data-tone="light">

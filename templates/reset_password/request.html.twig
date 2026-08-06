@@ -1,30 +1,79 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Demande de réinitialisation du mot de passe{% endblock %}
+{% block title %}Mot de passe oublié | Walid BELBECHE{% endblock %}
+{% block meta_description %}Réinitialisez le mot de passe de votre espace client en deux minutes.{% endblock %}
+
+{# Une page de secours reste une page publique. Celle-ci n'avait aucune
+   mise en page : son titre passait sous la barre de navigation fixe, le
+   contenu commencait au milieu de l'ecran et le pied de page remontait,
+   laissant un grand vide blanc. On tombe dessus au pire moment, quand on
+   est deja bloque dehors : c'est precisement la qu'un site doit rassurer. #}
 
 {% block content %}
-    <div class="container">
-        <h1>Réinitialisation du mot de passe</h1>
 
-        <p>Vous avez oublié votre mot de passe ? Pas de souci, ça arrive même aux meilleurs d'entre nous ! Suivez simplement ces étapes pour le réinitialiser :</p>
+<section class="wb-hero wb-slant" data-tone="dark" style="padding-bottom:6rem;">
+	<div class="container">
+		<div class="row justify-content-center text-center">
+			<div class="col-lg-7">
+				<span class="wb-eyebrow">Espace client</span>
+				<h1 class="wb-display">Mot de passe<br><span class="wb-mark">oublié ?</span></h1>
+				<p class="wb-lead wb-lead--on-dark mx-auto mb-0">
+					Ça arrive à tout le monde. Indiquez l'adresse e-mail de votre compte,
+					je vous envoie un lien pour en choisir un nouveau.
+				</p>
+			</div>
+		</div>
+	</div>
+</section>
 
-        <ol style="list-style-type: lower-alpha">
-            <li style="list-style-type: auto;"><strong>Saisissez votre e-mail :</strong> Assurez-vous d'entrer l'adresse e-mail que vous utilisez pour ce site.</li>
-            <li style="list-style-type: auto;"><strong>Vérifiez votre boîte de réception :</strong> Après avoir soumis votre e-mail, recherchez un message de notre part avec un lien de réinitialisation. Si vous ne le voyez pas tout de suite, jetez un œil dans votre dossier de spam.</li>
-            <li style="list-style-type: auto;"><strong>Cliquez sur le lien :</strong> Suivez les instructions pour créer un nouveau mot de passe sécurisé.</li>
-        </ol>
+<section class="wb-section" data-tone="light">
+	<div class="container" style="max-width:620px;">
 
-        <form method="post">
-            <input type="hidden" name="_csrf_token" value="{{ csrf_token('reset_password_request') }}">
-            <div class="mb-3">
-                <label for="email" class="form-label">Adresse e-mail</label>
-                <input type="email" class="form-control" id="email" name="email" required placeholder="votre.email@example.com">
-            </div>
-            <button type="submit" class="btn btn-primary">Envoyer</button>
-        </form>
+		{% for type, messages in app.flashes %}
+			{% for message in messages %}
+				<div class="wb-flash wb-flash--{{ type }}" style="margin-bottom:1.2rem;">{{ message }}</div>
+			{% endfor %}
+		{% endfor %}
 
-        <p class="mt-4">Si vous rencontrez des problèmes ou si vous n'avez pas reçu d'e-mail après quelques minutes, n'hésitez pas à <a href="{{ path('front_contact') }}">nous contacter</a>.</p>
-    </div>
+		<div class="wb-card wb-form" data-tone="light">
+			<form method="post" novalidate>
+				<input type="hidden" name="_csrf_token" value="{{ csrf_token('reset_password_request') }}">
+				<div class="mb-3">
+					<label for="email" class="form-label">Adresse e-mail de votre compte</label>
+					<input type="email" class="form-control" id="email" name="email" required
+					       autocomplete="email" autofocus placeholder="vous@votre-entreprise.fr">
+					<div class="form-text">Celle que vous utilisez pour vous connecter ici.</div>
+				</div>
+				<button type="submit" class="wb-btn wb-btn--gold w-100">Recevoir le lien</button>
+			</form>
+		</div>
+
+		<ol class="wb-etapes">
+			<li>
+				<strong>Vous recevez un e-mail.</strong>
+				Il arrive en général en moins d'une minute. S'il tarde, regardez dans
+				les indésirables : les messages automatiques y atterrissent souvent.
+			</li>
+			<li>
+				<strong>Vous cliquez sur le lien.</strong>
+				Il n'est valable qu'une heure et ne fonctionne qu'une seule fois.
+				Passé ce délai, redemandez-en un depuis cette page.
+			</li>
+			<li>
+				<strong>Vous choisissez un nouveau mot de passe.</strong>
+				Douze caractères minimum. Une phrase que vous seul retenez vaut mieux
+				qu'un mot compliqué que vous devrez noter quelque part.
+			</li>
+		</ol>
+
+		<p class="text-center" style="margin-top:1.6rem; font-size:.92rem;">
+			Toujours bloqué au bout de quelques minutes ?
+			<a href="{{ path('front_contact') }}">Écrivez-moi</a>, je débloque le compte à la main.
+			<br>
+			<a href="{{ path('app_login') }}">Retour à la connexion</a>
+		</p>
+
+	</div>
+</section>
+
 {% endblock %}
-
-

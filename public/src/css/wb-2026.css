@@ -972,10 +972,34 @@ section.bg-dark .small, section.bg-primary .small,
     color: var(--tone-text);
 }
 
-/* 1. On rend la main a l'heritage. Sans !important : la specificite 0,1,1
-      suffit a passer devant les regles du theme, qui sont en 0,0,1. */
+/* 1. On rend la main a l'heritage, pour les elements du theme historique
+      uniquement.
+
+      Cette regle existe pour defaire les couleurs figees du vieux theme,
+      qui sont posees en 0,0,1. Elle etait ecrite sans exception, et elle
+      passait donc aussi devant nos propres composants : une classe comme
+      .wb-base__prix, en 0,1,0, perdait contre cette regle en 0,1,1. Le
+      prix en or de l'estimateur, le libelle dore du total, la mention
+      grise sous chaque carte : tout ressortait dans la couleur du bloc,
+      sans aucune nuance. De l'exterieur, on voyait « les couleurs ne
+      s'affichent pas », et c'etait exact.
+
+      L'exception ci-dessous met nos composants hors de portee. Le theme
+      historique ignore le prefixe wb-, il ne peut donc pas les viser :
+      les exclure ne lui rend rien. Un composant qui ne declare aucune
+      couleur herite de toute facon, c'est le comportement natif. */
 [data-tone] :is(p, li, span, div, dd, dt, small, td, th, figcaption,
-                blockquote, label, legend, time, address, cite) {
+                blockquote, label, legend, time, address, cite):not([class*="wb-"]) {
+    color: inherit;
+}
+
+/* 1 bis. Nos composants heritent eux aussi, mais par une regle volontairement
+      faible : :where() ne compte pour rien, l'ensemble pese 0,0,1. Elle passe
+      donc devant le theme historique, qui pese pareil et se charge avant, et
+      elle s'efface devant la moindre classe qui pose une couleur. Un composant
+      sans couleur suit son bloc ; un composant qui en declare une la garde. */
+:where([data-tone]) :where([class*="wb-"]):is(p, li, span, div, dd, dt, small,
+                td, th, figcaption, blockquote, label, legend, time, address, cite) {
     color: inherit;
 }
 
@@ -1900,28 +1924,35 @@ html.wb-portail-ouvert { overflow: hidden; }
 .wb-team__lien:hover { text-decoration: underline; }
 
 /* ========================================================== MISE EN SCENE ==
-   Les classes ci-dessous ne sont posees que par le script. Sans JavaScript,
-   ou avec « moins d'animations » actif, rien n'est masque.
+   Regle de survie de ce bloc : AUCUNE de ces regles ne s'applique tant que le
+   script n'a pas pose la classe wb-anime sur <html>.
+
+   La version precedente masquait directement, en pariant sur le fait que le
+   script finirait toujours son travail. Un pari perdu une fois sur mille
+   suffit : script bloque par une politique de securite, erreur JavaScript
+   plus haut dans la page, fichier CSS deploye sans son script, et la moitie
+   de la page d'accueil devient invisible sans qu'aucune erreur ne s'affiche.
+   Une animation ratee ne coute rien. Du contenu disparu coute un client.
    ========================================================================= */
-.wb-reveal {
+.wb-anime .wb-reveal {
     opacity: 0;
     transform: translateY(20px);
     transition: opacity .75s ease, transform .75s cubic-bezier(.22, .61, .36, 1);
     transition-delay: var(--wb-delay, 0ms);
     will-change: opacity, transform;
 }
-.wb-reveal.is-in { opacity: 1; transform: none; }
+.wb-anime .wb-reveal.is-in { opacity: 1; transform: none; }
 
-.wb-entree {
+.wb-anime .wb-entree {
     opacity: 0;
     transform: translateY(22px);
     transition: opacity .85s ease, transform .85s cubic-bezier(.22, .61, .36, 1);
     transition-delay: var(--wb-delay, 0ms);
 }
-.wb-hero.is-entre .wb-entree { opacity: 1; transform: none; }
+.wb-anime .wb-hero.is-entre .wb-entree { opacity: 1; transform: none; }
 
 @media (prefers-reduced-motion: reduce) {
-    .wb-reveal, .wb-entree { opacity: 1 !important; transform: none !important; }
+    .wb-anime .wb-reveal, .wb-anime .wb-entree { opacity: 1 !important; transform: none !important; }
     .wb-portail__fond { animation: none; }
 }
 
@@ -2144,3 +2175,149 @@ html.wb-portail-ouvert { overflow: hidden; }
     line-height: 1.45;
     color: var(--wb-text-2, #5a6b82);
 }
+
+/* Lien Audit gratuit dans la barre : present sans voler la vedette au devis. */
+.nav-link.nav-audit {
+    border: 1px solid rgba(245, 179, 1, .55);
+    border-radius: 16px;
+    padding: .42rem .9rem !important;
+    margin-right: .4rem;
+    color: var(--wb-gold) !important;
+    font-weight: 600;
+}
+.nav-link.nav-audit:hover { background: rgba(245, 179, 1, .12); }
+
+/* La barre de navigation ne doit jamais couper un libelle en deux. Un menu
+   qui se casse coute plus cher en credibilite que deux caracteres gagnes. */
+.navbar-nav .nav-link { white-space: nowrap; }
+@media (min-width: 992px) and (max-width: 1400px) {
+    .navbar-nav .nav-link { padding-left: .55rem !important; padding-right: .55rem !important; font-size: .93rem; }
+}
+
+
+/* ==========================================================================
+   COMPOSANTS DE REASSURANCE ET DE PEDAGOGIE
+
+   Trois briques qui manquaient au systeme. Les gabarits les appelaient
+   deja : .wb-rassure etait ecrit dans la page de devis et dans
+   l'estimateur sans qu'aucune regle n'existe, les trois arguments
+   ressortaient donc comme trois phrases sans relief au milieu du texte.
+   Une garantie que l'on n'arrive pas a distinguer d'un paragraphe ne
+   rassure personne.
+   ========================================================================== */
+
+/* -- Ligne de garantie, precedee de sa coche ------------------------------ */
+.wb-rassure {
+    display: flex;
+    align-items: flex-start;
+    gap: .7rem;
+    padding: .7rem 0;
+    font-size: .95rem;
+    line-height: 1.6;
+    border-top: 1px solid var(--wb-line);
+}
+.wb-rassure:first-of-type { border-top: 0; }
+.wb-rassure__i {
+    flex-shrink: 0;
+    width: 1.45rem;
+    height: 1.45rem;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    font-size: .8rem;
+    font-weight: 700;
+    background: rgba(27, 175, 122, .14);
+    color: #0f7a54;
+    margin-top: .1rem;
+}
+[data-tone="dark"] .wb-rassure { border-top-color: rgba(255, 255, 255, .14); }
+[data-tone="dark"] .wb-rassure__i { background: rgba(27, 175, 122, .22); color: #7ee3bb; }
+
+/* -- Questions frequentes, sans une ligne de JavaScript -------------------
+   L'element <details> du navigateur ouvre et ferme tout seul, reste
+   accessible au clavier, et son contenu est lu par les moteurs de
+   recherche meme replie. Un accordeon fait main coche rarement les
+   trois cases. */
+.wb-faq {
+    border-bottom: 1px solid var(--wb-line);
+    padding: .1rem 0;
+}
+.wb-faq > summary {
+    cursor: pointer;
+    list-style: none;
+    padding: .95rem 2rem .95rem 0;
+    font-weight: 700;
+    font-size: 1.02rem;
+    color: var(--tone-strong, var(--wb-text));
+    position: relative;
+    transition: color .2s ease;
+}
+.wb-faq > summary::-webkit-details-marker { display: none; }
+.wb-faq > summary:hover { color: var(--wb-gold-ink, #8a6400); }
+.wb-faq > summary:after {
+    content: "+";
+    position: absolute;
+    right: .2rem;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 1.3rem;
+    font-weight: 400;
+    line-height: 1;
+    color: var(--wb-gold);
+    transition: transform .25s ease;
+}
+.wb-faq[open] > summary:after { content: "−"; }
+.wb-faq > p {
+    margin: 0;
+    padding: 0 2rem .95rem 0;
+    font-size: .94rem;
+    line-height: 1.7;
+    color: var(--wb-text-2);
+}
+[data-tone="dark"] .wb-faq { border-bottom-color: rgba(255, 255, 255, .14); }
+[data-tone="dark"] .wb-faq > p { color: var(--wb-on-dark-2); }
+
+/* -- Marche a suivre numerotee ------------------------------------------- */
+.wb-etapes {
+    list-style: none;
+    counter-reset: wb-etape;
+    padding: 0;
+    margin: 1.6rem 0 0;
+}
+.wb-etapes > li {
+    counter-increment: wb-etape;
+    position: relative;
+    padding: 0 0 1.1rem 3rem;
+    font-size: .94rem;
+    line-height: 1.65;
+    color: var(--wb-text-2);
+}
+.wb-etapes > li:before {
+    content: counter(wb-etape);
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 2rem;
+    height: 2rem;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    font-weight: 800;
+    font-size: .9rem;
+    background: var(--wb-gold);
+    color: #0a1628;
+}
+/* Le filet qui relie les etapes, sauf sous la derniere. */
+.wb-etapes > li:not(:last-child):after {
+    content: "";
+    position: absolute;
+    left: 1rem;
+    top: 2.2rem;
+    bottom: .3rem;
+    width: 2px;
+    background: var(--wb-line);
+}
+.wb-etapes > li strong { display: block; color: var(--wb-text); margin-bottom: .15rem; }
+[data-tone="dark"] .wb-etapes > li { color: var(--wb-on-dark-2); }
+[data-tone="dark"] .wb-etapes > li strong { color: #fff; }
+[data-tone="dark"] .wb-etapes > li:not(:last-child):after { background: rgba(255, 255, 255, .18); }

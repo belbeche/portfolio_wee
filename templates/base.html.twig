@@ -3,7 +3,6 @@
 	<head>
 		<meta charset="UTF-8">
 		<meta name="language" content="fr">
-		<meta name="robots" content="index, follow">
 		<meta name="created" content="21-01-2025">
 		<meta name="image" content="https://walidbelbeche.fr/img/moi2.jpg">
 		<meta name="viewport" content="width=device-width, initial-scale=1"/>
@@ -46,6 +45,19 @@
 		<meta name="twitter:description" content="{{ og_desc }}">
 		<meta name="twitter:image" content="{{ app.request.schemeAndHttpHost ~ asset('medias/pwa/icon-512.png') }}">
 		<meta name="robots" content="index, follow, max-image-preview:large">
+
+		{# Pas de balise hreflang ici, et c'est volontaire. La langue est
+		   choisie en session : une meme adresse sert le francais et
+		   l'anglais. Declarer deux versions alors qu'il n'y a qu'une seule
+		   URL revient a mentir au moteur. Pour etre reellement indexe dans
+		   les deux langues, il faudrait des adresses distinctes du type
+		   /en/services : c'est un chantier a part. #}
+		<meta http-equiv="content-language" content="{{ app.request.locale }}">
+
+		{# Donnees structurees propres a chaque page : questions frequentes,
+		   fil d'Ariane, service decrit. C'est ce qui fait apparaitre les
+		   reponses directement dans les resultats de recherche. #}
+		{% block seo %}{% endblock %}
 
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css">
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css">
@@ -133,7 +145,7 @@
 			{#	<script src="{{ asset('js/app.js')}}"></script> #}
 
 			
-			<script>
+			<script nonce="{{ csp_nonce() }}">
 				document.addEventListener("DOMContentLoaded", function() {
 					const navbarMenu = document.getElementById("menu");
 					const burgerMenu = document.getElementById("burger");
@@ -219,7 +231,7 @@
 			// 	})
 			</script>#}
 
-			<script>
+			<script nonce="{{ csp_nonce() }}">
 				if ('serviceWorker' in navigator) {
 					window.addEventListener('load', function () {
 						navigator.serviceWorker.register('/sw.js').catch(function () {});
@@ -277,7 +289,7 @@
 				"@id": "https://walidbelbeche.fr/#identite",
 				"name": "Walid Belbeche",
 				"alternateName": "Walid Belbeche, consultant informatique",
-				"description": "Conception et developpement d'applications web et mobiles. Un seul interlocuteur, du cadrage a la mise en production.",
+				"description": "Conception et développement d'applications web et mobiles. Un seul interlocuteur, du cadrage à la mise en production.",
 				"url": "https://walidbelbeche.fr",
 				"logo": "https://walidbelbeche.fr/medias/pwa/icon-512.png",
 				"image": "https://walidbelbeche.fr/medias/pwa/icon-512.png",
@@ -296,7 +308,7 @@
 				"founder": {
 					"@type": "Person",
 					"name": "Walid Belbeche",
-					"jobTitle": "Consultant informatique, developpeur web et mobile",
+					"jobTitle": "Consultant informatique, développeur web et mobile",
 					"sameAs": [
 						"https://www.linkedin.com/in/walid-belbeche/",
 						"https://github.com/belbeche"
@@ -314,19 +326,19 @@
 							"@type": "Offer",
 							"price": "290",
 							"priceCurrency": "EUR",
-							"itemOffered": { "@type": "Service", "name": "Le Diagnostic", "description": "Audit de votre site, de vos outils et de vos fichiers, avec un plan d'action chiffre ligne par ligne." }
+							"itemOffered": { "@type": "Service", "name": "Le Diagnostic", "description": "Audit de votre site, de vos outils et de vos fichiers, avec un plan d'action chiffré ligne par ligne." }
 						},
 						{
 							"@type": "Offer",
 							"price": "4900",
 							"priceCurrency": "EUR",
-							"itemOffered": { "@type": "Service", "name": "Le Projet", "description": "Site web, application metier ou application mobile au forfait, code et droits cedes a la fin." }
+							"itemOffered": { "@type": "Service", "name": "Le Projet", "description": "Site web, application métier ou application mobile au forfait, code et droits cédés à la fin." }
 						},
 						{
 							"@type": "Offer",
 							"price": "390",
 							"priceCurrency": "EUR",
-							"itemOffered": { "@type": "Service", "name": "L'Interlocuteur Unique", "description": "Supervision, sauvegardes verifiees, correctifs et evolutions incluses chaque mois." }
+							"itemOffered": { "@type": "Service", "name": "L'Interlocuteur Unique", "description": "Supervision, sauvegardes vérifiées, correctifs et évolutions inclus chaque mois." }
 						}
 					]
 				}

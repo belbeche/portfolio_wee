@@ -141,7 +141,15 @@ class Skill
     public function setHighlighted(bool $highlighted): self { $this->highlighted = $highlighted; return $this; }
 
     public function getPosition(): int { return $this->position; }
-    public function setPosition(int $position): self { $this->position = $position; return $this; }
+    /**
+     * Accepte null et le ramene a zero.
+     *
+     * Le champ « ordre d'affichage » est facultatif dans le formulaire, et
+     * un champ facultatif laisse passer null. La signature refusait ce null
+     * et la page tombait en erreur 500 au moment d'enregistrer. Une position
+     * absente veut dire « en premier », pas « plantage ».
+     */
+    public function setPosition(?int $position): self { $this->position = $position ?? 0; return $this; }
 
     public function __toString(): string { return (string) $this->name; }
 }

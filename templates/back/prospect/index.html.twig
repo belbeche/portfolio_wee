@@ -6,10 +6,41 @@
 
 {% block topActions %}
 	<a href="{{ url('back_prospect_history') }}" class="ad-btn ad-btn--ghost">Historique des e-mails</a>
-	<a href="{{ url('back_prospect_new') }}" class="ad-btn ad-btn--primary">Ajouter un prospect</a>
+	<a href="{{ url('back_sequence') }}" class="ad-btn ad-btn--primary">Tunnel d'acquisition</a>
+	<a href="{{ url('back_prospect_new') }}" class="ad-btn ad-btn--ghost">Ajouter un prospect</a>
 {% endblock %}
 
 {% block content %}
+
+<a href="{{ url('back_sequence') }}" class="wb-tunnel">
+	<span class="wb-tunnel__pastille">Nouveau</span>
+	<span>
+		<strong>Le tunnel d'acquisition est ici.</strong>
+		Diagnostic automatique du site de chaque prospect, séquence en quatre messages
+		qui disent quatre choses différentes, suivi des ouvertures, et la liste de ceux
+		qu'il faut rappeler en priorité.
+	</span>
+	<span class="wb-tunnel__fleche" aria-hidden="true">→</span>
+</a>
+
+<style>
+	.wb-tunnel {
+		display:flex; align-items:center; gap:.9rem; text-decoration:none; color:inherit;
+		background:linear-gradient(100deg,#0a1628,#16304f); color:#fff;
+		border-radius:14px; padding:1rem 1.2rem; margin-bottom:1rem;
+		transition:transform .25s cubic-bezier(.22,.61,.36,1);
+	}
+	.wb-tunnel:hover { transform:translateY(-3px); color:#fff; }
+	.wb-tunnel strong { color:#f5b301; }
+	.wb-tunnel span { font-size:.88rem; line-height:1.5; }
+	.wb-tunnel__pastille {
+		background:#f5b301; color:#0a1628; font-size:.7rem; font-weight:800;
+		text-transform:uppercase; letter-spacing:.06em; padding:.25rem .55rem;
+		border-radius:20px; white-space:nowrap; flex-shrink:0;
+	}
+	.wb-tunnel__fleche { margin-left:auto; font-size:1.3rem; color:#f5b301; flex-shrink:0; }
+	@media (max-width:700px) { .wb-tunnel { flex-wrap:wrap; } .wb-tunnel__fleche { display:none; } }
+</style>
 
 {# Compteurs du tunnel, pour savoir ou en est la prospection d'un coup d'oeil. #}
 {% set aContacter = prospects|filter(p => p.status == 'a_contacter')|length %}
@@ -104,7 +135,7 @@
 	</div>
 </section>
 
-<script>
+<script nonce="{{ csp_nonce() }}">
 (function () {
 	var etat = document.getElementById('wb-envoi-etat');
 	var ligne = document.getElementById('wb-envoi-ligne');

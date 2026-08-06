@@ -29,8 +29,40 @@ class DevisController extends AbstractController
     {
         $devis = new Devis();
 
+        // Arrivee depuis l'estimateur : on reprend le type de projet et on
+        // recopie le recapitulatif dans la description. Faire ressaisir a
+        // quelqu'un ce qu'il vient de cocher est le meilleur moyen de le
+        // perdre entre les deux pages.
+        $depuisEstimation = null;
+        if ($request->query->has('base')) {
+            $depuisEstimation = \App\Service\Tarifs::typePourBase((string) $request->query->get('base'));
+
+            $choix = [];
+            foreach (explode(',', (string) $request->query->get('options', '')) as $cle) {
+                $libelle = \App\Service\Tarifs::libelle(trim($cle));
+                if (null !== $libelle) {
+                    $choix[] = $libelle;
+                }
+            }
+
+            $resume = \App\Service\Tarifs::libelle((string) $request->query->get('base'));
+            $texte = 'Estimation faite en ligne : '.($resume ?: 'projet');
+            if ([] !== $choix) {
+                $texte .= "\nOptions retenues : ".implode(', ', $choix).'.';
+            }
+            $budget = (int) $request->query->get('budget');
+            if ($budget > 0) {
+                $texte .= sprintf("\nOrdre de grandeur affiche : environ %s euros.", number_format($budget, 0, ',', ' '));
+            }
+            $texte .= "\n\n";
+
+            $devis->setDescriptionProjet($texte);
+        }
+
         // Créer le formulaire de devis
-        $form = $this->createForm(DevisType::class, $devis);
+        $form = $this->createForm(DevisType::class, $devis, [
+            'default_type_de_site_web' => $depuisEstimation,
+        ]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {

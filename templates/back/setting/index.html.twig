@@ -15,7 +15,7 @@
         <span id="wb-purge-etat" style="font-size:.9rem;">Purge du cache de ce navigateur, puis rechargement…</span>
     </div>
 </div>
-<script>
+<script nonce="{{ csp_nonce() }}">
 (function () {
 	var etat = document.getElementById('wb-purge-etat');
 	var propre = {{ path('back_settings')|json_encode|raw }} + '?vide=1';
